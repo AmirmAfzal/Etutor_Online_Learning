@@ -1,0 +1,96 @@
+@import 'tailwindcss'layer(base);
+@import 'tailwindcss';
+
+@theme {
+  --font-display: "poppins"
+
+}
+
+@plugin "daisyui" {
+  themes: portfolio;
+}
+
+@plugin "daisyui/theme" {
+  name: "portfolio";
+  default: true;
+  /* set as default */
+  prefersdark: false;
+  /* set as default dark mode (prefers-color-scheme:dark) */
+  color-scheme: dark;
+  /* color of browser-provided UI */
+
+  --color-primary: #C6FCA6;
+  --color-primary-content: #000000;
+  --color-secondary: #A7FCEE;
+  --color-secondary-content: #000000;
+  --color-accent: #A7FCEE;
+  --color-accent-content: #000000;
+  --color-neutral: #1c2f3d;
+  --color-neutral-content: #FFFFFF;
+  --color-base-100: #081B28;
+  --color-base-200: #1c2f3d;
+  --color-base-300: #1c2f3d;
+  --color-base-content: #FFFFFF;
+  --color-error: #F87272;
+  --color-error-content: #000000;
+
+  --radius-btn: 1rem;
+  --radius-field: 1rem;
+  --radius-box: 1rem;
+
+  --size-btn: 2rem;
+  --size-field: 0.3rem;
+
+  --border: 1px;
+
+  --depth: 0;
+  --noise: 0;
+}
+
+:root {
+  --font-poppins: 'Poppins', sans-serif;
+}
+
+* {
+  font-family: var(--font-poppins);
+  direction: ltr;
+}
+
+
+
+
+
+.rtl {
+  direction: rtl
+}
+
+.ltr {
+  direction: ltr
+}
+
+input:focus {
+  outline: none !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
