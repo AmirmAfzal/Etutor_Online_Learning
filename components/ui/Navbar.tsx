@@ -1,8 +1,75 @@
-import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import { Input } from "./input";
+import NavLink from "../NavLink";
 
 const Navbar = () => {
-  return <div className=""></div>;
+  return (
+    <header className="border-base-300 border-b">
+      <nav className="bg-neutral flex items-center justify-between px-8">
+        <div className="flex flex-row items-center gap-8">
+          <NavLink href="/">Home</NavLink>
+          <NavLink href="/courses">Courses</NavLink>
+          <NavLink href="/about">About</NavLink>
+          <NavLink href="/contact">Contact</NavLink>
+          <NavLink href="/test">Become an Instructor</NavLink>
+        </div>
+        <div className="flex flex-row items-center gap-4">
+          <Select>
+            <SelectTrigger className="border-0">
+              <SelectValue placeholder="USD" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="EUR">EUR</SelectItem>
+              <SelectItem value="GBP">GBP</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select>
+            <SelectTrigger className="border-0">
+              <SelectValue placeholder="English" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="english">English</SelectItem>
+              <SelectItem value="english">English</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </nav>
+      <div className="flex flex-row items-center justify-between px-6 py-4">
+        <div className="flex flex-row items-center gap-8">
+          <Image src="/images/LOGO.png" alt="logo" width={200} height={80} />
+
+          <Select>
+            <SelectTrigger className="max-w-64">
+              <SelectValue placeholder="Browse" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="english">English</SelectItem>
+              <SelectItem value="english">English</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Input
+            type="text"
+            className="w-96 pl-8"
+            placeholder="What do you want learn..."
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href="" className="btn btn-soft btn-primary">
+            Create Account
+          </Link>
+          <Link href="" className="btn btn-primary">
+            Sign In
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
 };
 
 export default Navbar;

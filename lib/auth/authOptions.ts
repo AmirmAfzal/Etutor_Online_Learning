@@ -1,9 +1,10 @@
 import { AuthOptions } from "next-auth";
-import userModel from "@/lib/db/models/userModel";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
-import { connectDB } from "@/lib/db/db";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
+
+import userModel from "@/lib/db/models/userModel";
+import { connectDB } from "@/lib/db/db";
 import clientPromise from "@/lib/db/MongoDbClient";
 
 export const authOptions: AuthOptions = {
