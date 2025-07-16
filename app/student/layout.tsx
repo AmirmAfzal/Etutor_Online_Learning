@@ -16,13 +16,13 @@ const mockProfiles = [
 ];
 
 const tabLinks = [
-  { label: "Dashboard", href: "/student-dashboard" },
-  { label: "Courses", href: "/student-dashboard/courses" },
-  { label: "Teachers", href: "/student-dashboard/teachers" },
-  { label: "Message", href: "/student-dashboard/messages" },
-  { label: "Wishlist", href: "/student-dashboard/wishlist" },
-  { label: "Purchase History", href: "/student-dashboard/purchase-history" },
-  { label: "Settings", href: "/student-dashboard/settings" },
+  { label: "Dashboard", href: "/student" },
+  { label: "Courses", href: "/student/courses" },
+  { label: "Teachers", href: "/student/teachers" },
+  { label: "Message", href: "/student/messages" },
+  { label: "Wishlist", href: "/student/wishlist" },
+  { label: "Purchase History", href: "/student/purchase-history" },
+  { label: "Settings", href: "/student/settings" },
 ];
 
 export default function StudentDashboardLayout({
