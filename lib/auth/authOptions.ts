@@ -1,4 +1,5 @@
 import { AuthOptions } from "next-auth";
+// eslint-disable-next-line import/no-named-as-default
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";

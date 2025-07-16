@@ -41,7 +41,7 @@ const Navbar = () => {
       </nav>
       <div className="flex flex-row items-center justify-between px-6 py-4">
         <div className="flex flex-row items-center gap-8">
-          <Image src="/images/LOGO.png" alt="logo" width={200} height={80} />
+          <Image src="/images/LOGO.png" alt="logo" className="w-35" width={200} height={80} />
 
           <Select>
             <SelectTrigger className="max-w-64">
@@ -52,15 +52,20 @@ const Navbar = () => {
               <SelectItem value="english">English</SelectItem>
             </SelectContent>
           </Select>
-
-          <Input
-            type="text"
-            className="w-96 pl-8"
-            placeholder="What do you want learn..."
-          />
+          <div className="relative">
+            <Image src="/icons/search.svg" alt="search" width={20} height={20} className="absolute left-4 top-3 z-10" />
+            <Input
+              type="text"
+              className="w-96 pl-12"
+              placeholder="What do you want learn..."
+              />
+          </div>
         </div>
         <div className="flex items-center gap-2">
-          <Link href="" className="btn btn-soft btn-primary">
+          <Image src="/icons/Bell.svg" alt="bell" width={20} height={20} />
+          <Image src="/icons/Heart.svg" alt="heart" width={20} height={20} />
+          <Image src="/icons/ShoppingCart.svg" alt="Shopping-cart" width={20} height={20} />
+          <Link href="" className="btn btn-soft btn-primary ml-4">
             Create Account
           </Link>
           <Link href="" className="btn btn-primary">
