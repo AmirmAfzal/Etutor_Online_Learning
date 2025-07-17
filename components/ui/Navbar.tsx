@@ -15,11 +15,11 @@ const Navbar = () => {
           <NavLink href="/courses">Courses</NavLink>
           <NavLink href="/about">About</NavLink>
           <NavLink href="/contact">Contact</NavLink>
-          <NavLink href="/test">Become an Instructor</NavLink>
+          <NavLink href="/become-instructor">Become an Instructor</NavLink>
         </div>
         <div className="flex flex-row items-center gap-4">
           <Select>
-            <SelectTrigger className="border-0">
+            <SelectTrigger className="border-0 text-base-100">
               <SelectValue placeholder="USD" />
             </SelectTrigger>
             <SelectContent>
@@ -29,11 +29,11 @@ const Navbar = () => {
           </Select>
 
           <Select>
-            <SelectTrigger className="border-0">
+            <SelectTrigger className="border-0 text-base-100">
               <SelectValue placeholder="English" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="english">English</SelectItem>
+              <SelectItem value="englis">English</SelectItem>
               <SelectItem value="english">English</SelectItem>
             </SelectContent>
           </Select>
@@ -43,15 +43,11 @@ const Navbar = () => {
         <div className="flex flex-row items-center gap-8">
           <Image src="/images/LOGO.png" alt="logo" className="w-35" width={200} height={80} />
 
-          <Select>
-            <SelectTrigger className="max-w-64">
-              <SelectValue placeholder="Browse" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="english">English</SelectItem>
-              <SelectItem value="english">English</SelectItem>
-            </SelectContent>
-          </Select>
+          <select className="w-32 h-12 border border-base-300 rounded-none px-2">
+            <option value="english">English1</option>
+            <option value="english">English2</option>
+          </select>
+
           <div className="relative">
             <Image src="/icons/search.svg" alt="search" width={20} height={20} className="absolute left-4 top-3 z-10" />
             <Input

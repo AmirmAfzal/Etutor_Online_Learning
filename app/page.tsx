@@ -3,6 +3,9 @@ import Category from "./Category"
 import TopCourse from "./TopCourse"
 import FeaturedCourses from "./FeaturedCourses"
 import RecentCourse from "./RecentCourse"
+import BecomeInstructor from "./BecomeInstructor"
+import TopInstructor from "./TopInstructor"
+import CompaniesLogo from "./CompaniesLogo"
 
 const HomePage = () => {
   return (
@@ -12,6 +15,9 @@ const HomePage = () => {
       <TopCourse />
       <FeaturedCourses />
       <RecentCourse />
+      <BecomeInstructor />
+      <TopInstructor />
+      <CompaniesLogo />
     </>
   );
 };
