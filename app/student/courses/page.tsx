@@ -48,7 +48,7 @@ const fakeCourses = [
     status: "text-success",
   },
 ];
-
+// FIXME: convert this component to server side component and use searchParams to filter the results
 export default function CoursesPage() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("Latest");
@@ -97,6 +97,7 @@ export default function CoursesPage() {
           <div className="flex flex-row gap-2">
             {/* sorted by */}
             <div className="flex flex-col gap-2">
+              {/* FIXME: use shadcn selects insted of defualt selections */}
               <div className="flex flex-row items-center gap-2">
                 <label htmlFor="sort" className="text-base-content/60 text-xs">
                   Sorted by:
@@ -157,6 +158,7 @@ export default function CoursesPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* FIXME: change idx to index everywhere */}
         {paginatedCourses.map((course, idx) => (
           <CourseCard
             key={idx + (currentPage - 1) * coursesPerPage}
