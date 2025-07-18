@@ -44,7 +44,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
               Watch Lecture
             </button>
             <span
-              className={`text-[10px] font-semibold sm:text-xs ${status || ""}`}
+              className={`text-success text-[10px] font-semibold sm:text-xs`}
             >
               {progress}
             </span>

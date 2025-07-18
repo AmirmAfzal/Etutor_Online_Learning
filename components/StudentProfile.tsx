@@ -20,9 +20,7 @@ const StudentProfile: React.FC<StudentProfileProps> = ({
         alt="Profile"
         width={112}
         height={112}
-        className="h-20 w-20 rounded-full object-cover sm:h-28 sm:w-28"
-        // FIXME: use tailwind for this
-        style={{ width: "auto", height: "auto" }}
+        className="h-auto w-auto rounded-full object-cover sm:h-28 sm:w-28"
         priority={true}
       />
       <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
