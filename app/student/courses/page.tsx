@@ -1,5 +1,5 @@
-"use client";
-import { useState } from "react";
+// "use client";
+// import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import Pagination from "@/components/Pagination";
 import CourseCard from "@/components/CourseCardStudent";
@@ -50,19 +50,19 @@ const fakeCourses = [
 ];
 
 export default function CoursesPage() {
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("Latest");
-  const [status, setStatus] = useState("All Courses");
-  const [teacher, setTeacher] = useState("All Teachers");
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [search, setSearch] = useState("");
+  // const [sort, setSort] = useState("Latest");
+  // const [status, setStatus] = useState("All Courses");
+  // const [teacher, setTeacher] = useState("All Teachers");
+  // const [currentPage, setCurrentPage] = useState(1);
   const coursesPerPage = 20;
 
   // Pagination logic
-  const totalPages = Math.ceil(fakeCourses.length / coursesPerPage);
-  const paginatedCourses = fakeCourses.slice(
-    (currentPage - 1) * coursesPerPage,
-    currentPage * coursesPerPage
-  );
+  // const totalPages = Math.ceil(fakeCourses.length / coursesPerPage);
+  // const paginatedCourses = fakeCourses.slice(
+  //   (currentPage - 1) * coursesPerPage,
+  //   currentPage * coursesPerPage
+  // );
 
   return (
     <>
@@ -86,8 +86,8 @@ export default function CoursesPage() {
                 <Input
                   type="text"
                   placeholder="Search in your courses..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  // value={search}
+                  // onChange={(e) => setSearch(e.target.value)}
                   className="bg-base-100 border-base-content/10 focus:border-primary focus:ring-primary/20 placeholder:text-base-content/40 w-full border py-2 pr-4 pl-10 text-base transition-all focus:ring-0"
                 />
               </div>
@@ -104,8 +104,8 @@ export default function CoursesPage() {
               </div>
               <select
                 className="select border-base-content/10 focus:border-primary focus:ring-primary/20 text-base-content/60 w-full min-w-[180px] border-1 px-4 py-2 text-base transition-all focus:ring-0"
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
+                // value={sort}
+                // onChange={(e) => setSort(e.target.value)}
               >
                 <option className="text-base-content/60">Latest</option>
                 <option className="text-base-content/60">Oldest</option>
@@ -124,8 +124,8 @@ export default function CoursesPage() {
               </div>
               <select
                 className="select border-base-content/10 focus:border-primary focus:ring-primary/20 text-base-content/60 w-full min-w-[180px] border-1 px-4 py-2 text-base transition-all focus:ring-0"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                // value={status}
+                // onChange={(e) => setStatus(e.target.value)}
               >
                 <option className="text-base-content/60">All Courses</option>
                 <option className="text-base-content/60">Ongoing</option>
@@ -144,8 +144,8 @@ export default function CoursesPage() {
               </div>
               <select
                 className="select border-base-content/10 focus:border-primary focus:ring-primary/20 text-base-content/60 w-full min-w-[180px] border-1 px-4 py-2 text-base transition-all focus:ring-0"
-                value={teacher}
-                onChange={(e) => setTeacher(e.target.value)}
+                // value={teacher}
+                // onChange={(e) => setTeacher(e.target.value)}
               >
                 <option className="text-base-content/60">All Teachers</option>
                 <option className="text-base-content/60">Mr. Ahmadi</option>
@@ -157,19 +157,16 @@ export default function CoursesPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {paginatedCourses.map((course, idx) => (
-          <CourseCard
-            key={idx + (currentPage - 1) * coursesPerPage}
-            {...course}
-          />
+        {fakeCourses.map((course, idx) => (
+          <CourseCard key={idx} {...course} />
         ))}
       </div>
       {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {/* <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          /> */}
     </>
   );
 }
