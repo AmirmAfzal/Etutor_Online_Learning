@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 
 import TeacherCard from "@/components/TeacherCard";
-import { Select, SelectItem } from "@/components/ui/Select";
+import { Select, SelectItem } from "@/components/ui/select";
 
 // Fake data for demonstration
 const fakeTeachers = [
@@ -113,7 +113,7 @@ export default function TeachersPage({
                   Courses:
                 </label>
               </div>
-              <Select name="courses" defaultValue={courses} className="w-full">
+              <Select name="courses" defaultValue={courses}>
                 <SelectItem value="All">All Courses</SelectItem>
                 <SelectItem value="1">1 Course</SelectItem>
                 <SelectItem value="2">2 Courses</SelectItem>
@@ -126,7 +126,7 @@ export default function TeachersPage({
                   Sort by:
                 </label>
               </div>
-              <Select name="sort" defaultValue={sort} className="w-full">
+              <Select name="sort" defaultValue={sort}>
                 <SelectItem value="Latest">Latest</SelectItem>
                 <SelectItem value="Oldest">Oldest</SelectItem>
                 <SelectItem value="Most Students">Most Students</SelectItem>

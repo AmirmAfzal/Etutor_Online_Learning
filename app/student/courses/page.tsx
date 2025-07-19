@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 
 import CourseCard from "@/components/CourseCardStudent";
-import { Select, SelectItem } from "@/components/ui/Select";
+import { Select, SelectItem } from "@/components/ui/select";
 
 // Fake data for demonstration
 const fakeCourses = [
