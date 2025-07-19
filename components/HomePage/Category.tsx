@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import Icon from "../ui/Icon";
 
 const Category = () => {
