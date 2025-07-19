@@ -1,9 +1,7 @@
 import { Poppins } from "next/font/google";
-
 import Navbar from "@/components/ui/Navbar";
-import Footer from "@/components/ui/Footer";
-
 import AuthProvider from "./auth/AuthProvider";
+import Footer from "@/components/ui/Footer";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -18,9 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <body className={`bg-base-100 ${poppins.variable}`}>
         <AuthProvider>
           <Navbar />
-          <main className="no-scrollbar min-h-screen">
-            {children}
-          </main>
+          <main className="no-scrollbar min-h-screen">{children}</main>
           <Footer />
         </AuthProvider>
       </body>
