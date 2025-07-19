@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
 import { Select, SelectItem } from "@/components/ui/Select";
 import TeacherCard from "@/components/TeacherCard";
+import { Icon } from "@iconify/react";
 
 // Fake data for demonstration
 const fakeTeachers = [
@@ -85,14 +85,18 @@ export default function TeachersPage({
               <label htmlFor="search" className="text-base-content/60 text-xs">
                 Search:
               </label>
-              <div className="relative w-full">
-                <Input
+              <div className="border-base-content/10 bg-base-100 focus-within:border-primary focus-within:ring-primary/20 flex w-full items-center border p-1 focus-within:ring-1">
+                <Icon
+                  icon="ph:magnifying-glass-bold"
+                  className="text-base-content/40 ml-3 text-xl"
+                />
+                <input
                   id="search"
                   name="search"
                   type="text"
                   placeholder="Search instructors..."
                   defaultValue={search}
-                  className="bg-base-100 border-base-content/10 focus:border-primary focus:ring-primary/20 placeholder:text-base-content/40 w-full border py-2 pr-4 pl-4 text-base transition-all focus:ring-0"
+                  className="placeholder:text-base-content/40 w-full bg-transparent py-2 pr-4 pl-2 text-base focus:outline-none"
                 />
               </div>
               <button type="submit" className="hidden" />

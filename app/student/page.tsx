@@ -7,28 +7,24 @@ const mockCoursesData = [
     subtitle: "1. Introductions",
     image: "/images/course-1.jpg",
     progress: null,
-    status: null,
   },
   {
     title: "The Complete 2021 Web Development Bootcamp",
     subtitle: "167. What You'll Need to Get Started - Setup",
     image: "/images/course-2.jpg",
     progress: "61% Completed",
-    status: "text-success",
   },
   {
     title: "Copywriting - Become a Freelance Copywriter",
     subtitle: "1. How to get started with figma",
     image: "/images/course-3.jpg",
     progress: null,
-    status: null,
   },
   {
     title: "2021 Complete Python Bootcamp From Zero to Hero",
     subtitle: "9. Advanced CSS - Selector Priority",
     image: "/images/course-4.jpg",
     progress: "12% Finish",
-    status: "text-success",
   },
 ];
 
@@ -46,7 +42,7 @@ export default function StudentDashboard() {
           <div className="bg-primary/10 flex flex-row items-start gap-4 p-2 sm:p-6">
             <div className="bg-base-100 flex items-center gap-2 p-2">
               <Icon
-                icon="icon-park-twotone:play"
+                icon="ph:play-circle-fill"
                 className="text-primary text-4xl md:text-5xl"
               />
             </div>
@@ -62,7 +58,7 @@ export default function StudentDashboard() {
           <div className="bg-secondary/10 flex flex-row items-start gap-4 p-4 sm:p-6">
             <div className="bg-base-100 flex items-center gap-2 p-2">
               <Icon
-                icon="fontisto:checkbox-active"
+                icon="ph:check-square-offset-duotone"
                 className="text-secondary text-4xl md:text-5xl"
               />
             </div>
@@ -78,7 +74,7 @@ export default function StudentDashboard() {
           <div className="bg-success/10 flex flex-row items-start gap-4 p-4 sm:p-6">
             <div className="bg-base-100 flex items-center gap-2 p-2">
               <Icon
-                icon="solar:cup-bold-duotone"
+                icon="ph:trophy-duotone"
                 className="text-success text-4xl md:text-5xl"
               />
             </div>
@@ -116,11 +112,11 @@ export default function StudentDashboard() {
         </h3>
         <div className="flex flex-row items-center gap-2">
           <Icon
-            icon="mdi:chevron-left"
+            icon="ph:arrow-left-light"
             className="text-primary bg-primary/10 p-2 text-4xl transition-all duration-300 hover:translate-y-[-2px] hover:cursor-pointer"
           />
           <Icon
-            icon="mdi:chevron-right"
+            icon="ph:arrow-right-light"
             className="text-primary bg-primary/10 p-2 text-4xl transition-all duration-300 hover:translate-y-[-2px] hover:cursor-pointer"
           />
         </div>
@@ -133,7 +129,6 @@ export default function StudentDashboard() {
             subtitle={course.subtitle}
             image={course.image}
             progress={course.progress}
-            status={course.status}
             priority={idx === 0}
           />
         ))}

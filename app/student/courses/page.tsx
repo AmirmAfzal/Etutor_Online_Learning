@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
 import CourseCard from "@/components/CourseCardStudent";
 import { Select, SelectItem } from "@/components/ui/Select";
+import { Icon } from "@iconify/react";
 
 // Fake data for demonstration
 const fakeCourses = [
@@ -116,17 +116,18 @@ export default function CoursesPage({
               <label htmlFor="search" className="text-base-content/60 text-xs">
                 Search:
               </label>
-              <div className="relative w-full">
-                <span className="text-base-content/60 absolute top-1/2 left-3 -translate-y-1/2 text-xl">
-                  {/* TODO: add search icon */}
-                </span>
-                <Input
+              <div className="border-base-content/10 bg-base-100 focus-within:border-primary focus-within:ring-primary/20 flex w-full items-center border p-1 focus-within:ring-1">
+                <Icon
+                  icon="ph:magnifying-glass-bold"
+                  className="text-base-content/40 ml-3 text-xl"
+                />
+                <input
                   id="search"
                   name="search"
                   type="text"
                   placeholder="Search in your courses..."
                   defaultValue={search}
-                  className="bg-base-100 border-base-content/10 focus:border-primary focus:ring-primary/20 placeholder:text-base-content/40 w-full border py-2 pr-4 pl-10 text-base transition-all focus:ring-0"
+                  className="placeholder:text-base-content/40 w-full bg-transparent py-2 pr-4 pl-2 text-base focus:ring-0 focus:outline-none"
                 />
               </div>
               <button type="submit" className="hidden" />

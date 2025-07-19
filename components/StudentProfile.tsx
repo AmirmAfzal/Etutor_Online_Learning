@@ -33,10 +33,7 @@ const StudentProfile: React.FC<StudentProfileProps> = ({
       </div>
       <button className="btn btn-soft btn-primary mt-2 w-full gap-2 font-bold md:static md:top-6 md:right-6 md:mt-0 md:ml-auto md:w-auto">
         Become Instructor
-        <Icon
-          icon="solar:arrow-right-outline"
-          className="text-xl sm:text-2xl"
-        />
+        <Icon icon="ph:arrow-right" className="text-xl sm:text-2xl" />
       </button>
     </div>
   );

@@ -39,7 +39,7 @@ const Pagination: React.FC<PaginationProps> = ({
               tabIndex={currentPage === 1 ? -1 : 0}
               className={`border-base-content/10 flex h-10 w-10 items-center justify-center rounded-full border text-xl transition-all ${currentPage === 1 ? "bg-base-100 text-base-content/30 pointer-events-none cursor-not-allowed" : "bg-base-100 text-primary hover:bg-primary/10"}`}
             >
-              <Icon icon="solar:arrow-left-linear" />
+              <Icon icon="ph:arrow-left" />
             </a>
           ) : null}
           {/* Page Numbers */}
@@ -69,7 +69,7 @@ const Pagination: React.FC<PaginationProps> = ({
               tabIndex={currentPage === totalPages ? -1 : 0}
               className={`border-base-content/10 flex h-10 w-10 items-center justify-center rounded-full border text-xl transition-all ${currentPage === totalPages ? "bg-base-100 text-base-content/30 pointer-events-none cursor-not-allowed" : "bg-base-100 text-primary hover:bg-primary/10"}`}
             >
-              <Icon icon="solar:arrow-right-linear" />
+              <Icon icon="ph:arrow-right" />
             </a>
           ) : null}
         </div>
