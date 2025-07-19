@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 
 import TeacherCard from "@/components/TeacherCard";
-import { Select, SelectItem } from "@/components/ui/select";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Fake data for demonstration
 const fakeTeachers = [
@@ -37,17 +37,20 @@ const fakeTeachers = [
   // ... add more teachers as needed
 ];
 
-export default function TeachersPage({
+export default async function TeachersPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{
+    search?: string;
+    sort?: string;
+    courses?: string;
+  }>;
 }) {
-  const search =
-    typeof searchParams?.search === "string" ? searchParams.search : "";
-  const sort =
-    typeof searchParams?.sort === "string" ? searchParams.sort : "Latest";
-  const courses =
-    typeof searchParams?.courses === "string" ? searchParams.courses : "All";
+  // Await searchParams if it is a Promise
+  const params = searchParams ? await searchParams : {};
+  const search = typeof params.search === "string" ? params.search : "";
+  const sort = typeof params.sort === "string" ? params.sort : "Latest";
+  const courses = typeof params.courses === "string" ? params.courses : "All";
 
   // Filter logic
   let filteredTeachers = fakeTeachers.filter((teacher) => {
@@ -114,10 +117,15 @@ export default function TeachersPage({
                 </label>
               </div>
               <Select name="courses" defaultValue={courses}>
-                <SelectItem value="All">All Courses</SelectItem>
-                <SelectItem value="1">1 Course</SelectItem>
-                <SelectItem value="2">2 Courses</SelectItem>
-                <SelectItem value="3">3 Courses</SelectItem>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Courses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All Courses</SelectItem>
+                  <SelectItem value="1">1 Course</SelectItem>
+                  <SelectItem value="2">2 Courses</SelectItem>
+                  <SelectItem value="3">3 Courses</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <div className="flex flex-1 flex-col gap-2">
@@ -127,9 +135,14 @@ export default function TeachersPage({
                 </label>
               </div>
               <Select name="sort" defaultValue={sort}>
-                <SelectItem value="Latest">Latest</SelectItem>
-                <SelectItem value="Oldest">Oldest</SelectItem>
-                <SelectItem value="Most Students">Most Students</SelectItem>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Latest">Latest</SelectItem>
+                  <SelectItem value="Oldest">Oldest</SelectItem>
+                  <SelectItem value="Most Students">Most Students</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <button type="submit" className="hidden" />

@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 
 import CourseCard from "@/components/CourseCardStudent";
-import { Select, SelectItem } from "@/components/ui/select";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Fake data for demonstration
 const fakeCourses = [
@@ -56,24 +56,22 @@ const fakeCourses = [
   },
 ];
 
-export default function CoursesPage({
+export default async function CoursesPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{
+    search?: string;
+    sort?: string;
+    status?: string;
+    teacher?: string;
+  }>;
 }) {
-  // Extract filters from searchParams
-  const search =
-    typeof searchParams.search === "string" ? searchParams.search : "";
-  const sort =
-    typeof searchParams.sort === "string" ? searchParams.sort : "Latest";
-  const status =
-    typeof searchParams.status === "string"
-      ? searchParams.status
-      : "All Courses";
-  const teacher =
-    typeof searchParams.teacher === "string"
-      ? searchParams.teacher
-      : "All Teachers";
+  // Await searchParams if it is a Promise
+  const params = searchParams ? await searchParams : {};
+  const search = typeof params.search === "string" ? params.search : "";
+  const sort = typeof params.sort === "string" ? params.sort : "Latest";
+  const status = typeof params.status === "string" ? params.status : "All Courses";
+  const teacher = typeof params.teacher === "string" ? params.teacher : "All Teachers";
   // Pagination (optional, not implemented fully)
   // const currentPage = parseInt(typeof searchParams.page === "string" ? searchParams.page : "1", 10);
   // const coursesPerPage = 20;
@@ -145,9 +143,14 @@ export default function CoursesPage({
                 </label>
               </div>
               <Select name="sort" defaultValue={sort}>
-                <SelectItem value="Latest">Latest</SelectItem>
-                <SelectItem value="Oldest">Oldest</SelectItem>
-                <SelectItem value="Most Viewed">Most Viewed</SelectItem>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Sorted by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Latest">Latest</SelectItem>
+                  <SelectItem value="Oldest">Oldest</SelectItem>
+                  <SelectItem value="Most Viewed">Most Viewed</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             {/* status */}
@@ -161,9 +164,14 @@ export default function CoursesPage({
                 </label>
               </div>
               <Select name="status" defaultValue={status}>
-                <SelectItem value="All Courses">All Courses</SelectItem>
-                <SelectItem value="Ongoing">Ongoing</SelectItem>
-                <SelectItem value="Completed">Completed</SelectItem>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All Courses">All Courses</SelectItem>
+                  <SelectItem value="Ongoing">Ongoing</SelectItem>
+                  <SelectItem value="Completed">Completed</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             {/* teacher */}
@@ -177,9 +185,14 @@ export default function CoursesPage({
                 </label>
               </div>
               <Select name="teacher" defaultValue={teacher}>
-                <SelectItem value="All Teachers">All Teachers</SelectItem>
-                <SelectItem value="Mr. Ahmadi">Mr. Ahmadi</SelectItem>
-                <SelectItem value="Mr. Rezaei">Mr. Rezaei</SelectItem>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Teacher" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All Teachers">All Teachers</SelectItem>
+                  <SelectItem value="Mr. Ahmadi">Mr. Ahmadi</SelectItem>
+                  <SelectItem value="Mr. Rezaei">Mr. Rezaei</SelectItem>
+                </SelectContent>
               </Select>
             </div>
             <button type="submit" className="hidden" />
