@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react";
-import Image from "next/image";
 import CourseCard from "@/components/CourseCardStudent";
 
 const mockCoursesData = [

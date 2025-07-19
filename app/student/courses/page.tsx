@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-import Pagination from "@/components/Pagination";
 import CourseCard from "@/components/CourseCardStudent";
 import { Select, SelectItem } from "@/components/ui/Select";
 

@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { Icon } from "@iconify/react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import StudentProfile from "@/components/StudentProfile";

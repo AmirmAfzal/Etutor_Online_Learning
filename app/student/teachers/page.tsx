@@ -1,72 +1,39 @@
 import { Input } from "@/components/ui/input";
 import { Select, SelectItem } from "@/components/ui/Select";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import TeacherCard from "@/components/TeacherCard";
 
 // Fake data for demonstration
 const fakeTeachers = [
   {
     name: "Wade Warren",
     title: "Frontend Developer",
-    image: "/images/profile-student.jpg",
+    image: "/images/Teacher-profile-1.jpg",
     rating: 4.8,
     students: 230984,
   },
   {
     name: "Bessie Cooper",
     title: "JavaScript Instructor",
-    image: "/images/profile-student.jpg",
+    image: "/images/Teacher-profile-2.jpg",
     rating: 4.7,
     students: 271488,
   },
   {
     name: "Floyd Miles",
     title: "Python Instructor",
-    image: "/images/profile-student.jpg",
+    image: "/images/Teacher-profile-3.jpg",
     rating: 4.9,
     students: 198234,
   },
   {
     name: "Ronald Richards",
     title: "Math Instructor",
-    image: "/images/profile-student.jpg",
+    image: "/images/Teacher-profile-4.jpg",
     rating: 4.6,
     students: 139876,
   },
   // ... add more teachers as needed
 ];
-
-function TeacherCard({
-  name,
-  title,
-  image,
-  rating,
-  students,
-}: (typeof fakeTeachers)[0]) {
-  return (
-    <div className="bg-base-100 border-base-content/20 flex flex-col items-center rounded-lg border p-4 transition-all duration-300 hover:shadow-md">
-      <Image
-        src={image}
-        alt={name}
-        width={96}
-        height={96}
-        className="mb-3 h-24 w-24 rounded-full border object-cover"
-      />
-      <div className="text-base-content/90 mb-1 text-lg font-semibold">
-        {name}
-      </div>
-      <div className="text-base-content/60 mb-2 text-sm">{title}</div>
-      <div className="text-base-content/70 mb-2 flex flex-row items-center gap-2 text-xs">
-        <span>⭐ {rating}</span>
-        <span>·</span>
-        <span>{students.toLocaleString()} students</span>
-      </div>
-      <Button size="sm" className="mt-2 w-full">
-        Send Message
-      </Button>
-    </div>
-  );
-}
 
 export default function TeachersPage({
   searchParams,
@@ -77,6 +44,8 @@ export default function TeachersPage({
     typeof searchParams?.search === "string" ? searchParams.search : "";
   const sort =
     typeof searchParams?.sort === "string" ? searchParams.sort : "Latest";
+  const courses =
+    typeof searchParams?.courses === "string" ? searchParams.courses : "All";
 
   // Filter logic
   let filteredTeachers = fakeTeachers.filter((teacher) => {
@@ -130,15 +99,28 @@ export default function TeachersPage({
             </form>
           </div>
           {/* filter */}
-          <form className="flex flex-row gap-2" method="GET">
+          <form className="flex flex-1 flex-row gap-2" method="GET">
             {/* sorted by */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-2 flex-col gap-2">
+              <div className="flex flex-row items-center gap-2">
+                <label htmlFor="sort" className="text-base-content/60 text-xs">
+                  Courses:
+                </label>
+              </div>
+              <Select name="courses" defaultValue={courses} className="w-full">
+                <SelectItem value="All">All Courses</SelectItem>
+                <SelectItem value="1">1 Course</SelectItem>
+                <SelectItem value="2">2 Courses</SelectItem>
+                <SelectItem value="3">3 Courses</SelectItem>
+              </Select>
+            </div>
+            <div className="flex flex-1 flex-col gap-2">
               <div className="flex flex-row items-center gap-2">
                 <label htmlFor="sort" className="text-base-content/60 text-xs">
                   Sort by:
                 </label>
               </div>
-              <Select name="sort" defaultValue={sort}>
+              <Select name="sort" defaultValue={sort} className="w-full">
                 <SelectItem value="Latest">Latest</SelectItem>
                 <SelectItem value="Oldest">Oldest</SelectItem>
                 <SelectItem value="Most Students">Most Students</SelectItem>

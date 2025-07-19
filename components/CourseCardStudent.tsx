@@ -6,7 +6,6 @@ interface CourseCardProps {
   subtitle: string;
   image: string;
   progress?: string | null;
-  status?: string | null;
   priority?: boolean;
 }
 
@@ -15,7 +14,6 @@ const CourseCard: React.FC<CourseCardProps> = ({
   subtitle,
   image,
   progress,
-  status,
   priority = false,
 }) => {
   return (
