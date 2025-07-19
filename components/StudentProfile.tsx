@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { Icon } from "@iconify/react";
 import React from "react";
+
+import { Icon } from "@iconify/react";
 
 interface StudentProfileProps {
   name: string;

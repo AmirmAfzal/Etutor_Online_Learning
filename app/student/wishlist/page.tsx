@@ -1,6 +1,7 @@
 "use client";
-import Loading from "../loading";
 import { useEffect, useState } from "react";
+
+import Loading from "../loading";
 
 export default function WishlistPage() {
   const [loading, setLoading] = useState(true);

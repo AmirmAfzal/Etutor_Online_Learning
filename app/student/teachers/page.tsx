@@ -1,6 +1,7 @@
-import { Select, SelectItem } from "@/components/ui/Select";
-import TeacherCard from "@/components/TeacherCard";
 import { Icon } from "@iconify/react";
+
+import TeacherCard from "@/components/TeacherCard";
+import { Select, SelectItem } from "@/components/ui/Select";
 
 // Fake data for demonstration
 const fakeTeachers = [

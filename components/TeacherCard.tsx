@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import { Icon } from "@iconify/react";
 
 interface TeacherCardProps {

@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
+import React from "react";
 import { usePathname } from "next/navigation";
+
 import StudentProfile from "@/components/StudentProfile";
 
 const mockProfiles = [

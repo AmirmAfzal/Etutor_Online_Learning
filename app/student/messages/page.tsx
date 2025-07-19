@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+
 import Loading from "@/app/loading";
 
 export default function MessagesPage() {
