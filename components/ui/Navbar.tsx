@@ -1,10 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { Input } from "./input";
 import NavLink from "../NavLink";
+import Icon from "./Icon";
 
 const Navbar = () => {
   return (
@@ -19,7 +26,7 @@ const Navbar = () => {
         </div>
         <div className="flex flex-row items-center gap-4">
           <Select>
-            <SelectTrigger className="border-0 text-base-100">
+            <SelectTrigger className="text-base-100 border-0">
               <SelectValue placeholder="USD" />
             </SelectTrigger>
             <SelectContent>
@@ -29,7 +36,7 @@ const Navbar = () => {
           </Select>
 
           <Select>
-            <SelectTrigger className="border-0 text-base-100">
+            <SelectTrigger className="text-base-100 border-0">
               <SelectValue placeholder="English" />
             </SelectTrigger>
             <SelectContent>
@@ -41,26 +48,42 @@ const Navbar = () => {
       </nav>
       <div className="flex flex-row items-center justify-between px-6 py-4">
         <div className="flex flex-row items-center gap-8">
-          <Image src="/images/LOGO.png" alt="logo" className="w-35" width={200} height={80} />
+          <Image
+            src="/images/LOGO.png"
+            alt="logo"
+            className="w-35"
+            width={200}
+            height={80}
+          />
 
-          <select className="w-32 h-12 border border-base-300 rounded-none px-2">
-            <option value="english">English1</option>
-            <option value="english">English2</option>
-          </select>
+          <Select>
+            <SelectTrigger className="text-base-100 border-0">
+              <SelectValue placeholder="Browse" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="englis">English</SelectItem>
+              <SelectItem value="english">English</SelectItem>
+            </SelectContent>
+          </Select>
 
           <div className="relative">
-            <Image src="/icons/search.svg" alt="search" width={20} height={20} className="absolute left-4 top-3 z-10" />
+            <Icon
+              icon="ph:magnifying-glass"
+              width="24"
+              height="24"
+              className="absolute top-3 left-4 z-10"
+            />
             <Input
               type="text"
               className="w-96 pl-12"
               placeholder="What do you want learn..."
-              />
+            />
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Image src="/icons/Bell.svg" alt="bell" width={20} height={20} />
-          <Image src="/icons/Heart.svg" alt="heart" width={20} height={20} />
-          <Image src="/icons/ShoppingCart.svg" alt="Shopping-cart" width={20} height={20} />
+        <div className="flex items-center gap-4">
+          <Icon icon="ph:bell" width="24" height="24" />
+          <Icon icon="ph:heart" width="24" height="24" />
+          <Icon icon="ph:shopping-cart-simple" width="24" height="24" />
           <Link href="" className="btn btn-soft btn-primary ml-4">
             Create Account
           </Link>
