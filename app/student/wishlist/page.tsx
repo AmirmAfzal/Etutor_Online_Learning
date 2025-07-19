@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-
+import Image from "next/image";
 import Link from "next/link";
 
 // Fake wishlist data for demonstration
@@ -37,11 +37,7 @@ const fakeWishlistCourses = [
   },
 ];
 
-export default function WishlistPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default function WishlistPage() {
   return (
     <>
       <div className="mb-8">
@@ -118,7 +114,13 @@ const WishlistCourseRow: React.FC<WishlistCourseRowProps> = ({
           <div className="flex items-center gap-5">
             {/* Course Image */}
             <div className="flex-shrink-0">
-              <img src={image} alt={title} className="h-16 w-24 object-cover" />
+              <Image
+                src={image}
+                alt={title}
+                width={96}
+                height={64}
+                className="h-16 w-24 object-cover"
+              />
             </div>
 
             {/* Course Info */}
