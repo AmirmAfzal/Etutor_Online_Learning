@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import Icon from "../ui/Icon";
+
 const TopInstructor = () => {
   const instructors = [
     {
@@ -66,7 +68,12 @@ const TopInstructor = () => {
             </div>
             <div className="border-base-300 flex flex-row items-center justify-between border-t p-2">
               <div className="flex flex-row items-center gap-1">
-                <Image src="/icons/Star.svg" alt="" width={20} height={20} />
+                <Icon
+                  width="24"
+                  height="24"
+                  className="text-primary"
+                  icon="ph:star-fill"
+                />
                 <p className="text-sm">{item.rating}</p>
               </div>
               <div className="flex flex-row items-center gap-1 text-sm">
@@ -84,12 +91,7 @@ const TopInstructor = () => {
         </p>
         <Link href="" className="text-primary flex flex-row items-center gap-2">
           Become Instructor
-          <Image
-            src="/icons/ArrowRight.svg"
-            alt="arrow-right"
-            width={20}
-            height={20}
-          />
+          <Icon icon="ph:arrow-right" width="24" height="24" />
         </Link>
       </div>
     </section>
