@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Icon } from "@iconify/react";
 
 interface PaginationProps {
@@ -7,8 +6,8 @@ interface PaginationProps {
   coursesPerPage: number;
   totalItems: number;
   getPageHref?: (page: number) => string;
-  children: (paginatedItems: any[]) => React.ReactNode;
-  items: any[];
+  children: (paginatedItems: unknown[]) => React.ReactNode;
+  items: unknown[];
 }
 
 const Pagination: React.FC<PaginationProps> = ({
