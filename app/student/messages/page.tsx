@@ -1,6 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 // Mock data for messages
 const mockContacts = [
@@ -144,10 +148,89 @@ export default function MessagesPage() {
         {/* Header */}
         <div className="border-base-300 flex items-center justify-between border-b p-4">
           <h2 className="text-base-content text-lg font-semibold">Message</h2>
-          <button className="btn btn-primary btn-sm gap-2">
-            <Icon icon="ph:plus" />
-            Compose
-          </button>
+          <DialogPrimitive.Root>
+            <DialogPrimitive.Trigger asChild>
+              <Button variant="default" size="sm" className="btn btn-primary">
+                <Icon icon="ph:plus" />
+                Compose
+              </Button>
+            </DialogPrimitive.Trigger>
+            <DialogPrimitive.Portal>
+              <DialogPrimitive.Overlay className="bg-base-content/50 fixed inset-0 z-40" />
+              <DialogPrimitive.Content className="bg-base-100 fixed top-1/2 left-1/2 z-50 w-full max-w-xl -translate-x-1/2 -translate-y-1/2 p-6">
+                <div className="border-base-content/20 flex items-center justify-between border-b pb-2">
+                  <span className="text-base-content/70 text-lg font-semibold">
+                    New Message
+                  </span>
+                  <DialogPrimitive.Close asChild>
+                    <button className="btn btn-ghost text-base-content/70 text-2xl">
+                      &times;
+                    </button>
+                  </DialogPrimitive.Close>
+                </div>
+                {/* Modal content goes here */}
+                <form className="mt-4 space-y-6">
+                  <div>
+                    <label
+                      className="text-base-content/70 mb-1 block text-base font-medium"
+                      htmlFor="teacher-select"
+                    >
+                      Teacher:
+                    </label>
+                    <select
+                      id="teacher-select"
+                      className="border-base-300 bg-base-100 text-base-content/70 focus:border-primary w-full border px-3 py-2 focus:ring-0"
+                      defaultValue=""
+                      required
+                    >
+                      <option value="" disabled>
+                        Select...
+                      </option>
+                      {mockContacts.map((contact) => (
+                        <option key={contact.id} value={contact.id}>
+                          {contact.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      className="text-base-content/70 mb-1 block text-base font-medium"
+                      htmlFor="message-textarea"
+                    >
+                      Message
+                    </label>
+                    <Textarea
+                      id="message-textarea"
+                      className="bg-base-100 border-base-300 text-base-content placeholder:text-base-content/40 min-h-[100px] resize-none border"
+                      placeholder="Write your message here..."
+                      required
+                    />
+                  </div>
+                  <div className="flex items-center justify-between pt-2">
+                    <DialogPrimitive.Close asChild>
+                      <button
+                        type="button"
+                        className="btn btn-ghost text-base-content/70 text-sm"
+                      >
+                        Cancel
+                      </button>
+                    </DialogPrimitive.Close>
+                    <button
+                      type="submit"
+                      className="btn btn-primary flex items-center gap-2 rounded px-8 py-2 font-semibold"
+                    >
+                      Send Message
+                      <Icon
+                        icon="ph:paper-plane-right-fill"
+                        className="text-xl"
+                      />
+                    </button>
+                  </div>
+                </form>
+              </DialogPrimitive.Content>
+            </DialogPrimitive.Portal>
+          </DialogPrimitive.Root>
         </div>
 
         {/* Search Bar */}
