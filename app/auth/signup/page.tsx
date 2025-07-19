@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { startTransition, useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema } from "@/lib/validation/auth/signinSchema";
@@ -14,11 +14,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Link from "next/link";
+import Icon from "@/components/ui/Icon";
+import { createUser } from "@/lib/actions/signup";
+import { signIn } from "next-auth/react";
+import { redirect } from "next/navigation";
 
-const SignInPage = () => {
+const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const form = useForm<z.infer<typeof signUpSchema>>({
@@ -34,16 +37,34 @@ const SignInPage = () => {
     },
   });
 
-  const [resultError, setResultError] = useState<string | null>(null);
-  const onSubmit = (data: z.infer<typeof signUpSchema>) => {
-    // Simulate error for demonstration
-    if (data.email === "error@example.com") {
-      setResultError("An account with this email already exists.");
-      return;
-    }
-    setResultError(null);
-    alert("Account created!\n" + JSON.stringify(data, null, 2));
+  const [state, formAction, pending] = useActionState(createUser, {
+    message: "",
+    errors: [],
+  });
+
+  const handleSumbit = async (data: z.infer<typeof signUpSchema>) => {
+    startTransition(() => {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value.toString());
+      });
+      formAction(formData);
+    });
   };
+
+  useEffect(() => {
+    const handleSignin = async () => {
+      if (state.message === "SUCCESS") {
+        const result = await signIn("credentials", {
+          email: form.getValues("email"),
+          password: form.getValues("password"),
+          redirect: false,
+        });
+        if (result?.ok) redirect("/");
+      }
+    };
+    handleSignin();
+  }, [state.message]);
 
   return (
     <div className="grid h-screen grid-cols-5">
@@ -58,8 +79,8 @@ const SignInPage = () => {
         <h1 className="mb-8 text-4xl font-semibold">Create your account</h1>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full max-w-md space-y-4"
+            onSubmit={form.handleSubmit(handleSumbit)}
+            className="w-full max-w-lg space-y-4"
           >
             <div className="flex gap-4">
               <FormField
@@ -135,11 +156,14 @@ const SignInPage = () => {
                         />
                         <button
                           type="button"
-                          className="absolute top-1/2 right-2 -translate-y-1/2 text-xs text-gray-500"
+                          className="absolute top-1/2 right-2 -translate-y-1/2 text-xs"
                           tabIndex={-1}
                           onClick={() => setShowPassword((v) => !v)}
                         >
-                          {showPassword ? "Hide" : "Show"}
+                          <Icon
+                            width={24}
+                            icon={showPassword ? "ph:eye-slash" : "ph:eye"}
+                          />
                         </button>
                       </div>
                     </FormControl>
@@ -162,11 +186,16 @@ const SignInPage = () => {
                         />
                         <button
                           type="button"
-                          className="absolute top-1/2 right-2 -translate-y-1/2 text-xs text-gray-500"
+                          className="absolute top-1/2 right-2 -translate-y-1/2 text-xs"
                           tabIndex={-1}
                           onClick={() => setShowConfirmPassword((v) => !v)}
                         >
-                          {showConfirmPassword ? "Hide" : "Show"}
+                          <Icon
+                            width={24}
+                            icon={
+                              showConfirmPassword ? "ph:eye-slash" : "ph:eye"
+                            }
+                          />
                         </button>
                       </div>
                     </FormControl>
@@ -175,46 +204,57 @@ const SignInPage = () => {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="terms"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2">
-                  <FormControl>
-                    <input
-                      type="checkbox"
-                      id="terms"
-                      checked={field.value}
-                      onChange={field.onChange}
-                      className="mr-2"
-                    />
-                  </FormControl>
-                  <FormLabel htmlFor="terms" className="text-xs">
-                    I Agree with all of your{" "}
-                    <Link href="/" className="text-primary underline">
-                      Terms & Conditions
-                    </Link>
-                  </FormLabel>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {resultError && (
-              <div className="mb-2 text-center text-sm text-red-600">
-                {resultError}
+            <div className="flex flex-row justify-between gap-4">
+              <FormField
+                control={form.control}
+                name="terms"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      {/* <Checkbox
+                        id="terms"
+                        checked={field.value}
+                        onCheckedChange={(checked) => field.onChange(!!checked)}
+                        aria-checked={field.value}
+                        className="checkbox-sm"
+                      /> */}
+                      <input
+                        checked={field.value}
+                        aria-checked={field.value}
+                        onChange={field.onChange}
+                        type="checkbox"
+                        className="checkbox checkbox-primary"
+                      />
+                    </FormControl>
+                    <FormLabel htmlFor="terms">
+                      <span className="text-base-content/60 leading-5 font-normal">
+                        I Agree with all of your{" "}
+                        <Link href="/" className="link-secondary link">
+                          Terms & Conditions
+                        </Link>
+                      </span>
+                    </FormLabel>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <button
+                type="submit"
+                className="btn btn-primary flex gap-2"
+                disabled={pending}
+              >
+                {pending ? "Creating..." : "Create Account"}{" "}
+                <Icon width={24} icon="ph:arrow-right" />
+              </button>
+            </div>
+            {state.errors.length > 0 && (
+              <div className="text-error mb-2 text-center text-sm">
+                {state.errors.join(", ")}
               </div>
             )}
-            
-            <Button
-              type="submit"
-              className="bg-primary hover:bg-primary/90 mt-2 w-full text-base font-semibold"
-            >
-              Create Account
-            </Button>
-            <div className="my-4 flex items-center gap-2">
-              <div className="h-px flex-1 bg-gray-200" />
-              <span className="text-xs text-gray-400">SIGN UP WITH</span>
-              <div className="h-px flex-1 bg-gray-200" />
+
+            <div className="divider text-base-content/60 mt-8 text-sm">
+              SIGN UP WITH
             </div>
           </form>
         </Form>
@@ -223,4 +263,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default SignupPage;
