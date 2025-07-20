@@ -1,10 +1,31 @@
+import InstructorOverview from "@/components/instructor-dashboard/InstructorOverview";
+import Bannar from "@/components/instructor-dashboard/Bannar";
+import RecentActivity from "@/components/instructor-dashboard/RecentActivity";
+import Revenue from "@/components/instructor-dashboard/RevenueView";
+import EarningView from "@/components/instructor-dashboard/EarningView";
 
-type Props = {}
+type Props = {};
 
 const DashboardPage = (props: Props) => {
   return (
-    <div>DashboardPage</div>
-  )
-}
+    <section className="bg-base-300 space-y-6 p-6">
+      <InstructorOverview />
+      <Bannar />
+      <div className="container mx-auto grid grid-cols-12 gap-6">
+        <div className="col-span-4 h-auto w-full">
+          <RecentActivity />
+        </div>
+        <div className="col-span-5 h-auto w-full">
+          <Revenue />
+        </div>
+        <div className="col-span-3 h-auto w-full">
+          <EarningView />
+        </div>
+        <div className="col-span-5 h-80 w-full bg-base-100"></div>
+        <div className="col-span-7 h-80 w-full bg-base-100"></div>
+      </div>
+    </section>
+  );
+};
 
-export default DashboardPage
+export default DashboardPage;

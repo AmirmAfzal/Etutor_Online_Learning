@@ -8,7 +8,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -48,19 +47,14 @@ const Aside = () => {
     <Sidebar collapsible="icon" variant="sidebar">
       <SidebarContent className="bg-neutral">
         <SidebarGroup>
-          <SidebarGroupLabel>
-            <Link
-              href="/instructor/dashboard"
-              className="flex items-center gap-2"
-            >
-              <Icon
-                icon="ph:graduation-cap"
-                width="32"
-                height="32"
-                className="text-primary"
-              />
-              <h1 className="text-base-100 text-3xl font-bold">E-tutor</h1>
-            </Link>
+          <SidebarGroupLabel className="border-b py-6">
+            <Icon
+              icon="ph:graduation-cap"
+              width="32"
+              height="32"
+              className="text-primary"
+            />
+            <h1 className="text-base-100 ml-2 text-3xl font-bold">E-tutor</h1>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="mt-8">
@@ -70,9 +64,9 @@ const Aside = () => {
                     <Link
                       href={link.href}
                       key={link.name}
-                      className="text-base-100/50 flex items-center gap-4 py-6"
+                      className="text-base-100/50 flex items-center py-6"
                     >
-                      <Icon icon={link.icon} width="32" height="32" />
+                      <Icon icon={link.icon} width="24" height="24" />
                       {link.name}
                     </Link>
                   </SidebarMenuButton>
