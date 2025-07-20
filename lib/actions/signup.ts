@@ -2,7 +2,7 @@
 
 import { connectDB } from "../db/db";
 import userModel from "../db/models/userModel";
-import { signUpSchema } from "@/lib/validation/auth/signinSchema";
+import { signUpSchema } from "@/lib/validation/auth/signupSchema";
 import { ActionData } from "@/lib/formTypes";
 import bcrypt from "bcrypt";
 import studentModel from "../db/models/studentModel";

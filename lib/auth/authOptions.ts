@@ -24,14 +24,14 @@ export const authOptions: AuthOptions = {
         const findedUser = await userModel
           .findOne({ email: credentials?.email })
           .select("+password");
-        if (!findedUser) throw new Error("NATIONALCODE_NOT_FOUND");
+        if (!findedUser) throw new Error("email not found");
 
-        if (!credentials?.password) throw new Error("PASSWORD_NOT_FOUND");
+        if (!credentials?.password) throw new Error("password is invalid");
         const successCompare = await compare(
           credentials?.password,
           findedUser.password
         );
-        if (!successCompare) throw new Error("CREDENTIALS_MATCH_ERROR");
+        if (!successCompare) throw new Error("The email and password you entered do not match. Please try again.");
 
         return {
           id: findedUser._id,
