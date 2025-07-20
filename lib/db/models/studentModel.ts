@@ -18,6 +18,37 @@ const studentSchema = new Schema<StudentInterface>(
       required: true,
       unique: true,
     },
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    bio: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    courses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "course",
+      },
+    ],
+    purchases: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "course",
+      },
+    ],
+    wishlist: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "course",
+      },
+    ],
   },
   {
     timestamps: true,
