@@ -30,6 +30,23 @@ export default function StudentDashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
+  if (pathname === "/student/checkout") {
+    return (
+      <div className="bg-base-100 flex w-full flex-col items-center justify-center pb-16">
+        <div className="bg-base-200 flex h-32 w-full flex-col items-center justify-center gap-3">
+          <h4 className="text-base-content/80 text-xl font-semibold">
+            Checkout
+          </h4>
+          <span className="text-base-content/70 text-sm">
+            Home/ShopingCard/Checkout
+          </span>
+        </div>
+        <div className="mt-10 w-full max-w-5xl">{children}</div>
+      </div>
+    );
+  }
+
   return (
     <section className="bg-base-200 flex min-h-screen w-full flex-col items-center">
       <div

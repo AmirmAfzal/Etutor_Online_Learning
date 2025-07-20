@@ -85,7 +85,7 @@ export default async function PurchaseHistoryPage() {
             className="bg-base-100 border-base-content/10 border transition-all hover:translate-y-[-2px]"
           >
             <AccordionTrigger className="min-h-[72px] px-6">
-              <div className="flex w-full flex-col justify-between gap-3 md:flex-row md:items-center">
+              <div className="flex w-full flex-col items-start justify-between gap-3">
                 <span className="text-base-content/80 text-lg font-semibold md:text-xl">
                   {purchase.date}
                 </span>

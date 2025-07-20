@@ -150,7 +150,7 @@ export default function MessagesPage() {
           <h2 className="text-base-content text-lg font-semibold">Message</h2>
           <DialogPrimitive.Root>
             <DialogPrimitive.Trigger asChild>
-              <Button variant="default" size="sm" className="btn btn-primary">
+              <Button variant="default" size="sm" className="!btn !btn-primary">
                 <Icon icon="ph:plus" />
                 Compose
               </Button>
