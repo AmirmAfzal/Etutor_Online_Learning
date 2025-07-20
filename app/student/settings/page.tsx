@@ -46,12 +46,12 @@ const StudentSettingsPage = () => {
                 <input
                   type="text"
                   placeholder="First name"
-                  className="input input-bordered focus:ring-primary w-1/2 rounded-none border-0 focus:ring-2 focus:outline-none"
+                  className="input focus:ring-primary border-base-content/10 w-1/2 border focus:ring-2 focus:outline-none"
                 />
                 <input
                   type="text"
                   placeholder="Last name"
-                  className="input input-bordered focus:ring-primary w-1/2 rounded-none border-0 focus:ring-2 focus:outline-none"
+                  className="input focus:ring-primary border-base-content/10 w-1/2 border focus:ring-2 focus:outline-none"
                 />
               </div>
             </div>
@@ -60,7 +60,7 @@ const StudentSettingsPage = () => {
               <input
                 type="text"
                 placeholder="Enter your username"
-                className="input input-bordered focus:ring-primary w-full rounded-none border-0 focus:ring-2 focus:outline-none"
+                className="input focus:ring-primary border-base-content/10 w-full border focus:ring-2 focus:outline-none"
               />
             </div>
             <div className="col-span-2">
@@ -68,7 +68,7 @@ const StudentSettingsPage = () => {
               <input
                 type="email"
                 placeholder="Email address"
-                className="input input-bordered focus:ring-primary w-full rounded-none border-0 focus:ring-2 focus:outline-none"
+                className="input focus:ring-primary border-base-content/10 w-full border focus:ring-2 focus:outline-none"
               />
             </div>
             <div className="col-span-2">
@@ -77,7 +77,7 @@ const StudentSettingsPage = () => {
                 <input
                   type="text"
                   placeholder="Your title, profession or small biography"
-                  className="input input-bordered focus:ring-primary w-full rounded-none border-0 pr-12 focus:ring-2 focus:outline-none"
+                  className="input focus:ring-primary border-base-content/10 w-full border pr-12 focus:ring-2 focus:outline-none"
                   maxLength={50}
                 />
                 <span className="text-neutral absolute top-1/2 right-3 -translate-y-1/2 text-xs">
@@ -98,10 +98,10 @@ const StudentSettingsPage = () => {
       </div>
 
       {/* Change Password */}
-      <div>
+      <div className="border-base-content/10 flex flex-col gap-6 border-t pt-4">
         <h3 className="mb-6 text-lg font-semibold">Change password</h3>
-        <form className="grid grid-cols-3 items-end gap-6">
-          <div>
+        <form className="flex flex-col items-start gap-6">
+          <div className="w-1/2">
             <label className="mb-1 block text-sm font-medium">
               Current Password
             </label>
@@ -109,33 +109,14 @@ const StudentSettingsPage = () => {
               <input
                 type="password"
                 placeholder="Password"
-                className="input input-bordered focus:ring-primary w-full rounded-none border-0 pr-10 focus:ring-2 focus:outline-none"
+                className="input focus:ring-primary border-base-content/10 w-full border pr-10 focus:ring-2 focus:outline-none"
               />
-              <span className="text-neutral absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer">
-                <svg
-                  width="18"
-                  height="18"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
+              <span className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer">
+                <Icon icon="ph:eye" width={16} height={16} />
               </span>
             </div>
           </div>
-          <div>
+          <div className="w-1/2">
             <label className="mb-1 block text-sm font-medium">
               New Password
             </label>
@@ -143,33 +124,14 @@ const StudentSettingsPage = () => {
               <input
                 type="password"
                 placeholder="Password"
-                className="input input-bordered focus:ring-primary w-full rounded-none border-0 pr-10 focus:ring-2 focus:outline-none"
+                className="input focus:ring-primary border-base-content/10 w-full border pr-10 focus:ring-2 focus:outline-none"
               />
-              <span className="text-neutral absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer">
-                <svg
-                  width="18"
-                  height="18"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
+              <span className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer">
+                <Icon icon="ph:eye" width={16} height={16} />
               </span>
             </div>
           </div>
-          <div>
+          <div className="w-1/2">
             <label className="mb-1 block text-sm font-medium">
               Confirm Password
             </label>
@@ -177,29 +139,10 @@ const StudentSettingsPage = () => {
               <input
                 type="password"
                 placeholder="Confirm new password"
-                className="input input-bordered focus:ring-primary w-full rounded-none border-0 pr-10 focus:ring-2 focus:outline-none"
+                className="input focus:ring-primary border-base-content/10 w-full border pr-10 focus:ring-2 focus:outline-none"
               />
-              <span className="text-neutral absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer">
-                <svg
-                  width="18"
-                  height="18"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
+              <span className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer">
+                <Icon icon="ph:eye" width={16} height={16} />
               </span>
             </div>
           </div>
