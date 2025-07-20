@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+
 import Icon from "@/components/ui/Icon";
 
 const StudentSettingsPage = () => {
@@ -39,16 +40,21 @@ const StudentSettingsPage = () => {
           {/* User Info Form */}
           <form className="grid flex-1 grid-cols-2 gap-6">
             <div>
-              <label className="mb-1 block text-sm font-medium">
+              <label
+                htmlFor="firstName"
+                className="mb-1 block text-sm font-medium"
+              >
                 Full name
               </label>
               <div className="flex gap-2">
                 <input
+                  id="firstName"
                   type="text"
                   placeholder="First name"
                   className="input focus:ring-primary border-base-content/10 w-1/2 border focus:ring-2 focus:outline-none"
                 />
                 <input
+                  id="lastName"
                   type="text"
                   placeholder="Last name"
                   className="input focus:ring-primary border-base-content/10 w-1/2 border focus:ring-2 focus:outline-none"
@@ -56,25 +62,37 @@ const StudentSettingsPage = () => {
               </div>
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium">Username</label>
+              <label
+                htmlFor="username"
+                className="mb-1 block text-sm font-medium"
+              >
+                Username
+              </label>
               <input
+                id="username"
                 type="text"
                 placeholder="Enter your username"
                 className="input focus:ring-primary border-base-content/10 w-full border focus:ring-2 focus:outline-none"
               />
             </div>
             <div className="col-span-2">
-              <label className="mb-1 block text-sm font-medium">Email</label>
+              <label htmlFor="email" className="mb-1 block text-sm font-medium">
+                Email
+              </label>
               <input
+                id="email"
                 type="email"
                 placeholder="Email address"
                 className="input focus:ring-primary border-base-content/10 w-full border focus:ring-2 focus:outline-none"
               />
             </div>
             <div className="col-span-2">
-              <label className="mb-1 block text-sm font-medium">Title</label>
+              <label htmlFor="title" className="mb-1 block text-sm font-medium">
+                Title
+              </label>
               <div className="relative">
                 <input
+                  id="title"
                   type="text"
                   placeholder="Your title, profession or small biography"
                   className="input focus:ring-primary border-base-content/10 w-full border pr-12 focus:ring-2 focus:outline-none"
@@ -102,11 +120,15 @@ const StudentSettingsPage = () => {
         <h3 className="mb-6 text-lg font-semibold">Change password</h3>
         <form className="flex flex-col items-start gap-6">
           <div className="w-1/2">
-            <label className="mb-1 block text-sm font-medium">
+            <label
+              htmlFor="currentPassword"
+              className="mb-1 block text-sm font-medium"
+            >
               Current Password
             </label>
             <div className="relative">
               <input
+                id="currentPassword"
                 type="password"
                 placeholder="Password"
                 className="input focus:ring-primary border-base-content/10 w-full border pr-10 focus:ring-2 focus:outline-none"
@@ -117,11 +139,15 @@ const StudentSettingsPage = () => {
             </div>
           </div>
           <div className="w-1/2">
-            <label className="mb-1 block text-sm font-medium">
+            <label
+              htmlFor="newPassword"
+              className="mb-1 block text-sm font-medium"
+            >
               New Password
             </label>
             <div className="relative">
               <input
+                id="newPassword"
                 type="password"
                 placeholder="Password"
                 className="input focus:ring-primary border-base-content/10 w-full border pr-10 focus:ring-2 focus:outline-none"
@@ -132,11 +158,15 @@ const StudentSettingsPage = () => {
             </div>
           </div>
           <div className="w-1/2">
-            <label className="mb-1 block text-sm font-medium">
+            <label
+              htmlFor="confirmPassword"
+              className="mb-1 block text-sm font-medium"
+            >
               Confirm Password
             </label>
             <div className="relative">
               <input
+                id="confirmPassword"
                 type="password"
                 placeholder="Confirm new password"
                 className="input focus:ring-primary border-base-content/10 w-full border pr-10 focus:ring-2 focus:outline-none"
