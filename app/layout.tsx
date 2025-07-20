@@ -1,9 +1,7 @@
 import { Poppins } from "next/font/google";
-
+import Navbar from "@/components/ui/Navbar";
 import AuthProvider from "./auth/AuthProvider";
 import Footer from "@/components/ui/Footer";
-import Navbar from "@/components/ui/Navbar";
-
 import "./globals.css";
 
 const poppins = Poppins({
