@@ -1,21 +1,24 @@
-import React from "react";
+import HeroSection from "../components/HomePage/HeroSection";
+import Category from "../components/HomePage/Category";
+import TopCourse from "../components/HomePage/TopCourse";
+import FeaturedCourses from "../components/HomePage/FeaturedCourses";
+import RecentCourse from "../components/HomePage/RecentCourse";
+import BecomeInstructor from "../components/HomePage/BecomeInstructor";
+import TopInstructor from "../components/HomePage/TopInstructor";
+import CompaniesLogo from "../components/HomePage/CompaniesLogo";
 
 const HomePage = () => {
   return (
-    <div>
-      <h1>Learn with expert anytime anywhere</h1>
-      <a href="" className="link link-primary">
-        Hi
-      </a>
-      <button className="btn btn-primary">Click here</button>
-      <button className="btn btn-secondary">Click here</button>
-      <button className="btn btn-neutral">click here</button>
-      <div className="bg-base-100 mt-10 w-full border-2 p-10">
-        <div className="bg-base-200 w-full p-10">
-          <div className="bg-base-300 h-10 w-full p-10"></div>
-        </div>
-      </div>
-    </div>
+    <>
+      <HeroSection />
+      <Category />
+      <TopCourse />
+      <FeaturedCourses />
+      <RecentCourse />
+      <BecomeInstructor />
+      <TopInstructor />
+      <CompaniesLogo />
+    </>
   );
 };
 
