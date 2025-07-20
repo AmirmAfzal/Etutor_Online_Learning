@@ -204,9 +204,7 @@ export default async function PurchaseHistoryPage() {
       </Accordion>
       <div className="text-base-content/60 mt-8 text-center text-xs opacity-80 md:text-sm">
         Yay! You have seen all your purchase history.
-        <span className="ml-1">
-          <Icon icon="ph:sunglasses" className="text-2xl" />
-        </span>
+        {/* TODO : add a emoji here */}
       </div>
     </div>
   );
