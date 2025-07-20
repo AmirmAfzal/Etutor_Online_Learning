@@ -5,6 +5,7 @@ import userModel from "../db/models/userModel";
 import { signUpSchema } from "@/lib/validation/auth/signinSchema";
 import { ActionData } from "@/lib/formTypes";
 import bcrypt from "bcrypt";
+import studentModel from "../db/models/studentModel";
 
 export const createUser = async (
   prevState: ActionData,
@@ -13,7 +14,9 @@ export const createUser = async (
   await connectDB();
   const data = Object.fromEntries(formData.entries());
 
-  type SignUpFormData = Record<string, FormDataEntryValue> & { terms?: string | boolean };
+  type SignUpFormData = Record<string, FormDataEntryValue> & {
+    terms?: string | boolean;
+  };
   const typedData = data as SignUpFormData;
 
   if (typeof typedData.terms === "string") {
@@ -39,11 +42,15 @@ export const createUser = async (
 
   const hashedPassword = await bcrypt.hash(result.data.password, 10);
 
-  await userModel.create({
-    name: `${result.data.firstName} ${result.data.lastName}`,
+  const createdUser = await userModel.create({
     email: result.data.email,
     password: hashedPassword,
     role: "STUDENT",
+  });
+  await studentModel.create({
+    user: createdUser._id,
+    firstname: result.data.firstName,
+    lastname: result.data.lastName,
   });
 
   return {
