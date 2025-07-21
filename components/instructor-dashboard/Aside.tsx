@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Icon from "../ui/Icon";
 
 import {
   Sidebar,
@@ -12,6 +11,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+
+import Icon from "../ui/Icon";
 
 const Aside = () => {
   const links = [

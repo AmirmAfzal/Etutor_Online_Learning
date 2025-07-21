@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   Select,
   SelectContent,
@@ -8,9 +9,7 @@ import {
 } from "../ui/select";
 import Icon from "../ui/Icon";
 
-type Props = {};
-
-const RecentActivity = (props: Props) => {
+const RecentActivity = () => {
   const recentActivity = [
     {
       id: 1,

@@ -1,10 +1,9 @@
 import Image from "next/image";
 import React from "react";
+
 import Icon from "../ui/Icon";
 
-type Props = {};
-
-const Bannar = (props: Props) => {
+const Bannar = () => {
   return (
     <div className="bg-secondary container mx-auto p-6">
       <div className="flex flex-row items-center justify-between">

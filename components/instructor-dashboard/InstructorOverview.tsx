@@ -1,9 +1,8 @@
 import React from "react";
+
 import Icon from "../ui/Icon";
 
-type Props = {};
-
-const InstructorOverview = (props: Props) => {
+const InstructorOverview = () => {
   const overviewData = [
     {
       icon: "ph:play-circle-duotone",

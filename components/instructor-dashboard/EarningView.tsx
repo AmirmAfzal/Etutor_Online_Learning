@@ -4,13 +4,10 @@ import React from "react";
 import {
   BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
+
 import {
   Select,
   SelectContent,
@@ -18,8 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-
-type Props = {};
 
 const data = [
   {
@@ -78,7 +73,7 @@ const data = [
   },
 ];
 
-const EarningView = (props: Props) => {
+const EarningView = () => {
   return (
     <div className="bg-base-100 h-full w-full">
       <div className="border-base-300 flex flex-row items-center justify-between border-b p-4">

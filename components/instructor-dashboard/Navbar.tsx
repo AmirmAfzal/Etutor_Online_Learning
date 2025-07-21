@@ -1,7 +1,8 @@
 import React from "react";
+import Image from "next/image";
+
 import { Input } from "../ui/input";
 import Icon from "../ui/Icon";
-import Image from "next/image";
 
 type Props = {
   children: React.ReactNode;

@@ -6,10 +6,10 @@ import {
   Area,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+
 import {
   Select,
   SelectContent,
@@ -17,8 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-
-type Props = {};
 
 const data = [
   { name: "Aug 01", uv: 4000, pv: 2400, amt: 2400 },
@@ -30,7 +28,7 @@ const data = [
   { name: "Aug 30", uv: 3490, pv: 4300, amt: 2100 },
 ];
 
-const RevenueView = (props: Props) => {
+const RevenueView = () => {
   return (
     <div className="bg-base-100 h-full w-full">
       <div className="border-base-300 flex flex-row items-center justify-between border-b p-4">
@@ -51,8 +49,13 @@ const RevenueView = (props: Props) => {
           data={data}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
-          <XAxis dataKey="name" fontSize={12} />
-          <YAxis fontSize={12} />
+          <XAxis
+            dataKey="name"
+            tickLine={false}
+            axisLine={false}
+            fontSize={12}
+          />
+          <YAxis fontSize={12} tickLine={false} axisLine={false} />
           <Tooltip />
           <Area
             type="monotone"
