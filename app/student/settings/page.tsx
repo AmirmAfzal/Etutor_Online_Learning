@@ -1,9 +1,70 @@
-import React from "react";
+"use client";
+
 import Image from "next/image";
+import { z } from "zod";
+import { useState } from "react";
 
 import Icon from "@/components/ui/Icon";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { settingAccountSchema } from "@/lib/validation/Student-dashboard/settingAccountSchema";
+import { settingPasswordSchema } from "@/lib/validation/Student-dashboard/settingPasswordSchema";
 
 const StudentSettingsPage = () => {
+  // form state for account settings
+  const formAccount = useForm<z.infer<typeof settingAccountSchema>>({
+    resolver: zodResolver(settingAccountSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      username: "",
+      email: "",
+      title: "",
+    },
+  });
+
+  // form state for password settings
+  const formPassword = useForm<z.infer<typeof settingPasswordSchema>>({
+    resolver: zodResolver(settingPasswordSchema),
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    },
+  });
+
+  //TODO:server action for update student model
+  // const [state, formAction, pending] = useActionState(studentModel.updateOne, {
+  //   message: "",
+  //   errors: [],
+  // });
+
+  // Password visibility states
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+
+  // handle submit for account settings
+  const onSubmitAccount = (data: z.infer<typeof settingAccountSchema>) => {
+    console.log(data);
+    // update student model
+  };
+
+  // handle submit for password settings
+  const onSubmitPassword = (data: z.infer<typeof settingPasswordSchema>) => {
+    console.log(data);
+  };
+
   return (
     <div className="bg-base-100 max-w-5xl">
       {/* Header */}
@@ -38,154 +99,213 @@ const StudentSettingsPage = () => {
             </div>
           </div>
           {/* User Info Form */}
-          <form className="grid flex-1 grid-cols-2 gap-6">
-            <div>
-              <label
-                htmlFor="firstName"
-                className="mb-1 block text-sm font-medium"
-              >
-                Full name
-              </label>
-              <div className="flex gap-2">
-                <input
-                  id="firstName"
-                  type="text"
-                  placeholder="First name"
-                  className="input focus:ring-primary border-base-content/10 w-1/2 border focus:ring-2 focus:outline-none"
-                />
-                <input
-                  id="lastName"
-                  type="text"
-                  placeholder="Last name"
-                  className="input focus:ring-primary border-base-content/10 w-1/2 border focus:ring-2 focus:outline-none"
-                />
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="username"
-                className="mb-1 block text-sm font-medium"
-              >
-                Username
-              </label>
-              <input
-                id="username"
-                type="text"
-                placeholder="Enter your username"
-                className="input focus:ring-primary border-base-content/10 w-full border focus:ring-2 focus:outline-none"
+          <Form {...formAccount}>
+            <form
+              onSubmit={formAccount.handleSubmit(onSubmitAccount)}
+              className="grid flex-1 grid-cols-2 gap-6"
+            >
+              <FormField
+                control={formAccount.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem className="col-span-1">
+                    <FormLabel>First name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="First name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="col-span-2">
-              <label htmlFor="email" className="mb-1 block text-sm font-medium">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="Email address"
-                className="input focus:ring-primary border-base-content/10 w-full border focus:ring-2 focus:outline-none"
+              <FormField
+                control={formAccount.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem className="col-span-1">
+                    <FormLabel>Last name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Last name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="col-span-2">
-              <label htmlFor="title" className="mb-1 block text-sm font-medium">
-                Title
-              </label>
-              <div className="relative">
-                <input
-                  id="title"
-                  type="text"
-                  placeholder="Your title, profession or small biography"
-                  className="input focus:ring-primary border-base-content/10 w-full border pr-12 focus:ring-2 focus:outline-none"
-                  maxLength={50}
-                />
-                <span className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 text-xs">
-                  0/50
-                </span>
+              <FormField
+                control={formAccount.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formAccount.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Email address"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formAccount.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          placeholder="Your title, profession or small biography"
+                          maxLength={50}
+                          {...field}
+                        />
+                        <span className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 text-xs">
+                          {field.value?.length || 0}/50
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="col-span-2">
+                <Button
+                  type="submit"
+                  className="!btn !btn-primary mt-2 px-6 py-2 font-medium"
+                >
+                  Save Changes
+                </Button>
               </div>
-            </div>
-            <div className="col-span-2">
-              <button
-                type="button"
-                className="btn btn-primary mt-2 px-6 py-2 font-medium"
-              >
-                Save Changes
-              </button>
-            </div>
-          </form>
+            </form>
+          </Form>
         </div>
       </div>
 
       {/* Change Password */}
-      <div className="border-base-content/10 flex flex-col gap-6 border-t pt-4">
-        <h3 className="mb-6 text-lg font-semibold">Change password</h3>
-        <form className="flex flex-col items-start gap-6">
-          <div className="w-1/2">
-            <label
-              htmlFor="currentPassword"
-              className="mb-1 block text-sm font-medium"
-            >
-              Current Password
-            </label>
-            <div className="relative">
-              <input
-                id="currentPassword"
-                type="password"
-                placeholder="Password"
-                className="input focus:ring-primary border-base-content/10 w-full border pr-10 focus:ring-2 focus:outline-none"
-              />
-              <span className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer">
-                <Icon icon="ph:eye" width={16} height={16} />
-              </span>
-            </div>
-          </div>
-          <div className="w-1/2">
-            <label
-              htmlFor="newPassword"
-              className="mb-1 block text-sm font-medium"
-            >
-              New Password
-            </label>
-            <div className="relative">
-              <input
-                id="newPassword"
-                type="password"
-                placeholder="Password"
-                className="input focus:ring-primary border-base-content/10 w-full border pr-10 focus:ring-2 focus:outline-none"
-              />
-              <span className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer">
-                <Icon icon="ph:eye" width={16} height={16} />
-              </span>
-            </div>
-          </div>
-          <div className="w-1/2">
-            <label
-              htmlFor="confirmPassword"
-              className="mb-1 block text-sm font-medium"
-            >
-              Confirm Password
-            </label>
-            <div className="relative">
-              <input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm new password"
-                className="input focus:ring-primary border-base-content/10 w-full border pr-10 focus:ring-2 focus:outline-none"
-              />
-              <span className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer">
-                <Icon icon="ph:eye" width={16} height={16} />
-              </span>
-            </div>
-          </div>
+      <Form {...formPassword}>
+        <form
+          onSubmit={formPassword.handleSubmit(onSubmitPassword)}
+          className="flex flex-col items-start gap-6"
+        >
+          <FormField
+            control={formPassword.control}
+            name="currentPassword"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormLabel>Current Password</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      type={showCurrentPassword ? "text" : "password"}
+                      placeholder="Password"
+                      {...field}
+                    />
+                    <button
+                      type="button"
+                      className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                      tabIndex={-1}
+                      onClick={() => setShowCurrentPassword((v) => !v)}
+                    >
+                      <Icon
+                        icon={showCurrentPassword ? "ph:eye-slash" : "ph:eye"}
+                        width={16}
+                        height={16}
+                      />
+                    </button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={formPassword.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormLabel>New Password</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      type={showNewPassword ? "text" : "password"}
+                      placeholder="Password"
+                      {...field}
+                    />
+                    <button
+                      type="button"
+                      className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                      tabIndex={-1}
+                      onClick={() => setShowNewPassword((v) => !v)}
+                    >
+                      <Icon
+                        icon={showNewPassword ? "ph:eye-slash" : "ph:eye"}
+                        width={16}
+                        height={16}
+                      />
+                    </button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={formPassword.control}
+            name="confirmNewPassword"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      type={showConfirmNewPassword ? "text" : "password"}
+                      placeholder="Confirm new password"
+                      {...field}
+                    />
+                    <button
+                      type="button"
+                      className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                      tabIndex={-1}
+                      onClick={() => setShowConfirmNewPassword((v) => !v)}
+                    >
+                      <Icon
+                        icon={
+                          showConfirmNewPassword ? "ph:eye-slash" : "ph:eye"
+                        }
+                        width={16}
+                        height={16}
+                      />
+                    </button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="col-span-3">
-            <button
-              type="button"
-              className="btn btn-primary mt-2 px-6 py-2 font-medium"
+            <Button
+              type="submit"
+              className="!btn !btn-primary mt-2 px-6 py-2 font-medium"
             >
               Change Password
-            </button>
+            </Button>
           </div>
         </form>
-      </div>
+      </Form>
     </div>
   );
 };
