@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { startTransition, useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpSchema } from "@/lib/validation/auth/signinSchema";
+import { signUpSchema } from "@/lib/validation/auth/signupSchema";
 import { z } from "zod";
 import {
   Form,
