@@ -1,36 +1,42 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 
-import TeacherCard from "@/components/TeacherCard";
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
+import TeacherCard from "@/components/Student/TeacherCard";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Fake data for demonstration
 const fakeTeachers = [
   {
     name: "Wade Warren",
     title: "Frontend Developer",
-    image: "/images/Teacher-profile-1.jpg",
+    image: "/images/student-dashboard/Teacher-profile-1.jpg",
     rating: 4.8,
     students: 230984,
   },
   {
     name: "Bessie Cooper",
     title: "JavaScript Instructor",
-    image: "/images/Teacher-profile-2.jpg",
+    image: "/images/student-dashboard/Teacher-profile-2.jpg",
     rating: 4.7,
     students: 271488,
   },
   {
     name: "Floyd Miles",
     title: "Python Instructor",
-    image: "/images/Teacher-profile-3.jpg",
+    image: "/images/student-dashboard/Teacher-profile-3.jpg",
     rating: 4.9,
     students: 198234,
   },
   {
     name: "Ronald Richards",
     title: "Math Instructor",
-    image: "/images/Teacher-profile-4.jpg",
+    image: "/images/student-dashboard/Teacher-profile-4.jpg",
     rating: 4.6,
     students: 139876,
   },

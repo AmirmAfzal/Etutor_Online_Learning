@@ -1,15 +1,21 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 
-import CourseCard from "@/components/CourseCardStudent";
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CourseCard from "@/components/Student/CourseCardStudent";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Fake data for demonstration
 const fakeCourses = [
   {
     title: "Web Design Course",
     subtitle: "31. Learn More About Web Design",
-    image: "/images/course-1.jpg",
+    image: "/images/student-dashboard/course-1.jpg",
     progress: "26% Completed",
     status: "Ongoing",
     teacher: "Mr. Ahmadi",
@@ -17,7 +23,7 @@ const fakeCourses = [
   {
     title: "SQL Beginner Course",
     subtitle: "105. Special Features Challenge",
-    image: "/images/course-2.jpg",
+    image: "/images/student-dashboard/course-2.jpg",
     progress: "22% Completed",
     status: "Ongoing",
     teacher: "Mr. Rezaei",
@@ -25,7 +31,7 @@ const fakeCourses = [
   {
     title: "Advanced CSS Training",
     subtitle: "54. CSS Static and Relative Positioning",
-    image: "/images/course-3.jpg",
+    image: "/images/student-dashboard/course-3.jpg",
     progress: "52% Completed",
     status: "Completed",
     teacher: "Mr. Ahmadi",
@@ -33,7 +39,7 @@ const fakeCourses = [
   {
     title: "Intro to Machine Learning",
     subtitle: "651. CSS Property Challenge Solution",
-    image: "/images/course-4.jpg",
+    image: "/images/student-dashboard/course-4.jpg",
     progress: "13% Completed",
     status: "Ongoing",
     teacher: "Mr. Rezaei",
@@ -41,7 +47,7 @@ const fakeCourses = [
   {
     title: "Intro to Machine Learning",
     subtitle: "651. CSS Property Challenge Solution",
-    image: "/images/course-4.jpg",
+    image: "/images/student-dashboard/course-4.jpg",
     progress: "0% Completed",
     status: "Completed",
     teacher: "Mr. Ahmadi",
@@ -49,7 +55,7 @@ const fakeCourses = [
   {
     title: "Intro to Machine Learning",
     subtitle: "651. CSS Property Challenge Solution",
-    image: "/images/course-4.jpg",
+    image: "/images/student-dashboard/course-4.jpg",
     progress: "0% Completed",
     status: "Ongoing",
     teacher: "Mr. Rezaei",
@@ -70,8 +76,10 @@ export default async function CoursesPage({
   const params = searchParams ? await searchParams : {};
   const search = typeof params.search === "string" ? params.search : "";
   const sort = typeof params.sort === "string" ? params.sort : "Latest";
-  const status = typeof params.status === "string" ? params.status : "All Courses";
-  const teacher = typeof params.teacher === "string" ? params.teacher : "All Teachers";
+  const status =
+    typeof params.status === "string" ? params.status : "All Courses";
+  const teacher =
+    typeof params.teacher === "string" ? params.teacher : "All Teachers";
   // Pagination (optional, not implemented fully)
   // const currentPage = parseInt(typeof searchParams.page === "string" ? searchParams.page : "1", 10);
   // const coursesPerPage = 20;

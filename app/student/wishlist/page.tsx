@@ -8,7 +8,7 @@ const fakeWishlistCourses = [
   {
     id: 1,
     title: "The Ultimate Drawing Course - Beginner to Advanced",
-    image: "/images/course-1.jpg",
+    image: "/images/student-dashboard/course-1.jpg",
     instructors: "Harry Potter • John Wick",
     price: "$37.00",
     originalPrice: "$49.00",
@@ -18,7 +18,7 @@ const fakeWishlistCourses = [
   {
     id: 2,
     title: "Digital Marketing Masterclass - 23 Courses in 1",
-    image: "/images/course-2.jpg",
+    image: "/images/student-dashboard/course-2.jpg",
     instructors: "Nobody",
     price: "$24.00",
     originalPrice: null,
@@ -28,7 +28,7 @@ const fakeWishlistCourses = [
   {
     id: 3,
     title: "Angular - The Complete Guide (2021 Edition)",
-    image: "/images/course-3.jpg",
+    image: "/images/student-dashboard/course-3.jpg",
     instructors: "Kevin Gilbert",
     price: "$13.00",
     originalPrice: null,
@@ -43,7 +43,7 @@ export default function WishlistPage() {
       <div className="mb-8">
         {/* title */}
         <div className="text-base-content/80 mb-8 text-3xl font-bold">
-          Wishlist{" "}
+          Wishlist
           <span className="text-base-content/60">
             ({fakeWishlistCourses.length})
           </span>

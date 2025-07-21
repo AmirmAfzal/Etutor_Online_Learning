@@ -18,7 +18,7 @@ const fakePurchases = [
       {
         title: "Learn Ethical Hacking From Scratch",
         price: 13.99,
-        image: "/images/course-1.jpg",
+        image: "/images/student-dashboard/course-1.jpg",
         teacher: "Marvin McKinney",
         rating: 4.7,
         reviews: 151444,
@@ -26,7 +26,7 @@ const fakePurchases = [
       {
         title: "Mega Digital Marketing Course A-Z: 12 Courses in 1 + Updates",
         price: 49.0,
-        image: "/images/course-2.jpg",
+        image: "/images/student-dashboard/course-2.jpg",
         teacher: "Esther Howard",
         rating: 4.7,
         reviews: 151444,

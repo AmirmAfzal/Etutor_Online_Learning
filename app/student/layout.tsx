@@ -4,13 +4,13 @@ import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
 
-import StudentProfile from "@/components/StudentProfile";
+import StudentProfile from "@/components/Student/StudentProfile";
 
 const mockProfiles = [
   {
     name: "Kevin Gilbert",
     job: "Web Designer & Best-Selling Instructor",
-    image: "/images/profile-student.jpg",
+    image: "/images/student-dashboard/profile-student.jpg",
   },
 ];
 
@@ -49,10 +49,7 @@ export default function StudentDashboardLayout({
 
   return (
     <section className="bg-base-200 flex min-h-screen w-full flex-col items-center">
-      <div
-        className="bg-primary/10 flex w-full justify-center"
-        style={{ minHeight: 260 }}
-      >
+      <div className="bg-primary/10 flex min-h-[260px] w-full justify-center">
         <div className="w-full max-w-5xl">
           {/* Profile Card */}
           {mockProfiles.map((profile, idx) => (

@@ -11,7 +11,7 @@ const mockContacts = [
   {
     id: 1,
     name: "Jane Cooper",
-    image: "/images/Teacher-profile-1.jpg",
+    image: "/images/student-dashboard/Teacher-profile-1.jpg",
     lastMessage: "Yeah sure, tell me zafor.",
     timestamp: "just now",
     isActive: true,
@@ -20,7 +20,7 @@ const mockContacts = [
   {
     id: 2,
     name: "Jenny Wilson",
-    image: "/images/Teacher-profile-2.jpg",
+    image: "/images/student-dashboard/Teacher-profile-2.jpg",
     lastMessage: "Thank you so much, sir.",
     timestamp: "2 d",
     isActive: false,
@@ -29,7 +29,7 @@ const mockContacts = [
   {
     id: 3,
     name: "Marvin McKinney",
-    image: "/images/Teacher-profile-3.jpg",
+    image: "/images/student-dashboard/Teacher-profile-3.jpg",
     lastMessage: "You're Welcome.",
     timestamp: "1 m",
     isActive: false,
@@ -38,7 +38,7 @@ const mockContacts = [
   {
     id: 4,
     name: "Eleanor Pena",
-    image: "/images/Teacher-profile-4.jpg",
+    image: "/images/student-dashboard/Teacher-profile-4.jpg",
     lastMessage: "Thank you so much, sir.",
     timestamp: "1 m",
     isActive: false,
@@ -47,7 +47,7 @@ const mockContacts = [
   {
     id: 5,
     name: "Ronald Richards",
-    image: "/images/Teacher-profile-1.jpg",
+    image: "/images/student-dashboard/Teacher-profile-1.jpg",
     lastMessage: "Sorry, I can't help you.",
     timestamp: "2 m",
     isActive: false,
@@ -56,7 +56,7 @@ const mockContacts = [
   {
     id: 6,
     name: "Kathryn Murphy",
-    image: "/images/Teacher-profile-2.jpg",
+    image: "/images/student-dashboard/Teacher-profile-2.jpg",
     lastMessage: "new message.",
     timestamp: "2 m",
     isActive: false,
@@ -65,7 +65,7 @@ const mockContacts = [
   {
     id: 7,
     name: "Jacob Jones",
-    image: "/images/Teacher-profile-3.jpg",
+    image: "/images/student-dashboard/Teacher-profile-3.jpg",
     lastMessage: "Thank you so much, sir.",
     timestamp: "6 m",
     isActive: false,
@@ -74,7 +74,7 @@ const mockContacts = [
   {
     id: 8,
     name: "Cameron Williamson",
-    image: "/images/Teacher-profile-4.jpg",
+    image: "/images/student-dashboard/Teacher-profile-4.jpg",
     lastMessage: "It's okay, no problem brother, i will fix everhitn...",
     timestamp: "6 m",
     isActive: false,
@@ -83,7 +83,7 @@ const mockContacts = [
   {
     id: 9,
     name: "Arlene McCoy",
-    image: "/images/Teacher-profile-1.jpg",
+    image: "/images/student-dashboard/Teacher-profile-1.jpg",
     lastMessage: "Thank you so much, sir.",
     timestamp: "9 m",
     isActive: false,
@@ -92,7 +92,7 @@ const mockContacts = [
   {
     id: 10,
     name: "Dianne Russell",
-    image: "/images/Teacher-profile-2.jpg",
+    image: "/images/student-dashboard/Teacher-profile-2.jpg",
     lastMessage: "You're Welcome.",
     timestamp: "9 m",
     isActive: false,
@@ -293,7 +293,7 @@ export default function MessagesPage() {
         <div className="border-base-300 flex items-center justify-between border-b p-4">
           <div className="flex items-center gap-3">
             <Image
-              src="/images/Teacher-profile-1.jpg"
+              src="/images/student-dashboard/Teacher-profile-1.jpg"
               alt="Jane Cooper"
               width={40}
               height={40}

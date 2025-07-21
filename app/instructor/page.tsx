@@ -2,7 +2,7 @@ import React from "react";
 import Icon from "@/components/ui/Icon";
 import Image from "next/image";
 import Link from "next/link";
-import CourseCard from "@/components/CourseCard";
+import CourseCard from "@/components/Student/CourseCard";
 
 const InstractorPage = () => {
   return (

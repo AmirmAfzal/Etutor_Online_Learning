@@ -19,12 +19,12 @@ const StudentSettingsPage = () => {
                 <Image
                   width={192}
                   height={192}
-                  src="/images/profile-student.jpg"
+                  src="/images/student-dashboard/profile-student.jpg"
                   alt="Profile"
                   className="h-full w-full object-cover"
                 />
                 <button
-                  className="bg-base-content/70 text-base-100 absolute bottom-0 left-0 flex w-full items-center justify-center gap-2 py-2 text-sm font-medium"
+                  className="bg-base-content/70 text-base-100 absolute bottom-0 left-0 flex w-full cursor-pointer items-center justify-center gap-2 py-2 text-sm font-medium"
                   type="button"
                 >
                   <Icon icon="ph:upload-simple" width={16} height={16} />
@@ -98,7 +98,7 @@ const StudentSettingsPage = () => {
                   className="input focus:ring-primary border-base-content/10 w-full border pr-12 focus:ring-2 focus:outline-none"
                   maxLength={50}
                 />
-                <span className="text-neutral absolute top-1/2 right-3 -translate-y-1/2 text-xs">
+                <span className="text-base-content/80 absolute top-1/2 right-3 -translate-y-1/2 text-xs">
                   0/50
                 </span>
               </div>

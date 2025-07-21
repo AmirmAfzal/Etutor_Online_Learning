@@ -1,31 +1,31 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 
-import CourseCard from "@/components/CourseCardStudent";
+import CourseCard from "@/components/Student/CourseCardStudent";
 
 const mockCoursesData = [
   {
     title: "Reiki Level I, II and Master/Teacher Program",
     subtitle: "1. Introductions",
-    image: "/images/course-1.jpg",
+    image: "/images/student-dashboard/course-1.jpg",
     progress: null,
   },
   {
     title: "The Complete 2021 Web Development Bootcamp",
     subtitle: "167. What You'll Need to Get Started - Setup",
-    image: "/images/course-2.jpg",
+    image: "/images/student-dashboard/course-2.jpg",
     progress: "61% Completed",
   },
   {
     title: "Copywriting - Become a Freelance Copywriter",
     subtitle: "1. How to get started with figma",
-    image: "/images/course-3.jpg",
+    image: "/images/student-dashboard/course-3.jpg",
     progress: null,
   },
   {
     title: "2021 Complete Python Bootcamp From Zero to Hero",
     subtitle: "9. Advanced CSS - Selector Priority",
-    image: "/images/course-4.jpg",
+    image: "/images/student-dashboard/course-4.jpg",
     progress: "12% Finish",
   },
 ];

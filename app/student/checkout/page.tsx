@@ -3,27 +3,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@iconify/react";
 
 const courses = [
   {
     title: "Graphic Design Masterclass - Learn GREAT Design",
     instructor: "Courtney Henry",
     price: 13.0,
-    image: "/images/course-1.jpg",
+    image: "/images/student-dashboard/course-1.jpg",
   },
   {
     title: "Learn Python Programming Masterclass",
     instructor: "Marvin McKinney",
     price: 39.0,
-    image: "/images/course-2.jpg",
+    image: "/images/student-dashboard/course-2.jpg",
   },
   {
     title: "Instagram Marketing 2021: Complete Guide To Instagram",
     instructor: "Jacob Jones",
     price: 32.0,
     oldPrice: 52.0,
-    image: "/images/course-3.jpg",
+    image: "/images/student-dashboard/course-3.jpg",
   },
 ];
 

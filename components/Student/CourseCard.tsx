@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import Icon from "./ui/Icon";
+import Icon from "../ui/Icon";
 
 interface Props {
   thumbnail: string;
@@ -18,7 +18,9 @@ const CourseCard = (props: Props) => {
       <div className="space-y-2 p-4">
         <div className="flex flex-row items-center justify-between">
           <span className="bg-base-200 p-1 text-xs">{props.category}</span>
-          <span className="text-primary text-2xl font-semibold">${props.price}</span>
+          <span className="text-primary text-2xl font-semibold">
+            ${props.price}
+          </span>
         </div>
         <div className="">
           <span className="text-lg font-medium">{props.name}</span>
