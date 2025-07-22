@@ -4,6 +4,7 @@ const nameRegex = /^[a-zA-Zآ-یءچ-]+$/;
 const usernameRegex = /^[a-zA-Z0-9_]+$/;
 
 export const settingAccountSchema = z.object({
+  id: z.string().min(1, "User ID is required"),
   firstName: z
     .string()
     .min(3, { message: "First name must be at least 3 characters" })

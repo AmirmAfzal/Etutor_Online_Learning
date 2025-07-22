@@ -24,10 +24,12 @@ import { settingPasswordSchema } from "@/lib/validation/Student-dashboard/settin
 import { updateStudentAccount } from "@/lib/actions/updateStudentAccount";
 
 const StudentSettingsPage = () => {
+  const userId = "USER_ID_FROM_AUTH";
   // form state for account settings
   const formAccount = useForm<z.infer<typeof settingAccountSchema>>({
     resolver: zodResolver(settingAccountSchema),
     defaultValues: {
+      id: userId,
       firstName: "",
       lastName: "",
       username: "",
@@ -52,8 +54,8 @@ const StudentSettingsPage = () => {
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
   // handle submit for account settings
-  // Using useActionState to handle form submission (first element is state, second is action function )
-  const [_, formAction, pending] = useActionState(updateStudentAccount, {
+  // به خاطر ارور لینت اینطوری شد
+  const [, formAction] = useActionState(updateStudentAccount, {
     message: "",
     errors: [],
   });
@@ -64,12 +66,7 @@ const StudentSettingsPage = () => {
       formData.append(key, value.toString());
     });
 
-    console.log("Starting update process...");
     startTransition(() => {
-      console.log(
-        "Sending data to server:",
-        Object.fromEntries(formData.entries())
-      );
       formAction(formData);
     });
   };
@@ -217,7 +214,6 @@ const StudentSettingsPage = () => {
         >
           <FormField
             control={formPassword.control}
-            name="currentPassword"
             render={({ field }) => (
               <FormItem className="w-1/2">
                 <FormLabel>Current Password</FormLabel>
