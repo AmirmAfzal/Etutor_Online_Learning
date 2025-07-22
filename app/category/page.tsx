@@ -287,6 +287,12 @@ export default function CategoryPage() {
             </span>
           </div>
         </div>
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {courses.map((course, index) => (
+            <CourseCard key={index} {...course} />
+          ))}
+        </div>
       </section>
     </section>
   );
