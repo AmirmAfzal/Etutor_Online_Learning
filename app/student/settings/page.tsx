@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, startTransition } from "react";
+
+import { useActionState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import Icon from "@/components/ui/Icon";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormField,
@@ -19,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { settingAccountSchema } from "@/lib/validation/Student-dashboard/settingAccountSchema";
 import { settingPasswordSchema } from "@/lib/validation/Student-dashboard/settingPasswordSchema";
+import { updateStudentAccount } from "@/lib/actions/updateStudentAccount";
 
 const StudentSettingsPage = () => {
   // form state for account settings
@@ -43,21 +46,32 @@ const StudentSettingsPage = () => {
     },
   });
 
-  //TODO:server action for update student model
-  // const [state, formAction, pending] = useActionState(studentModel.updateOne, {
-  //   message: "",
-  //   errors: [],
-  // });
-
   // Password visibility states
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
   // handle submit for account settings
-  const onSubmitAccount = (data: z.infer<typeof settingAccountSchema>) => {
-    console.log(data);
-    // update student model
+  // Using useActionState to handle form submission (first element is state, second is action function )
+  const [_, formAction, pending] = useActionState(updateStudentAccount, {
+    message: "",
+    errors: [],
+  });
+
+  const onSubmitAccount = () => {
+    const formData = new FormData();
+    Object.entries(formAccount.getValues()).forEach(([key, value]) => {
+      formData.append(key, value.toString());
+    });
+
+    console.log("Starting update process...");
+    startTransition(() => {
+      console.log(
+        "Sending data to server:",
+        Object.fromEntries(formData.entries())
+      );
+      formAction(formData);
+    });
   };
 
   // handle submit for password settings
