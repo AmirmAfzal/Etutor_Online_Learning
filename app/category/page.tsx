@@ -1,6 +1,8 @@
 import CourseCard from "@/components/CourseCard";
 import TeacherCard from "@/components/TeacherCard";
 import Icon from "@/components/ui/Icon";
+import Form from "next/form";
+import { redirect } from "next/navigation";
 
 import {
   Select,
@@ -150,8 +152,32 @@ const popularKeywords = [
   "Wordpress",
 ];
 
-// TODO: Add serachParams option
-export default function CategoryPage() {
+// Server action for search form
+async function searchCourses(formData: FormData) {
+  "use server";
+
+  // Get the search query from form data
+  const query = formData.get("query")?.toString() || "";
+
+  if (query) {
+    redirect(`/category?query=${encodeURIComponent(query)}`);
+  }
+}
+
+export default function CategoryPage({
+  searchParams,
+}: {
+  searchParams: { query?: string };
+}) {
+  // Filter courses based on search query if provided
+  const query = searchParams.query?.toLowerCase();
+  const filteredCourses = query
+    ? courses.filter(
+        (course) =>
+          course.name.toLowerCase().includes(query) ||
+          course.category.toLowerCase().includes(query)
+      )
+    : courses;
   return (
     <section className="container mx-auto flex flex-col items-center px-4 py-8">
       {/* Best selling courses */}
@@ -160,7 +186,7 @@ export default function CategoryPage() {
           Best selling courses in Web Development
         </h2>
         <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-5">
-          {courses.slice(0, 5).map((course, index) => (
+          {filteredCourses.slice(0, 5).map((course, index) => (
             <CourseCard key={index} {...course} />
           ))}
         </div>
@@ -238,17 +264,23 @@ export default function CategoryPage() {
               Filter
               <span className="text-primary">03</span>
             </button>
-            <div className="relative">
+
+            <Form action={searchCourses} className="relative">
               <input
                 type="text"
+                name="query"
+                defaultValue={searchParams.query || ""}
                 placeholder="UI/UX Design"
                 className="border-base-300 w-full border py-3 pr-4 pl-10"
               />
               <Icon
                 icon="ph:magnifying-glass"
-                className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
+                className="text-base-content/50 absolute top-1/2 left-3 -translate-y-1/2"
               />
-            </div>
+              <button type="submit" className="sr-only">
+                Search
+              </button>
+            </Form>
           </div>
 
           <div className="flex flex-row gap-2">
@@ -280,16 +312,25 @@ export default function CategoryPage() {
           </div>
           <div>
             <span className="text-base-content/80">
-              3.644.122
-              <span className="text-base-content/60 ml-2">
-                result find for &quot;UI/UX&quot;
-              </span>
+              {query ? (
+                <>
+                  {filteredCourses.length.toLocaleString()}
+                  <span className="text-base-content/60 ml-2">
+                    results for &quot;{searchParams.query}&quot;
+                  </span>
+                </>
+              ) : (
+                <>
+                  {courses.length.toLocaleString()}
+                  <span className="text-base-content/60 ml-2">courses</span>
+                </>
+              )}
             </span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {courses.map((course, index) => (
+          {filteredCourses.map((course, index) => (
             <CourseCard key={index} {...course} />
           ))}
         </div>
