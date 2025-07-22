@@ -1,8 +1,14 @@
 import CourseCard from "@/components/CourseCard";
 import TeacherCard from "@/components/TeacherCard";
 import Icon from "@/components/ui/Icon";
-import Pagination from "@/components/Pagination";
 
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 const courses = [
   {
     thumbnail: "/images/course-images-1.png",
@@ -144,21 +150,8 @@ const popularKeywords = [
   "Wordpress",
 ];
 
-export default function CategoryPage({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
-  const coursesPerPage = 8;
-  const totalItems = courses.length;
-  const currentPage =
-    Number(searchParams?.page) > 0 ? Number(searchParams.page) : 1;
-  const totalPages = Math.ceil(totalItems / coursesPerPage);
-  const paginatedCourses = courses.slice(
-    (currentPage - 1) * coursesPerPage,
-    currentPage * coursesPerPage
-  );
-
+// TODO: Add serachParams option
+export default function CategoryPage() {
   return (
     <section className="container mx-auto flex flex-col items-center px-4 py-8">
       {/* Best selling courses */}
@@ -236,18 +229,20 @@ export default function CategoryPage({
       </div>
 
       {/* Filter and Course Grid */}
-      <section>
+      <section className="max-w-6xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 rounded-md border border-gray-300 px-4 py-2 font-semibold">
+            <button className="border-primary/50 py- flex items-center gap-2 border px-4 py-3 font-semibold">
+              {/* TODO : change this icon */}
               <Icon icon="ph:funnel" />
               Filter
+              <span className="text-primary">03</span>
             </button>
             <div className="relative">
               <input
                 type="text"
                 placeholder="UI/UX Design"
-                className="w-full rounded-md border border-gray-300 py-2 pr-4 pl-10 sm:w-64"
+                className="border-base-300 w-full border py-3 pr-4 pl-10"
               />
               <Icon
                 icon="ph:magnifying-glass"
@@ -255,54 +250,41 @@ export default function CategoryPage({
               />
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-gray-600">Sort by:</span>
-            <select className="rounded-md border border-gray-300 px-4 py-2">
-              <option>Trending</option>
-              <option>Popular</option>
-              <option>Newest</option>
-            </select>
+
+          <div className="flex flex-row gap-2">
+            <div className="flex flex-row items-center gap-2">
+              <label htmlFor="sort" className="text-base-content/60 text-xs">
+                Sorted by:
+              </label>
+            </div>
+            <Select name="sort">
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Sorted by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Latest">Latest</SelectItem>
+                <SelectItem value="Oldest">Oldest</SelectItem>
+                <SelectItem value="Most Viewed">Most Viewed</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {paginatedCourses.map((course, index) => (
-            <CourseCard key={index} {...course} />
-          ))}
-        </div>
-
-        <div className="mt-8 flex justify-center">
-          <div className="flex items-center gap-2">
-            <a
-              href={`?page=${Math.max(1, currentPage - 1)}`}
-              aria-disabled={currentPage === 1}
-              tabIndex={currentPage === 1 ? -1 : 0}
-              className={`border-base-content/10 flex h-10 w-10 items-center justify-center rounded-full border text-xl transition-all ${currentPage === 1 ? "bg-base-100 text-base-content/30 pointer-events-none cursor-not-allowed" : "bg-base-100 text-primary hover:bg-primary/10"}`}
-            >
-              <Icon icon="ph:arrow-left" />
-            </a>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <a
-                key={i}
-                href={`?page=${i + 1}`}
-                className={`border-base-content/10 flex h-10 w-10 items-center justify-center rounded-full font-bold ${
-                  currentPage === i + 1
-                    ? "bg-primary text-base-200"
-                    : "bg-base-100 text-primary/80"
-                }`}
-                aria-current={currentPage === i + 1 ? "page" : undefined}
-              >
-                {(i + 1).toString().padStart(2, "0")}
-              </a>
-            ))}
-            <a
-              href={`?page=${Math.min(totalPages, currentPage + 1)}`}
-              aria-disabled={currentPage === totalPages}
-              tabIndex={currentPage === totalPages ? -1 : 0}
-              className={`border-base-content/10 flex h-10 w-10 items-center justify-center rounded-full border text-xl transition-all ${currentPage === totalPages ? "bg-base-100 text-base-content/30 pointer-events-none cursor-not-allowed" : "bg-base-100 text-primary hover:bg-primary/10"}`}
-            >
-              <Icon icon="ph:arrow-right" />
-            </a>
+        <div className="border-base-300 flex flex-row justify-between border-b">
+          <div className="text-primary mb-4 flex flex-row items-center gap-2">
+            <span className="text-base-content"> Suggestion:</span>
+            <button className="hover:underline">User interface</button>
+            <button className="hover:underline">User experience</button>
+            <button className="hover:underline">Web design</button>
+            <button className="hover:underline">App</button>
+          </div>
+          <div>
+            <span className="text-base-content/80">
+              3.644.122
+              <span className="text-base-content/60 ml-2">
+                result find for &quot;UI/UX&quot;
+              </span>
+            </span>
           </div>
         </div>
       </section>
