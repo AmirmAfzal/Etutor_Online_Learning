@@ -36,7 +36,11 @@ const fakeWishlistCourses = [
     reviews: 451444,
   },
 ];
-
+// FIXME: دیزاین این صفحه جزییاتش رعایت نشده
+// پدینگا درست نیست
+// font weight درست نیست
+// اندازه عکسا درست نیست
+// اندازه فونت ها هم درست نیست
 export default function WishlistPage() {
   return (
     <>

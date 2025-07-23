@@ -33,10 +33,11 @@ export default function TeacherCard({
           </div>
           <div className="text-base-content/50 text-sm">{title}</div>
         </div>
-
+        {/* FIXME: این بوردره درست نمیفته از عرض نمیچسبه مثل دیزاین */}
         <div className="border-base-content/10 border-t pt-3">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-1">
+              {/* FIXME : این رنگ زرده رو همون پرایمری بزار */}
               <Icon icon="ph:star-fill" className="text-sm text-yellow-500" />
               <span className="text-base-content/80 text-sm font-medium">
                 {rating}

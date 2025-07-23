@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 
+// FIXME: فعلا مشکلی نداره چون بعد قراره اینارو به سرور وصل کنیم ولی صفحه ای اگر باشه که دیتا داره اونو تو فولدر پایین میزاریم
+// مثلا : /lib/data/student/courses.ts
 const courses = [
   {
     title: "Graphic Design Masterclass - Learn GREAT Design",
@@ -69,16 +71,19 @@ const page = () => {
               <span className="text-base-content/90 font-medium tracking-widest">
                 {pm.label}
               </span>
+              {/* FIXME: این شرط ها هیچ کدوم تاثیر نداره ، چون دیتا ثابته اینا پاک بشن */}
               {pm.expiry && (
                 <span className="text-base-content/60 ml-auto text-sm">
                   {pm.expiry}
                 </span>
               )}
+              {/* FIXME: همچنین این */}
               {pm.name && (
                 <span className="text-base-content/80 ml-4 text-sm">
                   {pm.name}
                 </span>
               )}
+              {/* FIXME: همچنین این */}
               {pm.desc && (
                 <span className="text-base-content/70 ml-2 text-xs">
                   {pm.desc}
@@ -87,6 +92,7 @@ const page = () => {
             </div>
           ))}
         </div>
+        {/* FIXME: کامنتای نامربوط حذف بشه اگر کد اچ تی ام ال زیاد شده کمپوننت بندی کنید */}
         {/* New Card */}
         <div className="border-success bg-base-100 mb-6 flex items-center border p-4">
           <span className="text-base-content/60 flex items-center gap-2">

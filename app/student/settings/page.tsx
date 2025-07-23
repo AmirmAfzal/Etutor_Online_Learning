@@ -23,9 +23,12 @@ import { settingAccountSchema } from "@/lib/validation/Student-dashboard/setting
 import { settingPasswordSchema } from "@/lib/validation/Student-dashboard/settingPasswordSchema";
 import { updateStudentAccount } from "@/lib/actions/updateStudentAccount";
 
+// FIXME: آقا کمپوننت بندی چیز خوبیه استفاده کن دو تا فرمو جدا کن تو کمپوننت های جدا چون میخواییم اطلاعات کاربرم بگیریم این صفحه حتما باید سرور رندر باشه فرما تک تک کلاینت رندر باشه
 const StudentSettingsPage = () => {
   const userId = "USER_ID_FROM_AUTH";
   // form state for account settings
+  // FIXME: اسم دهی برعکسه
+  // formAccount -> accountForm
   const formAccount = useForm<z.infer<typeof settingAccountSchema>>({
     resolver: zodResolver(settingAccountSchema),
     defaultValues: {
@@ -39,6 +42,8 @@ const StudentSettingsPage = () => {
   });
 
   // form state for password settings
+  // FIXME: اسم دهی برعکسه
+  // formPassword -> passwordForm
   const formPassword = useForm<z.infer<typeof settingPasswordSchema>>({
     resolver: zodResolver(settingPasswordSchema),
     defaultValues: {
@@ -194,6 +199,7 @@ const StudentSettingsPage = () => {
                 )}
               />
               <div className="col-span-2">
+                {/* FIXME: بجای این از دکمه های دیزی یوعای استفاده کن */}
                 <Button
                   type="submit"
                   className="!btn !btn-primary mt-2 px-6 py-2 font-medium"

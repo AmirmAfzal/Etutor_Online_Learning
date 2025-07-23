@@ -17,6 +17,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   priority = false,
 }) => {
   return (
+    // FIXME: اوپاسیتی بوردر بالاست
     <div className="bg-base-100 border-base-content/20 flex h-full min-w-[220px] flex-col border-1 transition-all duration-300 hover:translate-y-[-2px] sm:min-w-0">
       <Image
         src={image}
@@ -24,6 +25,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
         width={400}
         height={160}
         className="mb-2 h-32 w-full object-cover sm:mb-3 sm:h-36 md:h-40"
+        // FIXME: همین رو با تیلویند زدی دیگه ، این استایله حذف بشه
+        // height: "auto" -> h-auto
         style={{ width: "100%", height: "auto" }}
         priority={priority}
       />

@@ -124,6 +124,11 @@ export default function StudentDashboard() {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {/* FIXME: سلام وقت بخیر مهندس ،  */}
+        {/* idx این فیلد دوم که گزاشتید  */}
+        {/* معمولا ایندکس استفاده میشه */}
+        {/* index یا i */}
+        {/* جز اینا اسم دیگه ای واس این نزارید با تشکر */}
         {mockCourses.map((course, idx) => (
           <CourseCard
             key={idx}

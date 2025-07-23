@@ -70,7 +70,9 @@ const fakePurchases = [
     details: null,
   },
 ];
-
+// FIXME: دیزاین این صفحه جزییاتش رعایت نشده
+// font weight رعایت نشده
+// اندازه فونت ها هم درست نیست
 export default async function PurchaseHistoryPage() {
   return (
     <div className="max-w-5xl px-2 py-8">

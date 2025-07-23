@@ -5,7 +5,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-
+// FIXME: صفحه خیلی شلوغه یکم کمپوننت بندی کن چیزای اضافی رو
 // Mock data for messages
 const mockContacts = [
   {
@@ -142,6 +142,9 @@ const mockChatMessages = [
 
 export default function MessagesPage() {
   return (
+    // FIXME: ارتفاع صفحه همون
+    // 100vh باشه بهتره
+    // h-[calc(100vh-400px)] -> h-screen
     <div className="bg-base-100 border-base-300 flex h-[calc(100vh-400px)] w-full border">
       {/* Left Pane - Message List */}
       <div className="border-base-300 flex w-1/3 flex-col border-r">
@@ -150,10 +153,16 @@ export default function MessagesPage() {
           <h2 className="text-base-content text-lg font-semibold">Message</h2>
           <DialogPrimitive.Root>
             <DialogPrimitive.Trigger asChild>
-              <Button variant="default" size="sm" className="!btn !btn-primary">
+              {/*FIXME: خب بجای این همون باتن دیزی یوعای رو استفاده کن */}
+              {/* <Button variant="default" size="sm" className="!btn !btn-primary">
                 <Icon icon="ph:plus" />
                 Compose
-              </Button>
+              </Button> */}
+              {/* اینا */}
+              <button className="btn btn-primary">
+                <Icon icon="ph:plus" />
+                Compose
+              </button>
             </DialogPrimitive.Trigger>
             <DialogPrimitive.Portal>
               <DialogPrimitive.Overlay className="bg-base-content/50 fixed inset-0 z-40" />
@@ -177,6 +186,7 @@ export default function MessagesPage() {
                     >
                       Teacher:
                     </label>
+                    {/* FIXME: سلکت شد سی ان استفاده بشه */}
                     <select
                       id="teacher-select"
                       className="border-base-300 bg-base-100 text-base-content/70 focus:border-primary w-full border px-3 py-2 focus:ring-0"
