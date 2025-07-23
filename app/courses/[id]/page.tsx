@@ -34,6 +34,18 @@ For example, this is a Design course but I don't teach you Photoshop. Because Ph
     "How to use Webflow CMS for dynamic content",
     "How to publish and host your website on Webflow",
   ],
+  thisCourseFor: [
+    "Anyone who wants to learn Web Design",
+    "Anyone who wants to learn Figma",
+    "Anyone who wants to learn Webflow",
+    "Anyone who wants to create responsive websites",
+  ],
+  courseRequirements: [
+    "Basic computer skills",
+    "A computer with internet access",
+    "Willingness to learn and practice",
+    "No prior design or coding experience required",
+  ],
 };
 
 export default function CoursePage() {
@@ -121,12 +133,12 @@ export default function CoursePage() {
                   ))}
               </div>
 
-              <div className="bg-success/20 w-full p-4">
+              <div className="bg-success/20 w-full p-4 pl-10">
                 <span className="text-base-content/80 text-xl font-medium">
                   What you will learn in this course
                 </span>
-                <div>
-                  <ul className="grid grid-cols-2 gap-4 pl-5">
+                <div className="mt-4">
+                  <ul className="grid grid-cols-2 gap-6 pl-5">
                     {fakeCourses.whatYouWillLearn.map((item, index) => (
                       // TODO: add checkbox icon
                       <li key={index} className="text-base-content/70 text-sm">
@@ -136,6 +148,39 @@ export default function CoursePage() {
                   </ul>
                 </div>
               </div>
+
+              <div className="mt-12 w-full">
+                <span className="text-base-content/80 text-2xl font-medium">
+                  Who this course is for :
+                </span>
+                <div className="mt-4">
+                  <ul className="flex flex-col items-start gap-3 pl-5">
+                    {fakeCourses.thisCourseFor.map((item, index) => (
+                      // TODO: add right icon
+                      <li key={index} className="text-base-content/70 text-sm">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-12 w-full">
+                <span className="text-base-content/80 text-2xl font-medium">
+                  Course requirements
+                </span>
+                <div className="mt-4">
+                  <ul className="flex list-disc flex-col items-start gap-3 pl-5">
+                    {fakeCourses.courseRequirements.map((item, index) => (
+                      <li key={index} className="text-base-content/70 text-sm">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* shadcn */}
             </div>
           </div>
         </div>
