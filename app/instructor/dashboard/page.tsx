@@ -25,7 +25,7 @@ const DashboardPage = () => {
           <CourseRating />
         </div>
         <div className="col-span-7 h-auto w-full">
-          <CourseOverview />  
+          <CourseOverview />
         </div>
       </div>
     </section>
