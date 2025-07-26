@@ -29,12 +29,7 @@ const fakeCourses = {
   createdBy: "Dianne Russell , Kristin Watson",
   rating: 4.8,
   reviews: 244455,
-  courseDescription: `It gives you a huge self-satisfaction when you look at your work and say, "I made this!". I love that feeling after I'm done working on something. When I lean back in my chair, look at the final result with a smile, and have this little "spark joy" moment. It's especially satisfying when I know I just made $5,000.
-
-I do! And that's why I got into this field. Not for the love of Web Design, which I do now. But for the LIFESTYLE! There are many ways one can achieve this lifestyle. This is my way. This is how I achieved a lifestyle I've been fantasizing about for five years. And I'm going to teach you the same. Often people think Web Design is complicated. That it needs some creative talent or knack for computers. Sure, a lot of people make it very complicated. People make the simplest things complicated. Like most subjects taught in the universities. But I don't like complicated. I like easy. I like life hacks. I like to take the shortest and simplest route to my destination. I haven't gone to an art school or have a computer science degree. I'm an outsider to this field who hacked myself into it, somehow ending up being a sought-after professional. That's how I'm going to teach you Web Design. So you're not demotivated on your way with needless complexity. So you enjoy the process because it's simple and fun. So you can become a Freelance Web Designer in no time.
-
-For example, this is a Design course but I don't teach you Photoshop. Because Photoshop is needlessly complicated for Web Design. But people still teach it to web designers. I don't. I teach Figma – a simple tool that is taking over the design world. You will be designing a complete website within a week while others are still learning how to create basic layouts in Photoshop.
-`,
+  courseDescription: `This course provides a comprehensive guide to designing and developing responsive websites. Learn the secrets of good design and how to turn your ideas into reality using Figma and Webflow.`,
   whatYouWillLearn: [
     "How to design a complete website in Figma",
     "How to create a responsive website in Webflow",
@@ -145,20 +140,19 @@ const studentsComments = [
       "This course was amazing! I learned so much about web design and Figma.",
   },
   {
-    name: "Alice Johnson",
-    avatar: "/images/profile-img.png",
-    star: 3,
-    time: "2 days ago",
-    comment:
-      "This course was amazing! I learned so much about web design and Figma.",
-  },
-  {
-    name: "Alice Johnson",
+    name: "Bob Smith",
     avatar: "/images/profile-img.png",
     star: 5,
-    time: "2 days ago",
+    time: "1 week ago",
     comment:
-      "This course was amazing! I learned so much about web design and Figma.",
+      "The instructors were very knowledgeable and the content was well-organized.",
+  },
+  {
+    name: "Charlie Brown",
+    avatar: "/images/profile-img.png",
+    star: 3,
+    time: "3 days ago",
+    comment: "Good course but could use more examples.",
   },
 ];
 
@@ -180,22 +174,37 @@ const RelatedCourses = [
     rating: 4.7,
   },
   {
-    thumbnail: "/images/course-2.jpg",
-    name: "Figma for Beginners",
-    category: "Design",
-    price: 39.99,
-    students: 800,
-    rating: 4.7,
-  },
-  {
-    thumbnail: "/images/course-2.jpg",
-    name: "Figma for Beginners",
-    category: "Design",
-    price: 39.99,
-    students: 800,
-    rating: 4.7,
+    thumbnail: "/images/course-3.jpg",
+    name: "Advanced Webflow Techniques",
+    category: "Development",
+    price: 59.99,
+    students: 500,
+    rating: 4.8,
   },
 ];
+
+const fakeSidebarCart = {
+  price: 49.0,
+  originalPrice: 26.0,
+  discount: "56% Off",
+  timeLeft: "2 days left at this price!",
+  courseDetails: [
+    { label: "Course Duration", value: "6 Month" },
+    { label: "Course Level", value: "Beginner" },
+    { label: "Students Enrolled", value: "69,419,618" },
+    { label: "Language", value: "Mandarin" },
+    { label: "Subtitle Language", value: "English" },
+  ],
+  includes: [
+    "Lifetime access",
+    "30-days money-back guarantee",
+    "Free exercises file & downloadable resources",
+    "Shareable certificate of completion",
+    "Access on mobile, tablet and TV",
+    "English subtitles",
+    "100% online course",
+  ],
+};
 
 const CoursePage = () => {
   return (
@@ -355,72 +364,47 @@ const CoursePage = () => {
           <div className="bg-base-100 sticky top-8 flex flex-col gap-1 p-4 shadow">
             <div className="flex w-full flex-row items-center justify-between">
               <span className="text-base-content/80 mb-1 text-lg font-medium">
-                $49.00
+                ${fakeSidebarCart.price.toFixed(2)}
                 <span className="text-base-content/50 ml-1 text-xs line-through">
-                  $26.00
+                  ${fakeSidebarCart.originalPrice.toFixed(2)}
                 </span>
               </span>
               <button className="btn btn-soft btn-primary text-xs">
-                56% Off
+                {fakeSidebarCart.discount}
               </button>
             </div>
             <span className="text-error ml-1 flex flex-row items-start gap-1 text-xs">
-              <Icon icon="ph:alarm" className="text-sm" />2 days left at this
-              price!
+              <Icon icon="ph:alarm" className="text-sm" />
+              {fakeSidebarCart.timeLeft}
             </span>
             <div className="divider divider-base-300 w-full"></div>
 
             <div className="flex w-full flex-col gap-1 text-xs text-nowrap">
-              <div className="flex flex-row items-center justify-between gap-1">
-                <span className="flex items-center gap-1">
-                  <Icon
-                    icon="ph:clock-duotone"
-                    className="text-base-content/60 text-sm"
-                  />
-                  Course Duration
-                </span>
-                <span className="text-base-content/60">6 Month</span>
-              </div>
-              <div className="flex items-center justify-between gap-1">
-                <span className="flex items-center gap-1">
-                  <Icon
-                    icon="ph:chart-bar-duotone"
-                    className="text-base-content/60 text-sm"
-                  />
-                  Course Level
-                </span>
-                <span className="text-base-content/60">Beginner</span>
-              </div>
-              <div className="flex items-center justify-between gap-1">
-                <span className="flex items-center gap-1">
-                  <Icon
-                    icon="ph:users-duotone"
-                    className="text-base-content/60 text-sm"
-                  />
-                  Students Enrolled
-                </span>
-                <span className="text-base-content/60">69,419,618</span>
-              </div>
-              <div className="flex items-center justify-between gap-1">
-                <span className="flex items-center gap-1">
-                  <Icon
-                    icon="ph:notebook-duotone"
-                    className="text-base-content/60 text-sm"
-                  />
-                  Language
-                </span>
-                <span className="text-base-content/60">Mandarin</span>
-              </div>
-              <div className="flex items-center justify-between gap-1">
-                <span className="flex items-center gap-1">
-                  <Icon
-                    icon="ph:notepad-duotone"
-                    className="text-base-content/60 text-sm"
-                  />
-                  Subtitle Language
-                </span>
-                <span className="text-base-content/60">English</span>
-              </div>
+              {fakeSidebarCart.courseDetails.map((detail, index) => (
+                <div
+                  key={index}
+                  className="flex flex-row items-center justify-between gap-1"
+                >
+                  <span className="flex items-center gap-1">
+                    <Icon
+                      icon={
+                        detail.label === "Course Duration"
+                          ? "ph:clock-duotone"
+                          : detail.label === "Course Level"
+                            ? "ph:chart-bar-duotone"
+                            : detail.label === "Students Enrolled"
+                              ? "ph:users-duotone"
+                              : detail.label === "Language"
+                                ? "ph:notebook-duotone"
+                                : "ph:notepad-duotone"
+                      }
+                      className="text-base-content/60 text-sm"
+                    />
+                    {detail.label}
+                  </span>
+                  <span className="text-base-content/60">{detail.value}</span>
+                </div>
+              ))}
             </div>
 
             <div className="divider divider-base-300 my-1 w-full"></div>
@@ -452,43 +436,17 @@ const CoursePage = () => {
                 This course includes:
               </span>
               <ul className="text-base-content/60 mt-2 space-y-2 text-xs">
-                <li className="flex items-center gap-1">
-                  <Icon icon="ph:clock" className="text-primary text-sm" />
-                  Lifetime access
-                </li>
-                <li className="flex items-center gap-1">
-                  <Icon
-                    icon="ph:currency-dollar"
-                    className="text-primary text-sm"
-                  />
-                  30-days money-back guarantee
-                </li>
-                <li className="flex items-center gap-1">
-                  <Icon icon="ph:file-text" className="text-primary text-sm" />
-                  Free exercises file & downloadable resources
-                </li>
-                <li className="flex items-center gap-1">
-                  <Icon icon="ph:trophy" className="text-primary text-sm" />
-                  Shareable certificate of completion
-                </li>
-                <li className="flex items-center gap-1">
-                  <Icon
-                    icon="ph:device-mobile"
-                    className="text-primary text-sm"
-                  />
-                  Access on mobile, tablet and TV
-                </li>
-                <li className="flex items-center gap-1">
-                  <Icon icon="ph:calendar" className="text-primary text-sm" />
-                  English subtitles
-                </li>
-                <li className="flex items-center gap-1">
-                  <Icon icon="ph:stack" className="text-primary text-sm" />
-                  100% online course
-                </li>
+                {fakeSidebarCart.includes.map((item, index) => (
+                  <li key={index} className="flex items-center gap-1">
+                    <Icon
+                      icon="ph:check-circle-fill"
+                      className="text-primary text-sm"
+                    />
+                    {item}
+                  </li>
+                ))}
               </ul>
             </div>
-
             {/* TODO: Add share buttons */}
           </div>
         </div>
