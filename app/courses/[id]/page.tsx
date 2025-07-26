@@ -352,22 +352,144 @@ const CoursePage = () => {
 
         {/* side bar cart */}
         <div className="md:col-span-1">
-          <div className="bg-base-100 sticky top-24 flex flex-col gap-4 p-6 shadow">
+          <div className="bg-base-100 sticky top-8 flex flex-col gap-1 p-4 shadow">
             <div className="flex w-full flex-row items-center justify-between">
-              <span className="text-base-content/80 mb-2 text-lg font-medium">
+              <span className="text-base-content/80 mb-1 text-lg font-medium">
                 $49.00
-                <span className="text-base-content/50 ml-2 text-sm line-through">
+                <span className="text-base-content/50 ml-1 text-xs line-through">
                   $26.00
                 </span>
               </span>
-              <button className="btn btn-soft btn-primary">56% Off</button>
+              <button className="btn btn-soft btn-primary text-xs">
+                56% Off
+              </button>
             </div>
-            <span className="text-error ml-2 flex flex-row items-start gap-2 text-sm">
-              <Icon icon="ph:alarm" className="text-lg" />2 days left at this
+            <span className="text-error ml-1 flex flex-row items-start gap-1 text-xs">
+              <Icon icon="ph:alarm" className="text-sm" />2 days left at this
               price!
             </span>
-
             <div className="divider divider-base-300 w-full"></div>
+
+            <div className="flex w-full flex-col gap-1 text-xs text-nowrap">
+              <div className="flex flex-row items-center justify-between gap-1">
+                <span className="flex items-center gap-1">
+                  <Icon
+                    icon="ph:clock-duotone"
+                    className="text-base-content/60 text-sm"
+                  />
+                  Course Duration
+                </span>
+                <span className="text-base-content/60">6 Month</span>
+              </div>
+              <div className="flex items-center justify-between gap-1">
+                <span className="flex items-center gap-1">
+                  <Icon
+                    icon="ph:chart-bar-duotone"
+                    className="text-base-content/60 text-sm"
+                  />
+                  Course Level
+                </span>
+                <span className="text-base-content/60">Beginner</span>
+              </div>
+              <div className="flex items-center justify-between gap-1">
+                <span className="flex items-center gap-1">
+                  <Icon
+                    icon="ph:users-duotone"
+                    className="text-base-content/60 text-sm"
+                  />
+                  Students Enrolled
+                </span>
+                <span className="text-base-content/60">69,419,618</span>
+              </div>
+              <div className="flex items-center justify-between gap-1">
+                <span className="flex items-center gap-1">
+                  <Icon
+                    icon="ph:notebook-duotone"
+                    className="text-base-content/60 text-sm"
+                  />
+                  Language
+                </span>
+                <span className="text-base-content/60">Mandarin</span>
+              </div>
+              <div className="flex items-center justify-between gap-1">
+                <span className="flex items-center gap-1">
+                  <Icon
+                    icon="ph:notepad-duotone"
+                    className="text-base-content/60 text-sm"
+                  />
+                  Subtitle Language
+                </span>
+                <span className="text-base-content/60">English</span>
+              </div>
+            </div>
+
+            <div className="divider divider-base-300 my-1 w-full"></div>
+
+            <div className="flex flex-col items-center gap-1">
+              <button className="btn btn-primary w-full text-xs">
+                Add To cart
+              </button>
+              <button className="btn btn-soft btn-primary w-full text-xs">
+                Buy Now
+              </button>
+              <div className="flex w-full flex-row items-center justify-between">
+                <button className="btn btn-ghost border-base-300 w-1/2 border text-xs">
+                  Add to Wishlist
+                </button>
+                <button className="btn btn-ghost border-base-300 w-1/2 border text-xs">
+                  Gift course
+                </button>
+              </div>
+              <span className="text-base-content/60 text-xs">
+                Note: all course have 30-days money-back guarantee
+              </span>
+            </div>
+
+            <div className="divider divider-base-300 my-1 w-full"></div>
+
+            <div>
+              <span className="text-base-content/80 text-md font-medium">
+                This course includes:
+              </span>
+              <ul className="text-base-content/60 mt-2 space-y-2 text-xs">
+                <li className="flex items-center gap-1">
+                  <Icon icon="ph:clock" className="text-primary text-sm" />
+                  Lifetime access
+                </li>
+                <li className="flex items-center gap-1">
+                  <Icon
+                    icon="ph:currency-dollar"
+                    className="text-primary text-sm"
+                  />
+                  30-days money-back guarantee
+                </li>
+                <li className="flex items-center gap-1">
+                  <Icon icon="ph:file-text" className="text-primary text-sm" />
+                  Free exercises file & downloadable resources
+                </li>
+                <li className="flex items-center gap-1">
+                  <Icon icon="ph:trophy" className="text-primary text-sm" />
+                  Shareable certificate of completion
+                </li>
+                <li className="flex items-center gap-1">
+                  <Icon
+                    icon="ph:device-mobile"
+                    className="text-primary text-sm"
+                  />
+                  Access on mobile, tablet and TV
+                </li>
+                <li className="flex items-center gap-1">
+                  <Icon icon="ph:calendar" className="text-primary text-sm" />
+                  English subtitles
+                </li>
+                <li className="flex items-center gap-1">
+                  <Icon icon="ph:stack" className="text-primary text-sm" />
+                  100% online course
+                </li>
+              </ul>
+            </div>
+
+            {/* TODO: Add share buttons */}
           </div>
         </div>
       </div>
