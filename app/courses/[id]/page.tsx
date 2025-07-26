@@ -1,12 +1,12 @@
 import Image from "next/image";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 import Icon from "@/components/ui/Icon";
-import TruncatedText from "@/components/Courses/TruncatedText";
+
+import CourseCard from "@/components/CourseCard";
+import Curriculum from "@/components/Courses/Curriculum";
+import CourseInstructors from "@/components/Courses/CourseInstructors";
+import Comments from "@/components/Courses/Comments";
+import CourseRating from "@/components/Courses/CourseRating";
 
 // Fake data that would come from a database
 
@@ -60,11 +60,23 @@ For example, this is a Design course but I don't teach you Photoshop. Because Ph
       lectures: 4,
       duration: "51m",
       content: [
-        { title: "What's is Webflow?", info: "07:31" },
-        { title: "Sign up in Webflow", info: "07:31" },
-        { title: "Webflow Terms & Conditions", info: "5.3 MB" },
-        { title: "Teaser of Webflow", info: "07:31" },
-        { title: "Practice Project", info: "5.3 MB" },
+        {
+          title: "What's is Webflow?",
+          info: "07:31",
+          type: "video" as "video",
+        },
+        {
+          title: "Sign up in Webflow",
+          info: "07:31",
+          type: "video" as "video",
+        },
+        {
+          title: "Webflow Terms & Conditions",
+          info: "5.3 MB",
+          type: "file" as "file",
+        },
+        { title: "Teaser of Webflow", info: "07:31", type: "video" as "video" },
+        { title: "Practice Project", info: "5.3 MB", type: "file" as "file" },
       ],
     },
     {
@@ -123,7 +135,69 @@ const Instructors = [
   },
 ];
 
-export default function CoursePage() {
+const studentsComments = [
+  {
+    name: "Alice Johnson",
+    avatar: "/images/profile-img.png",
+    star: 4,
+    time: "2 days ago",
+    comment:
+      "This course was amazing! I learned so much about web design and Figma.",
+  },
+  {
+    name: "Alice Johnson",
+    avatar: "/images/profile-img.png",
+    star: 3,
+    time: "2 days ago",
+    comment:
+      "This course was amazing! I learned so much about web design and Figma.",
+  },
+  {
+    name: "Alice Johnson",
+    avatar: "/images/profile-img.png",
+    star: 5,
+    time: "2 days ago",
+    comment:
+      "This course was amazing! I learned so much about web design and Figma.",
+  },
+];
+
+const RelatedCourses = [
+  {
+    thumbnail: "/images/course-1.jpg",
+    name: "Web Design Masterclass",
+    category: "Web Design",
+    price: 49.99,
+    students: 1200,
+    rating: 4.5,
+  },
+  {
+    thumbnail: "/images/course-2.jpg",
+    name: "Figma for Beginners",
+    category: "Design",
+    price: 39.99,
+    students: 800,
+    rating: 4.7,
+  },
+  {
+    thumbnail: "/images/course-2.jpg",
+    name: "Figma for Beginners",
+    category: "Design",
+    price: 39.99,
+    students: 800,
+    rating: 4.7,
+  },
+  {
+    thumbnail: "/images/course-2.jpg",
+    name: "Figma for Beginners",
+    category: "Design",
+    price: 39.99,
+    students: 800,
+    rating: 4.7,
+  },
+];
+
+const CoursePage = () => {
   return (
     <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-12 md:grid-cols-3">
@@ -162,7 +236,8 @@ export default function CoursePage() {
                     </div>
                     <div className="flex flex-row items-center gap-2">
                       <span className="flex items-center gap-1">
-                        {/* TODO:rating icon */}
+                        {/* TODO: add icons to number of reviews */}
+                        <Icon icon="ph:star-fill" className="text-primary" />
                         {fakeCourses.rating}(
                         {fakeCourses.reviews.toLocaleString()} reviews)
                       </span>
@@ -208,15 +283,21 @@ export default function CoursePage() {
                   ))}
               </div>
 
-              <div className="bg-success/20 w-full p-4 pl-10">
+              <div className="bg-success/10 w-full p-4 pl-10">
                 <span className="text-base-content/80 text-xl font-medium">
                   What you will learn in this course
                 </span>
                 <div className="mt-4">
                   <ul className="grid grid-cols-2 gap-6 pl-5">
                     {fakeCourses.whatYouWillLearn.map((item, index) => (
-                      // TODO: add checkbox icon
-                      <li key={index} className="text-base-content/70 text-sm">
+                      <li
+                        key={index}
+                        className="text-base-content/70 flex items-start gap-2 text-sm"
+                      >
+                        <Icon
+                          icon="ph:check-circle-fill"
+                          className="text-success text-lg"
+                        />
                         {item}
                       </li>
                     ))}
@@ -231,8 +312,14 @@ export default function CoursePage() {
                 <div className="mt-4">
                   <ul className="flex flex-col items-start gap-3 pl-5">
                     {fakeCourses.thisCourseFor.map((item, index) => (
-                      // TODO: add right icon
-                      <li key={index} className="text-base-content/70 text-sm">
+                      <li
+                        key={index}
+                        className="text-base-content/70 flex items-start gap-2 text-sm"
+                      >
+                        <Icon
+                          icon="ph:arrow-right"
+                          className="text-primary text-lg"
+                        />
                         {item}
                       </li>
                     ))}
@@ -245,7 +332,7 @@ export default function CoursePage() {
                   Course requirements
                 </span>
                 <div className="mt-4">
-                  <ul className="flex list-disc flex-col items-start gap-3 pl-5">
+                  <ul className="ml-5 flex list-disc flex-col items-start gap-3 pl-5">
                     {fakeCourses.courseRequirements.map((item, index) => (
                       <li key={index} className="text-base-content/70 text-sm">
                         {item}
@@ -255,125 +342,63 @@ export default function CoursePage() {
                 </div>
               </div>
 
-              {/* TODO: Add icon  */}
-              <div className="mt-12 w-full">
-                <span className="text-base-content/80 mb-4 block text-2xl font-semibold">
-                  Curriculum
-                </span>
-                <Accordion type="single" collapsible className="w-full">
-                  {fakeCourses.curriculum.map((section, index) => (
-                    <AccordionItem
-                      key={index}
-                      value={`section-${index + 1}`}
-                      className="bg-base-100 border-base-content/10 border transition-all duration-150 hover:translate-y-[-1px]"
-                    >
-                      <AccordionTrigger className="min-h-[72px] px-6">
-                        <div className="flex w-full flex-row items-start justify-between gap-3">
-                          <span className="text-base-content/80 font-semibold">
-                            {section.title}
-                          </span>
-                          <div className="flex flex-wrap gap-5">
-                            <span className="text-base-content/60 flex items-center gap-2 text-sm">
-                              <Icon
-                                icon="ph:play-circle-duotone"
-                                className="text-secondary"
-                              />
-                              {section.lectures} Lectures
-                            </span>
-                            <span className="text-base-content/60 flex items-center gap-2 text-sm">
-                              <Icon
-                                icon="ph:clock"
-                                className="text-primary text-lg"
-                              />
-                              {section.duration}
-                            </span>
-                          </div>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <ul className="px-4">
-                          {section.content.map((item, idx) => (
-                            <li
-                              key={idx}
-                              className="flex items-center gap-2 py-1 text-sm"
-                            >
-                              {item.title}
-                              <span className="ml-auto text-xs">
-                                {item.info}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            </div>
-
-            <div className="mt-12 w-full space-y-3">
-              <span className="text-base-content/80 mb-4 block text-2xl font-semibold">
-                Course instructors{` (${Instructors.length})`}
-              </span>
-              {Instructors.map((instructor, index) => (
-                <div key={index} className="border-base-300 w-full border p-4">
-                  <div className="flex flex-row items-center gap-4">
-                    <Image
-                      width={64}
-                      height={64}
-                      src={instructor.avatar}
-                      alt={instructor.name}
-                      className="border-base-300 mb-6 w-2/5 rounded-full border"
-                    />
-                    <div className="flex flex-col gap-2">
-                      <span className="text-base-content/80 font-semibold">
-                        {instructor.name}
-                      </span>
-                      <span className="text-base-content/60 text-sm">
-                        {instructor.bio}
-                      </span>
-
-                      <div className="text-base-content/80 flex flex-row items-center justify-between gap-4 text-sm font-semibold">
-                        <span>
-                          {instructor.rating}
-                          <span className="text-base-content/60 ml-1">
-                            Course rating
-                          </span>
-                        </span>
-                        <span>
-                          {instructor.students.toLocaleString()}
-                          <span className="text-base-content/60 ml-1">
-                            Students
-                          </span>
-                        </span>
-                        <span>
-                          {instructor.courses}
-                          <span className="text-base-content/60 ml-1">
-                            Courses
-                          </span>
-                        </span>
-                      </div>
-                      <div className="mt-4">
-                        <TruncatedText
-                          text={instructor.description}
-                          maxLength={150}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <Curriculum curriculum={fakeCourses.curriculum} />
+              <CourseInstructors instructors={Instructors} />
+              <CourseRating rating={fakeCourses.rating} />
+              <Comments studentsComments={studentsComments} />
             </div>
           </div>
         </div>
 
         {/* side bar cart */}
         <div className="md:col-span-1">
-          <div className="border-primary bg-base-300 sticky top-24 flex flex-col gap-4 border p-6">
-            {/* TODO: CART */}
+          <div className="bg-base-100 sticky top-24 flex flex-col gap-4 p-6 shadow">
+            <div className="flex w-full flex-row items-center justify-between">
+              <span className="text-base-content/80 mb-2 text-lg font-medium">
+                $49.00
+                <span className="text-base-content/50 ml-2 text-sm line-through">
+                  $26.00
+                </span>
+              </span>
+              <button className="btn btn-soft btn-primary">56% Off</button>
+            </div>
+            <span className="text-error ml-2 flex flex-row items-start gap-2 text-sm">
+              <Icon icon="ph:alarm" className="text-lg" />2 days left at this
+              price!
+            </span>
+
+            <div className="divider divider-base-300 w-full"></div>
           </div>
+        </div>
+      </div>
+
+      <div className="border-base-300 mt-12 w-full border-t">
+        <div className="flex flex-row items-center justify-between gap-4 p-6">
+          <span className="text-base-content/80 text-2xl font-semibold">
+            Related Courses
+          </span>
+
+          <button className="btn btn-soft btn-primary mt-6">
+            view All <Icon icon="ph:arrow-right" className="ml-2 text-lg" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 p-6 md:grid-cols-3 lg:grid-cols-4">
+          {RelatedCourses.map((course, index) => (
+            <CourseCard
+              key={index}
+              thumbnail={course.thumbnail}
+              name={course.name}
+              category={course.category}
+              price={course.price}
+              rating={course.rating}
+              students={course.students}
+            />
+          ))}
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default CoursePage;
