@@ -70,16 +70,14 @@ const fakePurchases = [
     details: null,
   },
 ];
-// FIXME: دیزاین این صفحه جزییاتش رعایت نشده
-// font weight رعایت نشده
-// اندازه فونت ها هم درست نیست
+
 export default async function PurchaseHistoryPage() {
   return (
     <div className="max-w-5xl px-2 py-8">
       <h2 className="text-base-content/80 mb-6 text-xl font-bold">
         Purchase History
       </h2>
-      <Accordion type="single" collapsible className="w-full space-y-4">
+      <Accordion type="single" collapsible className="w-full space-y-3">
         {fakePurchases.map((purchase) => (
           <AccordionItem
             key={purchase.id}
@@ -88,28 +86,28 @@ export default async function PurchaseHistoryPage() {
           >
             <AccordionTrigger className="min-h-[72px] px-6">
               <div className="flex w-full flex-col items-start justify-between gap-3">
-                <span className="text-base-content/80 text-lg font-semibold md:text-xl">
+                <span className="text-base-content/80 text-md font-medium md:text-lg">
                   {purchase.date}
                 </span>
-                <div className="flex flex-wrap gap-5 text-base">
-                  <span className="text-base-content/60 flex items-center gap-2">
+                <div className="flex flex-wrap gap-5">
+                  <span className="text-base-content/60 flex items-center gap-2 text-xs">
                     <Icon
                       icon="ph:play-circle-duotone"
-                      className="text-primary text-xl"
+                      className="text-secondary text-lg"
                     />
                     {purchase.summary.courses} Courses
                   </span>
-                  <span className="text-base-content/60 flex items-center gap-2">
+                  <span className="text-base-content/60 flex items-center gap-2 text-xs">
                     <Icon
                       icon="ph:currency-dollar"
-                      className="text-primary text-xl"
+                      className="text-primary text-lg"
                     />
                     ${purchase.summary.price.toFixed(2)} USD
                   </span>
-                  <span className="text-base-content/60 flex items-center gap-2">
+                  <span className="text-base-content/60 flex items-center gap-2 text-xs">
                     <Icon
                       icon="ph:credit-card"
-                      className="text-success text-xl"
+                      className="text-success text-lg"
                     />
                     {purchase.summary.method}
                   </span>
@@ -118,79 +116,83 @@ export default async function PurchaseHistoryPage() {
             </AccordionTrigger>
             <AccordionContent>
               {purchase.details ? (
-                <div className="flex flex-col gap-2 p-2 md:flex-row">
-                  <div className="flex-2 space-y-2">
+                <div className="flex w-full flex-col gap-2 p-2 md:flex-row">
+                  <div className="w-3/5 space-y-2">
                     {purchase.details.map((course, i) => (
                       <div
                         key={i}
-                        className="border-base-content/10 flex items-center gap-2 border-b pr-4 pb-1 last:border-b-0 last:pb-0"
+                        className="border-base-content/10 flex items-center gap-2 pr-4 pb-1 last:pb-0"
                       >
                         <div className="bg-base-200 relative h-24 w-1/4 overflow-hidden">
                           <Image
                             src={course.image}
                             alt={course.title}
-                            fill
+                            width={300}
+                            height={256}
                             className="object-cover"
                           />
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 space-y-2">
                           <div className="flex items-center justify-start gap-2 text-base">
                             <Icon
                               icon="ph:star-fill"
-                              className="text-primary/80 text-lg"
+                              className="text-primary/80 text-md"
                             />
-                            <span>{course.rating}</span>
+                            <span className="text-xs">{course.rating}</span>
                             <span className="text-base-content/50 text-xs">
                               ({course.reviews.toLocaleString()} Review)
                             </span>
                           </div>
-                          <div className="text-base-content/80 mb-1 text-lg font-semibold">
+                          <div className="text-base-content/80 text-md mb-1 font-medium">
                             {course.title}
                           </div>
-                          <div className="text-base-content/50 text-base">
-                            Course by: {course.teacher}
-                          </div>
+                          <span className="text-base-content/60 text-xs">
+                            <span className="text-base-content/50">
+                              Course by:
+                            </span>
+                            {course.teacher}
+                          </span>
                         </div>
-                        <div className="text-primary text-lg font-semibold">
+                        <div className="text-primary p-4 text-lg font-semibold">
                           ${course.price.toFixed(2)}
                         </div>
                       </div>
                     ))}
                   </div>
-                  <div className="border-base-content/10 flex min-w-[180px] flex-1 flex-col gap-4 border-l pl-2">
-                    <div>
-                      <div className="text-base-content/80 text-base font-semibold md:text-lg">
+                  <div className="border-base-content/10 flex w-2/5 flex-col items-center gap-6 border-l pl-2">
+                    <div className="flex w-3/4 flex-col items-center gap-2">
+                      <div className="text-base-content/80 font-medium text-nowrap md:text-lg">
                         {purchase.date}
                       </div>
                       <div className="text-base-content/60 mt-1 flex gap-2">
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1 text-xs">
                           <Icon
                             icon="ph:play-circle-duotone"
-                            className="text-primary text-base"
+                            className="text-secondary text-md"
                           />
                           {purchase.summaryCourses} Courses
                         </span>
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1 text-xs">
                           <Icon
                             icon="ph:currency-dollar"
-                            className="text-primary text-base"
+                            className="text-primary text-md"
                           />
                           ${purchase.summary.price.toFixed(2)} USD
                         </span>
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1 text-xs">
                           <Icon
                             icon="ph:credit-card"
-                            className="text-success text-base"
+                            className="text-success text-md"
                           />
                           {purchase.summary.method}
                         </span>
                       </div>
                     </div>
-                    <div className="flex flex-row justify-between gap-3 text-base">
-                      <span className="text-base-content/80 font-medium">
+                    <div className="flex w-3/4 flex-row justify-between gap-3 text-base">
+                      <span className="text-base-content/80 text-xs font-medium">
                         {purchase.user.name}
                       </span>
-                      <span className="text-base-content/80">
+                      <span className="text-base-content/80 text-sm">
                         {purchase.user.card}
                       </span>
                       <span className="text-base-content/80 text-xs">

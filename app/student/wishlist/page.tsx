@@ -36,16 +36,11 @@ const fakeWishlistCourses = [
     reviews: 451444,
   },
 ];
-// FIXME: دیزاین این صفحه جزییاتش رعایت نشده
-// پدینگا درست نیست
-// font weight درست نیست
-// اندازه عکسا درست نیست
-// اندازه فونت ها هم درست نیست
+
 export default function WishlistPage() {
   return (
     <>
       <div className="mb-8">
-        {/* title */}
         <div className="text-base-content/80 mb-8 text-3xl font-bold">
           Wishlist
           <span className="text-base-content/60">
@@ -67,16 +62,14 @@ export default function WishlistPage() {
         </div>
       ) : (
         <div className="bg-base-100 border-base-content/10 border">
-          {/* Table Header */}
           <div className="border-base-content/10 bg-base-100 border-b px-8 py-5">
-            <div className="text-base-content/70 grid grid-cols-12 gap-4 text-base font-semibold">
+            <div className="text-base-content/70 grid grid-cols-12 gap-4 text-base font-medium">
               <div className="col-span-6">COURSE</div>
-              <div className="col-span-3 text-center">PRICES</div>
-              <div className="col-span-3 text-center">ACTION</div>
+              <div className="col-span-1 text-center">PRICES</div>
+              <div className="col-span-4 text-center">ACTION</div>
             </div>
           </div>
 
-          {/* Table Body */}
           <div className="divide-base-content/10 divide-y">
             {fakeWishlistCourses.map((course) => (
               <WishlistCourseRow key={course.id} {...course} />
@@ -111,19 +104,17 @@ const WishlistCourseRow: React.FC<WishlistCourseRowProps> = ({
   reviews,
 }) => {
   return (
-    <div className="hover:bg-base-200/30 px-8 py-6 transition-colors">
+    <div className="hover:bg-base-200/30 px-2 py-4 transition-colors">
       <div className="grid grid-cols-12 items-center gap-6">
-        {/* Course Column */}
         <div className="col-span-6">
           <div className="flex items-center gap-5">
-            {/* Course Image */}
             <div className="flex-shrink-0">
               <Image
                 src={image}
                 alt={title}
                 width={96}
                 height={64}
-                className="h-16 w-24 object-cover"
+                className="h-30 w-40 object-cover"
               />
             </div>
 
@@ -131,29 +122,30 @@ const WishlistCourseRow: React.FC<WishlistCourseRowProps> = ({
             <div className="min-w-0 flex-1">
               {/* Rating */}
               <div className="mb-2 flex items-center gap-1">
-                <Icon icon="ph:star-fill" className="text-sm text-yellow-500" />
-                <span className="text-base-content/70 text-xs font-medium">
+                <Icon icon="ph:star-fill" className="text-primary text-sm" />
+                <span className="text-base-content/70 text-xs font-semibold">
                   {rating} ({reviews.toLocaleString()} Review)
                 </span>
               </div>
 
               {/* Title */}
-              <h3 className="text-base-content/90 mb-2 line-clamp-2 text-lg font-semibold">
+              <h3 className="text-base-content/80 mb-2 text-sm font-medium">
                 {title}
               </h3>
 
               {/* Instructors */}
-              <p className="text-base-content/60 text-xs">
-                Course by: {instructors}
-              </p>
+              <span className="text-base-content/70 text-xs">
+                <span className="text-base-content/50"> Course by: </span>
+                {instructors}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Prices Column */}
         <div className="col-span-3 text-center">
-          <div className="flex flex-col items-center">
-            <span className="text-primary text-xl font-bold">{price}</span>
+          <div className="flex flex-row items-center gap-1">
+            <span className="text-primary text-xl font-medium">{price}</span>
             {originalPrice && (
               <span className="text-base-content/40 text-xs line-through">
                 {originalPrice}
@@ -163,7 +155,7 @@ const WishlistCourseRow: React.FC<WishlistCourseRowProps> = ({
         </div>
 
         {/* Action Column */}
-        <div className="col-span-3 text-center">
+        <div className="col-span-2 ml-8 text-center text-nowrap">
           <div className="flex items-center justify-center gap-3">
             <form method="POST" action="/api/cart/buy-now">
               <input type="hidden" name="courseId" value={id} />

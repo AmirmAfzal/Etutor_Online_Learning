@@ -109,13 +109,11 @@ export default async function CoursesPage({
   return (
     <>
       <div className="mb-6 flex flex-col gap-4">
-        {/* title */}
         <div className="text-base-content/80 mb-4 text-xl font-semibold">
           Courses
           <span className="text-base-content/80">{`(${filteredCourses.length})`}</span>
         </div>
         <div className="flex flex-row gap-2">
-          {/* search */}
           <div className="flex flex-1 items-center gap-2">
             <form
               className="flex w-full max-w-md flex-col items-start gap-2"
@@ -141,9 +139,7 @@ export default async function CoursesPage({
               <button type="submit" className="hidden" />
             </form>
           </div>
-          {/* filter */}
           <form className="flex flex-row gap-2" method="GET">
-            {/* sorted by */}
             <div className="flex flex-col gap-2">
               <div className="flex flex-row items-center gap-2">
                 <label htmlFor="sort" className="text-base-content/60 text-xs">
@@ -161,7 +157,6 @@ export default async function CoursesPage({
                 </SelectContent>
               </Select>
             </div>
-            {/* status */}
             <div className="flex flex-col gap-2">
               <div className="flex flex-row items-center gap-2">
                 <label
@@ -182,7 +177,6 @@ export default async function CoursesPage({
                 </SelectContent>
               </Select>
             </div>
-            {/* teacher */}
             <div className="flex flex-col gap-2">
               <div className="flex flex-row items-center gap-2">
                 <label

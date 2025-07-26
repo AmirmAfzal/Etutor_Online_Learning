@@ -124,19 +124,14 @@ export default function StudentDashboard() {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {/* FIXME: سلام وقت بخیر مهندس ،  */}
-        {/* idx این فیلد دوم که گزاشتید  */}
-        {/* معمولا ایندکس استفاده میشه */}
-        {/* index یا i */}
-        {/* جز اینا اسم دیگه ای واس این نزارید با تشکر */}
-        {mockCourses.map((course, idx) => (
+        {mockCourses.map((course, i) => (
           <CourseCard
-            key={idx}
+            key={i}
             title={course.title}
             subtitle={course.subtitle}
             image={course.image}
             progress={course.progress}
-            priority={idx === 0}
+            priority={i === 0}
           />
         ))}
       </div>

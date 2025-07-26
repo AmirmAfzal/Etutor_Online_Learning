@@ -1,11 +1,10 @@
 import React from "react";
-import Image from "next/image";
-import { Icon } from "@iconify/react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
 
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-// FIXME: صفحه خیلی شلوغه یکم کمپوننت بندی کن چیزای اضافی رو
+import MessageHeader from "@/components/Student/student-messages/MessageHeader";
+import ChatMessages from "@/components/Student/student-messages/ChatMessages";
+import ContactList from "@/components/Student/student-messages/ContactList";
+import MessageInput from "@/components/Student/student-messages/MessageInput";
+
 // Mock data for messages
 const mockContacts = [
   {
@@ -142,228 +141,15 @@ const mockChatMessages = [
 
 export default function MessagesPage() {
   return (
-    // FIXME: ارتفاع صفحه همون
-    // 100vh باشه بهتره
-    // h-[calc(100vh-400px)] -> h-screen
-    <div className="bg-base-100 border-base-300 flex h-[calc(100vh-400px)] w-full border">
-      {/* Left Pane - Message List */}
+    <div className="bg-base-100 border-base-300 flex h-screen w-full border">
       <div className="border-base-300 flex w-1/3 flex-col border-r">
-        {/* Header */}
-        <div className="border-base-300 flex items-center justify-between border-b p-4">
-          <h2 className="text-base-content text-lg font-semibold">Message</h2>
-          <DialogPrimitive.Root>
-            <DialogPrimitive.Trigger asChild>
-              {/*FIXME: خب بجای این همون باتن دیزی یوعای رو استفاده کن */}
-              {/* <Button variant="default" size="sm" className="!btn !btn-primary">
-                <Icon icon="ph:plus" />
-                Compose
-              </Button> */}
-              {/* اینا */}
-              <button className="btn btn-primary">
-                <Icon icon="ph:plus" />
-                Compose
-              </button>
-            </DialogPrimitive.Trigger>
-            <DialogPrimitive.Portal>
-              <DialogPrimitive.Overlay className="bg-base-content/50 fixed inset-0 z-40" />
-              <DialogPrimitive.Content className="bg-base-100 fixed top-1/2 left-1/2 z-50 w-full max-w-xl -translate-x-1/2 -translate-y-1/2 p-6">
-                <div className="border-base-content/20 flex items-center justify-between border-b pb-2">
-                  <span className="text-base-content/70 text-lg font-semibold">
-                    New Message
-                  </span>
-                  <DialogPrimitive.Close asChild>
-                    <button className="btn btn-ghost text-base-content/70 text-2xl">
-                      &times;
-                    </button>
-                  </DialogPrimitive.Close>
-                </div>
-                {/* Modal content goes here */}
-                <form className="mt-4 space-y-6">
-                  <div>
-                    <label
-                      className="text-base-content/70 mb-1 block text-base font-medium"
-                      htmlFor="teacher-select"
-                    >
-                      Teacher:
-                    </label>
-                    {/* FIXME: سلکت شد سی ان استفاده بشه */}
-                    <select
-                      id="teacher-select"
-                      className="border-base-300 bg-base-100 text-base-content/70 focus:border-primary w-full border px-3 py-2 focus:ring-0"
-                      defaultValue=""
-                      required
-                    >
-                      <option value="" disabled>
-                        Select...
-                      </option>
-                      {mockContacts.map((contact) => (
-                        <option key={contact.id} value={contact.id}>
-                          {contact.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label
-                      className="text-base-content/70 mb-1 block text-base font-medium"
-                      htmlFor="message-textarea"
-                    >
-                      Message
-                    </label>
-                    <Textarea
-                      id="message-textarea"
-                      className="bg-base-100 border-base-300 text-base-content placeholder:text-base-content/40 min-h-[100px] resize-none border"
-                      placeholder="Write your message here..."
-                      required
-                    />
-                  </div>
-                  <div className="flex items-center justify-between pt-2">
-                    <DialogPrimitive.Close asChild>
-                      <button
-                        type="button"
-                        className="btn btn-ghost text-base-content/70 text-sm"
-                      >
-                        Cancel
-                      </button>
-                    </DialogPrimitive.Close>
-                    <button
-                      type="submit"
-                      className="btn btn-primary flex items-center gap-2 rounded px-8 py-2 font-semibold"
-                    >
-                      Send Message
-                      <Icon
-                        icon="ph:paper-plane-right-fill"
-                        className="text-xl"
-                      />
-                    </button>
-                  </div>
-                </form>
-              </DialogPrimitive.Content>
-            </DialogPrimitive.Portal>
-          </DialogPrimitive.Root>
-        </div>
-
-        {/* Search Bar */}
-        <div className="border-base-300 flex items-center justify-between border-b p-4">
-          <div className="relative w-full">
-            <input
-              type="text"
-              placeholder="Search"
-              className="input input-sm w-full pr-10"
-            />
-            <Icon
-              icon="ph:magnifying-glass"
-              className="text-base-content/50 absolute top-1/2 right-3 -translate-y-1/2"
-            />
-          </div>
-        </div>
-
-        {/* Contact List */}
-        <div className="flex-1 overflow-y-auto">
-          {mockContacts.map((contact) => (
-            <div
-              key={contact.id}
-              className={`border-base-200 hover:bg-base-200 flex cursor-pointer items-center gap-3 border-b p-4 ${
-                contact.isActive ? "bg-primary/10" : ""
-              }`}
-            >
-              <div className="relative">
-                <Image
-                  src={contact.image}
-                  alt={contact.name}
-                  width={48}
-                  height={48}
-                  className="rounded-full object-cover"
-                />
-                {contact.unread && (
-                  <div className="bg-primary absolute -top-1 -right-1 h-3 w-3 rounded-full"></div>
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-base-content truncate font-medium">
-                    {contact.name}
-                  </h3>
-                  <span className="text-base-content/50 text-xs">
-                    {contact.timestamp}
-                  </span>
-                </div>
-                <p className="text-base-content/60 truncate text-sm">
-                  {contact.lastMessage}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <MessageHeader mockContacts={mockContacts} />
+        <ContactList mockContacts={mockContacts} />
       </div>
 
-      {/* Right Pane - Chat Window */}
       <div className="flex w-2/3 flex-col">
-        {/* Chat Header */}
-        <div className="border-base-300 flex items-center justify-between border-b p-4">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/images/student-dashboard/Teacher-profile-1.jpg"
-              alt="Jane Cooper"
-              width={40}
-              height={40}
-              className="rounded-full object-cover"
-            />
-            <div>
-              <h3 className="text-base-content font-medium">Jane Cooper</h3>
-              <p className="text-success text-xs">Active Now</p>
-            </div>
-          </div>
-          <button className="btn btn-soft btn-sm">
-            <Icon icon="ph:dots-three-vertical" className="text-xl" />
-          </button>
-        </div>
-
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="space-y-4">
-            <div className="text-center">
-              <span className="text-base-content/50 text-sm">Today</span>
-            </div>
-
-            {mockChatMessages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.isOwn ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-xs px-4 py-2 ${
-                    message.isOwn
-                      ? "bg-primary text-primary-content"
-                      : "bg-primary/20 text-base-content"
-                  }`}
-                >
-                  <p className="text-sm">{message.message}</p>
-                  <p className="mt-1 text-xs opacity-70">{message.timestamp}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Message Input */}
-        <div className="border-base-300 flex items-center gap-2 border-t p-4">
-          <div className="relative flex-1">
-            <input
-              type="text"
-              placeholder="Type your message"
-              className="input w-full pr-12"
-            />
-            <Icon
-              icon="ph:pencil-simple-line"
-              className="text-primary/50 absolute top-1/2 right-4 -translate-y-1/2 text-lg"
-            />
-          </div>
-          <button className="btn btn-primary btn-sm gap-2 py-6">
-            Send
-            <Icon icon="ph:paper-plane-right-fill" className="text-xl" />
-          </button>
-        </div>
+        <ChatMessages mockChatMessages={mockChatMessages} />
+        <MessageInput />
       </div>
     </div>
   );

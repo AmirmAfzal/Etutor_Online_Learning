@@ -55,12 +55,10 @@ const paymentMethods = [
 const page = () => {
   return (
     <div className="flex w-full flex-col gap-10 md:flex-row">
-      {/* Payment Method */}
       <div className="bg-base-100 flex-1 p-8">
         <h2 className="text-base-content mb-8 text-2xl font-bold">
           Payment Method
         </h2>
-        {/* Payment Methods */}
         <div className="mb-6 space-y-4">
           {paymentMethods.map((pm) => (
             <div
@@ -71,29 +69,18 @@ const page = () => {
               <span className="text-base-content/90 font-medium tracking-widest">
                 {pm.label}
               </span>
-              {/* FIXME: این شرط ها هیچ کدوم تاثیر نداره ، چون دیتا ثابته اینا پاک بشن */}
-              {pm.expiry && (
-                <span className="text-base-content/60 ml-auto text-sm">
-                  {pm.expiry}
-                </span>
-              )}
-              {/* FIXME: همچنین این */}
-              {pm.name && (
-                <span className="text-base-content/80 ml-4 text-sm">
-                  {pm.name}
-                </span>
-              )}
-              {/* FIXME: همچنین این */}
-              {pm.desc && (
-                <span className="text-base-content/70 ml-2 text-xs">
-                  {pm.desc}
-                </span>
-              )}
+              <span className="text-base-content/60 ml-auto text-sm">
+                {pm.expiry}
+              </span>
+              <span className="text-base-content/80 ml-4 text-sm">
+                {pm.name}
+              </span>
+              <span className="text-base-content/70 ml-2 text-xs">
+                {pm.desc}
+              </span>
             </div>
           ))}
         </div>
-        {/* FIXME: کامنتای نامربوط حذف بشه اگر کد اچ تی ام ال زیاد شده کمپوننت بندی کنید */}
-        {/* New Card */}
         <div className="border-success bg-base-100 mb-6 flex items-center border p-4">
           <span className="text-base-content/60 flex items-center gap-2">
             <Icon icon="ph:credit-card" className="text-success text-lg" />
@@ -104,7 +91,6 @@ const page = () => {
             className="text-success ml-auto text-2xl"
           />
         </div>
-        {/* Card Form */}
         <form className="space-y-5">
           <div>
             <Label htmlFor="name" className="mb-1 block">
@@ -169,7 +155,6 @@ const page = () => {
           </div>
         </form>
       </div>
-      {/* Order Summary */}
       <div className="bg-base-100 border-base-content/10 flex w-full flex-col border p-7 md:mt-10 md:w-[370px]">
         <div className="mb-4 flex items-center justify-between">
           <span className="text-base-content/70 text-lg font-semibold">
