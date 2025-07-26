@@ -1,9 +1,18 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { startTransition, useActionState, useState } from "react";
+import { useFormState } from "react-dom";
+
+import {
+  saveBasicInformation,
+  saveAndPreviewBasicInformation,
+} from "@/lib/actions/instructor/create-course/basicInformation";
+import {
+  basicInformationSchema,
+  BasicInformationFormData,
+} from "@/lib/validation/schemas/instructor/create-course";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -21,28 +30,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { z } from "zod";
 
-const formSchema = z.object({
-  title: z.string().min(1).max(80),
-  subtitle: z.string().min(1).max(120),
-  category: z.string().min(1),
-  subcategory: z.string().min(1),
-  topic: z.string().min(1),
-  language: z.string().min(1),
-  subtitleLang: z.string().optional(),
-  level: z.string().min(1),
-  durationValue: z.string().min(1),
-  durationUnit: z.string().min(1),
-});
-
-type FormField = z.infer<typeof formSchema>;
+// Use the imported schema type
+type FormField = BasicInformationFormData;
 
 const BasicInformation = () => {
   const [titleLength, setTitleLength] = useState(0);
   const [subTitleLength, setSubTitleLength] = useState(0);
 
   const form = useForm<FormField>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(basicInformationSchema),
     defaultValues: {
       title: "",
       subtitle: "",
@@ -57,24 +55,64 @@ const BasicInformation = () => {
     },
   });
 
-  const onSubmit = (values: FormField) => {
-    console.log("✅ Form submitted:", values);
-    form.reset();
+  // Initial state for form action
+  const initialState = {
+    message: "",
+    errors: [],
   };
 
+  // Use React's useFormState for server action
+  const [state, formAction] = useActionState(
+    saveBasicInformation,
+    initialState
+  );
+  const [previewState, previewFormAction] = useActionState(
+    saveAndPreviewBasicInformation,
+    initialState
+  );
+  const handleSubmit = async (data: z.infer<typeof basicInformationSchema>) => {
+    startTransition(() => {
+      // Convert data to FormData
+      const formData = new FormData();
+      
+      // Add each field to the FormData object
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value);
+        }
+      });
+      
+      formAction(formData);
+    });
+  };
   return (
     <div>
       <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
         <h2 className="text-xl font-bold">Basic Information</h2>
         <div>
-          <button className="btn btn-primary btn-soft mr-4">Save</button>
-          <button className="btn btn-primary btn-soft">Save & Preview</button>
+          <button
+            className="btn btn-primary btn-soft mr-4"
+            type="submit"
+            // formAction={formAction}
+          >
+            Save
+          </button>
+          <button
+            className="btn btn-primary btn-soft"
+            type="submit"
+            // formAction={previewFormAction}
+          >
+            Save & Preview
+          </button>
         </div>
       </div>
 
       <div className="p-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            className="space-y-4"
+            onSubmit={form.handleSubmit(handleSubmit)}
+          >
             {/* Title */}
             <FormField
               control={form.control}
@@ -273,11 +311,11 @@ const BasicInformation = () => {
                           <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="beginner">Beginner</SelectItem>
-                          <SelectItem value="intermediate">
+                          <SelectItem value="Beginner">Beginner</SelectItem>
+                          <SelectItem value="Intermediate">
                             Intermediate
                           </SelectItem>
-                          <SelectItem value="advanced">Advanced</SelectItem>
+                          <SelectItem value="Advanced">Advanced</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -316,9 +354,9 @@ const BasicInformation = () => {
                             <SelectValue placeholder="Day" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="day">Day</SelectItem>
-                            <SelectItem value="week">Week</SelectItem>
-                            <SelectItem value="month">Month</SelectItem>
+                            <SelectItem value="Day">Day</SelectItem>
+                            <SelectItem value="Week">Week</SelectItem>
+                            <SelectItem value="Hour">Month</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -330,11 +368,37 @@ const BasicInformation = () => {
             </div>
 
             <div className="mt-6 flex flex-row items-center justify-between">
-              <button className="btn btn-outline">Cancel</button>
+              <button className="btn btn-outline" type="button">
+                Cancel
+              </button>
               <button type="submit" className="btn btn-primary">
                 Save & Next
               </button>
             </div>
+
+            {/* Display form submission status */}
+            {state.message === "SUCCESS" && (
+              <div className="bg-success/10 text-success mt-4 rounded-md p-4">
+                <p>Course information saved successfully!</p>
+              </div>
+            )}
+
+            {state.message === "ERROR" && (
+              <div className="bg-error/10 text-error mt-4 rounded-md p-4">
+                <p>Error saving course information:</p>
+                <ul className="ml-4 list-disc">
+                  {state.errors.map((error, index) => (
+                    <li key={index}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {state.message === "PREVIEW" && (
+              <div className="mt-4 rounded-md bg-blue-50 p-4 text-blue-700">
+                <p>Course information saved and ready for preview!</p>
+              </div>
+            )}
           </form>
         </Form>
       </div>
