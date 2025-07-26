@@ -68,30 +68,16 @@ const CourseRating = () => {
         <div className="bg-primary/10 col-span-3 flex flex-col items-center justify-center gap-2">
           <h3 className="text-3xl font-bold">4.6</h3>
           <div className="flex flex-row items-center gap-1">
-            <Icon
-              icon="ph:star-fill"
-              className="text-primary"
-              width="20"
-              height="20"
-            />
-            <Icon
-              icon="ph:star-fill"
-              className="text-primary"
-              width="20"
-              height="20"
-            />
-            <Icon
-              icon="ph:star-fill"
-              className="text-primary"
-              width="20"
-              height="20"
-            />
-            <Icon
-              icon="ph:star-fill"
-              className="text-primary"
-              width="20"
-              height="20"
-            />
+            {[1, 2, 3, 4].map((star) => (
+              <Icon
+                key={star}
+                icon="ph:star-fill"
+                className="text-primary"
+                width="20"
+                height="20"
+              />
+            ))}
+
             <Icon
               icon="ph:star"
               className="text-primary"

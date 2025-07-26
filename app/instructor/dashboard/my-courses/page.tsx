@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import {
   DropdownMenu,
@@ -19,6 +20,7 @@ import {
 const MyCoursesPage = () => {
   const courses = [
     {
+      id: 1,
       thumbnail: "/images/course-images-1.png",
       name: "Machine Learning A-Z™: Hands-On Python & R In Data...",
       category: "Design",
@@ -27,6 +29,7 @@ const MyCoursesPage = () => {
       students: 265.7,
     },
     {
+      id: 2,
       thumbnail: "/images/course-images-2.png",
       name: "The Complete 2021 Web Development Bootcamp",
       category: "Developments",
@@ -35,6 +38,7 @@ const MyCoursesPage = () => {
       students: 265.7,
     },
     {
+      id: 3,
       thumbnail: "/images/course-images-3.png",
       name: "Learn Python Programming Masterclass",
       category: "Business",
@@ -43,6 +47,7 @@ const MyCoursesPage = () => {
       students: 265.7,
     },
     {
+      id: 4,
       thumbnail: "/images/course-images-4.png",
       name: "The Complete Digital Marketing Course - 12 Courses in 1",
       category: "Marketing",
@@ -51,6 +56,7 @@ const MyCoursesPage = () => {
       students: 265.7,
     },
     {
+      id: 5,
       thumbnail: "/images/course-images-5.png",
       name: "Reiki Level I, II and Master/Teacher Program",
       category: "IT & Software",
@@ -59,6 +65,7 @@ const MyCoursesPage = () => {
       students: 265.7,
     },
     {
+      id: 6,
       thumbnail: "/images/course-images-6.png",
       name: "The Complete Foundation Stock Trading Course",
       category: "Music",
@@ -67,6 +74,7 @@ const MyCoursesPage = () => {
       students: 265.7,
     },
     {
+      id: 7,
       thumbnail: "/images/course-images-7.png",
       name: "Beginner to Pro in Excel: Financial Modeling and Valuati...",
       category: "Marketing",
@@ -75,6 +83,7 @@ const MyCoursesPage = () => {
       students: 265.7,
     },
     {
+      id: 8,
       thumbnail: "/images/course-images-8.png",
       name: "The Python Mega Course: Build 10 Real World Applications",
       category: "Health & Fitness",
@@ -83,6 +92,7 @@ const MyCoursesPage = () => {
       students: 265.7,
     },
     {
+      id: 9,
       thumbnail: "/images/course-images-9.png",
       name: "Copywriting - Become a Freelance Copywriter, your ow...",
       category: "Design",
@@ -91,6 +101,7 @@ const MyCoursesPage = () => {
       students: 265.7,
     },
     {
+      id: 10,
       thumbnail: "/images/course-images-10.png",
       name: "Google Analytics Certification - Learn How To Pass The Exam",
       category: "Lifestyle",
@@ -227,7 +238,11 @@ const MyCoursesPage = () => {
 
                   <DropdownMenuContent>
                     <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
-                      <button>View Details</button>
+                      <Link
+                        href={`/instructor/dashboard/my-courses/${course.id}`}
+                      >
+                        View Details
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
                       <button>Edit Course</button>

@@ -28,7 +28,13 @@ const data = [
   { name: "Aug 30", uv: 3490, pv: 4300, amt: 2100 },
 ];
 
-const RevenueView = () => {
+type Props = {
+  stroke: string;
+  fill: string;
+  height: number;
+};
+
+const RevenueView = ({ stroke, fill, height }: Props) => {
   return (
     <div className="bg-base-100 h-full w-full">
       <div className="border-base-300 flex flex-row items-center justify-between border-b p-4">
@@ -44,7 +50,7 @@ const RevenueView = () => {
         </Select>
       </div>
 
-      <ResponsiveContainer width="100%" height={320}>
+      <ResponsiveContainer width="100%" height={height}>
         <AreaChart
           data={data}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -60,9 +66,9 @@ const RevenueView = () => {
           <Area
             type="monotone"
             dataKey="uv"
-            stroke="#564FFD"
+            stroke={stroke}
             strokeWidth={2}
-            fill="#EBEBFF"
+            fill={fill}
           />
         </AreaChart>
       </ResponsiveContainer>

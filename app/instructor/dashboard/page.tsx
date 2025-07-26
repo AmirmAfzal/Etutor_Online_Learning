@@ -1,7 +1,7 @@
 import InstructorOverview from "@/components/instructor-dashboard/InstructorOverview";
 import Bannar from "@/components/instructor-dashboard/Bannar";
 import RecentActivity from "@/components/instructor-dashboard/RecentActivity";
-import Revenue from "@/components/instructor-dashboard/RevenueView";
+import RevenueView from "@/components/instructor-dashboard/RevenueView";
 import EarningView from "@/components/instructor-dashboard/EarningView";
 import CourseRating from "@/components/instructor-dashboard/CourseRating";
 import CourseOverview from "@/components/instructor-dashboard/CourseOverview";
@@ -16,7 +16,7 @@ const DashboardPage = () => {
           <RecentActivity />
         </div>
         <div className="col-span-5 h-auto w-full">
-          <Revenue />
+          <RevenueView stroke="#564FFD" fill="#EBEBFF" height={320} />
         </div>
         <div className="col-span-3 h-auto w-full">
           <EarningView />

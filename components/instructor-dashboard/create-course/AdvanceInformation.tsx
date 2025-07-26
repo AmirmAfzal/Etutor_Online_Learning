@@ -184,7 +184,8 @@ const AdvanceInformation = () => {
               <button
                 onClick={() => addField("topics")}
                 disabled={topics.length >= MAX_INPUTS}
-                className="btn btn-ghost text-primary disabled:opacity-60"
+                className="btn btn-soft btn-primary disabled:btn-disabled"
+                type="button"
               >
                 + Add new
               </button>
@@ -225,7 +226,8 @@ const AdvanceInformation = () => {
               <button
                 onClick={() => addField("targetTopics")}
                 disabled={targetTopics.length >= MAX_INPUTS}
-                className="btn btn-ghost text-primary disabled:opacity-60"
+                className="btn btn-soft btn-primary disabled:btn-disabled"
+                type="button"
               >
                 + Add new
               </button>
@@ -266,7 +268,8 @@ const AdvanceInformation = () => {
               <button
                 onClick={() => addField("requirementsTopics")}
                 disabled={requirementsTopics.length >= MAX_INPUTS}
-                className="btn btn-ghost text-primary disabled:opacity-60"
+                className="btn btn-soft btn-primary disabled:btn-disabled"
+                type="button"
               >
                 + Add new
               </button>
