@@ -20,7 +20,7 @@ const TruncatedText = ({
       </span>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="text-base-content/80 font-semibold"
+        className="text-base-content/80 text-sm font-semibold"
       >
         {isExpanded ? "Show Less" : "Read More"}
       </button>
