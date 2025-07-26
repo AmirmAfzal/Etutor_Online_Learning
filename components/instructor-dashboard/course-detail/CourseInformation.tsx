@@ -1,9 +1,6 @@
 import Icon from "@/components/ui/Icon";
-import React from "react";
 
-type Props = {};
-
-const CourseInformation = (props: Props) => {
+const CourseInformation = () => {
   const information = [
     {
       id: 1,

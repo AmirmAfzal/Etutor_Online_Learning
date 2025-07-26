@@ -1,5 +1,4 @@
 import Image from "next/image";
-import React from "react";
 
 import CourseInformation from "@/components/instructor-dashboard/course-detail/CourseInformation";
 import CourseOverview from "@/components/instructor-dashboard/CourseOverview";
@@ -7,9 +6,7 @@ import CourseRating from "@/components/instructor-dashboard/CourseRating";
 import RevenueView from "@/components/instructor-dashboard/RevenueView";
 import Icon from "@/components/ui/Icon";
 
-type Props = {};
-
-const CourseDetailPage = (props: Props) => {
+const CourseDetailPage = () => {
   return (
     <section className="bg-base-200 w-full">
       <div className="container mx-auto p-6">
