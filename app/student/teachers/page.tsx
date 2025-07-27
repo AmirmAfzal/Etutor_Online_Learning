@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "@iconify/react";
+import Form from "next/form";
 
 import TeacherCard from "@/components/Student/TeacherCard";
 import {
@@ -89,10 +90,10 @@ export default async function TeachersPage({
         <div className="flex flex-row gap-2">
           {/* search */}
           <div className="flex flex-1 items-center gap-2">
-            {/* FIXME: فرم هارو با نکست فرم عوض کن */}
-            <form
+            {/* TODO: check the form */}
+            <Form
               className="flex w-full max-w-md flex-col items-start gap-2"
-              method="GET"
+              action="/search"
             >
               <label htmlFor="search" className="text-base-content/60 text-xs">
                 Search:
@@ -104,7 +105,7 @@ export default async function TeachersPage({
                 />
                 <input
                   id="search"
-                  name="search"
+                  name="query"
                   type="text"
                   placeholder="Search instructors..."
                   defaultValue={search}
@@ -112,10 +113,13 @@ export default async function TeachersPage({
                 />
               </div>
               <button type="submit" className="hidden" />
-            </form>
+            </Form>
           </div>
           {/* filter */}
-          <form className="flex flex-1 flex-row gap-2" method="GET">
+          <Form
+            className="flex flex-1 flex-row gap-2"
+            action="/student/teachers"
+          >
             {/* sorted by */}
             <div className="flex flex-2 flex-col gap-2">
               <div className="flex flex-row items-center gap-2">
@@ -153,7 +157,7 @@ export default async function TeachersPage({
               </Select>
             </div>
             <button type="submit" className="hidden" />
-          </form>
+          </Form>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
