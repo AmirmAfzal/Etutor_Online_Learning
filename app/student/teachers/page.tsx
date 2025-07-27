@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { redirect } from "next/navigation";
 
 // Fake data for demonstration
 const fakeTeachers = [
@@ -44,40 +45,30 @@ const fakeTeachers = [
   // ... add more teachers as needed
 ];
 
-export default async function TeachersPage({
+async function searchCourses(formData: FormData) {
+  "use server";
+
+  // Get the search query from form data
+  const query = formData.get("query")?.toString() || "";
+
+  if (query) {
+    redirect(`/student/teachers?query=${encodeURIComponent(query)}`);
+  }
+}
+
+const TeachersPage = ({
   searchParams,
 }: {
-  searchParams?: Promise<{
-    search?: string;
-    sort?: string;
-    courses?: string;
-  }>;
-}) {
-  // Await searchParams if it is a Promise
-  const params = searchParams ? await searchParams : {};
-  const search = typeof params.search === "string" ? params.search : "";
-  const sort = typeof params.sort === "string" ? params.sort : "Latest";
-  const courses = typeof params.courses === "string" ? params.courses : "All";
-
-  // Filter logic
-  let filteredTeachers = fakeTeachers.filter((teacher) => {
-    const matchesSearch =
-      !search ||
-      teacher.name.toLowerCase().includes(search.toLowerCase()) ||
-      teacher.title.toLowerCase().includes(search.toLowerCase());
-    return matchesSearch;
-  });
-
-  // Sort logic
-  if (sort === "Latest") {
-    filteredTeachers = filteredTeachers.slice().reverse();
-  } else if (sort === "Oldest") {
-    // do nothing, keep original order
-  } else if (sort === "Most Students") {
-    filteredTeachers = filteredTeachers
-      .slice()
-      .sort((a, b) => b.students - a.students);
-  }
+  searchParams: { query?: string };
+}) => {
+  const query = searchParams.query?.toLowerCase();
+  const filteredTeachers = query
+    ? fakeTeachers.filter(
+        (teacher) =>
+          teacher.name.toLowerCase().includes(query) ||
+          teacher.title.toLowerCase().includes(query)
+      )
+    : fakeTeachers;
 
   return (
     <>
@@ -93,7 +84,7 @@ export default async function TeachersPage({
             {/* TODO: check the form */}
             <Form
               className="flex w-full max-w-md flex-col items-start gap-2"
-              action="/search"
+              action={searchCourses}
             >
               <label htmlFor="search" className="text-base-content/60 text-xs">
                 Search:
@@ -108,26 +99,22 @@ export default async function TeachersPage({
                   name="query"
                   type="text"
                   placeholder="Search instructors..."
-                  defaultValue={search}
+                  defaultValue={searchParams?.query || ""}
                   className="placeholder:text-base-content/40 w-full bg-transparent py-2 pr-4 pl-2 text-base focus:outline-none"
                 />
               </div>
               <button type="submit" className="hidden" />
             </Form>
           </div>
-          {/* filter */}
-          <Form
-            className="flex flex-1 flex-row gap-2"
-            action="/student/teachers"
-          >
-            {/* sorted by */}
+          {/* TODO: این قسمت رو چطوری اکشنش رو اوکی کنم  */}
+          <Form className="flex flex-1 flex-row gap-2" action="">
             <div className="flex flex-2 flex-col gap-2">
               <div className="flex flex-row items-center gap-2">
                 <label htmlFor="sort" className="text-base-content/60 text-xs">
                   Courses:
                 </label>
               </div>
-              <Select name="courses" defaultValue={courses}>
+              <Select name="courses">
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Courses" />
                 </SelectTrigger>
@@ -145,7 +132,7 @@ export default async function TeachersPage({
                   Sort by:
                 </label>
               </div>
-              <Select name="sort" defaultValue={sort}>
+              <Select name="sort">
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
@@ -161,10 +148,12 @@ export default async function TeachersPage({
         </div>
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {filteredTeachers.map((teacher, idx) => (
-          <TeacherCard key={idx} {...teacher} />
+        {filteredTeachers.map((teacher, i) => (
+          <TeacherCard key={i} {...teacher} />
         ))}
       </div>
     </>
   );
-}
+};
+
+export default TeachersPage;

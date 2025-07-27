@@ -9,6 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { redirect } from "next/navigation";
+import Form from "next/form";
 
 // Fake data for demonstration
 const fakeCourses = [
@@ -62,49 +64,30 @@ const fakeCourses = [
   },
 ];
 
-export default async function CoursesPage({
+async function searchCourses(formData: FormData) {
+  "use server";
+
+  const query = formData.get("query")?.toString() || "";
+
+  if (query) {
+    redirect(`/student/courses?search=${encodeURIComponent(query)}`);
+  }
+}
+
+const CoursesPage = ({
   searchParams,
 }: {
-  searchParams?: Promise<{
-    search?: string;
-    sort?: string;
-    status?: string;
-    teacher?: string;
-  }>;
-}) {
-  // Await searchParams if it is a Promise
-  const params = searchParams ? await searchParams : {};
-  const search = typeof params.search === "string" ? params.search : "";
-  const sort = typeof params.sort === "string" ? params.sort : "Latest";
-  const status =
-    typeof params.status === "string" ? params.status : "All Courses";
-  const teacher =
-    typeof params.teacher === "string" ? params.teacher : "All Teachers";
-  // Pagination (optional, not implemented fully)
-  // const currentPage = parseInt(typeof searchParams.page === "string" ? searchParams.page : "1", 10);
-  // const coursesPerPage = 20;
-
-  // Filter logic
-  let filteredCourses = fakeCourses.filter((course) => {
-    const matchesSearch =
-      !search ||
-      course.title.toLowerCase().includes(search.toLowerCase()) ||
-      course.subtitle.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = status === "All Courses" || course.status === status;
-    const matchesTeacher =
-      teacher === "All Teachers" || course.teacher === teacher;
-    return matchesSearch && matchesStatus && matchesTeacher;
-  });
-
-  // Sort logic
-  if (sort === "Latest") {
-    filteredCourses = filteredCourses.slice().reverse();
-  } else if (sort === "Oldest") {
-    // do nothing, keep original order
-  } else if (sort === "Most Viewed") {
-    // For demo, just shuffle
-    filteredCourses = filteredCourses.slice().sort(() => Math.random() - 0.5);
-  }
+  searchParams: { query?: string };
+}) => {
+  // FIXME: چرا سرچم درست کار نمیکنه ؟ نفهمیدم من
+  const query = searchParams.query?.toLowerCase();
+  const filteredCourses = query
+    ? fakeCourses.filter(
+        (course) =>
+          course.title.toLowerCase().includes(query) ||
+          course.subtitle.toLowerCase().includes(query)
+      )
+    : fakeCourses;
 
   return (
     <>
@@ -115,29 +98,30 @@ export default async function CoursesPage({
         </div>
         <div className="flex flex-row gap-2">
           <div className="flex flex-1 items-center gap-2">
-            <form
+            <Form
               className="flex w-full max-w-md flex-col items-start gap-2"
-              method="GET"
+              action={searchCourses}
             >
               <label htmlFor="search" className="text-base-content/60 text-xs">
                 Search:
               </label>
               <div className="border-base-content/10 bg-base-100 focus-within:border-primary focus-within:ring-primary/20 flex w-full items-center border p-1 focus-within:ring-1">
-                <Icon
-                  icon="ph:magnifying-glass-bold"
-                  className="text-base-content/40 ml-3 text-xl"
-                />
+                <button type="submit">
+                  <Icon
+                    icon="ph:magnifying-glass-bold"
+                    className="text-base-content/40 ml-3 text-xl"
+                  />
+                </button>
                 <input
                   id="search"
-                  name="search"
+                  name="query"
                   type="text"
                   placeholder="Search in your courses..."
-                  defaultValue={search}
+                  defaultValue={searchParams.query || ""}
                   className="placeholder:text-base-content/40 w-full bg-transparent py-2 pr-4 pl-2 text-base focus:ring-0 focus:outline-none"
                 />
               </div>
-              <button type="submit" className="hidden" />
-            </form>
+            </Form>
           </div>
           <form className="flex flex-row gap-2" method="GET">
             <div className="flex flex-col gap-2">
@@ -146,7 +130,7 @@ export default async function CoursesPage({
                   Sorted by:
                 </label>
               </div>
-              <Select name="sort" defaultValue={sort}>
+              <Select name="sort">
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Sorted by" />
                 </SelectTrigger>
@@ -166,7 +150,7 @@ export default async function CoursesPage({
                   Status:
                 </label>
               </div>
-              <Select name="status" defaultValue={status}>
+              <Select name="status">
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
@@ -186,7 +170,7 @@ export default async function CoursesPage({
                   Teacher:
                 </label>
               </div>
-              <Select name="teacher" defaultValue={teacher}>
+              <Select name="teacher">
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Teacher" />
                 </SelectTrigger>
@@ -203,8 +187,8 @@ export default async function CoursesPage({
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {filteredCourses.map((course, idx) => (
-          <CourseCard key={idx} {...course} />
+        {filteredCourses.map((course, i) => (
+          <CourseCard key={i} {...course} />
         ))}
       </div>
       {/* Pagination (optional, SSR-ready) */}
@@ -215,4 +199,6 @@ export default async function CoursesPage({
           /> */}
     </>
   );
-}
+};
+
+export default CoursesPage;
