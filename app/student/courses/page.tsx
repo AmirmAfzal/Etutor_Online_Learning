@@ -64,23 +64,13 @@ const fakeCourses = [
   },
 ];
 
-async function searchCourses(formData: FormData) {
-  "use server";
-
-  const query = formData.get("query")?.toString() || "";
-
-  if (query) {
-    redirect(`/student/courses?search=${encodeURIComponent(query)}`);
-  }
-}
-
-const CoursesPage = ({
+const CoursesPage = async ({
   searchParams,
 }: {
   searchParams: { query?: string };
 }) => {
   // FIXME: چرا سرچم درست کار نمیکنه ؟ نفهمیدم من
-  const query = searchParams.query?.toLowerCase();
+  const query = await searchParams.query?.toLowerCase();
   const filteredCourses = query
     ? fakeCourses.filter(
         (course) =>
@@ -100,7 +90,7 @@ const CoursesPage = ({
           <div className="flex flex-1 items-center gap-2">
             <Form
               className="flex w-full max-w-md flex-col items-start gap-2"
-              action={searchCourses}
+              action={"/student/courses"}
             >
               <label htmlFor="search" className="text-base-content/60 text-xs">
                 Search:
