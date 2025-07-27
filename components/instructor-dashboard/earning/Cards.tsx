@@ -85,7 +85,7 @@ const Cards = () => {
         <h3 className="text-sm font-bold">Cards</h3>
         <Select>
           <SelectTrigger className="border-0">
-            <SelectValue placeholder="This Month" />
+            <SelectValue placeholder="Revenue" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="revenue">Revenue</SelectItem>

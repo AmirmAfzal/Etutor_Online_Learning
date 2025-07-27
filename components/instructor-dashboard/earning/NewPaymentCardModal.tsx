@@ -12,6 +12,8 @@ import {
   FormField,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Cleave from "cleave.js/react";
+import { Separator } from "@/components/ui/separator";
 
 type Props = {
   closeModal: () => void;
@@ -23,7 +25,7 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
   const onSubmit = (data: any) => {
     console.log(data);
     closeModal();
-  }
+  };
 
   return (
     <div className="bg-base-content/70 fixed inset-0 z-50 flex items-center justify-center">
@@ -40,7 +42,10 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
           </button>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 p-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -61,7 +66,24 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
                 <FormItem>
                   <FormLabel>Card Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="Label" {...field} />
+                    <div className="relative">
+                      <Icon
+                        icon="ph:credit-card"
+                        className="text-primary absolute top-2 left-2"
+                        width="24"
+                        height="24"
+                      />
+                      <Separator
+                        orientation="vertical"
+                        className="absolute left-10"
+                      />
+                      <Cleave
+                        {...field}
+                        options={{ creditCard: true }}
+                        placeholder="Label"
+                        className="border-base-300 w-full border p-2 pl-12 shadow-xs"
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,7 +97,12 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
                   <FormItem>
                     <FormLabel>MM / YY</FormLabel>
                     <FormControl>
-                      <Input placeholder="MM / YY" {...field} />
+                      <Cleave
+                        {...field}
+                        options={{ date: true, datePattern: ["m", "y"] }}
+                        placeholder="MM / YY"
+                        className="border-base-300 w-full border p-2 shadow-xs"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
