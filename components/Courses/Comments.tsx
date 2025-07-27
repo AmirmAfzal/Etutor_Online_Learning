@@ -55,7 +55,9 @@ const Comments: FC<CommentsProps> = ({ studentsComments }) => {
           />
           <div>
             <span className="font-semibold">{comment.name}</span>
-            <span className="text-base-content/60 ml-4">{comment.time}</span>
+            <span className="text-base-content/60 ml-4 text-sm">
+              {comment.time}
+            </span>
             <div>
               {[...Array(comment.star)].map((_, index) => (
                 <Icon
