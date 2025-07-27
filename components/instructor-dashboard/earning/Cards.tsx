@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import NewPaymentCardModal from "./NewPaymentCardModal";
 
 const cards = [
   {
@@ -38,6 +39,8 @@ const cards = [
 ];
 
 const Cards = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(
     null
   );
@@ -53,6 +56,10 @@ const Cards = () => {
     if (swiperRef.current) {
       swiperRef.current.slideTo(index);
     }
+  };
+
+  const closeModalHandler = () => {
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -168,7 +175,10 @@ const Cards = () => {
             </button>
           </div>
         </div>
-        <button className="btn btn-dash btn-block mt-12 py-8">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="btn btn-dash btn-block mt-12 py-8"
+        >
           <Icon
             icon="ph:plus-circle"
             className="text-primary"
@@ -178,6 +188,7 @@ const Cards = () => {
           Add new card
         </button>
       </div>
+      {isModalOpen && <NewPaymentCardModal closeModal={closeModalHandler} />}
     </section>
   );
 };

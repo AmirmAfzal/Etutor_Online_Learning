@@ -3,12 +3,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition, useActionState, useState } from "react";
-import { useFormState } from "react-dom";
 
 import {
   saveBasicInformation,
   saveAndPreviewBasicInformation,
 } from "@/lib/actions/instructor/create-course/basicInformation";
+
 import {
   basicInformationSchema,
   BasicInformationFormData,
@@ -22,6 +22,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+
 import {
   Form,
   FormControl,

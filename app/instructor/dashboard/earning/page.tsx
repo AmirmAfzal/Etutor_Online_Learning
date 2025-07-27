@@ -1,6 +1,8 @@
+import Icon from "@/components/ui/Icon";
 import Cards from "@/components/instructor-dashboard/earning/Cards";
 import Statistic from "@/components/instructor-dashboard/earning/Statistic";
-import Icon from "@/components/ui/Icon";
+import WithdrawHistory from "@/components/instructor-dashboard/earning/WithdrawHistory";
+import WithdrawMoney from "@/components/instructor-dashboard/earning/WithdrawMoney";
 
 const EarningPage = () => {
   const earningInformation = [
@@ -68,6 +70,12 @@ const EarningPage = () => {
           </div>
           <div className="col-span-4">
             <Cards />
+          </div>
+          <div className="col-span-5">
+            <WithdrawMoney />
+          </div>
+          <div className="col-span-7">
+            <WithdrawHistory />
           </div>
         </div>
       </div>
