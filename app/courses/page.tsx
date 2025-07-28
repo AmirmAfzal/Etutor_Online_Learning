@@ -1,18 +1,10 @@
 // TODO: single course updated => merge to this branch
 
 import Icon from "@/components/ui/Icon";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import Form from "next/form";
+
 import React from "react";
-import { redirect } from "next/navigation";
 import CourseCard from "@/components/CourseCard";
+import CoursesSearch from "@/components/Courses/CoursesSearch";
 
 const courses = [
   {
@@ -97,17 +89,6 @@ const courses = [
   },
 ];
 
-async function searchCourses(formData: FormData) {
-  "use server";
-
-  // Get the search query from form data
-  const query = formData.get("query")?.toString() || "";
-
-  if (query) {
-    redirect(`/courses?query=${encodeURIComponent(query)}`);
-  }
-}
-
 const CoursesPage = ({
   searchParams,
 }: {
@@ -131,39 +112,10 @@ const CoursesPage = ({
               <span className="text-sm">Filter</span>
               <span className="text-primary bg-primary/10 px-2">3</span>
             </button>
-
-            <Form
-              action={searchCourses}
-              className="relative flex w-full items-center gap-2"
-            >
-              <button type="submit" className="absolute top-3 left-4 z-10">
-                <Icon icon="ph:magnifying-glass" className="text-xl" />
-              </button>
-              <Input
-                type="text"
-                name="query"
-                defaultValue={searchParams.query || ""}
-                className="w-96 pl-12"
-                placeholder="Search courses..."
-              />
-            </Form>
+            <CoursesSearch />
           </div>
 
-          <div className="flex flex-row items-center gap-3">
-            <label htmlFor="sorted" className="text-base-content/60 text-sm">
-              Sorted by:
-            </label>
-            <Select>
-              <SelectTrigger className="text-base-100 border-0">
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="trending">Trending</SelectItem>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="oldest">Oldest</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          {/*  */}
         </div>
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-2 text-xs">
