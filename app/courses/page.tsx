@@ -5,6 +5,8 @@ import Icon from "@/components/ui/Icon";
 import React from "react";
 import CourseCard from "@/components/CourseCard";
 import CoursesSearch from "@/components/Courses/CoursesSearch";
+import CoursesSelect from "@/components/Courses/CoursesSelect";
+import CourseFilter from "@/components/Courses/CourseFilter";
 
 const courses = [
   {
@@ -89,12 +91,38 @@ const courses = [
   },
 ];
 
+// fake data for filtered courses
+const categories = [
+  {
+    name: "Development",
+    subcategories: {
+      "Web Development": 574,
+      "Mobile Development": 1345,
+      "Software Testing": 317,
+      "Software Engineering": 31,
+      "Software Development Tools": 58,
+      "No-Code Development": 37,
+    },
+  },
+  { name: "Business", subcategories: { "Finance & Accounting": 0 } },
+  { name: "IT & Software", subcategories: { "": 0 } },
+  { name: "Office Productivity", subcategories: { "": 0 } },
+  { name: "Personal Development", subcategories: { "": 0 } },
+  { name: "Design", subcategories: { "": 0 } },
+  { name: "Marketing", subcategories: { "": 0 } },
+  { name: "Lifestyle", subcategories: { "": 0 } },
+  { name: "Photography & Video", subcategories: { "": 0 } },
+  { name: "Music", subcategories: { "": 0 } },
+  { name: "Health & Fitness", subcategories: { "": 0 } },
+];
+
 const CoursesPage = ({
   searchParams,
 }: {
-  searchParams: { query?: string };
+  searchParams: { query?: string; filter?: string };
 }) => {
   const query = searchParams.query?.toLowerCase();
+  const isFiltered = searchParams.filter === "true";
   const filteredCourses = query
     ? courses.filter(
         (course) =>
@@ -102,20 +130,26 @@ const CoursesPage = ({
           course.category.toLowerCase().includes(query)
       )
     : courses;
+
   return (
     <section className="container mx-auto mt-8 flex max-w-6xl flex-col items-center justify-center">
       <div className="border-base-300 flex w-full flex-col gap-4 border-b pb-2">
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-2">
-            <button className="border-primary/20 bg-border-base-100 flex flex-row items-center gap-3 rounded-none border px-2 py-3">
+            <a
+              href={isFiltered ? "/courses" : "/courses?filter=true"}
+              className="border-primary/20 bg-border-base-100 flex flex-row items-center gap-3 rounded-none border px-2 py-3"
+            >
               <Icon icon="ph:faders-fill" className="text-xl" />
               <span className="text-sm">Filter</span>
-              <span className="text-primary bg-primary/10 px-2">3</span>
-            </button>
+              <span className="text-primary bg-primary/10 px-2">
+                {isFiltered ? "3" : "0"}
+              </span>
+            </a>
             <CoursesSearch />
           </div>
 
-          {/*  */}
+          <CoursesSelect />
         </div>
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-2 text-xs">
@@ -139,13 +173,16 @@ const CoursesPage = ({
         </div>
         <div className="grid grid-cols-4 gap-2">{}</div>
       </div>
-
-      <div className="grid grid-cols-1 gap-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {filteredCourses.map((course, index) => (
-          <CourseCard key={index} {...course} />
-        ))}
+      <div className="flex w-full gap-4 pt-6">
+        {isFiltered && <CourseFilter categories={categories} />}
+        <div
+          className={`grid grid-cols-1 gap-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
+        >
+          {filteredCourses.map((course, index) => (
+            <CourseCard key={index} {...course} />
+          ))}
+        </div>
       </div>
-
       {/*TODO: Implement pagination */}
     </section>
   );
