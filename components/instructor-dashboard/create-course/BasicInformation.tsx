@@ -1,6 +1,8 @@
 "use client";
 
+import React from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition, useActionState, useState } from "react";
 
@@ -31,12 +33,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { z } from "zod";
 
 // Use the imported schema type
 type FormField = BasicInformationFormData;
 
-const BasicInformation = () => {
+type Props = {
+  onNext: () => void;
+}
+
+const BasicInformation = ({ onNext }: Props) => {
   const [titleLength, setTitleLength] = useState(0);
   const [subTitleLength, setSubTitleLength] = useState(0);
 
@@ -84,6 +89,7 @@ const BasicInformation = () => {
       });
       
       formAction(formData);
+      onNext();
     });
   };
   return (

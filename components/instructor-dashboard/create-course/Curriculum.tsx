@@ -22,7 +22,12 @@ interface Section {
   lectures: Lecture[];
 }
 
-const Curriculum = () => {
+type Props = {
+  onNext: () => void;
+  onBack: () => void;
+};
+
+const Curriculum = ({ onNext, onBack }: Props) => {
   const [sections, setSections] = useState<Section[]>([
     {
       id: 1,
@@ -150,6 +155,7 @@ const Curriculum = () => {
 
   const sendData = () => {
     console.log(sections);
+    onNext();
   };
 
   return (
@@ -316,7 +322,9 @@ const Curriculum = () => {
       </div>
 
       <div className="mt-6 flex flex-row items-center justify-between p-4">
-        <button className="btn btn-outline">Previous</button>
+        <button className="btn btn-outline" type="button" onClick={onBack}>
+          Previous
+        </button>
         <button type="submit" onClick={sendData} className="btn btn-primary">
           Save & Next
         </button>

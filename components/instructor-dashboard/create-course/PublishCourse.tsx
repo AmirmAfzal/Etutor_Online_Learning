@@ -4,7 +4,11 @@ import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-const PublishCourse = () => {
+type Props = {
+  onBack: () => void;
+};
+
+const PublishCourse = ({ onBack }: Props) => {
   return (
     <div>
       <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
@@ -96,7 +100,9 @@ const PublishCourse = () => {
         </div>
 
         <div className="mt-16 flex flex-row items-center justify-between p-4">
-          <button className="btn btn-soft">Prev Step</button>
+          <button className="btn btn-soft" type="button" onClick={onBack}>
+            Prev Step
+          </button>
           <button type="submit" className="btn btn-primary">
             Submit for Review
           </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,19 +14,31 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
+import { uploadToCloudinary } from "@/lib/actions/instructor/create-course/uploadToCloudinary";
+import { CldImage } from "next-cloudinary";
 
 const MAX_INPUTS = 8;
 const MAX_CHARS = 120;
 
 const formSchema = z.object({
-  topics: z.array(z.string().max(MAX_CHARS)).max(MAX_INPUTS),
-  targetTopics: z.array(z.string().max(MAX_CHARS)).max(MAX_INPUTS),
-  requirementsTopics: z.array(z.string().max(MAX_CHARS)).max(MAX_INPUTS),
+  topics: z.array(z.string().min(1, "fields is required").max(MAX_CHARS)),
+  targetTopics: z.array(z.string().min(1, "fields is required").max(MAX_CHARS)),
+  requirementsTopics: z.array(
+    z.string().min(1, "fields is required").max(MAX_CHARS)
+  ),
   description: z.string().min(10).max(1000),
+  thumbnail: z.string().url().optional(),
+  video: z.string().url().optional(),
 });
 
-const AdvanceInformation = () => {
+type Props = {
+  onNext: () => void;
+  onBack: () => void;
+};
+
+const AdvanceInformation = ({ onNext, onBack }: Props) => {
   const [topics, setTopics] = useState(["", "", "", ""]);
   const [targetTopics, setTargetTopics] = useState(["", "", "", ""]);
   const [requirementsTopics, setRequirementsTopics] = useState([
@@ -43,6 +55,8 @@ const AdvanceInformation = () => {
       targetTopics,
       requirementsTopics,
       description: "",
+      thumbnail: "",
+      video: "",
     },
   });
 
@@ -90,8 +104,33 @@ const AdvanceInformation = () => {
     }
   };
 
+  const imageUploadHandler = async (e: FormEvent) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
+    const result = (await uploadToCloudinary(formData)) as {
+      secure_url: string;
+    };
+    form.setValue("thumbnail", result.secure_url);
+  };
+
+  const videoUploadHandler = async (e: FormEvent) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    console.log(file.size);
+
+    const formData = new FormData();
+    formData.append("file", file);
+    const result = (await uploadToCloudinary(formData)) as {
+      secure_url: string;
+    };
+    form.setValue("video", result.secure_url);
+  };
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log("Submitted:", values);
+    onNext();
   };
 
   return (
@@ -104,48 +143,85 @@ const AdvanceInformation = () => {
         </div>
       </div>
 
+      {/* Upload Form */}
       <div className="border-base-300 border-b p-4">
         <div className="grid grid-cols-2 gap-6">
           <div className="flex flex-row gap-4">
-            <div className="bg-base-300 flex h-35 min-w-35 items-center justify-center">
-              <Icon
-                icon="ph:image-duotone"
-                className="opacity-50"
-                width="72"
-                height="72"
+            {form.watch("thumbnail") ? (
+              <CldImage
+                src={form.watch("thumbnail") || ""}
+                width="500"
+                height="500"
+                className="mt-4 w-45 rounded-lg"
+                alt="uploaded image"
+                crop={{
+                  type: "auto",
+                  source: true,
+                }}
               />
-            </div>
+            ) : (
+              <div className="bg-base-300 flex h-35 min-w-45 items-center justify-center">
+                <Icon
+                  icon="ph:image-duotone"
+                  className="opacity-50"
+                  width="72"
+                  height="72"
+                />
+              </div>
+            )}
             <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
               <p>
                 Upload your course Thumbnail here. Important guidelines:
                 1200x800 pixels or 12:8 Ratio. Supported format: .jpg, .jpeg, or
                 .png
               </p>
-              <button className="btn btn-primary btn-soft">
+              <label htmlFor="thumbnail" className="btn btn-primary btn-soft">
                 Upload Image
                 <Icon icon="ph:upload-simple" width="24" height="24" />
-              </button>
+              </label>
+              <Input
+                type="file"
+                id="thumbnail"
+                className="hidden"
+                accept="image/*"
+                onChange={imageUploadHandler}
+              />
             </div>
           </div>
           <div className="flex flex-row gap-4">
-            <div className="bg-base-300 flex h-35 min-w-35 items-center justify-center">
-              <Icon
-                icon="ph:play-circle-duotone"
-                className="opacity-50"
-                width="72"
-                height="72"
-              />
-            </div>
+            {form.watch("video") ? (
+              <video controls className="mt-4 w-45 rounded-lg">
+                <source src={form.watch("video")} />
+                <track kind="captions" />
+              </video>
+            ) : (
+              <div className="bg-base-300 flex h-35 min-w-45 items-center justify-center">
+                <Icon
+                  icon="ph:play-circle-duotone"
+                  className="opacity-50"
+                  width="72"
+                  height="72"
+                />
+              </div>
+            )}
+
             <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
               <p>
                 students who watch awell-made promo video are 5X more likely to
                 enroll in your course. Weve seen that statistic go up to 10X for
                 exceptionally awesome videos.
               </p>
-              <button className="btn btn-primary btn-soft">
+              <label htmlFor="video" className="btn btn-primary btn-soft">
                 Upload Video
                 <Icon icon="ph:upload-simple" width="24" height="24" />
-              </button>
+              </label>
+              <Input
+                type="file"
+                id="video"
+                className="hidden"
+                accept="video/*"
+                onChange={videoUploadHandler}
+              />
             </div>
           </div>
         </div>
@@ -169,6 +245,7 @@ const AdvanceInformation = () => {
                         className="border-base-300 mt-4 min-h-32 w-full border p-2"
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -212,6 +289,7 @@ const AdvanceInformation = () => {
                         </span>
                       </div>
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -254,6 +332,7 @@ const AdvanceInformation = () => {
                         </span>
                       </div>
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -300,13 +379,16 @@ const AdvanceInformation = () => {
                         </span>
                       </div>
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             ))}
           </div>
           <div className="mt-6 flex flex-row items-center justify-between p-4">
-            <button className="btn btn-outline">Previous</button>
+            <button className="btn btn-outline" type="button" onClick={onBack}>
+              Previous
+            </button>
             <button type="submit" className="btn btn-primary">
               Save & Next
             </button>

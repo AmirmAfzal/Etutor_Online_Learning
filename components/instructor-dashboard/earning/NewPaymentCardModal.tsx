@@ -1,8 +1,7 @@
 "use client";
 
+import Cleave from "cleave.js/react";
 import { useForm } from "react-hook-form";
-import Icon from "@/components/ui/Icon";
-
 import {
   Form,
   FormItem,
@@ -12,17 +11,25 @@ import {
   FormField,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Cleave from "cleave.js/react";
+import Icon from "@/components/ui/Icon";
 import { Separator } from "@/components/ui/separator";
+
+// Define form values type
+type FormValues = {
+  name: string;
+  cardNumber: string;
+  date: string;
+  cvc: string;
+};
 
 type Props = {
   closeModal: () => void;
 };
 
 const NewPaymentCardModal = ({ closeModal }: Props) => {
-  const form = useForm();
+  const form = useForm<FormValues>();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormValues) => {
     console.log(data);
     closeModal();
   };
