@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { redirect } from "next/navigation";
+import Search from "@/components/Student/Search";
 
 // Fake data for demonstration
 const fakeTeachers = [
@@ -45,17 +46,6 @@ const fakeTeachers = [
   // ... add more teachers as needed
 ];
 
-async function searchCourses(formData: FormData) {
-  "use server";
-
-  // Get the search query from form data
-  const query = formData.get("query")?.toString() || "";
-
-  if (query) {
-    redirect(`/student/teachers?query=${encodeURIComponent(query)}`);
-  }
-}
-
 const TeachersPage = ({
   searchParams,
 }: {
@@ -82,31 +72,9 @@ const TeachersPage = ({
           {/* search */}
           <div className="flex flex-1 items-center gap-2">
             {/* TODO: check the form */}
-            <Form
-              className="flex w-full max-w-md flex-col items-start gap-2"
-              action={searchCourses}
-            >
-              <label htmlFor="search" className="text-base-content/60 text-xs">
-                Search:
-              </label>
-              <div className="border-base-content/10 bg-base-100 focus-within:border-primary focus-within:ring-primary/20 flex w-full items-center border p-1 focus-within:ring-1">
-                <Icon
-                  icon="ph:magnifying-glass-bold"
-                  className="text-base-content/40 ml-3 text-xl"
-                />
-                <input
-                  id="search"
-                  name="query"
-                  type="text"
-                  placeholder="Search instructors..."
-                  defaultValue={searchParams?.query || ""}
-                  className="placeholder:text-base-content/40 w-full bg-transparent py-2 pr-4 pl-2 text-base focus:outline-none"
-                />
-              </div>
-              <button type="submit" className="hidden" />
-            </Form>
+
+            <Search action="/student/teachers" />
           </div>
-          {/* TODO: این قسمت رو چطوری اکشنش رو اوکی کنم  */}
           <Form className="flex flex-1 flex-row gap-2" action="">
             <div className="flex flex-2 flex-col gap-2">
               <div className="flex flex-row items-center gap-2">
