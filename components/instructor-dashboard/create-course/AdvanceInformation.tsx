@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { uploadToCloudinary } from "@/lib/actions/instructor/create-course/uploadToCloudinary";
-import { CldImage } from "next-cloudinary";
+import { CldImage, CldUploadButton } from "next-cloudinary";
 
 const MAX_INPUTS = 8;
 const MAX_CHARS = 120;
@@ -175,7 +175,7 @@ const AdvanceInformation = ({ onNext, onBack }: Props) => {
                 1200x800 pixels or 12:8 Ratio. Supported format: .jpg, .jpeg, or
                 .png
               </p>
-              <label htmlFor="thumbnail" className="btn btn-primary btn-soft">
+              {/* <label htmlFor="thumbnail" className="btn btn-primary btn-soft">
                 Upload Image
                 <Icon icon="ph:upload-simple" width="24" height="24" />
               </label>
@@ -185,6 +185,21 @@ const AdvanceInformation = ({ onNext, onBack }: Props) => {
                 className="hidden"
                 accept="image/*"
                 onChange={imageUploadHandler}
+              /> */}
+              {/* Basic config for CldUploadButton: set your unsigned upload preset below */}
+              <CldUploadButton
+                uploadPreset="course"
+                options={{
+                  sources: ["local"], // Only allow local file selection
+                  multiple: false, // (optional) Only allow one file at a time
+
+                }}
+                onSuccess={(result: any) => {
+                  // result.info.secure_url contains the uploaded file URL
+                  if (result?.info?.secure_url) {
+                    form.setValue("thumbnail", result.info.secure_url);
+                  }
+                }}
               />
             </div>
           </div>
