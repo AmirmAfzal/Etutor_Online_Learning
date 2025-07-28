@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
+import instructorModel from "@/lib/db/models/instructorModel";
 
 export default async function CategoryPage({
   searchParams,
@@ -20,6 +21,7 @@ export default async function CategoryPage({
   await connectDB();
 
   const coursesFromDB = await courseModel.find().lean();
+  const instructorsFromDB = await instructorModel.find().lean();
 
   const courses = coursesFromDB.map((course) => ({
     thumbnail: course.thumbnail,
@@ -30,43 +32,13 @@ export default async function CategoryPage({
     students: course.studentsCount,
   }));
 
-  const instructors = [
-    {
-      name: "Devon Lane",
-      title: "Web Developer",
-      image: "/images/instructors/instructor-1.png",
-      rating: 5.0,
-      students: 265.7,
-    },
-    {
-      name: "Darrell Steward",
-      title: "React Native Developer",
-      image: "/images/instructors/instructor-2.png",
-      rating: 5.0,
-      students: 265.7,
-    },
-    {
-      name: "Jane Cooper",
-      title: "Mobile Developer",
-      image: "/images/instructors/instructor-3.png",
-      rating: 5.0,
-      students: 265.7,
-    },
-    {
-      name: "Albert Flores",
-      title: "JavaScript Developer",
-      image: "/images/instructors/instructor-4.png",
-      rating: 5.0,
-      students: 265.7,
-    },
-    {
-      name: "Kathryn Murphy",
-      title: "Lead Developer",
-      image: "/images/instructors/instructor-5.png",
-      rating: 5.0,
-      students: 265.7,
-    },
-  ];
+  const instructors = instructorsFromDB.map((instructor) => ({
+    name: `${instructor.firstname} ${instructor.lastname}`,
+    title: "Instructor",
+    image: instructor.avatar || "/images/instructors/instructor-1.png",
+    rating: instructor.rating,
+    students: instructor.students,
+  }));
 
   const popularTools = [
     { name: "HTML 5", courses: 2736 },
