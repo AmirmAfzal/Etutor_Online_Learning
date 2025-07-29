@@ -16,10 +16,12 @@ import instructorModel from "@/lib/db/models/instructorModel";
 export default async function CategoryPage({
   searchParams,
 }: {
+  // FIXME: اینجا سرچ پارامز درست استفاده نشده باید promise میبود
   searchParams: { query?: string };
 }) {
   await connectDB();
 
+  // FIXME: اسم متغیرها درست بشه
   const coursesFromDB = await courseModel.find().lean();
   const instructorsFromDB = await instructorModel.find().lean();
 
@@ -60,6 +62,8 @@ export default async function CategoryPage({
     "Wordpress",
   ];
 
+  // FIXME: فیلتر حتما باید از دیتابیس باشه ، فکر کن بعدا یه میلیون تا دوره داریم هر بار که یارو درخواست میده یه میلیون تارو پر میکنیم تو رم بعد فیلتر میکنیم؟
+  // نه میاییم مستقیم از دیتابیس فیلتر میکنیم
   const query = searchParams.query?.toLowerCase();
   const filteredCourses = query
     ? courses.filter(
