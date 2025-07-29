@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Icon from "../ui/Icon";
+import { Slider } from "@/components/ui/slider";
 
 const CourseFilter = ({
   categories,
@@ -173,6 +174,37 @@ const CourseFilter = ({
         </Accordion>
 
         {/* price */}
+        <Accordion
+          type="single"
+          collapsible
+          className="border-base-300 mt-8 border"
+        >
+          <AccordionItem value="price">
+            <AccordionTrigger className="border-base-300 rounded-none border border-x-0 px-2 text-lg font-semibold">
+              PRICE
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="flex flex-col gap-4 px-2 py-4">
+                <Slider
+                  defaultValue={[20, 80]}
+                  max={100}
+                  step={1}
+                  className="w-full"
+                >
+                  {/* change class name in ui/slider component */}
+                  <Slider.Track>
+                    <Slider.Range />
+                  </Slider.Track>
+                  <Slider.Thumb />
+                  <Slider.Thumb />
+                </Slider>
+                <div className="text-base-content/70 text-xs font-medium">
+                  Price range: ${20} - ${80}
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </aside>
   );
