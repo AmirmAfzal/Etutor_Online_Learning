@@ -33,8 +33,8 @@ const Curriculum = ({ onNext, onBack }: Props) => {
       id: 1,
       name: "Section name",
       lectures: [
-        { id: 1, name: "Lecture name 1" },
-        { id: 2, name: "Lecture name 2" },
+        { id: 1, name: "Lecture name 01" },
+        { id: 2, name: "Lecture name 02" },
       ],
     },
   ]);
@@ -58,8 +58,8 @@ const Curriculum = ({ onNext, onBack }: Props) => {
         id: newId,
         name: "Section name",
         lectures: [
-          { id: 1, name: "Lecture name 1" },
-          { id: 2, name: "Lecture name 2" },
+          { id: 1, name: "Lecture name 01" },
+          { id: 2, name: "Lecture name 02" },
         ],
       },
     ]);
@@ -75,7 +75,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
                 ...section.lectures,
                 {
                   id: section.lectures.length + 1,
-                  name: `Lecture name ${section.lectures.length + 1}`,
+                  name: `Lecture name 0${section.lectures.length + 1}`,
                 },
               ],
             }

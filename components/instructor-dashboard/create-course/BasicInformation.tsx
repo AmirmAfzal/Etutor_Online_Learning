@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -39,7 +39,7 @@ type FormField = BasicInformationFormData;
 
 type Props = {
   onNext: () => void;
-}
+};
 
 const BasicInformation = ({ onNext }: Props) => {
   const [titleLength, setTitleLength] = useState(0);
@@ -80,18 +80,24 @@ const BasicInformation = ({ onNext }: Props) => {
     startTransition(() => {
       // Convert data to FormData
       const formData = new FormData();
-      
+
       // Add each field to the FormData object
       Object.entries(data).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           formData.append(key, value);
         }
       });
-      
+
       formAction(formData);
-      onNext();
     });
   };
+
+  useEffect(() => {
+    if (state.message === "SUCCESS") {
+      onNext();
+    }
+  }, [state.message]);
+
   return (
     <div>
       <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
@@ -363,7 +369,7 @@ const BasicInformation = ({ onNext }: Props) => {
                           <SelectContent>
                             <SelectItem value="Day">Day</SelectItem>
                             <SelectItem value="Week">Week</SelectItem>
-                            <SelectItem value="Hour">Month</SelectItem>
+                            <SelectItem value="Hour">Hour</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>

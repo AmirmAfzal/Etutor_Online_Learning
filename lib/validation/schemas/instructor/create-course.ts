@@ -2,8 +2,14 @@ import { z } from "zod";
 
 // Define the schema for course basic information validation
 export const basicInformationSchema = z.object({
-  title: z.string().min(1, "Title is required").max(80, "Title must be less than 80 characters"),
-  subtitle: z.string().min(1, "Subtitle is required").max(120, "Subtitle must be less than 120 characters"),
+  title: z
+    .string()
+    .min(1, "Title is required")
+    .max(80, "Title must be less than 80 characters"),
+  subtitle: z
+    .string()
+    .min(1, "Subtitle is required")
+    .max(120, "Subtitle must be less than 120 characters"),
   category: z.string().min(1, "Category is required"),
   subcategory: z.string().min(1, "Subcategory is required"),
   topic: z.string().min(1, "Topic is required"),
@@ -16,3 +22,17 @@ export const basicInformationSchema = z.object({
 
 // Export the type for use in components and server actions
 export type BasicInformationFormData = z.infer<typeof basicInformationSchema>;
+
+// Define the schema for course advance information validation
+export const advanceInformationSchema = z.object({
+  topics: z.array(z.string().min(1, "fields is required").max(120)),
+  targetTopics: z.array(z.string().min(1, "fields is required").max(120)),
+  requirementsTopics: z.array(z.string().min(1, "fields is required").max(120)),
+  description: z.string().min(10).max(1000),
+  thumbnail: z.string().url(),
+  video: z.string().url(),
+});
+
+export type AdvanceInformationFormData = z.infer<
+  typeof advanceInformationSchema
+>;

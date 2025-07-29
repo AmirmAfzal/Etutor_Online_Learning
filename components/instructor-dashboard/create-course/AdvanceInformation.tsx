@@ -1,7 +1,11 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
-import { z } from "zod";
+import React, {
+  startTransition,
+  useActionState,
+  useEffect,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -16,26 +20,24 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { uploadToCloudinary } from "@/lib/actions/instructor/create-course/uploadToCloudinary";
 import { CldImage, CldUploadButton } from "next-cloudinary";
+import {
+  AdvanceInformationFormData,
+  advanceInformationSchema,
+} from "@/lib/validation/schemas/instructor/create-course";
+import { saveAdvanceInformation } from "@/lib/actions/instructor/create-course/advanceInformation";
 
 const MAX_INPUTS = 8;
 const MAX_CHARS = 120;
 
-const formSchema = z.object({
-  topics: z.array(z.string().min(1, "fields is required").max(MAX_CHARS)),
-  targetTopics: z.array(z.string().min(1, "fields is required").max(MAX_CHARS)),
-  requirementsTopics: z.array(
-    z.string().min(1, "fields is required").max(MAX_CHARS)
-  ),
-  description: z.string().min(10).max(1000),
-  thumbnail: z.string().url().optional(),
-  video: z.string().url().optional(),
-});
-
 type Props = {
   onNext: () => void;
   onBack: () => void;
+};
+
+const initialState = {
+  message: "",
+  errors: [],
 };
 
 const AdvanceInformation = ({ onNext, onBack }: Props) => {
@@ -48,8 +50,13 @@ const AdvanceInformation = ({ onNext, onBack }: Props) => {
     "",
   ]);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [state, formAction] = useActionState(
+    saveAdvanceInformation,
+    initialState
+  );
+
+  const form = useForm<AdvanceInformationFormData>({
+    resolver: zodResolver(advanceInformationSchema),
     defaultValues: {
       topics,
       targetTopics,
@@ -104,34 +111,28 @@ const AdvanceInformation = ({ onNext, onBack }: Props) => {
     }
   };
 
-  const imageUploadHandler = async (e: FormEvent) => {
-    const file = (e.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    const formData = new FormData();
-    formData.append("file", file);
-    const result = (await uploadToCloudinary(formData)) as {
-      secure_url: string;
-    };
-    form.setValue("thumbnail", result.secure_url);
+  const handleSubmit = (data: AdvanceInformationFormData) => {
+    startTransition(() => {
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((item) => {
+            formData.append(key, item);
+          });
+        } else if (value !== undefined && value !== null) {
+          formData.append(key, value);
+        }
+      });
+      formAction(formData);
+    });
   };
 
-  const videoUploadHandler = async (e: FormEvent) => {
-    const file = (e.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    console.log(file.size);
-
-    const formData = new FormData();
-    formData.append("file", file);
-    const result = (await uploadToCloudinary(formData)) as {
-      secure_url: string;
-    };
-    form.setValue("video", result.secure_url);
-  };
-
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("Submitted:", values);
-    onNext();
-  };
+  useEffect(() => {
+    if (state.message === "SUCCESS") {
+      onNext();
+    }
+  }, [state.message]);
 
   return (
     <div>
@@ -146,97 +147,104 @@ const AdvanceInformation = ({ onNext, onBack }: Props) => {
       {/* Upload Form */}
       <div className="border-base-300 border-b p-4">
         <div className="grid grid-cols-2 gap-6">
-          <div className="flex flex-row gap-4">
-            {form.watch("thumbnail") ? (
-              <CldImage
-                src={form.watch("thumbnail") || ""}
-                width="500"
-                height="500"
-                className="mt-4 w-45 rounded-lg"
-                alt="uploaded image"
-                crop={{
-                  type: "auto",
-                  source: true,
-                }}
-              />
-            ) : (
-              <div className="bg-base-300 flex h-35 min-w-45 items-center justify-center">
-                <Icon
-                  icon="ph:image-duotone"
-                  className="opacity-50"
-                  width="72"
-                  height="72"
+          <div>
+            <p className="mb-2">Course Thumbnail</p>
+            <div className="flex flex-row gap-4">
+              {form.watch("thumbnail") ? (
+                <CldImage
+                  src={form.watch("thumbnail") || ""}
+                  width="500"
+                  height="500"
+                  className="w-45 rounded-lg"
+                  alt="uploaded image"
+                  crop={{
+                    type: "auto",
+                    source: true,
+                  }}
                 />
+              ) : (
+                <div className="bg-base-300 flex h-35 min-w-45 items-center justify-center">
+                  <Icon
+                    icon="ph:image-duotone"
+                    className="opacity-50"
+                    width="72"
+                    height="72"
+                  />
+                </div>
+              )}
+              <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
+                <p>
+                  Upload your course Thumbnail here. Important guidelines:
+                  1200x800 pixels or 12:8 Ratio. Supported format: .jpg, .jpeg,
+                  or .png
+                </p>
+                <CldUploadButton
+                  uploadPreset="course"
+                  className="btn btn-primary btn-soft"
+                  options={{
+                    sources: ["local"],
+                    multiple: false,
+                    resourceType: "image",
+                  }}
+                  onSuccess={(result: any) => {
+                    if (result?.info?.secure_url) {
+                      form.setValue("thumbnail", result.info.secure_url);
+                    }
+                  }}
+                >
+                  <span className="flex flex-row items-center gap-2">
+                    Upload Image
+                    <Icon icon="ph:upload-simple" width="24" height="24" />
+                  </span>
+                </CldUploadButton>
               </div>
-            )}
-            <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
-              <p>
-                Upload your course Thumbnail here. Important guidelines:
-                1200x800 pixels or 12:8 Ratio. Supported format: .jpg, .jpeg, or
-                .png
-              </p>
-              {/* <label htmlFor="thumbnail" className="btn btn-primary btn-soft">
-                Upload Image
-                <Icon icon="ph:upload-simple" width="24" height="24" />
-              </label>
-              <Input
-                type="file"
-                id="thumbnail"
-                className="hidden"
-                accept="image/*"
-                onChange={imageUploadHandler}
-              /> */}
-              {/* Basic config for CldUploadButton: set your unsigned upload preset below */}
-              <CldUploadButton
-                uploadPreset="course"
-                options={{
-                  sources: ["local"], // Only allow local file selection
-                  multiple: false, // (optional) Only allow one file at a time
-
-                }}
-                onSuccess={(result: any) => {
-                  // result.info.secure_url contains the uploaded file URL
-                  if (result?.info?.secure_url) {
-                    form.setValue("thumbnail", result.info.secure_url);
-                  }
-                }}
-              />
             </div>
           </div>
-          <div className="flex flex-row gap-4">
-            {form.watch("video") ? (
-              <video controls className="mt-4 w-45 rounded-lg">
-                <source src={form.watch("video")} />
-                <track kind="captions" />
-              </video>
-            ) : (
-              <div className="bg-base-300 flex h-35 min-w-45 items-center justify-center">
-                <Icon
-                  icon="ph:play-circle-duotone"
-                  className="opacity-50"
-                  width="72"
-                  height="72"
-                />
-              </div>
-            )}
+          <div>
+            <p className="mb-2">Course Trailer</p>
+            <div className="flex flex-row gap-4">
+              {form.watch("video") ? (
+                <video controls className="w-45 rounded-lg">
+                  <source src={form.watch("video")} />
+                  <track kind="captions" />
+                </video>
+              ) : (
+                <div className="bg-base-300 flex h-35 min-w-45 items-center justify-center">
+                  <Icon
+                    icon="ph:play-circle-duotone"
+                    className="opacity-50"
+                    width="72"
+                    height="72"
+                  />
+                </div>
+              )}
 
-            <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
-              <p>
-                students who watch awell-made promo video are 5X more likely to
-                enroll in your course. Weve seen that statistic go up to 10X for
-                exceptionally awesome videos.
-              </p>
-              <label htmlFor="video" className="btn btn-primary btn-soft">
-                Upload Video
-                <Icon icon="ph:upload-simple" width="24" height="24" />
-              </label>
-              <Input
-                type="file"
-                id="video"
-                className="hidden"
-                accept="video/*"
-                onChange={videoUploadHandler}
-              />
+              <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
+                <p>
+                  students who watch awell-made promo video are 5X more likely
+                  to enroll in your course. Weve seen that statistic go up to
+                  10X for exceptionally awesome videos.
+                </p>
+                <CldUploadButton
+                  uploadPreset="course"
+                  className="btn btn-primary btn-soft"
+                  options={{
+                    sources: ["local"],
+                    multiple: false,
+                    resourceType: "video",
+                  }}
+                  onSuccess={(result: any) => {
+                    if (result?.info?.secure_url) {
+                      form.setValue("video", result.info.secure_url);
+                    }
+                  }}
+                >
+                  <span className="flex flex-row items-center gap-2">
+                    Upload video
+                    <Icon icon="ph:upload-simple" width="24" height="24" />
+                  </span>
+                </CldUploadButton>
+              </div>
             </div>
           </div>
         </div>
@@ -244,7 +252,7 @@ const AdvanceInformation = ({ onNext, onBack }: Props) => {
 
       {/* Form */}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           {/* course description */}
           <div className="border-base-300 border-b p-4">
             <div className="">
