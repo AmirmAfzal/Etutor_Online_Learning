@@ -1,7 +1,5 @@
 import Image from "next/image";
-
 import Icon from "@/components/ui/Icon";
-
 import CourseCard from "@/components/CourseCard";
 import Curriculum from "@/components/Courses/Curriculum";
 import CourseInstructors from "@/components/Courses/CourseInstructors";
@@ -59,20 +57,20 @@ const fakeCourses = {
         {
           title: "What's is Webflow?",
           info: "07:31",
-          type: "video" as "video",
+          type: "video" ,
         },
         {
           title: "Sign up in Webflow",
           info: "07:31",
-          type: "video" as "video",
+          type: "video" ,
         },
         {
           title: "Webflow Terms & Conditions",
           info: "5.3 MB",
-          type: "file" as "file",
+          type: "file" ,
         },
-        { title: "Teaser of Webflow", info: "07:31", type: "video" as "video" },
-        { title: "Practice Project", info: "5.3 MB", type: "file" as "file" },
+        { title: "Teaser of Webflow", info: "07:31", type: "video"  },
+        { title: "Practice Project", info: "5.3 MB", type: "file"  },
       ],
     },
     {
