@@ -21,20 +21,25 @@ import { Button } from "@/components/ui/button";
 import { settingAccountSchema } from "@/lib/validation/Student-dashboard/settingAccountSchema";
 import { updateStudentAccount } from "@/lib/actions/updateStudentAccount";
 
-interface AccountSettingsFormProps {
-  userId: string;
+interface Props {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  title: string;
 }
 
-const AccountSettingsForm = ({ userId }: AccountSettingsFormProps) => {
+const AccountSettingsForm = (props: Props) => {
   const accountForm = useForm<z.infer<typeof settingAccountSchema>>({
     resolver: zodResolver(settingAccountSchema),
     defaultValues: {
-      id: userId,
-      firstName: "",
-      lastName: "",
-      username: "",
-      email: "",
-      title: "",
+      id: props._id,
+      firstName: props.firstName,
+      lastName: props.lastName,
+      username: props.username,
+      email: props.email,
+      title: props.title,
     },
   });
 
