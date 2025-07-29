@@ -1,4 +1,4 @@
-// TODO: change checkbox to daisy ui checkbox
+// TODO: change checkbox to daisy ui checkbox - DONE
 
 import {
   Accordion,
@@ -6,17 +6,28 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Icon from "../ui/Icon";
 
 const CourseFilter = ({
   categories,
+  tools,
+  rating,
+  courseLevel,
 }: {
   categories: {
     name: string;
-    subcategories: string;
+    icon: string;
+    subcategories: { [key: string]: number }[];
+  }[];
+  tools: string[];
+  courseLevel: string[];
+  rating: {
+    label: string;
+    count: number;
   }[];
 }) => {
   return (
-    <aside className="border-base-300 bg-base-100 w-1/2 border-r p-4">
+    <aside className="border-base-300 bg-base-100 w-7/12 border-r p-4">
       <div>
         <Accordion type="single" collapsible className="border-base-300 border">
           <AccordionItem value="categories">
@@ -30,11 +41,18 @@ const CourseFilter = ({
                     <AccordionItem value="subcategories">
                       <AccordionTrigger className="border-base-300 rounded-none border-t px-2 py-3">
                         <div className="flex items-center">
-                          {/* TODO: add icon here */}
-                          <span className="text-xs font-medium">
+                          <Icon
+                            icon={category.icon}
+                            // TODO: active and not active color
+                            className="text-primary text-xl"
+                          />
+                          <span className="ml-2 text-xs font-medium">
                             {category.name}
                             <span className="text-base-content/70 ml-2">
-                              {Object.values(category.subcategories)[0] || 0}
+                              {Object.values(category.subcategories).reduce(
+                                (a, b) => a + b,
+                                0
+                              )}
                             </span>
                           </span>
                         </div>
@@ -51,7 +69,7 @@ const CourseFilter = ({
                                   <input
                                     type="checkbox"
                                     id={sub}
-                                    className="accent-primary"
+                                    className="checkbox checkbox-primary checkbox-xs"
                                   />
                                   <span className="text-base-content/80 text-xs font-medium">
                                     {sub}
@@ -71,8 +89,90 @@ const CourseFilter = ({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        {/* <span className="mb-2 text-lg font-semibold">CATEGORY</span>
-         */}
+
+        {/* tools */}
+        <Accordion
+          type="single"
+          collapsible
+          className="border-base-300 mt-8 border"
+        >
+          <AccordionItem value="tools">
+            <AccordionTrigger className="border-base-300 rounded-none border border-x-0 px-2 text-lg font-semibold">
+              TOOLS
+            </AccordionTrigger>
+            <AccordionContent>
+              {tools.map((item, i) => (
+                <form key={i} className="flex flex-row items-center gap-2 p-2">
+                  <input
+                    type="checkbox"
+                    id={item}
+                    className="checkbox checkbox-primary checkbox-xs"
+                  />
+                  <span className="text-base-content/70 text-xs font-medium">
+                    {item}
+                  </span>
+                </form>
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        {/* rating */}
+        <Accordion
+          type="single"
+          collapsible
+          className="border-base-300 mt-8 border"
+        >
+          <AccordionItem value="rating">
+            <AccordionTrigger className="border-base-300 rounded-none border border-x-0 px-2 text-lg font-semibold">
+              RATING
+            </AccordionTrigger>
+            <AccordionContent>
+              {rating.map((item, i) => (
+                <form key={i} className="flex flex-row items-center gap-2 p-2">
+                  <input
+                    type="checkbox"
+                    id={item.label}
+                    className="checkbox checkbox-primary checkbox-xs"
+                  />
+                  <Icon icon="ph:star-fill" className="text-primary" />
+                  <span className="text-base-content/70 text-xs font-medium">
+                    {item.label}
+                  </span>
+                </form>
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        {/* course level */}
+        <Accordion
+          type="single"
+          collapsible
+          className="border-base-300 mt-8 border"
+        >
+          <AccordionItem value="course level">
+            <AccordionTrigger className="border-base-300 rounded-none border border-x-0 px-2 text-lg font-semibold">
+              COURSE LEVEL
+            </AccordionTrigger>
+            <AccordionContent>
+              {courseLevel.map((item, i) => (
+                <form key={i} className="flex flex-row items-center gap-2 p-2">
+                  <input
+                    type="checkbox"
+                    id={item}
+                    className="checkbox checkbox-primary checkbox-xs"
+                  />
+                  <span className="text-base-content/70 text-xs font-medium">
+                    {item}
+                  </span>
+                </form>
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        {/* price */}
       </div>
     </aside>
   );

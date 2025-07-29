@@ -95,6 +95,7 @@ const courses = [
 const categories = [
   {
     name: "Development",
+    icon: "ph:cpu",
     subcategories: {
       "Web Development": 574,
       "Mobile Development": 1345,
@@ -104,22 +105,69 @@ const categories = [
       "No-Code Development": 37,
     },
   },
-  { name: "Business", subcategories: { "Finance & Accounting": 0 } },
-  { name: "IT & Software", subcategories: { "": 0 } },
-  { name: "Office Productivity", subcategories: { "": 0 } },
-  { name: "Personal Development", subcategories: { "": 0 } },
-  { name: "Design", subcategories: { "": 0 } },
-  { name: "Marketing", subcategories: { "": 0 } },
-  { name: "Lifestyle", subcategories: { "": 0 } },
-  { name: "Photography & Video", subcategories: { "": 0 } },
-  { name: "Music", subcategories: { "": 0 } },
-  { name: "Health & Fitness", subcategories: { "": 0 } },
+  {
+    name: "Business",
+    icon: "ph:handshake",
+    subcategories: { "Finance & Accounting": 0 },
+  },
+  {
+    name: "IT & Software",
+    icon: "ph:chart-bar-horizontal",
+    subcategories: { "": 0 },
+  },
+  {
+    name: "Office Productivity",
+    icon: "ph:bug-droid",
+    subcategories: { "": 0 },
+  },
+  {
+    name: "Personal Development",
+    icon: "ph:receipt",
+    subcategories: { "": 0 },
+  },
+  { name: "Design", icon: "ph:pen-nib", subcategories: { "": 0 } },
+  { name: "Marketing", icon: "ph:megaphone", subcategories: { "": 0 } },
+  { name: "Lifestyle", icon: "ph:package", subcategories: { "": 0 } },
+  { name: "Photography & Video", icon: "ph:camera", subcategories: { "": 0 } },
+  { name: "Music", icon: "ph:headset", subcategories: { "": 0 } },
+  {
+    name: "Health & Fitness",
+    icon: "ph:first-aid-kit",
+    subcategories: { "": 0 },
+  },
+];
+
+const tools = ["HTML 5", "CSS 3", "React", "Webflow", "Node.js", "Laravel"];
+const courseLevel = ["All Level", "Beginner", "Intermediate", "Expert"];
+
+const rating = [
+  {
+    label: "5 Star",
+
+    count: 12345,
+  },
+  {
+    label: "4 Star & up",
+    count: 12345,
+  },
+  {
+    label: "3 Star & up",
+    count: 12345,
+  },
+  {
+    label: "2 Star & up",
+    count: 12345,
+  },
+  {
+    label: "1 Star & up",
+    count: 12345,
+  },
 ];
 
 const CoursesPage = ({
   searchParams,
 }: {
-  searchParams: { query?: string; filter?: string };
+  searchParams: Promise<{ query?: string; filter?: string }>;
 }) => {
   const query = searchParams.query?.toLowerCase();
   const isFiltered = searchParams.filter === "true";
@@ -174,7 +222,14 @@ const CoursesPage = ({
         <div className="grid grid-cols-4 gap-2">{}</div>
       </div>
       <div className="flex w-full gap-4 pt-6">
-        {isFiltered && <CourseFilter categories={categories} />}
+        {isFiltered && (
+          <CourseFilter
+            categories={categories}
+            tools={tools}
+            rating={rating}
+            courseLevel={courseLevel}
+          />
+        )}
         <div
           className={`grid grid-cols-1 gap-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
         >
