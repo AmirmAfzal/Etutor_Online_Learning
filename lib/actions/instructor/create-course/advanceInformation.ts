@@ -5,7 +5,6 @@ import courseModel from "@/lib/db/models/courseModel";
 import { ActionData } from "@/lib/formTypes";
 import { advanceInformationSchema } from "@/lib/validation/schemas/instructor/create-course";
 import { redirect } from "next/navigation";
-import type { ZodIssue } from "zod";
 
 export async function saveAdvanceInformation(
   prevState: ActionData,
@@ -28,7 +27,7 @@ export async function saveAdvanceInformation(
   if (!result.success) {
     return {
       message: "ERROR",
-      errors: result.error.errors.map((error: ZodIssue) => error.message),
+      errors: result.error.errors.map((error) => error.message),
     };
   }
 
@@ -53,7 +52,6 @@ export async function saveAdvanceInformation(
         },
       }
     );
-    
 
     console.log(updatedCourse);
 

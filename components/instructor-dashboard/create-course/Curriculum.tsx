@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
@@ -10,13 +10,25 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import VideoUploaderModal from "./modals/VideoUploaderModal";
+import FileUploaderModal from "./modals/FileUploaderModal";
+import CaptionsModal from "./modals/CaptionsModal";
+import DescriptionModal from "./modals/DescriptionModal";
+import LectureNotesModal from "./modals/LectureNotesModal";
+import { saveCurriculum } from "@/lib/actions/instructor/create-course/curriculum";
 
-interface Lecture {
+export interface Lecture {
   id: number;
   name: string;
+  videoUrl?: string;
+  fileUrl?: string;
+  captions?: string;
+  description?: string;
+  note?: string;
+  noteFile?: string;
 }
 
-interface Section {
+export interface Section {
   id: number;
   name: string;
   lectures: Lecture[];
@@ -27,21 +39,25 @@ type Props = {
   onBack: () => void;
 };
 
+const initialState = {
+  message: "",
+  errors: [],
+};
+
+export type ModalType = "video" | "file" | "caption" | "description" | "note";
+
 const Curriculum = ({ onNext, onBack }: Props) => {
+  const [state, formAction] = useActionState(saveCurriculum, initialState);
   const [sections, setSections] = useState<Section[]>([
     {
       id: 1,
       name: "Section name",
       lectures: [
-        { id: 1, name: "Lecture name 01" },
-        { id: 2, name: "Lecture name 02" },
+        { id: 1, name: "Lecture name 1" },
+        { id: 2, name: "Lecture name 2" },
       ],
     },
   ]);
-
-  const [editingSectionId, setEditingSectionId] = useState<number | null>(null);
-  const [sectionNameDraft, setSectionNameDraft] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
 
   // Lecture edit state
   const [editingLecture, setEditingLecture] = useState<{
@@ -49,6 +65,62 @@ const Curriculum = ({ onNext, onBack }: Props) => {
     lectureId: number;
     draft: string;
   } | null>(null);
+
+  const [activeLecture, setActiveLecture] = useState<{
+    sectionId: number;
+    lectureId: number;
+  } | null>(null);
+
+  const [editingSectionId, setEditingSectionId] = useState<number | null>(null);
+  const [sectionNameDraft, setSectionNameDraft] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const [videoOpenModal, setVideoOpenModal] = useState(false);
+  const [fileOpenModal, setFileOpenModal] = useState(false);
+  const [captionOpenModal, setCaptionOpenModal] = useState(false);
+  const [descriptionOpenModal, setDescriptionOpenModal] = useState(false);
+  const [noteOpenModal, setNoteOpenModal] = useState(false);
+
+  const openLectureModalsHandler = (type: ModalType) => {
+    switch (type) {
+      case "video":
+        setVideoOpenModal(!videoOpenModal);
+        break;
+      case "file":
+        setFileOpenModal(!fileOpenModal);
+        break;
+      case "caption":
+        setCaptionOpenModal(!captionOpenModal);
+        break;
+      case "description":
+        setDescriptionOpenModal(!descriptionOpenModal);
+        break;
+      case "note":
+        setNoteOpenModal(!noteOpenModal);
+        break;
+    }
+  };
+  // update lecture data handler
+  const updateLectureContent = (
+    sectionId: number,
+    lectureId: number,
+    updatedFields: Partial<Lecture>
+  ) => {
+    setSections((prevSections) =>
+      prevSections.map((section) =>
+        section.id === sectionId
+          ? {
+              ...section,
+              lectures: section.lectures.map((lecture) =>
+                lecture.id === lectureId
+                  ? { ...lecture, ...updatedFields }
+                  : lecture
+              ),
+            }
+          : section
+      )
+    );
+  };
 
   const addSection = () => {
     const newId = sections.length + 1;
@@ -58,8 +130,8 @@ const Curriculum = ({ onNext, onBack }: Props) => {
         id: newId,
         name: "Section name",
         lectures: [
-          { id: 1, name: "Lecture name 01" },
-          { id: 2, name: "Lecture name 02" },
+          { id: 1, name: "Lecture name 1" },
+          { id: 2, name: "Lecture name 2" },
         ],
       },
     ]);
@@ -75,7 +147,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
                 ...section.lectures,
                 {
                   id: section.lectures.length + 1,
-                  name: `Lecture name 0${section.lectures.length + 1}`,
+                  name: `Lecture name ${section.lectures.length + 1}`,
                 },
               ],
             }
@@ -154,9 +226,20 @@ const Curriculum = ({ onNext, onBack }: Props) => {
   };
 
   const sendData = () => {
-    console.log(sections);
-    onNext();
+    startTransition(() => {
+      formAction(sections);
+      console.log(sections);
+    });
   };
+
+  useEffect(() => {
+    if (state.message === "SUCCESS") {
+      onNext();
+    }
+    if (state.message === "ERROR") {
+      console.log(state.errors)
+    }
+  }, [state.message]);
 
   return (
     <div>
@@ -266,19 +349,74 @@ const Curriculum = ({ onNext, onBack }: Props) => {
 
                       <DropdownMenuContent>
                         <DropdownMenuItem>
-                          <button>Video</button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setActiveLecture({
+                                sectionId: section.id,
+                                lectureId: lecture.id,
+                              });
+                              openLectureModalsHandler("video");
+                            }}
+                          >
+                            Video
+                          </button>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <button>Attach File</button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setActiveLecture({
+                                sectionId: section.id,
+                                lectureId: lecture.id,
+                              });
+                              openLectureModalsHandler("file");
+                            }}
+                          >
+                            Attach File
+                          </button>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <button>Captions</button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setActiveLecture({
+                                sectionId: section.id,
+                                lectureId: lecture.id,
+                              });
+                              openLectureModalsHandler("caption");
+                            }}
+                          >
+                            Captions
+                          </button>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <button>Description</button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setActiveLecture({
+                                sectionId: section.id,
+                                lectureId: lecture.id,
+                              });
+                              openLectureModalsHandler("description");
+                            }}
+                          >
+                            Description
+                          </button>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <button>Lecture Notes</button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setActiveLecture({
+                                sectionId: section.id,
+                                lectureId: lecture.id,
+                              });
+                              openLectureModalsHandler("note");
+                            }}
+                          >
+                            Lecture Notes
+                          </button>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -329,6 +467,92 @@ const Curriculum = ({ onNext, onBack }: Props) => {
           Save & Next
         </button>
       </div>
+
+      {videoOpenModal && activeLecture && (
+        <VideoUploaderModal
+          openModal={openLectureModalsHandler}
+          onSave={(videoUrl) => {
+            updateLectureContent(
+              activeLecture.sectionId,
+              activeLecture.lectureId,
+              {
+                videoUrl,
+              }
+            );
+            setActiveLecture(null);
+          }}
+        />
+      )}
+      {fileOpenModal && activeLecture && (
+        <FileUploaderModal
+          openModal={openLectureModalsHandler}
+          onSave={(fileUrl) => {
+            updateLectureContent(
+              activeLecture.sectionId,
+              activeLecture.lectureId,
+              {
+                fileUrl: fileUrl,
+              }
+            );
+            setActiveLecture(null);
+          }}
+        />
+      )}
+      {captionOpenModal && activeLecture && (
+        <CaptionsModal
+          openModal={openLectureModalsHandler}
+          sections={sections}
+          sectionId={activeLecture.sectionId}
+          lectureId={activeLecture.lectureId}
+          onSave={(caption) => {
+            updateLectureContent(
+              activeLecture.sectionId,
+              activeLecture.lectureId,
+              {
+                captions: caption,
+              }
+            );
+            setActiveLecture(null);
+          }}
+        />
+      )}
+      {descriptionOpenModal && activeLecture && (
+        <DescriptionModal
+          openModal={openLectureModalsHandler}
+          sections={sections}
+          sectionId={activeLecture.sectionId}
+          lectureId={activeLecture.lectureId}
+          onSave={(description) => {
+            updateLectureContent(
+              activeLecture.sectionId,
+              activeLecture.lectureId,
+              {
+                description,
+              }
+            );
+            setActiveLecture(null);
+          }}
+        />
+      )}
+      {noteOpenModal && activeLecture && (
+        <LectureNotesModal
+          openModal={openLectureModalsHandler}
+          sections={sections}
+          sectionId={activeLecture.sectionId}
+          lectureId={activeLecture.lectureId}
+          onSave={(note, noteFile) => {
+            updateLectureContent(
+              activeLecture.sectionId,
+              activeLecture.lectureId,
+              {
+                note,
+                noteFile
+              }
+            );
+            setActiveLecture(null);
+          }}
+        />
+      )}
 
       {modalOpen && (
         <div className="bg-base-content/70 fixed inset-0 z-50 flex items-center justify-center">

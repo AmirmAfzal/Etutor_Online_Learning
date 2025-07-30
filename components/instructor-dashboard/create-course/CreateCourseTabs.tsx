@@ -16,7 +16,7 @@ interface Props {
   tab: string;
 }
 
-const CreateCourseTabs = ({ course , tab }: Props) => {
+const CreateCourseTabs = ({ course, tab }: Props) => {
   const [currentTab, setCurrentTab] = useState(tab || "BasicInformation");
 
   return (
