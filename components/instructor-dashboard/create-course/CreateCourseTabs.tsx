@@ -9,9 +9,15 @@ import BasicInformation from "./BasicInformation";
 import AdvanceInformation from "./AdvanceInformation";
 import Curriculum from "./Curriculum";
 import PublishCourse from "./PublishCourse";
+import { CourseData } from "@/lib/db/models/courseModel";
 
-const CreateCourseTabs = () => {
-  const [currentTab, setCurrentTab] = useState("BasicInformation");
+interface Props {
+  course: CourseData | null;
+  tab: string;
+}
+
+const CreateCourseTabs = ({ course , tab }: Props) => {
+  const [currentTab, setCurrentTab] = useState(tab || "BasicInformation");
 
   return (
     <div className="bg-base-200 p-6">
@@ -54,6 +60,7 @@ const CreateCourseTabs = () => {
 
           <TabsContent value="BasicInformation">
             <BasicInformation
+              course={course}
               onNext={() => setCurrentTab("AdvanceInformation")}
             />
           </TabsContent>
@@ -62,6 +69,7 @@ const CreateCourseTabs = () => {
             <AdvanceInformation
               onNext={() => setCurrentTab("Curriculum")}
               onBack={() => setCurrentTab("BasicInformation")}
+              course={course}
             />
           </TabsContent>
 

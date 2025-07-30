@@ -1,9 +1,10 @@
 "use server";
 
 import { connectDB } from "@/lib/db/db";
-import AdvanceInfoModel from "@/lib/db/models/advanceInformationModel";
+import courseModel from "@/lib/db/models/courseModel";
 import { ActionData } from "@/lib/formTypes";
 import { advanceInformationSchema } from "@/lib/validation/schemas/instructor/create-course";
+import { redirect } from "next/navigation";
 import type { ZodIssue } from "zod";
 
 export async function saveAdvanceInformation(
@@ -12,6 +13,7 @@ export async function saveAdvanceInformation(
 ): Promise<ActionData> {
   await connectDB();
   const data = {
+    _id: formData.get("_id") as string,
     description: formData.get("description") as string,
     requirementsTopics: formData.getAll("requirementsTopics") as string[],
     targetTopics: formData.getAll("targetTopics") as string[],
@@ -19,6 +21,7 @@ export async function saveAdvanceInformation(
     topics: formData.getAll("topics") as string[],
     video: formData.get("video") as string,
   };
+  console.log(data);
 
   const result = advanceInformationSchema.safeParse(data);
 
@@ -30,15 +33,29 @@ export async function saveAdvanceInformation(
   }
 
   try {
-    const addAdvanceInformation = await AdvanceInfoModel.create({
-      topics: result.data.topics,
-      requirementsTopics: result.data.requirementsTopics,
-      targetTopics: result.data.targetTopics,
-      description: result.data.description,
-      thumbnail: result.data.thumbnail,
-      video: result.data.video,
-    });
-    console.log(addAdvanceInformation);
+    const foundCourse = await courseModel.findOne({ _id: data._id });
+    console.log(foundCourse);
+    if (!foundCourse)
+      return {
+        message: "ERROR",
+        errors: ["Course not found"],
+      };
+    const updatedCourse = await courseModel.findOneAndUpdate(
+      { _id: data._id },
+      {
+        $set: {
+          description: data.description,
+          requirements: data.requirementsTopics,
+          targetAudience: data.targetTopics,
+          trailer: data.video,
+          thumbnail: data.thumbnail,
+          learningOutcomes: data.topics,
+        },
+      }
+    );
+    
+
+    console.log(updatedCourse);
 
     return {
       message: "SUCCESS",

@@ -1,6 +1,7 @@
 import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
-export interface CourseInterface extends mongoose.Document {
+export interface CourseData {
+  _id: ObjectId;
   title?: string;
   subtitle?: string;
   thumbnail?: string;
@@ -25,6 +26,10 @@ export interface CourseInterface extends mongoose.Document {
   learningOutcomes?: string[];
   targetAudience?: string[];
   requirements?: string[];
+}
+
+export interface CourseInterface extends mongoose.Document, CourseData {
+  _id: ObjectId;
 }
 
 const courseSchema = new Schema<CourseInterface & Document>(

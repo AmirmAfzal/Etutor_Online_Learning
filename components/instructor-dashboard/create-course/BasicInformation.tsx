@@ -33,23 +33,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { CourseData } from "@/lib/db/models/courseModel";
 
 // Use the imported schema type
 type FormField = BasicInformationFormData;
 
 type Props = {
   onNext: () => void;
+  course: CourseData | null;
 };
 
-const BasicInformation = ({ onNext }: Props) => {
+const BasicInformation = ({ onNext, course }: Props) => {
   const [titleLength, setTitleLength] = useState(0);
   const [subTitleLength, setSubTitleLength] = useState(0);
 
   const form = useForm<FormField>({
     resolver: zodResolver(basicInformationSchema),
     defaultValues: {
-      title: "",
-      subtitle: "",
+      title: course?.title || "",
+      subtitle: course?.subtitle || "",
       category: "",
       subcategory: "",
       topic: "",

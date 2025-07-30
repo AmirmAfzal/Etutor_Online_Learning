@@ -9,12 +9,13 @@ import {
   basicInformationSchema,
   BasicInformationFormData,
 } from "@/lib/validation/schemas/instructor/create-course";
+import { redirect } from "next/navigation";
 
 export async function saveBasicInformation(
   prevState: ActionData,
   formData: FormData
 ): Promise<ActionData> {
-  await connectDB()
+  await connectDB();
   const data = Object.fromEntries(formData.entries());
   console.log(data);
 
@@ -27,7 +28,7 @@ export async function saveBasicInformation(
     };
   }
 
-  try {
+  // try {
     let foundCategory = await categoryModel.findOne({
       name: result.data.category,
     });
@@ -57,18 +58,20 @@ export async function saveBasicInformation(
       durationValue: result.data.durationValue,
       durationUnit: result.data.durationUnit,
     });
-
-    return {
-      message: "SUCCESS",
-      errors: [],
-    };
-  } catch (error) {
-    console.error("Error saving form data:", error);
-    return {
-      message: "ERROR",
-      errors: ["An unexpected error occurred. Please try again."],
-    };
-  }
+    redirect(
+      `/instructor/dashboard/create-course?tab=AdvanceInformation&_id=${createdCourse._id}`
+    );
+  //   return {
+  //     message: "SUCCESS",
+  //     errors: [],
+  //   };
+  // } catch (error) {
+  //   console.error("Error saving form data:", error);
+  //   return {
+  //     message: "ERROR",
+  //     errors: ["An unexpected error occurred. Please try again."],
+  //   };
+  // }
 }
 
 export async function saveAndPreviewBasicInformation(

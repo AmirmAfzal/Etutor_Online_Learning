@@ -26,6 +26,8 @@ import {
   advanceInformationSchema,
 } from "@/lib/validation/schemas/instructor/create-course";
 import { saveAdvanceInformation } from "@/lib/actions/instructor/create-course/advanceInformation";
+import { CourseData } from "@/lib/db/models/courseModel";
+
 
 const MAX_INPUTS = 8;
 const MAX_CHARS = 120;
@@ -33,6 +35,7 @@ const MAX_CHARS = 120;
 type Props = {
   onNext: () => void;
   onBack: () => void;
+  course: CourseData | null;
 };
 
 const initialState = {
@@ -40,7 +43,7 @@ const initialState = {
   errors: [],
 };
 
-const AdvanceInformation = ({ onNext, onBack }: Props) => {
+const AdvanceInformation = ({ onNext, onBack , course }: Props) => {
   const [topics, setTopics] = useState(["", "", "", ""]);
   const [targetTopics, setTargetTopics] = useState(["", "", "", ""]);
   const [requirementsTopics, setRequirementsTopics] = useState([
@@ -58,6 +61,7 @@ const AdvanceInformation = ({ onNext, onBack }: Props) => {
   const form = useForm<AdvanceInformationFormData>({
     resolver: zodResolver(advanceInformationSchema),
     defaultValues: {
+      _id: typeof course?._id === "string" ? course._id : "",
       topics,
       targetTopics,
       requirementsTopics,
@@ -253,6 +257,7 @@ const AdvanceInformation = ({ onNext, onBack }: Props) => {
       {/* Form */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <input type="text"  hidden {...form.register("_id")} />
           {/* course description */}
           <div className="border-base-300 border-b p-4">
             <div className="">
