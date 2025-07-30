@@ -8,89 +8,8 @@ import CourseCard from "@/components/CourseCard";
 import CoursesSearch from "@/components/Courses/CoursesSearch";
 import CoursesSelect from "@/components/Courses/CoursesSelect";
 import CourseFilter from "@/components/Courses/CourseFilter";
-
-const courses = [
-  {
-    thumbnail: "/images/course-images-1.png",
-    name: "Machine Learning A-Z™: Hands-On Python & R In Data...",
-    category: "Design",
-    price: 57,
-    rating: 5,
-    students: 265.7,
-  },
-  {
-    thumbnail: "/images/course-images-2.png",
-    name: "The Complete 2021 Web Development Bootcamp",
-    category: "Development",
-    price: 57,
-    rating: 5,
-    students: 265.7,
-  },
-  {
-    thumbnail: "/images/course-images-3.png",
-    name: "Learn Python Programming Masterclass",
-    category: "IT & Software",
-    price: 57,
-    rating: 5,
-    students: 265.7,
-  },
-  {
-    thumbnail: "/images/course-images-4.png",
-    name: "The Complete Digital Marketing Course - 12 Courses in 1",
-    category: "Marketing",
-    price: 57,
-    rating: 5,
-    students: 265.7,
-  },
-  {
-    thumbnail: "/images/course-images-5.png",
-    name: "Reiki Level I, II and Master/Teacher Program",
-    category: "Health & Fitness",
-    price: 57,
-    rating: 5,
-    students: 265.7,
-  },
-  {
-    thumbnail: "/images/course-images-6.png",
-    name: "Learn Ethical Hacking From Scratch 2021",
-    category: "IT & Software",
-    price: 35,
-    rating: 4.8,
-    students: 451.444,
-  },
-  {
-    thumbnail: "/images/course-images-7.png",
-    name: "Ultimate AWS Certified Solutions Architect Associate 2021",
-    category: "Development",
-    price: 13,
-    rating: 4.9,
-    students: 211.434,
-  },
-  {
-    thumbnail: "/images/course-images-8.png",
-    name: "Complete Blender Creator: Learn 3D Modelling for Beginners",
-    category: "Design",
-    price: 49,
-    rating: 4.9,
-    students: 187.837,
-  },
-  {
-    thumbnail: "/images/course-images-9.png",
-    name: "Data Structures & Algorithms Essentials (2021)",
-    category: "Development",
-    price: 24,
-    rating: 4.7,
-    students: 451.444,
-  },
-  {
-    thumbnail: "/images/course-images-10.png",
-    name: "2021 Complete Python Bootcamp From Zero to Hero in Python",
-    category: "Development",
-    price: 35,
-    rating: 4.3,
-    students: 902.941,
-  },
-];
+import { connectDB } from "@/lib/db/db";
+import courseModel from "@/lib/db/models/courseModel";
 
 // fake data for filtered courses
 const categories = [
@@ -187,20 +106,33 @@ const rating = [
   },
 ];
 
-const CoursesPage = ({
+const CoursesPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ query?: string; filter?: string }>;
 }) => {
-  const query = searchParams.query?.toLowerCase();
+  await connectDB();
+  const foundCourse = await courseModel.find().lean();
+
+  const courses = foundCourse.map((course) => ({
+    thumbnail: course.thumbnail,
+    name: course.title,
+    category: course.category[0]?.name || "Unknown",
+    price: course.price,
+    rating: 5, // TODO
+    students: course.studentsCount,
+  }));
+
   const isFiltered = searchParams.filter === "true";
-  const filteredCourses = query
-    ? courses.filter(
-        (course) =>
-          course.name.toLowerCase().includes(query) ||
-          course.category.toLowerCase().includes(query)
-      )
-    : courses;
+  const query = searchParams.query?.toLowerCase();
+  let filteredCourses = courses;
+  if (query) {
+    filteredCourses = filteredCourses.filter(
+      (course) =>
+        course.name.toLowerCase().includes(query) ||
+        course.category.toLowerCase().includes(query)
+    );
+  }
 
   return (
     <section className="container mx-auto mt-8 flex max-w-6xl flex-col items-center justify-center">
