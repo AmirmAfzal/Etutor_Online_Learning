@@ -1,4 +1,5 @@
 // TODO: single course updated => merge to this branch
+// TODO: fix type script erorrs
 
 import Icon from "@/components/ui/Icon";
 
@@ -137,13 +138,35 @@ const categories = [
   },
 ];
 
-const tools = ["HTML 5", "CSS 3", "React", "Webflow", "Node.js", "Laravel"];
-const courseLevel = ["All Level", "Beginner", "Intermediate", "Expert"];
+const tools = {
+  "HTML 5": 1234,
+  "GOLANG ": 1234,
+  "CSS 3": 1234,
+  "Node.js": 8454,
+};
+
+const price = {
+  Paid: 12863,
+  Free: 832,
+};
+
+const duration = {
+  "6-12 Months": 1312,
+  "3-6 Months": 42376,
+  "1-3 Months": 12,
+  "1-4 Weeks": 87423,
+  "1-7 Days": 23746,
+};
+const courseLevel = {
+  "All Level": 234234,
+  Beginner: 2345,
+  Intermediate: 124,
+  Expert: 826,
+};
 
 const rating = [
   {
     label: "5 Star",
-
     count: 12345,
   },
   {
@@ -228,6 +251,8 @@ const CoursesPage = ({
             tools={tools}
             rating={rating}
             courseLevel={courseLevel}
+            duration={duration}
+            price={price}
           />
         )}
         <div
