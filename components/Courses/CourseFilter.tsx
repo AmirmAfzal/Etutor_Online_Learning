@@ -33,7 +33,7 @@ const CourseFilter = ({
   price,
 }: Props) => {
   return (
-    <aside className="border-base-300 bg-base-100 w-7/12 border-r p-4">
+    <aside className="border-base-300 bg-base-100 w-5/12 border-r p-4">
       <div>
         {/* Categories */}
         <Accordion type="single" collapsible className="border-base-300 border">

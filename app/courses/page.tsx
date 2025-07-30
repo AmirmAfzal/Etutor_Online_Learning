@@ -1,5 +1,4 @@
 // TODO: single course updated => merge to this branch
-// TODO: fix type script erorrs
 
 import Icon from "@/components/ui/Icon";
 
@@ -12,7 +11,27 @@ import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 
 // fake data for filtered courses
-const categories = [
+interface Category {
+  name: string;
+  icon: string;
+  subcategories: { [key: string]: number };
+}
+
+interface Rating {
+  label: string;
+  count: number;
+}
+
+interface Course {
+  thumbnail: string;
+  name: string;
+  category: string;
+  price: number;
+  rating: number;
+  students: number;
+}
+
+const categories: Category[] = [
   {
     name: "Development",
     icon: "ph:cpu",
@@ -83,7 +102,7 @@ const courseLevel = {
   Expert: 826,
 };
 
-const rating = [
+const rating: Rating[] = [
   {
     label: "5 Star",
     count: 12345,
@@ -114,7 +133,7 @@ const CoursesPage = async ({
   await connectDB();
   const foundCourse = await courseModel.find().lean();
 
-  const courses = foundCourse.map((course) => ({
+  const courses: Course[] = foundCourse.map((course) => ({
     thumbnail: course.thumbnail,
     name: course.title,
     category: course.category[0]?.name || "Unknown",
@@ -141,11 +160,13 @@ const CoursesPage = async ({
           <div className="flex flex-row items-center gap-2">
             <a
               href={isFiltered ? "/courses" : "/courses?filter=true"}
-              className="border-primary/20 bg-border-base-100 flex flex-row items-center gap-3 rounded-none border px-2 py-3"
+              className={`bg-base-100 flex flex-row items-center gap-3 rounded-none border px-2 py-3 ${isFiltered ? "border-primary text-primary" : "border-primary/20 text-base-content/80"}`}
             >
               <Icon icon="ph:faders-fill" className="text-xl" />
               <span className="text-sm">Filter</span>
-              <span className="text-primary bg-primary/10 px-2">
+              <span
+                className={`${isFiltered ? "text-base-100 bg-primary px-2" : "text-primary bg-primary/10 px-2"}`}
+              >
                 {isFiltered ? "3" : "0"}
               </span>
             </a>
@@ -172,9 +193,12 @@ const CoursesPage = async ({
           </div>
 
           {/* TODO: number of results for search */}
-          <div className="text-base-content/70 text-sm">Results: 0</div>
+          <div className="text-base-content/70 text-sm">
+            {query
+              ? `${filteredCourses.length} results find for"${query}"`
+              : `${filteredCourses.length} Course`}
+          </div>
         </div>
-        <div className="grid grid-cols-4 gap-2">{}</div>
       </div>
       <div className="flex w-full gap-4 pt-6">
         {isFiltered && (
