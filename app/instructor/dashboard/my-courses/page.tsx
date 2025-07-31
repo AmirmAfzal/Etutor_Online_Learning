@@ -17,8 +17,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const MyCoursesPage = () => {
-  const courses = [
+type Course = {
+  id: number;
+  thumbnail: string;
+  name: string;
+  category: string;
+  price: number;
+  rating: number;
+  students: number;
+};
+
+type Props = {
+  searchParams: { [key: string]: string | undefined };
+};
+const MyCoursesPage = ({ searchParams }: Props) => {
+  const courses: Course[] = [
     {
       id: 1,
       thumbnail: "/images/course-images-1.png",
@@ -79,7 +92,7 @@ const MyCoursesPage = () => {
       name: "Beginner to Pro in Excel: Financial Modeling and Valuati...",
       category: "Marketing",
       price: 38,
-      rating: 4.2,
+      rating: 5,
       students: 265.7,
     },
     {
@@ -111,27 +124,54 @@ const MyCoursesPage = () => {
     },
   ];
 
+  const search = searchParams.search?.toLowerCase() || "";
+  const sort = searchParams.sort || "latest";
+  const category = searchParams.category || "all";
+  const rating = searchParams.rating || "4";
+
+  const filteredCourses = courses
+    .filter((course) => {
+      const matchSearch = course.name.toLowerCase().includes(search);
+      const matchCategory =
+        category === "all" ||
+        course.category.toLowerCase() === category.toLowerCase();
+      const matchRating = course.rating >= +rating;
+      return matchSearch && matchCategory && matchRating;
+    })
+    .sort((a, b) => {
+      if (sort === "latest") return b.id - a.id;
+      if (sort === "oldest") return a.id - b.id;
+      return 0;
+    });
+
   return (
     <section className="bg-base-200 p-6">
       <div className="container mx-auto">
-        <div className="flex flex-row items-center justify-between gap-6">
+        <form
+          action={"/instructor/dashboard/my-courses"}
+          className="flex flex-row items-center justify-between gap-6"
+        >
           <div className="relative">
-            <p className="text-base-content/80 mb-2 text-xs">Search:</p>
+            <label className="text-base-content/80 mb-2 text-xs">Search:</label>
             <Icon
               icon="ph:magnifying-glass"
-              className="text-base-content/80 absolute top-2/3 left-3 -translate-y-1/2"
+              className="text-base-content/80 absolute top-11 left-3 -translate-y-1/2"
               width="20"
               height="20"
             />
             <Input
               type="text"
+              name="search"
               className="bg-base-100 min-w-lg pl-12"
               placeholder="Search in your courses..."
+              defaultValue={search}
             />
           </div>
           <div className="w-full">
-            <p className="text-base-content/80 mb-2 text-xs">Sort by:</p>
-            <Select>
+            <label className="text-base-content/80 mb-2 text-xs">
+              Sort by:
+            </label>
+            <Select name="sort" defaultValue={sort}>
               <SelectTrigger className="bg-base-100 w-full border-0">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
@@ -143,8 +183,10 @@ const MyCoursesPage = () => {
           </div>
 
           <div className="w-full">
-            <p className="text-base-content/80 mb-2 text-xs">Category:</p>
-            <Select>
+            <label className="text-base-content/80 mb-2 text-xs">
+              Category:
+            </label>
+            <Select name="category" defaultValue={category}>
               <SelectTrigger className="bg-base-100 w-full border-0">
                 <SelectValue placeholder="All Category" />
               </SelectTrigger>
@@ -162,12 +204,13 @@ const MyCoursesPage = () => {
           </div>
 
           <div className="w-full">
-            <p className="text-base-content/80 mb-2 text-xs">Rating:</p>
-            <Select>
+            <label className="text-base-content/80 mb-2 text-xs">Rating:</label>
+            <Select name="rating" defaultValue={rating}>
               <SelectTrigger className="bg-base-100 w-full border-0">
                 <SelectValue placeholder="Rating" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="5">5 Start</SelectItem>
                 <SelectItem value="4">4 Start & Up</SelectItem>
                 <SelectItem value="3">3 Start & Up</SelectItem>
                 <SelectItem value="2">2 Start & Up</SelectItem>
@@ -175,10 +218,11 @@ const MyCoursesPage = () => {
               </SelectContent>
             </Select>
           </div>
-        </div>
+          <button type="submit" hidden />
+        </form>
 
         <div className="mt-6 grid grid-cols-4 gap-6">
-          {courses.map((course) => (
+          {filteredCourses.map((course) => (
             <div
               key={course.name}
               className="bg-base-100 transition-all duration-300 hover:shadow-lg"
