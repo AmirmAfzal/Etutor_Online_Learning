@@ -18,11 +18,17 @@ interface CourseData {
   teacher: string;
 }
 
-const StudentCoursesPage = async ({
-  searchParams,
-}: {
+interface Student {
+  _id: string;
+  user: string;
+  courses: CourseData[];
+}
+
+interface Props {
   searchParams: Promise<{ query?: string }>;
-}) => {
+}
+
+const StudentCoursesPage = async ({ searchParams }: Props) => {
   await connectDB();
 
   const session = await getServerSession(authOptions);
@@ -31,12 +37,13 @@ const StudentCoursesPage = async ({
   const student = await studentModel
     .findOne({ user: session.user.id })
     .populate<{ courses: CourseData[] }>("courses")
-    .lean();
+    .lean<Student | null>();
   if (!student) return redirect("/auth/signin");
 
-  const courses: CourseData[] = student.courses;
+  const courses: CourseData[] = student.courses || [];
 
-  const query = searchParams.query?.toLowerCase();
+  const resolvedSearchParams = await searchParams;
+  const query = resolvedSearchParams.query?.toLowerCase();
   const filteredCourses = query
     ? courses.filter(
         (course) =>
