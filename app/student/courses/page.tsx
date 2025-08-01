@@ -1,75 +1,49 @@
 import React from "react";
-
 import CourseCard from "@/components/Student/CourseCardStudent";
-
 import Search from "@/components/Student/Search";
 import CoursesSelect from "@/components/Student/CoursesSelect";
+import { authOptions } from "@/lib/auth/authOptions";
+import { connectDB } from "@/lib/db/db";
+import studentModel from "@/lib/db/models/studentModel";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-// Fake data for demonstration
-const fakeCourses = [
-  {
-    title: "Web Design Course",
-    subtitle: "31. Learn More About Web Design",
-    image: "/images/student-dashboard/course-1.jpg",
-    progress: "26% Completed",
-    status: "Ongoing",
-    teacher: "Mr. Ahmadi",
-  },
-  {
-    title: "SQL Beginner Course",
-    subtitle: "105. Special Features Challenge",
-    image: "/images/student-dashboard/course-2.jpg",
-    progress: "22% Completed",
-    status: "Ongoing",
-    teacher: "Mr. Rezaei",
-  },
-  {
-    title: "Advanced CSS Training",
-    subtitle: "54. CSS Static and Relative Positioning",
-    image: "/images/student-dashboard/course-3.jpg",
-    progress: "52% Completed",
-    status: "Completed",
-    teacher: "Mr. Ahmadi",
-  },
-  {
-    title: "Intro to Machine Learning",
-    subtitle: "651. CSS Property Challenge Solution",
-    image: "/images/student-dashboard/course-4.jpg",
-    progress: "13% Completed",
-    status: "Ongoing",
-    teacher: "Mr. Rezaei",
-  },
-  {
-    title: "Intro to Machine Learning",
-    subtitle: "651. CSS Property Challenge Solution",
-    image: "/images/student-dashboard/course-4.jpg",
-    progress: "0% Completed",
-    status: "Completed",
-    teacher: "Mr. Ahmadi",
-  },
-  {
-    title: "Intro to Machine Learning",
-    subtitle: "651. CSS Property Challenge Solution",
-    image: "/images/student-dashboard/course-4.jpg",
-    progress: "0% Completed",
-    status: "Ongoing",
-    teacher: "Mr. Rezaei",
-  },
-];
+interface CourseData {
+  _id: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  progress: string;
+  status: string;
+  teacher: string;
+}
 
-const CoursesPage = async ({
+const StudentCoursesPage = async ({
   searchParams,
 }: {
-  searchParams: { query?: string };
+  searchParams: Promise<{ query?: string }>;
 }) => {
-  const query = await searchParams.query?.toLowerCase();
+  await connectDB();
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) return redirect("/auth/signin");
+
+  const student = await studentModel
+    .findOne({ user: session.user.id })
+    .populate<{ courses: CourseData[] }>("courses")
+    .lean();
+  if (!student) return redirect("/auth/signin");
+
+  const courses: CourseData[] = student.courses;
+
+  const query = searchParams.query?.toLowerCase();
   const filteredCourses = query
-    ? fakeCourses.filter(
+    ? courses.filter(
         (course) =>
           course.title.toLowerCase().includes(query) ||
           course.subtitle.toLowerCase().includes(query)
       )
-    : fakeCourses;
+    : courses;
 
   return (
     <>
@@ -87,18 +61,12 @@ const CoursesPage = async ({
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {filteredCourses.map((course, i) => (
-          <CourseCard key={i} {...course} />
+        {filteredCourses.map((course) => (
+          <CourseCard key={course._id} {...course} />
         ))}
       </div>
-      {/* Pagination (optional, SSR-ready) */}
-      {/* <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          /> */}
     </>
   );
 };
 
-export default CoursesPage;
+export default StudentCoursesPage;
