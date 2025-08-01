@@ -13,7 +13,7 @@ interface Props {
 
 const CourseCard = (props: Props) => {
   return (
-    <div className="bg-base-100 border-base-300 border">
+    <div className="bg-base-100 border-base-300 border h-max">
       <Image src={props.thumbnail} alt={props.name} width={400} height={200} />
       <div className="space-y-2 p-4">
         <div className="flex flex-row items-center justify-between">
