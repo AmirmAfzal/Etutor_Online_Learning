@@ -27,10 +27,16 @@ type Course = {
   students: number;
 };
 
-type Props = {
-  searchParams: { [key: string]: string | undefined };
-};
-const MyCoursesPage = ({ searchParams }: Props) => {
+interface Props {
+  searchParams: Promise<{
+    search: string;
+    sort: string;
+    category: string;
+    rating: string;
+  }>;
+}
+
+const MyCoursesPage = async (props: Props) => {
   const courses: Course[] = [
     {
       id: 1,
@@ -124,6 +130,7 @@ const MyCoursesPage = ({ searchParams }: Props) => {
     },
   ];
 
+  const searchParams = await props.searchParams;
   const search = searchParams.search?.toLowerCase() || "";
   const sort = searchParams.sort || "latest";
   const category = searchParams.category || "all";
