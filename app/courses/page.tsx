@@ -142,8 +142,9 @@ const CoursesPage = async ({
     students: course.studentsCount,
   }));
 
-  const isFiltered = searchParams.filter === "true";
-  const query = searchParams.query?.toLowerCase();
+  const searchParam = await searchParams;
+  const isFiltered = searchParam.filter === "true";
+  const query = searchParam.query?.toLowerCase();
   let filteredCourses = courses;
   if (query) {
     filteredCourses = filteredCourses.filter(
