@@ -1,5 +1,5 @@
 import Comments from "@/components/Courses/Comments";
-import Curriculum from "@/components/Courses/Curriculum";
+import WatchCurriculum from "@/components/Courses/watchCurriculum";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/Icon";
 import Image from "next/image";
@@ -21,13 +21,8 @@ const curriculum = [
         info: "07:31",
         type: "video",
       },
-      {
-        title: "Webflow Terms & Conditions",
-        info: "5.3 MB",
-        type: "file",
-      },
+
       { title: "Teaser of Webflow", info: "07:31", type: "video" },
-      { title: "Practice Project", info: "5.3 MB", type: "file" },
     ],
   },
   {
@@ -166,15 +161,15 @@ const watchCourse = () => {
           alt=""
           width={1024}
           height={800}
-          className="w-2/3"
+          className="w-7/12"
         />
 
-        <div className="flex w-1/3 flex-col items-start justify-start">
+        <div className="flex w-5/12 flex-col items-start justify-start">
           {/* <span className="text-base-content/80 text-lg font-semibold">
             Course Content
           </span> */}
           {/* TODO :  */}
-          <Curriculum curriculum={curriculum} />
+          <WatchCurriculum curriculum={curriculum} />
         </div>
       </div>
       <div className="flex w-2/3 flex-col items-start justify-start px-4">
