@@ -8,7 +8,7 @@ import {
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import instructorModel from "@/lib/db/models/instructorModel";
@@ -16,28 +16,55 @@ import instructorModel from "@/lib/db/models/instructorModel";
 export default async function CategoryPage({
   searchParams,
 }: {
-  // FIXME: اینجا سرچ پارامز درست استفاده نشده باید promise میبود
-  searchParams: { query?: string };
+  searchParams: Promise<{ query?: string }>;
 }) {
   await connectDB();
+  const resolvedParams = await searchParams;
+  const query = resolvedParams.query?.toLowerCase();
 
-  // FIXME: اسم متغیرها درست بشه
-  const coursesFromDB = await courseModel.find().lean();
-  const instructorsFromDB = await instructorModel.find().lean();
+  const courseFilter = query
+    ? {
+        $or: [
+          { title: { $regex: query, $options: "i" } },
+          { "category.name": { $regex: query, $options: "i" } },
+        ],
+      }
+    : {};
 
-  const courses = coursesFromDB.map((course) => ({
-    thumbnail: course.thumbnail,
+  const instructorFilter = query
+    ? {
+        $or: [
+          { firstname: { $regex: query, $options: "i" } },
+          { lastname: { $regex: query, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const foundCourse = await courseModel.find(courseFilter).lean();
+  const foundInstructor = await instructorModel.find(instructorFilter).lean();
+
+  const courses = foundCourse.map((course) => ({
+    // this part had an error ai did this
+    thumbnail: course.thumbnail?.startsWith("http")
+      ? course.thumbnail
+      : course.thumbnail
+        ? `/images/courses/${course.thumbnail}`
+        : "/images/courses/default-thumbnail.png",
     name: course.title,
-    category: course.category[0]?.name || "Unknown",
+    category: course.category?.name || "Unknown",
     price: course.price,
-    rating: 5, // TODO
+    rating: 5,
     students: course.studentsCount,
   }));
 
-  const instructors = instructorsFromDB.map((instructor) => ({
+  const instructors = foundInstructor.map((instructor) => ({
     name: `${instructor.firstname} ${instructor.lastname}`,
     title: "Instructor",
-    image: instructor.avatar || "/images/instructors/instructor-1.png",
+    image: instructor.avatar?.startsWith("http")
+      ? instructor.avatar
+      : instructor.avatar
+        ? `/images/instructors/${instructor.avatar}`
+        : "/images/instructors/instructor-1.png",
     rating: instructor.rating,
     students: instructor.students,
   }));
@@ -62,17 +89,6 @@ export default async function CategoryPage({
     "Wordpress",
   ];
 
-  // FIXME: فیلتر حتما باید از دیتابیس باشه ، فکر کن بعدا یه میلیون تا دوره داریم هر بار که یارو درخواست میده یه میلیون تارو پر میکنیم تو رم بعد فیلتر میکنیم؟
-  // نه میاییم مستقیم از دیتابیس فیلتر میکنیم
-  const query = searchParams.query?.toLowerCase();
-  const filteredCourses = query
-    ? courses.filter(
-        (course) =>
-          course.name.toLowerCase().includes(query) ||
-          course.category.toLowerCase().includes(query)
-      )
-    : courses;
-
   return (
     <section className="container mx-auto flex flex-col items-center px-4 py-8">
       <div className="my-12 flex max-w-6xl flex-col items-center gap-12">
@@ -80,7 +96,7 @@ export default async function CategoryPage({
           Best selling courses in Web Development
         </h2>
         <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-5">
-          {filteredCourses.slice(0, 5).map((course, index) => (
+          {courses.slice(0, 5).map((course, index) => (
             <CourseCard key={index} {...course} />
           ))}
         </div>
@@ -148,12 +164,11 @@ export default async function CategoryPage({
       <section className="max-w-6xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <button className="border-primary/50 py- flex items-center gap-2 border px-4 py-3 font-semibold">
+            <button className="border-primary/50 flex items-center gap-2 border px-4 py-3 font-semibold">
               <Icon icon="ph:funnel" />
               Filter
               <span className="text-primary">03</span>
             </button>
-
             <Form action="/category" className="relative">
               <input
                 type="text"
@@ -202,9 +217,9 @@ export default async function CategoryPage({
             <span className="text-base-content/80">
               {query ? (
                 <>
-                  {filteredCourses.length.toLocaleString()}
+                  {courses.length.toLocaleString()}
                   <span className="text-base-content/60 ml-2">
-                    results for &quot;{searchParams.query}&quot;
+                    results for &quot;{resolvedParams.query}&quot;
                   </span>
                 </>
               ) : (
@@ -218,7 +233,7 @@ export default async function CategoryPage({
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {filteredCourses.map((course, index) => (
+          {courses.map((course, index) => (
             <CourseCard key={index} {...course} />
           ))}
         </div>
