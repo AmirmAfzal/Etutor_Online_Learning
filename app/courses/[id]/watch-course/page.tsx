@@ -1,5 +1,5 @@
-import Comments from "@/components/Courses/Comments";
-import WatchCurriculum from "@/components/Courses/watchCurriculum";
+import WatchComments from "@/components/Courses/watchCourses/WatchComments";
+import WatchCurriculum from "@/components/Courses/watchCourses/WatchCurriculum";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/Icon";
 import Image from "next/image";
@@ -81,31 +81,44 @@ If that all sounds a little too fancy - don’t worry, this course is aimed at p
   file: "",
 };
 
-const studentsComments = [
+const comments = [
   {
-    name: "Alice Johnson",
-    avatar: "/images/profile-img.png",
-    star: 4,
-    time: "2 days ago",
-    comment:
-      "This course was amazing! I learned so much about web design and Figma.",
-  },
-  {
-    name: "Bob Smith",
-    avatar: "/images/profile-img.png",
+    name: "Theresa Webb",
+    avatar: "/images/instructors/instructor-1.png",
+    time: "3 weeks ago",
     star: 5,
-    time: "1 week ago",
     comment:
-      "The instructors were very knowledgeable and the content was well-organized.",
+      "Now I know that I will spent that 5 minutes of my life with pure pleasure",
+    ADMIN: false,
+    replies: [
+      {
+        name: "John Doe",
+        avatar: "/images/instructors/instructor-3.png",
+        time: "2 weeks ago",
+        star: 4,
+        comment: "Totally agree with you!",
+        ADMIN: false,
+      },
+      {
+        name: "Admin",
+        avatar: "/images/instructors/instructor-3.png",
+        time: "1 week ago",
+        star: 5,
+        comment: "Thanks for your feedback!",
+        ADMIN: true,
+      },
+    ],
   },
   {
-    name: "Charlie Brown",
-    avatar: "/images/profile-img.png",
-    star: 3,
-    time: "3 days ago",
-    comment: "Good course but could use more examples.",
+    name: "Jane Smith",
+    avatar: "/images/instructors/instructor-3.png",
+    time: "1 week ago",
+    star: 4,
+    comment: "I enjoyed it too!",
+    ADMIN: false,
   },
 ];
+
 const watchCourse = () => {
   return (
     <section className="container mx-auto flex w-full flex-col items-start">
@@ -154,21 +167,17 @@ const watchCourse = () => {
           <Button className="!btn !btn-primary">Next Lecture</Button>
         </div>
       </div>
-      <div className="flex w-full flex-row items-center gap-4 p-4">
+      <div className="flex w-full flex-row items-start gap-4 p-4">
         {/* img || video*/}
         <Image
           src={"/images/courses/videoPlayer.png"}
           alt=""
           width={1024}
           height={800}
-          className="w-7/12"
+          className="mt-8 w-7/12"
         />
 
         <div className="flex w-5/12 flex-col items-start justify-start">
-          {/* <span className="text-base-content/80 text-lg font-semibold">
-            Course Content
-          </span> */}
-          {/* TODO :  */}
           <WatchCurriculum curriculum={curriculum} />
         </div>
       </div>
@@ -225,8 +234,9 @@ const watchCourse = () => {
             <span className="font-md text-base-content text-xl font-semibold">
               Lecture Notes
             </span>
-            {/* TODO: add download icon to btn */}
+
             <Button className="!btn !btn-primary !btn-soft">
+              <Icon icon="ph:download-simple" className="text-2xl" />
               Download Notes
             </Button>
           </div>
@@ -237,8 +247,8 @@ const watchCourse = () => {
           {/* TODO: add attach file number to here */}
           <span className="text-base-content text-xl font-semibold">{`Attach File (01)`}</span>
           <div className="bg-base-200 flex w-full flex-row items-start justify-between p-6">
-            <div className="flex flex-row">
-              {/* TODO :  add icon to here */}
+            <div className="flex flex-row items-center gap-2">
+              <Icon icon="ph:file-text" className="text-primary text-5xl" />
               {/* TODO : get deta from db */}
               <span className="font-md text-md flex flex-col">
                 Create account on webflow.pdf
@@ -249,8 +259,7 @@ const watchCourse = () => {
           </div>
         </div>
 
-        {/* TODO: */}
-        <Comments studentsComments={studentsComments} />
+        <WatchComments comments={comments} />
       </div>
     </section>
   );
