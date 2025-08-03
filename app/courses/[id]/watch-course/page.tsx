@@ -161,9 +161,9 @@ const watchCourse = () => {
         </div>
         {/* btns */}
         <div className="flex flex-row items-center gap-2">
-          <Button className="!btn !bg-base-100 !text-primary">
+          <button className="btn bg-base-100 text-primary">
             Write A Review
-          </Button>
+          </button>
           <Button className="!btn !btn-primary">Next Lecture</Button>
         </div>
       </div>
@@ -235,10 +235,10 @@ const watchCourse = () => {
               Lecture Notes
             </span>
 
-            <Button className="!btn !btn-primary !btn-soft">
+            <button className="!btn !btn-primary !btn-soft">
               <Icon icon="ph:download-simple" className="text-2xl" />
               Download Notes
-            </Button>
+            </button>
           </div>
           <p className="text-base-content/70 text-sm">{lactureData.note}</p>
         </div>
@@ -255,7 +255,7 @@ const watchCourse = () => {
                 <span className="text-base-content/60 text-sm">12.6 MB</span>
               </span>
             </div>
-            <Button className="!btn !btn-primary">Download File</Button>
+            <button className="btn btn-primary">Download File</button>
           </div>
         </div>
 
