@@ -6,7 +6,7 @@ export interface CourseInterface extends mongoose.Document {
   thumbnail: string;
   description: string;
   authors: ObjectId[];
-  lectures: ObjectId[];
+  sections: ObjectId[];
   price: number;
   offer: number;
   offerEndsAt: Date;
@@ -33,7 +33,7 @@ const courseSchema = new Schema<CourseInterface & Document>(
     thumbnail: { type: String, required: true },
     description: { type: String, required: true },
     authors: [{ type: Schema.Types.ObjectId, ref: "user", required: true }],
-    lectures: [{ type: Schema.Types.ObjectId, ref: "lecture", required: true }],
+    sections: [{ type: Schema.Types.ObjectId, ref: "section", required: true }],
     price: { type: Number, required: true },
     offer: { type: Number, required: true },
     offerEndsAt: { type: Date },
