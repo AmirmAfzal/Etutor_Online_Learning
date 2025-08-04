@@ -1,10 +1,10 @@
 import WatchComments from "@/components/Courses/watchCourses/WatchComments";
 import WatchCurriculum from "@/components/Courses/watchCourses/WatchCurriculum";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Icon from "@/components/ui/Icon";
 import Image from "next/image";
 import Link from "next/link";
+import WriteReview from "@/components/Courses/watchCourses/WriteReview";
 
 const curriculum = [
   {
@@ -124,7 +124,6 @@ const watchCourse = () => {
   return (
     <section className="container mx-auto flex w-full flex-col items-start">
       <div className="bg-base-200 flex w-full flex-row items-center justify-between p-4">
-        {/* description */}
         <div className="flex flex-row items-center gap-4">
           <Link
             href=""
@@ -160,11 +159,9 @@ const watchCourse = () => {
             </div>
           </div>
         </div>
-        {/* btns */}
         <div className="flex flex-row items-center gap-2">
-          <button className="btn bg-base-100 text-primary">
-            Write A Review
-          </button>
+          {/* daisy ui modal  */}
+          <WriteReview />
           <button className="btn btn-primary">Next Lecture</button>
         </div>
       </div>
@@ -215,7 +212,6 @@ const watchCourse = () => {
           </div>
         </div>
 
-        {/* tabs */}
         <Tabs defaultValue="description" className="mt-8 w-full">
           <TabsList className="!bg-base-100 data- flex gap-6">
             <TabsTrigger
@@ -322,15 +318,6 @@ const watchCourse = () => {
             <WatchComments comments={comments} />
           </TabsContent>
         </Tabs>
-        {/* <div className="border-base-300 text-base-content/70 mt-8 flex w-full flex-row items-start border-y text-lg font-semibold">
-          <span className="text-base-content/80 border-primary border-b-2 px-8 py-4">
-            Description
-          </span>
-          <span className="px-8 py-4">Lecture Notes</span>
-          <span className="px-8 py-4">Attach File </span>
-           TODO : number of file 
-           <span className="px-8 py-4">Comments</span>
-        </div>  */}
       </div>
     </section>
   );
