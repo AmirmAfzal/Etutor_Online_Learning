@@ -2,7 +2,13 @@ import React from "react";
 import { Icon } from "@iconify/react";
 
 import CourseCard from "@/components/CourseCardStudent";
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select";
 
 // Fake data for demonstration
 const fakeCourses = [
@@ -70,8 +76,10 @@ export default async function CoursesPage({
   const params = searchParams ? await searchParams : {};
   const search = typeof params.search === "string" ? params.search : "";
   const sort = typeof params.sort === "string" ? params.sort : "Latest";
-  const status = typeof params.status === "string" ? params.status : "All Courses";
-  const teacher = typeof params.teacher === "string" ? params.teacher : "All Teachers";
+  const status =
+    typeof params.status === "string" ? params.status : "All Courses";
+  const teacher =
+    typeof params.teacher === "string" ? params.teacher : "All Teachers";
   // Pagination (optional, not implemented fully)
   // const currentPage = parseInt(typeof searchParams.page === "string" ? searchParams.page : "1", 10);
   // const coursesPerPage = 20;

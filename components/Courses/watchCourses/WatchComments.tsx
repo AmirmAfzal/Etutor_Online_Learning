@@ -25,6 +25,7 @@ const CommentItem: FC<{
   activeReply?: string | null;
 }> = ({ comment, isReply = false, onReplyClick, activeReply }) => {
   return (
+    // TODO : Add comments profile to profile line
     <div className={`${isReply ? "ml-10 border-l pl-4" : ""}`}>
       <div className="flex flex-col items-start gap-4 py-4">
         <div className="flex items-center gap-3">

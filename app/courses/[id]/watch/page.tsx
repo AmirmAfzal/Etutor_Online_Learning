@@ -1,6 +1,7 @@
 import WatchComments from "@/components/Courses/watchCourses/WatchComments";
 import WatchCurriculum from "@/components/Courses/watchCourses/WatchCurriculum";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Icon from "@/components/ui/Icon";
 import Image from "next/image";
 import Link from "next/link";
@@ -164,7 +165,7 @@ const watchCourse = () => {
           <button className="btn bg-base-100 text-primary">
             Write A Review
           </button>
-          <Button className="!btn !btn-primary">Next Lecture</Button>
+          <button className="btn btn-primary">Next Lecture</button>
         </div>
       </div>
       <div className="flex w-full flex-row items-start gap-4 p-4">
@@ -181,6 +182,7 @@ const watchCourse = () => {
           <WatchCurriculum curriculum={curriculum} />
         </div>
       </div>
+
       <div className="flex w-2/3 flex-col items-start justify-start px-4">
         <span className="text-base-content/80 text-xl font-semibold">
           {courseData.section} .{courseData.sectionTitle}
@@ -213,53 +215,122 @@ const watchCourse = () => {
           </div>
         </div>
 
-        <div className="border-base-300 text-base-content/70 mt-8 flex w-full flex-row items-start border-y text-lg font-semibold">
+        {/* tabs */}
+        <Tabs defaultValue="description" className="mt-8 w-full">
+          <TabsList className="!bg-base-100 data- flex gap-6">
+            <TabsTrigger
+              value="description"
+              className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
+            >
+              Description
+            </TabsTrigger>
+            <TabsTrigger
+              value="lecture notes"
+              className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
+            >
+              Lecture Notes
+            </TabsTrigger>
+            <TabsTrigger
+              value="attach file"
+              className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
+            >
+              Attach File
+            </TabsTrigger>
+            <TabsTrigger
+              value="comments"
+              className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
+            >
+              Comments
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="description">
+            <div className="mt-8 flex w-full flex-col items-start gap-8">
+              <span className="font-md text-base-content text-xl font-semibold">
+                Lecture Description
+              </span>
+              <p className="text-base-content/70 text-sm">
+                {lactureData.description}
+              </p>
+              <div className="flex w-full flex-row items-center justify-between">
+                <span className="font-md text-base-content text-xl font-semibold">
+                  Lecture Notes
+                </span>
+
+                <button className="!btn !btn-primary !btn-soft">
+                  <Icon icon="ph:download-simple" className="text-2xl" />
+                  Download Notes
+                </button>
+              </div>
+              <p className="text-base-content/70 text-sm">{lactureData.note}</p>
+            </div>
+
+            <div className="mt-8 flex w-full flex-col items-start gap-4">
+              {/* TODO: add attach file number to here */}
+              <span className="text-base-content text-xl font-semibold">{`Attach File (01)`}</span>
+              <div className="bg-base-200 flex w-full flex-row items-start justify-between p-6">
+                <div className="flex flex-row items-center gap-2">
+                  <Icon icon="ph:file-text" className="text-primary text-5xl" />
+                  {/* TODO : get deta from db */}
+                  <span className="font-md text-md flex flex-col">
+                    Create account on webflow.pdf
+                    <span className="text-base-content/60 text-sm">
+                      12.6 MB
+                    </span>
+                  </span>
+                </div>
+                <button className="btn btn-primary">Download File</button>
+              </div>
+            </div>
+
+            <WatchComments comments={comments} />
+          </TabsContent>
+          <TabsContent value="lecture notes">
+            <div className="mt-8 flex w-full flex-row items-center justify-between">
+              <span className="font-md text-base-content text-xl font-semibold">
+                Lecture Notes
+              </span>
+
+              <button className="!btn !btn-primary !btn-soft">
+                <Icon icon="ph:download-simple" className="text-2xl" />
+                Download Notes
+              </button>
+            </div>
+            <p className="text-base-content/70 mt-8 text-sm">
+              {lactureData.note}
+            </p>
+          </TabsContent>
+          <TabsContent value="attach file">
+            <div className="mt-8 flex w-full flex-col items-start gap-4">
+              {/* TODO: add attach file number to here */}
+              <span className="text-base-content text-xl font-semibold">{`Attach File (01)`}</span>
+              <div className="bg-base-200 flex w-full flex-row items-start justify-between p-6">
+                <div className="flex flex-row items-center gap-2">
+                  <Icon icon="ph:file-text" className="text-primary text-5xl" />
+                  {/* TODO : get deta from db */}
+                  <span className="font-md text-md flex flex-col">
+                    Create account on webflow.pdf
+                    <span className="text-base-content/60 text-sm">
+                      12.6 MB
+                    </span>
+                  </span>
+                </div>
+                <button className="btn btn-primary">Download File</button>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="comments">
+            <WatchComments comments={comments} />
+          </TabsContent>
+        </Tabs>
+        {/* <div className="border-base-300 text-base-content/70 mt-8 flex w-full flex-row items-start border-y text-lg font-semibold">
           <span className="text-base-content/80 border-primary border-b-2 px-8 py-4">
             Description
           </span>
           <span className="px-8 py-4">Lecture Notes</span>
           <span className="px-8 py-4">Attach File </span>
-          {/* TODO : number of file */}
-          <span className="px-8 py-4">Comments</span>
-        </div>
-
-        <div className="mt-8 flex w-full flex-col items-start gap-8">
-          <span className="font-md text-base-content text-xl font-semibold">
-            Lecture Description
-          </span>
-          <p className="text-base-content/70 text-sm">
-            {lactureData.description}
-          </p>
-          <div className="flex w-full flex-row items-center justify-between">
-            <span className="font-md text-base-content text-xl font-semibold">
-              Lecture Notes
-            </span>
-
-            <button className="!btn !btn-primary !btn-soft">
-              <Icon icon="ph:download-simple" className="text-2xl" />
-              Download Notes
-            </button>
-          </div>
-          <p className="text-base-content/70 text-sm">{lactureData.note}</p>
-        </div>
-
-        <div className="mt-8 flex w-full flex-col items-start gap-4">
-          {/* TODO: add attach file number to here */}
-          <span className="text-base-content text-xl font-semibold">{`Attach File (01)`}</span>
-          <div className="bg-base-200 flex w-full flex-row items-start justify-between p-6">
-            <div className="flex flex-row items-center gap-2">
-              <Icon icon="ph:file-text" className="text-primary text-5xl" />
-              {/* TODO : get deta from db */}
-              <span className="font-md text-md flex flex-col">
-                Create account on webflow.pdf
-                <span className="text-base-content/60 text-sm">12.6 MB</span>
-              </span>
-            </div>
-            <button className="btn btn-primary">Download File</button>
-          </div>
-        </div>
-
-        <WatchComments comments={comments} />
+           TODO : number of file 
+           <span className="px-8 py-4">Comments</span>
+        </div>  */}
       </div>
     </section>
   );
