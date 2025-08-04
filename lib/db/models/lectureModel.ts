@@ -5,7 +5,10 @@ export interface LectureInterface extends Document {
   description: string;
   video: ObjectId;
   duration: number;
-  course: ObjectId;
+  files: string[]
+  notes: string
+  caption: string
+  section: ObjectId;
 }
 
 const lectureSchema = new Schema<LectureInterface & Document>({
@@ -13,7 +16,10 @@ const lectureSchema = new Schema<LectureInterface & Document>({
   description: { type: String, required: true },
   video: { type: Schema.Types.ObjectId, ref: "video", required: true },
   duration: { type: Number, required: true },
-  course: { type: Schema.Types.ObjectId, ref: "course", required: true },
+  section: { type: Schema.Types.ObjectId, ref: "section", required: true },
+  files: { type: [String], required: true },
+  notes: { type: String, required: true },
+  caption: { type: String, required: true },
 }, {
   timestamps: true,
 });
