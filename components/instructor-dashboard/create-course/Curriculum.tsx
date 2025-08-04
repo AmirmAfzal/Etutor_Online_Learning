@@ -180,16 +180,22 @@ const Curriculum = ({ onNext, onBack }: Props) => {
 
   const deleteLecture = (sectionId: number, lectureId: number) => {
     setSections((prev) =>
-      prev.map((section) =>
-        section.id === sectionId
-          ? {
-              ...section,
-              lectures: section.lectures.filter(
-                (lecture) => lecture.id !== lectureId
-              ),
-            }
-          : section
-      )
+      prev.map((section) => {
+        let editedLectures = section.lectures.filter(
+          (lecture) => lecture.id !== lectureId
+        ).map((lecture, index) => ({
+          ...lecture,
+          id: index + 1,
+          name: `Lecture name ${index + 1}`,
+        }));
+        let editedSection = {
+          ...section,
+          lectures: editedLectures,
+        };
+        console.log(editedSection)
+        return section.id === sectionId ? editedSection : section;
+        
+      })
     );
   };
 
@@ -237,7 +243,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
       onNext();
     }
     if (state.message === "ERROR") {
-      console.log(state.errors)
+      console.log(state.errors);
     }
   }, [state.message]);
 
@@ -546,7 +552,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
               activeLecture.lectureId,
               {
                 note,
-                noteFile
+                noteFile,
               }
             );
             setActiveLecture(null);
