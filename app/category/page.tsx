@@ -8,7 +8,7 @@ import {
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
+} from "@/components/ui/select";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import instructorModel from "@/lib/db/models/instructorModel";
@@ -31,25 +31,22 @@ export default async function CategoryPage({
       }
     : {};
 
-  const instructorFilter = query
-    ? {
-        $or: [
-          { firstname: { $regex: query, $options: "i" } },
-          { lastname: { $regex: query, $options: "i" } },
-        ],
-      }
-    : {};
+  const foundFilterCourse = await courseModel.find(courseFilter).lean();
+  const foundAllCourse = await courseModel.find().limit(5).lean();
+  const foundInstructor = await instructorModel.find().lean();
 
-  const foundCourse = await courseModel.find(courseFilter).lean();
-  const foundInstructor = await instructorModel.find(instructorFilter).lean();
+  const courses = foundFilterCourse.map((course) => ({
+    thumbnail:
+      course.thumbnail || "http://localhost:3000/images/courses-images-1.png",
+    name: course.title,
+    category: course.category?.name || "Unknown",
+    price: course.price,
+    rating: 5,
+    students: course.studentsCount,
+  }));
 
-  const courses = foundCourse.map((course) => ({
-    // this part had an error ai did this
-    thumbnail: course.thumbnail?.startsWith("http")
-      ? course.thumbnail
-      : course.thumbnail
-        ? `/images/courses/${course.thumbnail}`
-        : "/images/courses/default-thumbnail.png",
+  const AllCourse = foundAllCourse.map((course) => ({
+    thumbnail: course.thumbnail || "/images/course-images-1.png",
     name: course.title,
     category: course.category?.name || "Unknown",
     price: course.price,
@@ -60,11 +57,7 @@ export default async function CategoryPage({
   const instructors = foundInstructor.map((instructor) => ({
     name: `${instructor.firstname} ${instructor.lastname}`,
     title: "Instructor",
-    image: instructor.avatar?.startsWith("http")
-      ? instructor.avatar
-      : instructor.avatar
-        ? `/images/instructors/${instructor.avatar}`
-        : "/images/instructors/instructor-1.png",
+    image: instructor.avatar || "/images/instructors/instructors-1.png",
     rating: instructor.rating,
     students: instructor.students,
   }));
@@ -96,7 +89,7 @@ export default async function CategoryPage({
           Best selling courses in Web Development
         </h2>
         <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-5">
-          {courses.slice(0, 5).map((course, index) => (
+          {AllCourse.slice(0, 5).map((course, index) => (
             <CourseCard key={index} {...course} />
           ))}
         </div>
