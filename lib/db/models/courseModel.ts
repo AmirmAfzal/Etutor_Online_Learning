@@ -2,26 +2,26 @@ import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
 export interface CourseData {
   _id: ObjectId;
-  title?: string;
-  subtitle?: string;
-  thumbnail?: string;
-  description?: string;
-  authors?: ObjectId[];
-  lectures?: ObjectId[];
-  price?: number;
-  offer?: number;
+  title: string;
+  subtitle: string;
+  thumbnail: string;
+  description: string;
+  authors: ObjectId[];
+  sections: ObjectId[];
+  price: number;
+  offer: number;
   offerEndsAt?: Date;
-  language?: string;
+  language: string;
   subtitleLanguage?: string;
-  studentsCount?: number;
-  duration?: number;
+  studentsCount: number;
+  duration: number;
   category?: ObjectId;
-  tags?: ObjectId[];
-  video?: ObjectId[];
+  tags: ObjectId[];
+  video: ObjectId[];
   subCategory?: ObjectId;
-  topic?: string;
-  level?: "Beginner" | "Intermediate" | "Advanced";
-  durationUnit?: "Day" | "Week" | "Hour";
+  topic: string;
+  level: "Beginner" | "Intermediate" | "Advanced";
+  durationUnit: "Day" | "Week" | "Hour";
   trailer?: string;
   learningOutcomes?: string[];
   targetAudience?: string[];
@@ -34,17 +34,17 @@ export interface CourseInterface extends mongoose.Document, CourseData {
 
 const courseSchema = new Schema<CourseInterface & Document>(
   {
-    title: { type: String, default: "" },
-    subtitle: { type: String, default: "" },
-    thumbnail: { type: String, default: "" },
-    description: { type: String, default: "" },
-    authors: { type: [Schema.Types.ObjectId], ref: "user", default: [] },
-    lectures: { type: [Schema.Types.ObjectId], ref: "lecture", default: [] },
-    price: { type: Number, default: 0 },
-    offer: { type: Number, default: 0 },
-    offerEndsAt: { type: Date, default: Date.now },
-    language: { type: String, default: "English" },
-    subtitleLanguage: { type: String, default: "English" },
+    title: { type: String, required: true },
+    subtitle: { type: String, required: true },
+    thumbnail: { type: String, required: true },
+    description: { type: String, required: true },
+    authors: [{ type: Schema.Types.ObjectId, ref: "user", required: true }],
+    sections: [{ type: Schema.Types.ObjectId, ref: "section", required: true }],
+    price: { type: Number, required: true },
+    offer: { type: Number, required: true },
+    offerEndsAt: { type: Date },
+    language: { type: String, required: true },
+    subtitleLanguage: { type: String },
     studentsCount: { type: Number, default: 0 },
     duration: { type: Number, default: 0 },
     category: { type: Schema.Types.ObjectId, ref: "category", default: null },
