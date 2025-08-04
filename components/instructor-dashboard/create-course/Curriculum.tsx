@@ -53,8 +53,8 @@ const Curriculum = ({ onNext, onBack }: Props) => {
       id: 1,
       name: "Section name",
       lectures: [
-        { id: 1, name: "Lecture name 1" },
-        { id: 2, name: "Lecture name 2" },
+        { id: 1, name: "Lecture name" },
+        { id: 2, name: "Lecture name" },
       ],
     },
   ]);
@@ -130,8 +130,8 @@ const Curriculum = ({ onNext, onBack }: Props) => {
         id: newId,
         name: "Section name",
         lectures: [
-          { id: 1, name: "Lecture name 1" },
-          { id: 2, name: "Lecture name 2" },
+          { id: 1, name: "Lecture name" },
+          { id: 2, name: "Lecture name" },
         ],
       },
     ]);
@@ -147,7 +147,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
                 ...section.lectures,
                 {
                   id: section.lectures.length + 1,
-                  name: `Lecture name ${section.lectures.length + 1}`,
+                  name: `Lecture name`,
                 },
               ],
             }
@@ -253,7 +253,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
 
       <div className="space-y-4 p-4">
         <div className="space-y-4">
-          {sections.map((section, idx) => (
+          {sections.map((section, index) => (
             <div
               key={section.id}
               className="bg-base-200 border-base-300 border-b p-6"
@@ -262,7 +262,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
                 <div className="flex items-center gap-2">
                   <Icon icon="ph:list" width="20" height="20" />
                   <span className="font-semibold">
-                    Sections {String(idx + 1).padStart(2, "0")}:
+                    Sections {String(index + 1).padStart(2, "0")}:
                   </span>
                   <span>{section.name}</span>
                 </div>
@@ -294,7 +294,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
                 </div>
               </div>
 
-              {section.lectures.map((lecture) => (
+              {section.lectures.map((lecture ,index) => (
                 <div
                   key={lecture.id}
                   className="bg-base-100 my-4 flex items-center justify-between px-4 py-2"
@@ -335,7 +335,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
                       </>
                     ) : (
                       <span className="text-base-content/70 text-sm">
-                        {lecture.name}
+                        {lecture.name} {index + 1}
                       </span>
                     )}
                   </div>
