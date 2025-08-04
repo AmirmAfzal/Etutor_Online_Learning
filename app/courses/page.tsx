@@ -131,12 +131,12 @@ const CoursesPage = async ({
   searchParams: Promise<{ query?: string; filter?: string }>;
 }) => {
   await connectDB();
-  const foundCourse = await courseModel.find().lean();
+  const foundCourse = await courseModel.find().populate("category").lean();
 
   const courses: Course[] = foundCourse.map((course) => ({
     thumbnail: course.thumbnail,
     name: course.title,
-    category: course.category[0]?.name || "Unknown",
+    category: course?.category?.name || "Unknown",
     price: course.price,
     rating: 5, // TODO
     students: course.studentsCount,
