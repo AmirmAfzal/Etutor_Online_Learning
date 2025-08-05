@@ -4,24 +4,24 @@ export interface CourseData {
   _id: ObjectId;
   title: string;
   subtitle: string;
-  thumbnail: string;
-  description: string;
-  authors: ObjectId[];
-  sections: ObjectId[];
-  price: number;
-  offer: number;
-  offerEndsAt?: Date;
-  language: string;
-  subtitleLanguage?: string;
-  studentsCount: number;
-  duration: number;
   category?: ObjectId;
-  tags: ObjectId[];
-  video: ObjectId[];
   subCategory?: ObjectId;
   topic: string;
+  language: string;
+  subtitleLanguage?: string;
   level: "Beginner" | "Intermediate" | "Advanced";
+  duration?: number;
   durationUnit: "Day" | "Week" | "Hour";
+  thumbnail?: string;
+  description?: string;
+  authors?: ObjectId[];
+  sections?: ObjectId[];
+  price?: number;
+  offer?: number;
+  offerEndsAt?: Date;
+  studentsCount?: number;
+  tags?: ObjectId[];
+  video?: ObjectId[];
   trailer?: string;
   learningOutcomes?: string[];
   targetAudience?: string[];
@@ -36,24 +36,24 @@ const courseSchema = new Schema<CourseInterface & Document>(
   {
     title: { type: String, required: true },
     subtitle: { type: String, required: true },
-    thumbnail: { type: String, required: true },
-    description: { type: String, required: true },
-    authors: [{ type: Schema.Types.ObjectId, ref: "user", required: true }],
-    sections: [{ type: Schema.Types.ObjectId, ref: "section", required: true }],
-    price: { type: Number, required: true },
-    offer: { type: Number, required: true },
-    offerEndsAt: { type: Date },
+    category: { type: Schema.Types.ObjectId, ref: "category", default: null },
+    subCategory: { type: Schema.Types.ObjectId, ref: "subcategory", default: null },
+    topic: { type: String, required: true },
     language: { type: String, required: true },
     subtitleLanguage: { type: String },
-    studentsCount: { type: Number, default: 0 },
+    level: { type: String, enum: ["Beginner", "Intermediate", "Advanced"], default: "Beginner" },
     duration: { type: Number, default: 0 },
-    category: { type: Schema.Types.ObjectId, ref: "category", default: null },
+    durationUnit: { type: String, enum: ["Day", "Week", "Hour"], default: "Hour" },
+    thumbnail: { type: String, default: "" },
+    description: { type: String, default: "" },
+    authors: { type: [Schema.Types.ObjectId], ref: "user", default: [] },
+    sections: { type: [Schema.Types.ObjectId], ref: "section", default: [] },
+    price: { type: Number, default: 0 },
+    offer: { type: Number, default: 0 },
+    offerEndsAt: { type: Date },
+    studentsCount: { type: Number, default: 0 },
     tags: { type: [Schema.Types.ObjectId], ref: "tag", default: [] },
     video: { type: [Schema.Types.ObjectId], ref: "video", default: [] },
-    subCategory: { type: Schema.Types.ObjectId, ref: "subcategory", default: null },
-    topic: { type: String, default: "" },
-    level: { type: String, enum: ["Beginner", "Intermediate", "Advanced"], default: "Beginner" },
-    durationUnit: { type: String, enum: ["Day", "Week", "Hour"], default: "Hour" },
     trailer: { type: String, default: "" },
     learningOutcomes: { type: [String], default: [] },
     targetAudience: { type: [String], default: [] },
