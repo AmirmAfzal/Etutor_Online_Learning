@@ -1,14 +1,50 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 
 import { Input } from "../ui/input";
 import Icon from "../ui/Icon";
+import { usePathname } from "next/navigation";
 
 type Props = {
   children: React.ReactNode;
 };
 
 const Navbar = ({ children }: Props) => {
+  const pathName = usePathname();
+  const urlArr = pathName.split("/");
+  const pageUrl = urlArr[urlArr.length - 1];
+
+  function pageNameHandler(): string {
+    let header;
+    switch (pageUrl) {
+      case "dashboard":
+        header = "Dashboard";
+        break;
+      case "create-course":
+        header = "Create a new course";
+        break;
+      case "my-courses":
+        header = "My Courses";
+        break;
+      case "earning":
+        header = "Earning";
+        break;
+      case "message":
+        header = "Message";
+        break;
+      case "settings":
+        header = "Settings";
+        break;
+
+      default:
+        header = "Dashboard";
+        break;
+    }
+    return header;
+  }
+
   return (
     <nav className="w-full p-6">
       <div className="container mx-auto flex items-center justify-between">
@@ -16,7 +52,7 @@ const Navbar = ({ children }: Props) => {
           {children}
           <div>
             <p className="text-base-content/70 text-xs">Good Morning</p>
-            <h2 className="text-lg font-bold">Dashboart</h2>
+            <h2 className="text-lg font-bold">{pageNameHandler()}</h2>
           </div>
         </div>
         <div className="flex flex-row items-center gap-4">

@@ -58,3 +58,11 @@ const SectionSchema = z.object({
 });
 
 export const curriculumSchema = z.array(SectionSchema);
+
+// publish course
+export const publishMessageSchema = z.object({
+  welcomeMessage: z.string().min(10).max(100),
+  congratulationsMessage: z.string().min(10).max(100),
+});
+
+export type publishMessageFormData = z.infer<typeof publishMessageSchema>;

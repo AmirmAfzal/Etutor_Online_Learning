@@ -74,10 +74,6 @@ const CreateCourseTabs = ({ course, tab }: Props) => {
           </TabsContent>
 
           <TabsContent value="Curriculum">
-            {/* <Curriculum
-              onNext={() => setCurrentTab("PublishCourse")}
-              onBack={() => setCurrentTab("AdvanceInformation")}
-            /> */}
             <Curriculum
               onNext={() => setCurrentTab("PublishCourse")}
               onBack={() => setCurrentTab("AdvanceInformation")}
