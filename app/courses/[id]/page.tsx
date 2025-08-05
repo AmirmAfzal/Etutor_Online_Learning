@@ -399,7 +399,10 @@ const CoursePage = () => {
         </div>
 
         {/* side bar cart */}
-        <SidebarCart fakeSidebarCart={fakeSidebarCart} />
+        <SidebarCart
+          fakeSidebarCart={fakeSidebarCart}
+          fakeCourses={fakeCourses}
+        />
       </div>
 
       <div className="border-base-300 mt-12 w-full border-t">

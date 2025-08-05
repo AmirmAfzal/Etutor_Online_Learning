@@ -1,6 +1,7 @@
 // TODO: single course updated => merge to this branch
 
 import Icon from "@/components/ui/Icon";
+import Link from "next/link";
 
 import React from "react";
 import CourseCard from "@/components/CourseCard";
@@ -23,6 +24,7 @@ interface Rating {
 }
 
 interface Course {
+  id?: string; // optional for the initial render
   thumbnail: string;
   name: string;
   category: string;
@@ -136,7 +138,7 @@ const CoursesPage = async ({
   const courses: Course[] = foundCourse.map((course) => ({
     thumbnail: course.thumbnail,
     name: course.title,
-    category: course?.category?.name || "Unknown",
+    category: course.category?.name || "Unknown",
     price: course.price,
     rating: 5, // TODO
     students: course.studentsCount,
@@ -216,7 +218,9 @@ const CoursesPage = async ({
           className={`grid grid-cols-1 gap-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
         >
           {filteredCourses.map((course, index) => (
-            <CourseCard key={index} {...course} />
+            <Link key={index} href={`/courses/${course.id}`}>
+              <CourseCard {...course} />
+            </Link>
           ))}
         </div>
       </div>

@@ -1,7 +1,16 @@
+"use client";
+import React, { useState } from "react";
 import Icon from "../ui/Icon";
+
+interface CartItem {
+  title: string;
+  price: number;
+  thumbnail: string;
+}
 
 const SidebarCart = ({
   fakeSidebarCart,
+  fakeCourses,
 }: {
   fakeSidebarCart: {
     price: number;
@@ -11,7 +20,14 @@ const SidebarCart = ({
     courseDetails: { label: string; value: string }[];
     includes: string[];
   };
+  fakeCourses: { title: string; price: number; thumbnail: string }[];
 }) => {
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  const addToCart = (course: CartItem) => {
+    setCart((prevCart) => [...prevCart, course]);
+    alert(`${course.title} has been added to your cart!`);
+  };
   return (
     <div className="md:col-span-1">
       <div className="bg-base-100 sticky top-8 flex flex-col gap-1 p-4 shadow">
@@ -63,7 +79,16 @@ const SidebarCart = ({
         <div className="divider divider-base-300 my-1 w-full"></div>
 
         <div className="flex flex-col items-center gap-1">
-          <button className="btn btn-primary w-full text-xs">
+          <button
+            className="btn btn-primary w-full text-xs"
+            onClick={() =>
+              addToCart({
+                title: fakeCourses.title,
+                price: fakeSidebarCart.price,
+                thumbnail: "/images/courses/Trailer.jpg",
+              })
+            }
+          >
             Add To cart
           </button>
           <button className="btn btn-soft btn-primary w-full text-xs">
