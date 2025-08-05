@@ -10,7 +10,7 @@ interface CartItem {
 
 const SidebarCart = ({
   fakeSidebarCart,
-  fakeCourses,
+  courses,
 }: {
   fakeSidebarCart: {
     price: number;
@@ -20,7 +20,7 @@ const SidebarCart = ({
     courseDetails: { label: string; value: string }[];
     includes: string[];
   };
-  fakeCourses: { title: string; price: number; thumbnail: string }[];
+  courses: { title: string; price: number; thumbnail: string }[];
 }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
@@ -83,7 +83,7 @@ const SidebarCart = ({
             className="btn btn-primary w-full text-xs"
             onClick={() =>
               addToCart({
-                title: fakeCourses.title,
+                title: courses[0].title, // Access the first course's title
                 price: fakeSidebarCart.price,
                 thumbnail: "/images/courses/Trailer.jpg",
               })

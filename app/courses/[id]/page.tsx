@@ -71,29 +71,6 @@ const fakeCourses = {
   ],
 };
 
-const Instructors = [
-  {
-    name: "John Doe",
-    bio: "Web Design Expert",
-    avatar: "/images/instructors/instructor-1.png",
-    students: 354355,
-    rating: 4.8,
-    courses: 12,
-    description:
-      "John is a seasoned web designer with over 10 years of experience in creating stunning websites. He specializes in Figma and Webflow, helping students turn their design ideas into reality.",
-  },
-  {
-    name: "Jane Smith",
-    bio: "Figma Specialist",
-    avatar: "/images/instructors/instructor-2.png",
-    students: 254321,
-    rating: 4.9,
-    courses: 8,
-    description:
-      "Jane is a talented Figma designer with a passion for creating user-friendly interfaces. She has worked with various clients to bring their visions to life.",
-  },
-];
-
 const studentsComments = [
   {
     name: "Alice Johnson",
@@ -194,11 +171,38 @@ interface Course {
   curriculum?: any; // Added to match Curriculum usage
 }
 
+interface Instructor {
+  name: string;
+  bio: string;
+  avatar: string;
+  rating: number;
+  students: number;
+  courses: number;
+  description: string;
+}
+
 const CoursePage = async () => {
   await connectDB();
 
   const foundCourse = await courseModel.find().populate("category").lean();
-  console.log(foundCourse);
+
+  const foundInstructors = await courseModel.find().populate("authors");
+  const allAuthors = foundInstructors.flatMap((course) =>
+    course.authors.map((author: string) => author.toString())
+  );
+  //  TODO : foundInstructors[0].authors is not a good way to get all instructors, it should be a separate query
+  const instructors = foundInstructors[0].authors;
+  const instructorData: Instructor[] = instructors.map((instructor: any) => ({
+    name: `${instructor.firstname} ${instructor.lastname}`,
+    bio: instructor.bio || "Instructor",
+    avatar:
+      instructor.avatar || "/images/student-dashboard/Teacher-default.jpg",
+    rating: instructor.rating,
+    students: instructor.students,
+    courses: 12,
+    description:
+      "John is a seasoned web designer with over 10 years of experience in creating stunning websites. He specializes in Figma and Webflow, helping students turn their design ideas into reality.",
+  }));
 
   const courses: Course[] = foundCourse.map((course) => ({
     thumbnail: course.thumbnail,
@@ -245,7 +249,10 @@ const CoursePage = async () => {
     ],
   }));
 
-  const singleCourse = courses[0]; // Assuming the first course is used for display
+  const singleCourse = {
+    ...courses[0],
+    title: courses[0].title || "Untitled Course",
+  }; // Assuming the first course is used for display
 
   return (
     <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
@@ -412,7 +419,7 @@ const CoursePage = async () => {
                   </div>
                 </div>
                 <Curriculum curriculum={fakeCourses.curriculum} />
-                <CourseInstructors instructors={Instructors} />
+                <CourseInstructors instructors={instructorData} />
                 <CourseRating rating={singleCourse.rating} />
                 <Comments studentsComments={studentsComments} />
               </TabsContent>
@@ -420,7 +427,7 @@ const CoursePage = async () => {
                 <Curriculum curriculum={fakeCourses.curriculum} />
               </TabsContent>
               <TabsContent value="instructors">
-                <CourseInstructors instructors={Instructors} />
+                <CourseInstructors instructors={instructorData} />
               </TabsContent>
               <TabsContent value="review">
                 {/* TODO : what do we have here? */}
@@ -432,7 +439,7 @@ const CoursePage = async () => {
         {/* side bar cart */}
         <SidebarCart
           fakeSidebarCart={fakeSidebarCart}
-          fakeCourses={fakeCourses}
+          courses={[singleCourse]}
         />
       </div>
 
