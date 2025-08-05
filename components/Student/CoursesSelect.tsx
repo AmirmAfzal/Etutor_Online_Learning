@@ -6,7 +6,7 @@ import {
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select";
 import Form from "next/form";
 import { useRef } from "react";
 
