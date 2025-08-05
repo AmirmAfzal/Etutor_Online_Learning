@@ -16,9 +16,7 @@ import {
   changePasswordSchema,
 } from "@/lib/validation/schemas/instructor/settings/changePassword";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { initial } from "lodash";
-import { Key } from "lucide-react";
-import React, { startTransition, useActionState, useState } from "react";
+import React, { startTransition, useActionState, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 type Props = {};
@@ -57,6 +55,12 @@ const Changepassword = (props: Props) => {
       formAction(formData);
     });
   };
+
+  useEffect(() => {
+    if (state.message === "SUCCESS") {
+      form.reset();
+    }
+  }, [state.message]);
 
   return (
     <section className="bg-base-100 space-y-4 p-6">

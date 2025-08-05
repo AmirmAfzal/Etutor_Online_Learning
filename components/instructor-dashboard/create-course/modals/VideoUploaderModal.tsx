@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
 import { ModalType } from "../Curriculum";
@@ -11,21 +11,27 @@ type Props = {
   onSave: (videoUrl: string) => void;
 };
 
+export const formatDuration = (seconds: number) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs < 10 ? "0" + secs : secs}`;
+};
+
 const VideoUploaderModal = ({ openModal, onSave }: Props) => {
-  // const [videoUrl, setVideoUrl] = useState<string>("");
-  // const [videoName, setVideoName] = useState<string>("");
   const [video, setVideo] = useState<any>({});
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? "0" + secs : secs}`;
-  };
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handleUpload = () => {
     if (video) {
-      onSave(video.secure_url);
       openModal("video");
+      onSave(video);
+      console.log(video);
     }
   };
 

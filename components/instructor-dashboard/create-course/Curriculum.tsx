@@ -4,18 +4,20 @@ import { startTransition, useActionState, useEffect, useState } from "react";
 
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import VideoUploaderModal from "./modals/VideoUploaderModal";
+import VideoUploaderModal, {
+  formatDuration,
+} from "./modals/VideoUploaderModal";
 import FileUploaderModal from "./modals/FileUploaderModal";
 import CaptionsModal from "./modals/CaptionsModal";
 import DescriptionModal from "./modals/DescriptionModal";
 import LectureNotesModal from "./modals/LectureNotesModal";
 import { saveCurriculum } from "@/lib/actions/instructor/create-course/curriculum";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export interface Lecture {
   id: number;
@@ -80,6 +82,8 @@ const Curriculum = ({ onNext, onBack }: Props) => {
   const [captionOpenModal, setCaptionOpenModal] = useState(false);
   const [descriptionOpenModal, setDescriptionOpenModal] = useState(false);
   const [noteOpenModal, setNoteOpenModal] = useState(false);
+
+  const [video, setVideo] = useState<any>({});
 
   const openLectureModalsHandler = (type: ModalType) => {
     switch (type) {
@@ -181,20 +185,19 @@ const Curriculum = ({ onNext, onBack }: Props) => {
   const deleteLecture = (sectionId: number, lectureId: number) => {
     setSections((prev) =>
       prev.map((section) => {
-        let editedLectures = section.lectures.filter(
-          (lecture) => lecture.id !== lectureId
-        ).map((lecture, index) => ({
-          ...lecture,
-          id: index + 1,
-          name: `Lecture name ${index + 1}`,
-        }));
+        let editedLectures = section.lectures
+          .filter((lecture) => lecture.id !== lectureId)
+          .map((lecture, index) => ({
+            ...lecture,
+            id: index + 1,
+            name: `Lecture name ${index + 1}`,
+          }));
         let editedSection = {
           ...section,
           lectures: editedLectures,
         };
-        console.log(editedSection)
+        console.log(editedSection);
         return section.id === sectionId ? editedSection : section;
-        
       })
     );
   };
@@ -300,158 +303,242 @@ const Curriculum = ({ onNext, onBack }: Props) => {
                 </div>
               </div>
 
-              {section.lectures.map((lecture ,index) => (
-                <div
-                  key={lecture.id}
-                  className="bg-base-100 my-4 flex items-center justify-between px-4 py-2"
-                >
-                  <div className="flex items-center gap-2">
-                    <Icon icon="ph:list" width="20" height="20" />
-                    {editingLecture &&
-                    editingLecture.sectionId === section.id &&
-                    editingLecture.lectureId === lecture.id ? (
-                      <>
-                        <Input
-                          type="text"
-                          value={editingLecture.draft}
-                          onChange={(e) =>
-                            setEditingLecture({
-                              ...editingLecture,
-                              draft: e.target.value,
-                            })
-                          }
-                          className="w-48"
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") saveLectureName();
-                            if (e.key === "Escape") cancelLectureEdit();
-                          }}
-                        />
-                        <button
-                          className="btn btn-primary btn-xs ml-2"
-                          onClick={saveLectureName}
-                        >
-                          Save
-                        </button>
-                        <button
-                          className="btn btn-ghost btn-xs ml-1"
-                          onClick={cancelLectureEdit}
-                        >
-                          Cancel
-                        </button>
-                      </>
-                    ) : (
-                      <span className="text-base-content/70 text-sm">
-                        {lecture.name} {index + 1}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="btn btn-primary btn-soft">
-                          Contents
-                        </button>
-                      </DropdownMenuTrigger>
+              <Accordion type="single" collapsible className="w-full">
+                {section.lectures.map((lecture, index) => (
+                  <AccordionItem
+                    key={lecture.id}
+                    value={index.toString()}
+                    className="border-none"
+                  >
+                    <AccordionTrigger asChild>
+                      <div className="bg-base-100 mt-4 flex items-center justify-between rounded-none p-4">
+                        <div className="flex items-center gap-2">
+                          <Icon icon="ph:list" width="20" height="20" />
+                          {editingLecture &&
+                          editingLecture.sectionId === section.id &&
+                          editingLecture.lectureId === lecture.id ? (
+                            <>
+                              <Input
+                                type="text"
+                                value={editingLecture.draft}
+                                onChange={(e) =>
+                                  setEditingLecture({
+                                    ...editingLecture,
+                                    draft: e.target.value,
+                                  })
+                                }
+                                className="w-48"
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") saveLectureName();
+                                  if (e.key === "Escape") cancelLectureEdit();
+                                }}
+                              />
+                              <button
+                                className="btn btn-primary btn-xs ml-2"
+                                onClick={saveLectureName}
+                              >
+                                Save
+                              </button>
+                              <button
+                                className="btn btn-ghost btn-xs ml-1"
+                                onClick={cancelLectureEdit}
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <span className="text-base-content/70 text-sm">
+                              {lecture.name} {index + 1}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex flex-row items-center gap-4">
+                          <button
+                            onClick={() =>
+                              startEditLecture(
+                                section.id,
+                                lecture.id,
+                                lecture.name
+                              )
+                            }
+                          >
+                            <Icon
+                              icon="ph:pencil-simple-line"
+                              className="text-base-content/70 hover:text-base-content cursor-pointer"
+                              width="18"
+                              height="18"
+                            />
+                          </button>
+                          <button
+                            onClick={() =>
+                              deleteLecture(section.id, lecture.id)
+                            }
+                          >
+                            <Icon
+                              icon="ph:trash"
+                              className="text-base-content/70 hover:text-primary cursor-pointer"
+                              width="18"
+                              height="18"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                    </AccordionTrigger>
 
-                      <DropdownMenuContent>
-                        <DropdownMenuItem>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setActiveLecture({
-                                sectionId: section.id,
-                                lectureId: lecture.id,
-                              });
-                              openLectureModalsHandler("video");
-                            }}
-                          >
-                            Video
-                          </button>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setActiveLecture({
-                                sectionId: section.id,
-                                lectureId: lecture.id,
-                              });
-                              openLectureModalsHandler("file");
-                            }}
-                          >
-                            Attach File
-                          </button>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setActiveLecture({
-                                sectionId: section.id,
-                                lectureId: lecture.id,
-                              });
-                              openLectureModalsHandler("caption");
-                            }}
-                          >
-                            Captions
-                          </button>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setActiveLecture({
-                                sectionId: section.id,
-                                lectureId: lecture.id,
-                              });
-                              openLectureModalsHandler("description");
-                            }}
-                          >
-                            Description
-                          </button>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setActiveLecture({
-                                sectionId: section.id,
-                                lectureId: lecture.id,
-                              });
-                              openLectureModalsHandler("note");
-                            }}
-                          >
-                            Lecture Notes
-                          </button>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    <button
-                      onClick={() =>
-                        startEditLecture(section.id, lecture.id, lecture.name)
-                      }
-                    >
-                      <Icon
-                        icon="ph:pencil-simple-line"
-                        className="text-base-content/70 hover:text-base-content cursor-pointer"
-                        width="18"
-                        height="18"
-                      />
-                    </button>
-                    <button
-                      onClick={() => deleteLecture(section.id, lecture.id)}
-                    >
-                      <Icon
-                        icon="ph:trash"
-                        className="text-base-content/70 hover:text-primary cursor-pointer"
-                        width="18"
-                        height="18"
-                      />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                    <AccordionContent>
+                      <div className="bg-base-100 border-base-200 flex flex-col gap-6 border-t-2 p-4">
+                        <div>
+                          {lecture.videoUrl ? (
+                            <div className="flex flex-row gap-4">
+                              <video controls className="w-55 rounded-lg">
+                                <source src={video.secure_url} />
+                                <track kind="captions" />
+                              </video>
+                              <div className="flex flex-col items-start justify-between gap-2">
+                                <span className="flex flex-row items-center gap-2">
+                                  <p className="text-success text-xs">
+                                    FILE UPLOADED
+                                  </p>
+                                  <div className="bg-base-content h-1 w-1 rounded-full"></div>
+                                  <p className="text-base-content/80">
+                                    {formatDuration(video.duration)}
+                                  </p>
+                                </span>
+                                <p className="text-sm">
+                                  {video.original_filename}
+                                </p>
+                                <button
+                                  className="btn btn-secondary btn-soft"
+                                  type="button"
+                                  onClick={() => {
+                                    setActiveLecture({
+                                      sectionId: section.id,
+                                      lectureId: lecture.id,
+                                    });
+                                    openLectureModalsHandler("video");
+                                  }}
+                                >
+                                  Replace video
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn btn-primary btn-soft"
+                              type="button"
+                              onClick={() => {
+                                setActiveLecture({
+                                  sectionId: section.id,
+                                  lectureId: lecture.id,
+                                });
+                                openLectureModalsHandler("video");
+                              }}
+                            >
+                              Video
+                            </button>
+                          )}
+                        </div>
+                        <div>
+                          {lecture.fileUrl ? (
+                            <div className="space-y-2">
+                              <h3 className="text-2xl">File</h3>
+                              <p className="text-success">
+                                Upload File Successfully
+                              </p>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn btn-primary btn-soft"
+                              type="button"
+                              onClick={() => {
+                                setActiveLecture({
+                                  sectionId: section.id,
+                                  lectureId: lecture.id,
+                                });
+                                openLectureModalsHandler("file");
+                              }}
+                            >
+                              Attach File
+                            </button>
+                          )}
+                        </div>
+                        <div>
+                          {lecture.captions ? (
+                            <div className="space-y-2">
+                              <h3 className="text-2xl">Captions</h3>
+                              <p className="text-base-content/70">
+                                {lecture.captions}
+                              </p>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn btn-primary btn-soft"
+                              type="button"
+                              onClick={() => {
+                                setActiveLecture({
+                                  sectionId: section.id,
+                                  lectureId: lecture.id,
+                                });
+                                openLectureModalsHandler("caption");
+                              }}
+                            >
+                              Captions
+                            </button>
+                          )}
+                        </div>
+                        <div>
+                          {lecture.description ? (
+                            <div className="space-y-2">
+                              <h3 className="text-2xl">Description</h3>
+                              <p className="text-base-content/70">
+                                {lecture.description}
+                              </p>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn btn-primary btn-soft"
+                              type="button"
+                              onClick={() => {
+                                setActiveLecture({
+                                  sectionId: section.id,
+                                  lectureId: lecture.id,
+                                });
+                                openLectureModalsHandler("description");
+                              }}
+                            >
+                              Description
+                            </button>
+                          )}
+                        </div>
+                        <div>
+                          {lecture.note || lecture.noteFile ? (
+                            <div className="space-y-2">
+                              <h3 className="text-2xl">Note</h3>
+                              <p className="text-base-content/70">
+                                {lecture.note}
+                              </p>
+                            </div>
+                          ) : (
+                            <button
+                              className="btn btn-primary btn-soft"
+                              type="button"
+                              onClick={() => {
+                                setActiveLecture({
+                                  sectionId: section.id,
+                                  lectureId: lecture.id,
+                                });
+                                openLectureModalsHandler("note");
+                              }}
+                            >
+                              Lecture Notes
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </div>
           ))}
         </div>
@@ -477,14 +564,15 @@ const Curriculum = ({ onNext, onBack }: Props) => {
       {videoOpenModal && activeLecture && (
         <VideoUploaderModal
           openModal={openLectureModalsHandler}
-          onSave={(videoUrl) => {
+          onSave={(video: any | { secure_url: string }) => {
             updateLectureContent(
               activeLecture.sectionId,
               activeLecture.lectureId,
               {
-                videoUrl,
+                videoUrl: video.secure_url,
               }
             );
+            setVideo(video);
             setActiveLecture(null);
           }}
         />
