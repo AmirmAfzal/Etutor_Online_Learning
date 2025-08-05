@@ -7,48 +7,12 @@ import Comments from "@/components/Courses/Comments";
 import CourseRating from "@/components/Courses/CourseRating";
 import SidebarCart from "@/components/Courses/SidebarCart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { connectDB } from "@/lib/db/db";
+import courseModel from "@/lib/db/models/courseModel";
 
 // Fake data that would come from a database
 
 const fakeCourses = {
-  breadcrumb: ["Home", "Development", "Web Development", "Webflow"],
-  title:
-    "Complete Website Responsive Design: from Figma to Webflow to Website Design",
-  description:
-    "Learn how to design beautiful websites using Figma, Adobe XD or Sketch, and code them into responsive websites that work on all devices.",
-  instructors: [
-    {
-      name: "Dianne Russell",
-      avatar: "/images/profile-img.png",
-    },
-    {
-      name: "Kristin Watson",
-      avatar: "/images/profile-img.png",
-    },
-  ],
-  createdBy: "Dianne Russell , Kristin Watson",
-  rating: 4.8,
-  reviews: 244455,
-  courseDescription: `This course provides a comprehensive guide to designing and developing responsive websites. Learn the secrets of good design and how to turn your ideas into reality using Figma and Webflow.`,
-  whatYouWillLearn: [
-    "How to design a complete website in Figma",
-    "How to create a responsive website in Webflow",
-    "How to export assets from Figma to Webflow",
-    "How to use Webflow CMS for dynamic content",
-    "How to publish and host your website on Webflow",
-  ],
-  thisCourseFor: [
-    "Anyone who wants to learn Web Design",
-    "Anyone who wants to learn Figma",
-    "Anyone who wants to learn Webflow",
-    "Anyone who wants to create responsive websites",
-  ],
-  courseRequirements: [
-    "Basic computer skills",
-    "A computer with internet access",
-    "Willingness to learn and practice",
-    "No prior design or coding experience required",
-  ],
   curriculum: [
     {
       title: "Getting Started",
@@ -206,7 +170,83 @@ const fakeSidebarCart = {
   ],
 };
 
-const CoursePage = () => {
+interface Course {
+  id?: string;
+  thumbnail: string;
+  name: string;
+  title?: string;
+  description?: string;
+  category: string;
+  price: number;
+  rating: number;
+  students: number;
+  reviews?: number;
+  breadcrumb?: string[];
+  instructors?: {
+    name: string;
+    avatar: string;
+  }[];
+  courseDescription?: string;
+  whatYouWillLearn?: string[];
+  thisCourseFor?: string[];
+  courseRequirements?: string[];
+  createdBy?: string;
+  curriculum?: any; // Added to match Curriculum usage
+}
+
+const CoursePage = async () => {
+  await connectDB();
+
+  const foundCourse = await courseModel.find().populate("category").lean();
+  console.log(foundCourse);
+
+  const courses: Course[] = foundCourse.map((course) => ({
+    thumbnail: course.thumbnail,
+    name: course.title,
+    title: course.title,
+    description: course.description,
+    category: course.category?.name || "Unknown",
+    price: course.price,
+    students: course.studentsCount,
+    createdBy: course.authors.map((author: any) => author.name).join(", "),
+
+    rating: 5, // TODO
+    reviews: 244455,
+    breadcrumb: ["Home", "Development", "Web Development", "Webflow"],
+    instructors: [
+      {
+        name: "Dianne Russell",
+        avatar: "/images/profile-img.png",
+      },
+      {
+        name: "Kristin Watson",
+        avatar: "/images/profile-img.png",
+      },
+    ],
+    courseDescription: `This course provides a comprehensive guide to designing and developing responsive websites. Learn the secrets of good design and how to turn your ideas into reality using Figma and Webflow.`,
+    whatYouWillLearn: [
+      "How to design a complete website in Figma",
+      "How to create a responsive website in Webflow",
+      "How to export assets from Figma to Webflow",
+      "How to use Webflow CMS for dynamic content",
+      "How to publish and host your website on Webflow",
+    ],
+    thisCourseFor: [
+      "Anyone who wants to learn Web Design",
+      "Anyone who wants to learn Figma",
+      "Anyone who wants to learn Webflow",
+      "Anyone who wants to create responsive websites",
+    ],
+    courseRequirements: [
+      "Basic computer skills",
+      "A computer with internet access",
+      "Willingness to learn and practice",
+      "No prior design or coding experience required",
+    ],
+  }));
+
+  const singleCourse = courses[0]; // Assuming the first course is used for display
+
   return (
     <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-3">
@@ -215,19 +255,19 @@ const CoursePage = () => {
             <div className="flex max-w-7xl items-center justify-center">
               <div className="mt-12 mb-6 w-full px-2">
                 <span className="text-base-content/70 mb-4 flex items-center gap-2 text-sm">
-                  {fakeCourses.breadcrumb.join(" > ")}
+                  {singleCourse.breadcrumb?.join(" > ")}
                 </span>
                 <h1 className="mb-4 text-3xl font-semibold">
-                  {fakeCourses.title}
+                  {singleCourse.title}
                 </h1>
                 <p className="text-base-content/70 text-md mb-6 font-medium">
-                  {fakeCourses.description}
+                  {singleCourse.description}
                 </p>
                 <div className="mb-6 flex items-center gap-4">
                   <div className="flex w-full flex-row items-center justify-between">
                     <div className="flex flex-row items-center gap-2">
                       <div className="flex -space-x-2">
-                        {fakeCourses.instructors.map((instructor, index) => (
+                        {singleCourse.instructors?.map((instructor, index) => (
                           <Image
                             key={index}
                             src={instructor.avatar}
@@ -241,7 +281,7 @@ const CoursePage = () => {
                       <p className="text-base-content/60 flex flex-col text-sm">
                         Created by:
                         <span className="text-base-content/80 font-semibold">
-                          {fakeCourses.createdBy}
+                          {singleCourse.createdBy}
                         </span>
                       </p>
                     </div>
@@ -249,8 +289,8 @@ const CoursePage = () => {
                       <span className="text-md flex items-center justify-center gap-2">
                         {/* TODO: add icons to number of reviews */}
                         <Icon icon="ph:star-fill" className="text-primary" />
-                        {fakeCourses.rating}(
-                        {fakeCourses.reviews.toLocaleString()} reviews)
+                        {singleCourse.rating}(
+                        {singleCourse.reviews?.toLocaleString()} reviews)
                       </span>
                     </div>
                   </div>
@@ -267,15 +307,7 @@ const CoursePage = () => {
               height={800}
               className="mt-8 h-auto w-full max-w-2xl object-cover"
             />
-            {/* tabs */}
-            {/* <div className="border-base-300 mt-8 flex w-full max-w-5xl flex-row items-center justify-between border-b p-2 font-medium">
-                <span className="text-base-content/70 border-primary border-b-2">
-                  Overview
-                </span>
-                <span className="text-base-content/70">Curriculum</span>
-                <span className="text-base-content/70">Instructors</span>
-                <span className="text-base-content/70">Review</span>
-              </div> */}
+
             <Tabs defaultValue="description" className="mt-8 w-full">
               <TabsList className="!bg-base-100 data- flex gap-6">
                 <TabsTrigger
@@ -308,8 +340,8 @@ const CoursePage = () => {
                   <span className="text-base-content/80 text-2xl font-medium">
                     Description
                   </span>
-                  {fakeCourses.courseDescription
-                    .split(/\n\s*\n|\n/)
+                  {singleCourse.courseDescription
+                    ?.split(/\n\s*\n|\n/)
                     .filter(Boolean)
                     .map((para, idx) => (
                       <p
@@ -326,7 +358,7 @@ const CoursePage = () => {
                   </span>
                   <div className="mt-4">
                     <ul className="grid grid-cols-2 gap-6 pl-5">
-                      {fakeCourses.whatYouWillLearn.map((item, index) => (
+                      {singleCourse.whatYouWillLearn?.map((item, index) => (
                         <li
                           key={index}
                           className="text-base-content/70 flex items-start gap-2 text-sm"
@@ -347,7 +379,7 @@ const CoursePage = () => {
                   </span>
                   <div className="mt-4">
                     <ul className="flex flex-col items-start gap-3 pl-5">
-                      {fakeCourses.thisCourseFor.map((item, index) => (
+                      {singleCourse.thisCourseFor?.map((item, index) => (
                         <li
                           key={index}
                           className="text-base-content/70 flex items-start gap-2 text-sm"
@@ -368,7 +400,7 @@ const CoursePage = () => {
                   </span>
                   <div className="mt-4">
                     <ul className="ml-5 flex list-disc flex-col items-start gap-3 pl-5">
-                      {fakeCourses.courseRequirements.map((item, index) => (
+                      {singleCourse.courseRequirements?.map((item, index) => (
                         <li
                           key={index}
                           className="text-base-content/70 text-sm"
@@ -381,8 +413,7 @@ const CoursePage = () => {
                 </div>
                 <Curriculum curriculum={fakeCourses.curriculum} />
                 <CourseInstructors instructors={Instructors} />
-                {/* TODO: course rating need to update */}
-                <CourseRating rating={fakeCourses.rating} />
+                <CourseRating rating={singleCourse.rating} />
                 <Comments studentsComments={studentsComments} />
               </TabsContent>
               <TabsContent value="curriculum">
