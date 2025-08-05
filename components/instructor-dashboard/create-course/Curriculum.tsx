@@ -18,6 +18,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { CourseData } from "@/lib/db/models/courseModel";
+
 
 export interface Lecture {
   id: number;
@@ -39,6 +41,7 @@ export interface Section {
 type Props = {
   onNext: () => void;
   onBack: () => void;
+  course: CourseData | null;
 };
 
 const initialState = {
@@ -48,7 +51,7 @@ const initialState = {
 
 export type ModalType = "video" | "file" | "caption" | "description" | "note";
 
-const Curriculum = ({ onNext, onBack }: Props) => {
+const Curriculum = ({ onNext, onBack  , course}: Props) => {
   const [state, formAction] = useActionState(saveCurriculum, initialState);
   const [sections, setSections] = useState<Section[]>([
     {
@@ -236,7 +239,7 @@ const Curriculum = ({ onNext, onBack }: Props) => {
 
   const sendData = () => {
     startTransition(() => {
-      formAction(sections);
+      formAction({sections , courseId: course?._id.toString() || ""});
       console.log(sections);
     });
   };

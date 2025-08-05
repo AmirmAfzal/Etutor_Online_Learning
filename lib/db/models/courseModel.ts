@@ -2,26 +2,26 @@ import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
 export interface CourseData {
   _id: ObjectId;
-  title?: string;
-  subtitle?: string;
+  title: string;
+  subtitle: string;
+  category?: ObjectId;
+  subCategory?: ObjectId;
+  topic: string;
+  language: string;
+  subtitleLanguage?: string;
+  level: "Beginner" | "Intermediate" | "Advanced";
+  duration?: number;
+  durationUnit: "Day" | "Week" | "Hour";
   thumbnail?: string;
   description?: string;
   authors?: ObjectId[];
-  lectures?: ObjectId[];
+  sections?: ObjectId[];
   price?: number;
   offer?: number;
   offerEndsAt?: Date;
-  language?: string;
-  subtitleLanguage?: string;
   studentsCount?: number;
-  duration?: number;
-  category?: ObjectId;
   tags?: ObjectId[];
   video?: ObjectId[];
-  subCategory?: ObjectId;
-  topic?: string;
-  level?: "Beginner" | "Intermediate" | "Advanced";
-  durationUnit?: "Day" | "Week" | "Hour";
   trailer?: string;
   learningOutcomes?: string[];
   targetAudience?: string[];
@@ -34,26 +34,26 @@ export interface CourseInterface extends mongoose.Document, CourseData {
 
 const courseSchema = new Schema<CourseInterface & Document>(
   {
-    title: { type: String, default: "" },
-    subtitle: { type: String, default: "" },
+    title: { type: String, required: true },
+    subtitle: { type: String, required: true },
+    category: { type: Schema.Types.ObjectId, ref: "category", default: null },
+    subCategory: { type: Schema.Types.ObjectId, ref: "subcategory", default: null },
+    topic: { type: String, required: true },
+    language: { type: String, required: true },
+    subtitleLanguage: { type: String },
+    level: { type: String, enum: ["Beginner", "Intermediate", "Advanced"], default: "Beginner" },
+    duration: { type: Number, default: 0 },
+    durationUnit: { type: String, enum: ["Day", "Week", "Hour"], default: "Hour" },
     thumbnail: { type: String, default: "" },
     description: { type: String, default: "" },
     authors: { type: [Schema.Types.ObjectId], ref: "user", default: [] },
-    lectures: { type: [Schema.Types.ObjectId], ref: "lecture", default: [] },
+    sections: { type: [Schema.Types.ObjectId], ref: "section", default: [] },
     price: { type: Number, default: 0 },
     offer: { type: Number, default: 0 },
-    offerEndsAt: { type: Date, default: Date.now },
-    language: { type: String, default: "English" },
-    subtitleLanguage: { type: String, default: "English" },
+    offerEndsAt: { type: Date },
     studentsCount: { type: Number, default: 0 },
-    duration: { type: Number, default: 0 },
-    category: { type: Schema.Types.ObjectId, ref: "category", default: null },
     tags: { type: [Schema.Types.ObjectId], ref: "tag", default: [] },
     video: { type: [Schema.Types.ObjectId], ref: "video", default: [] },
-    subCategory: { type: Schema.Types.ObjectId, ref: "subcategory", default: null },
-    topic: { type: String, default: "" },
-    level: { type: String, enum: ["Beginner", "Intermediate", "Advanced"], default: "Beginner" },
-    durationUnit: { type: String, enum: ["Day", "Week", "Hour"], default: "Hour" },
     trailer: { type: String, default: "" },
     learningOutcomes: { type: [String], default: [] },
     targetAudience: { type: [String], default: [] },
