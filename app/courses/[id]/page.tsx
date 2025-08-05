@@ -1,13 +1,12 @@
 import Image from "next/image";
-
 import Icon from "@/components/ui/Icon";
-
 import CourseCard from "@/components/CourseCard";
 import Curriculum from "@/components/Courses/Curriculum";
 import CourseInstructors from "@/components/Courses/CourseInstructors";
 import Comments from "@/components/Courses/Comments";
 import CourseRating from "@/components/Courses/CourseRating";
 import SidebarCart from "@/components/Courses/SidebarCart";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Fake data that would come from a database
 
@@ -59,20 +58,20 @@ const fakeCourses = {
         {
           title: "What's is Webflow?",
           info: "07:31",
-          type: "video" as "video",
+          type: "video",
         },
         {
           title: "Sign up in Webflow",
           info: "07:31",
-          type: "video" as "video",
+          type: "video",
         },
         {
           title: "Webflow Terms & Conditions",
           info: "5.3 MB",
-          type: "file" as "file",
+          type: "file",
         },
-        { title: "Teaser of Webflow", info: "07:31", type: "video" as "video" },
-        { title: "Practice Project", info: "5.3 MB", type: "file" as "file" },
+        { title: "Teaser of Webflow", info: "07:31", type: "video" },
+        { title: "Practice Project", info: "5.3 MB", type: "file" },
       ],
     },
     {
@@ -210,7 +209,7 @@ const fakeSidebarCart = {
 const CoursePage = () => {
   return (
     <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-12 md:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-3">
         <div className="md:col-span-2">
           <div className="bg-base-200 w-full">
             <div className="flex max-w-7xl items-center justify-center">
@@ -268,98 +267,134 @@ const CoursePage = () => {
               height={800}
               className="mt-8 h-auto w-full max-w-2xl object-cover"
             />
-            <div className="flex w-full flex-col items-center justify-center">
-              <div className="border-base-300 mt-8 flex w-full max-w-5xl flex-row items-center justify-between border-b p-2 font-medium">
+            {/* tabs */}
+            {/* <div className="border-base-300 mt-8 flex w-full max-w-5xl flex-row items-center justify-between border-b p-2 font-medium">
                 <span className="text-base-content/70 border-primary border-b-2">
                   Overview
                 </span>
                 <span className="text-base-content/70">Curriculum</span>
                 <span className="text-base-content/70">Instructors</span>
                 <span className="text-base-content/70">Review</span>
-              </div>
-
-              <div className="p-4">
-                <span className="text-base-content/80 text-2xl font-medium">
-                  Description
-                </span>
-                {fakeCourses.courseDescription
-                  .split(/\n\s*\n|\n/)
-                  .filter(Boolean)
-                  .map((para, idx) => (
-                    <p
-                      key={idx}
-                      className="text-base-content/70 mt-4 mb-4 text-sm"
-                    >
-                      {para}
-                    </p>
-                  ))}
-              </div>
-
-              <div className="bg-success/10 w-full p-4 pl-10">
-                <span className="text-base-content/80 text-xl font-medium">
-                  What you will learn in this course
-                </span>
-                <div className="mt-4">
-                  <ul className="grid grid-cols-2 gap-6 pl-5">
-                    {fakeCourses.whatYouWillLearn.map((item, index) => (
-                      <li
-                        key={index}
-                        className="text-base-content/70 flex items-start gap-2 text-sm"
+              </div> */}
+            <Tabs defaultValue="description" className="mt-8 w-full">
+              <TabsList className="!bg-base-100 data- flex gap-6">
+                <TabsTrigger
+                  value="overview"
+                  className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
+                >
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger
+                  value="curriculum"
+                  className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
+                >
+                  Curriculum
+                </TabsTrigger>
+                <TabsTrigger
+                  value="instructors"
+                  className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
+                >
+                  Instructors
+                </TabsTrigger>
+                <TabsTrigger
+                  value="review"
+                  className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
+                >
+                  Review
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview">
+                <div className="p-4">
+                  <span className="text-base-content/80 text-2xl font-medium">
+                    Description
+                  </span>
+                  {fakeCourses.courseDescription
+                    .split(/\n\s*\n|\n/)
+                    .filter(Boolean)
+                    .map((para, idx) => (
+                      <p
+                        key={idx}
+                        className="text-base-content/70 mt-4 mb-4 text-sm"
                       >
-                        <Icon
-                          icon="ph:check-circle-fill"
-                          className="text-success text-lg"
-                        />
-                        {item}
-                      </li>
+                        {para}
+                      </p>
                     ))}
-                  </ul>
                 </div>
-              </div>
-
-              <div className="mt-12 w-full">
-                <span className="text-base-content/80 text-2xl font-medium">
-                  Who this course is for :
-                </span>
-                <div className="mt-4">
-                  <ul className="flex flex-col items-start gap-3 pl-5">
-                    {fakeCourses.thisCourseFor.map((item, index) => (
-                      <li
-                        key={index}
-                        className="text-base-content/70 flex items-start gap-2 text-sm"
-                      >
-                        <Icon
-                          icon="ph:arrow-right"
-                          className="text-primary text-lg"
-                        />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="bg-success/10 w-full p-4 pl-10">
+                  <span className="text-base-content/80 text-xl font-medium">
+                    What you will learn in this course
+                  </span>
+                  <div className="mt-4">
+                    <ul className="grid grid-cols-2 gap-6 pl-5">
+                      {fakeCourses.whatYouWillLearn.map((item, index) => (
+                        <li
+                          key={index}
+                          className="text-base-content/70 flex items-start gap-2 text-sm"
+                        >
+                          <Icon
+                            icon="ph:check-circle-fill"
+                            className="text-success text-lg"
+                          />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-
-              <div className="mt-12 w-full">
-                <span className="text-base-content/80 text-2xl font-medium">
-                  Course requirements
-                </span>
-                <div className="mt-4">
-                  <ul className="ml-5 flex list-disc flex-col items-start gap-3 pl-5">
-                    {fakeCourses.courseRequirements.map((item, index) => (
-                      <li key={index} className="text-base-content/70 text-sm">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="mt-12 w-full">
+                  <span className="text-base-content/80 text-2xl font-medium">
+                    Who this course is for :
+                  </span>
+                  <div className="mt-4">
+                    <ul className="flex flex-col items-start gap-3 pl-5">
+                      {fakeCourses.thisCourseFor.map((item, index) => (
+                        <li
+                          key={index}
+                          className="text-base-content/70 flex items-start gap-2 text-sm"
+                        >
+                          <Icon
+                            icon="ph:arrow-right"
+                            className="text-primary text-lg"
+                          />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-
-              <Curriculum curriculum={fakeCourses.curriculum} />
-              <CourseInstructors instructors={Instructors} />
-              {/* TODO: course rating need to update */}
-              <CourseRating rating={fakeCourses.rating} />
-              <Comments studentsComments={studentsComments} />
-            </div>
+                <div className="mt-12 w-full">
+                  <span className="text-base-content/80 text-2xl font-medium">
+                    Course requirements
+                  </span>
+                  <div className="mt-4">
+                    <ul className="ml-5 flex list-disc flex-col items-start gap-3 pl-5">
+                      {fakeCourses.courseRequirements.map((item, index) => (
+                        <li
+                          key={index}
+                          className="text-base-content/70 text-sm"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <Curriculum curriculum={fakeCourses.curriculum} />
+                <CourseInstructors instructors={Instructors} />
+                {/* TODO: course rating need to update */}
+                <CourseRating rating={fakeCourses.rating} />
+                <Comments studentsComments={studentsComments} />
+              </TabsContent>
+              <TabsContent value="curriculum">
+                <Curriculum curriculum={fakeCourses.curriculum} />
+              </TabsContent>
+              <TabsContent value="instructors">
+                <CourseInstructors instructors={Instructors} />
+              </TabsContent>
+              <TabsContent value="review">
+                {/* TODO : what do we have here? */}
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
 

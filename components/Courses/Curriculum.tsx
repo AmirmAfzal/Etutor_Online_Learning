@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   Accordion,
   AccordionContent,
@@ -11,7 +12,7 @@ interface CurriculumProps {
     title: string;
     lectures: number;
     duration: string;
-    content: { title: string; info: string; type: "video" | "file" }[];
+    content: { title: string; info: string; type: "video" | "file" | string }[];
   }[];
 }
 
