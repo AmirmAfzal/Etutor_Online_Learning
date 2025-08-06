@@ -15,15 +15,15 @@ export async function publishCourse(prevState: ActionData, formData: FormData) {
   }
 
   try {
-      console.log(result.data);
+    console.log(result.data);
     return {
-        message: "SUCCESS",
-        errors: []
-    }
+      message: "SUCCESS",
+      errors: [],
+    };
   } catch (error) {
-      return {
-          message: "ERROR",
-          errors: [],
-        };
-    }
+    return {
+      message: "ERROR",
+      errors: [],
+    };
+  }
 }
