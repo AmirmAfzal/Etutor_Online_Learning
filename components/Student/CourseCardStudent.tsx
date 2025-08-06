@@ -6,7 +6,6 @@ interface CourseCardProps {
   subtitle: string;
   image: string;
   progress?: string | null;
-  priority?: boolean;
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({
@@ -14,7 +13,6 @@ const CourseCard: React.FC<CourseCardProps> = ({
   subtitle,
   image,
   progress,
-  priority = false,
 }) => {
   return (
     <div className="bg-base-100 border-base-content/10 flex h-full min-w-[220px] flex-col border-1 transition-all duration-300 hover:translate-y-[-2px] sm:min-w-0">
@@ -24,7 +22,6 @@ const CourseCard: React.FC<CourseCardProps> = ({
         width={400}
         height={160}
         className="mb-2 h-auto w-full object-cover sm:mb-3 sm:h-36 md:h-40"
-        priority={priority}
       />
       <div className="flex-1 p-2 sm:p-3 md:p-4">
         <div className="text-base-content/50 mb-1 truncate text-xs font-medium sm:text-sm">

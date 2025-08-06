@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select";
 import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 import { FC } from "react";
