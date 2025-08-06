@@ -16,13 +16,19 @@ const CourseCard: React.FC<CourseCardProps> = ({
 }) => {
   return (
     <div className="bg-base-100 border-base-content/10 flex h-full min-w-[220px] flex-col border-1 transition-all duration-300 hover:translate-y-[-2px] sm:min-w-0">
-      <Image
-        src={image}
-        alt={title}
-        width={400}
-        height={160}
-        className="mb-2 h-auto w-full object-cover sm:mb-3 sm:h-36 md:h-40"
-      />
+      {image ? (
+        <Image
+          src={image}
+          alt={title || "Course image"}
+          width={400}
+          height={160}
+          className="mb-2 h-auto w-full object-cover sm:mb-3 sm:h-36 md:h-40"
+        />
+      ) : (
+        <div className="bg-base-200 mb-2 flex h-auto w-full items-center justify-center sm:mb-3 sm:h-36 md:h-40">
+          <span className="text-base-content/50">No Image Available</span>
+        </div>
+      )}
       <div className="flex-1 p-2 sm:p-3 md:p-4">
         <div className="text-base-content/50 mb-1 truncate text-xs font-medium sm:text-sm">
           {title}

@@ -7,7 +7,7 @@ import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { log } from "console"; // Temporary logging for debugging
+// Temporary logging for debugging
 
 interface CourseData {
   _id: string;
@@ -31,12 +31,9 @@ interface Props {
 
 const StudentCoursesPage = async ({ searchParams }: Props) => {
   await connectDB();
-  log("Database connected successfully");
 
   const session = await getServerSession(authOptions);
-  log("Session retrieved:", session);
   if (!session?.user?.id) {
-    log("No session found, redirecting to signin");
     return redirect("/auth/signin");
   }
 
@@ -44,17 +41,13 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
     .findOne({ user: session.user.id })
     .populate<{ courses: CourseData[] }>("courses")
     .lean<Student | null>();
-  log("Student retrieved:", student);
   if (!student) {
-    log("No student found, redirecting to signin");
     return redirect("/auth/signin");
   }
 
   const courses: CourseData[] = student.courses || [];
-  log("Courses retrieved:", courses);
 
   const resolvedSearchParams = await searchParams;
-  log("Search params resolved:", resolvedSearchParams);
 
   // TODO : replace this filter in database
   const query = resolvedSearchParams.query?.toLowerCase();
@@ -65,7 +58,6 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
           course.subtitle.toLowerCase().includes(query)
       )
     : courses;
-  log("Filtered courses:", filteredCourses);
 
   const mappedCourses = filteredCourses.map((course) => ({
     id: course._id,
@@ -75,7 +67,6 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
     progress: course.progress || "0%",
     status: course.status || "Not Started",
   }));
-  log("Mapped courses:", mappedCourses);
 
   return (
     <>

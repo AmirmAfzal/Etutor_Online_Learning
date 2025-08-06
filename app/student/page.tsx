@@ -2,44 +2,57 @@ import React from "react";
 import { Icon } from "@iconify/react";
 
 import CourseCard from "@/components/Student/CourseCardStudent";
+import { connectDB } from "@/lib/db/db";
+import studentModel from "@/lib/db/models/studentModel";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
 
-const mockCoursesData = [
-  {
-    title: "Reiki Level I, II and Master/Teacher Program",
-    subtitle: "1. Introductions",
-    image: "/images/student-dashboard/course-1.jpg",
-    progress: null,
-  },
-  {
-    title: "The Complete 2021 Web Development Bootcamp",
-    subtitle: "167. What You'll Need to Get Started - Setup",
-    image: "/images/student-dashboard/course-2.jpg",
-    progress: "61% Completed",
-  },
-  {
-    title: "Copywriting - Become a Freelance Copywriter",
-    subtitle: "1. How to get started with figma",
-    image: "/images/student-dashboard/course-3.jpg",
-    progress: null,
-  },
-  {
-    title: "2021 Complete Python Bootcamp From Zero to Hero",
-    subtitle: "9. Advanced CSS - Selector Priority",
-    image: "/images/student-dashboard/course-4.jpg",
-    progress: "12% Finish",
-  },
-];
+interface CourseData {
+  title: string;
+  subtitle: string;
+  image: string;
+  thumbnail?: string;
+  progress?: string;
+}
 
-export default function StudentDashboard() {
-  const mockCourses = mockCoursesData;
+interface Student {
+  _id: string;
+  user: string;
+  courses: CourseData[];
+}
+
+const StudentDashboard = async () => {
+  await connectDB();
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return redirect("/auth/signin");
+  }
+  const student = await studentModel
+    .findOne({ user: session.user.id })
+    .populate<{ courses: CourseData[] }>("courses")
+    .lean<Student | null>();
+  if (!student) {
+    return redirect("/auth/signin");
+  }
+
+  const foundCourses: CourseData[] = student.courses || [];
+
+  const courses: CourseData[] = foundCourses.map((course) => ({
+    title: course.title,
+    subtitle: course.subtitle,
+    image: course.thumbnail || "/images/course-images-01.png",
+    progress: course.progress || "0%",
+  }));
 
   return (
     <>
-      {/* Dashboard Stats */}
       <div className="flex w-full flex-col items-start">
         <h3 className="text-base-content/80 mt-2 mb-2 text-lg font-medium sm:mt-0 sm:mb-4 sm:text-2xl">
           Dashboard
         </h3>
+        {/* TODO : connect to db */}
         <div className="mt-8 mb-8 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
           <div className="bg-primary/10 flex flex-row items-start gap-4 p-2 sm:p-6">
             <div className="bg-base-100 flex items-center gap-2 p-2">
@@ -107,7 +120,6 @@ export default function StudentDashboard() {
           </div>
         </div>
       </div>
-      {/* Courses List */}
       <div className="mb-4 flex flex-row items-center justify-between">
         <h3 className="text-base-content text-lg font-semibold">
           Let’s start learning, Kevin
@@ -124,17 +136,18 @@ export default function StudentDashboard() {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {mockCourses.map((course, i) => (
+        {courses.map((course, i) => (
           <CourseCard
             key={i}
             title={course.title}
             subtitle={course.subtitle}
             image={course.image}
             progress={course.progress}
-            priority={i === 0}
           />
         ))}
       </div>
     </>
   );
-}
+};
+
+export default StudentDashboard;
