@@ -3,53 +3,71 @@ import { Icon } from "@iconify/react";
 
 import Link from "next/link";
 import WishlistCourseRow from "@/components/Student/student-wishlist/WishlistCoursesRow";
-// Fake wishlist data for demonstration
-const fakeWishlistCourses = [
-  {
-    id: 1,
-    title: "The Ultimate Drawing Course - Beginner to Advanced",
-    image: "/images/student-dashboard/course-1.jpg",
-    instructors: "Harry Potter • John Wick",
-    price: "$37.00",
-    originalPrice: "$49.00",
-    rating: 4.6,
-    reviews: 451444,
-  },
-  {
-    id: 2,
-    title: "Digital Marketing Masterclass - 23 Courses in 1",
-    image: "/images/student-dashboard/course-2.jpg",
-    instructors: "Nobody",
-    price: "$24.00",
-    originalPrice: null,
-    rating: 4.8,
-    reviews: 451444,
-  },
-  {
-    id: 3,
-    title: "Angular - The Complete Guide (2021 Edition)",
-    image: "/images/student-dashboard/course-3.jpg",
-    instructors: "Kevin Gilbert",
-    price: "$13.00",
-    originalPrice: null,
-    rating: 4.7,
-    reviews: 451444,
-  },
-];
+import { connectDB } from "@/lib/db/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import { redirect } from "next/navigation";
+import studentModel from "@/lib/db/models/studentModel";
 
-export default function WishlistPage() {
+interface CourseData {
+  _id: string;
+  title: string;
+  subtitle: string;
+  thumbnail: string;
+  price?: string;
+  originalPrice?: string;
+  rating?: number;
+  reviews?: number;
+  author: string[];
+}
+
+interface Student {
+  _id: string;
+  user: string;
+  wishlist: CourseData[];
+}
+
+const WishlistPage = async () => {
+  await connectDB();
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return redirect("/auth/signin");
+  }
+
+  const student = await studentModel
+    .findOne({ user: session.user.id })
+    .populate<{ courses: CourseData[] }>("wishlist")
+    .lean<Student | null>();
+  if (!student) {
+    return redirect("/auth/signin");
+  }
+
+  const wishlistCourses: CourseData[] = student.wishlist || [];
+
+  const courses = wishlistCourses.map((course) => ({
+    id: course._id.toString(), // Ensure id is a string
+    title: course.title,
+    image: course.thumbnail,
+    instructors: Array.isArray(course.author)
+      ? course.author.join(" • ")
+      : "Unknown",
+    price: course.price || "$22.00",
+    originalPrice: course.originalPrice || "18.00",
+    rating: course.rating || 545,
+    reviews: course.reviews || 667,
+  }));
+
   return (
     <>
       <div className="mb-8">
         <div className="text-base-content/80 mb-8 text-3xl font-bold">
           Wishlist
-          <span className="text-base-content/60">
-            ({fakeWishlistCourses.length})
-          </span>
+          <span className="text-base-content/60">({courses.length})</span>
         </div>
       </div>
 
-      {fakeWishlistCourses.length === 0 ? (
+      {courses.length === 0 ? (
         <div className="text-base-content/60 flex h-64 w-full flex-col items-center justify-center gap-4 text-center">
           <Icon icon="ph:heart" className="text-6xl" />
           <div className="text-xl font-semibold">Your wishlist is empty</div>
@@ -71,14 +89,18 @@ export default function WishlistPage() {
           </div>
 
           <div className="divide-base-content/10 divide-y">
-            {fakeWishlistCourses.map((course) => (
-              <WishlistCourseRow key={course.id} {...course} />
+            {courses.map((course, index) => (
+              <WishlistCourseRow
+                key={course.id || `course-${index}`}
+                {...course}
+                id={Number.isNaN(Number(course.id)) ? index : Number(course.id)}
+              />
             ))}
           </div>
         </div>
       )}
     </>
   );
-}
+};
 
-// Custom Wishlist Course Row Component
+export default WishlistPage;
