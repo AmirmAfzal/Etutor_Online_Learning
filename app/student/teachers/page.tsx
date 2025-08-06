@@ -32,14 +32,16 @@ const TeachersPage = async ({ searchParams }: Props) => {
     //  TODO : foundCourses[0].authors is not a good way to get all instructors, it should be a separate query
     const instructors = foundCourses[0].authors;
 
-    const instructorData: InstructorData[] = instructors.map((instructor: any) => ({
-      name: `${instructor.firstname} ${instructor.lastname}`,
-      title: instructor.bio || "Instructor",
-      image:
-        instructor.avatar || "/images/student-dashboard/Teacher-default.jpg",
-      rating: instructor.rating,
-      students: instructor.students,
-    }));
+    const instructorData: InstructorData[] = instructors.map(
+      (instructor: any) => ({
+        name: `${instructor.firstname} ${instructor.lastname}`,
+        title: instructor.bio || "Instructor",
+        image:
+          instructor.avatar || "/images/student-dashboard/Teacher-default.jpg",
+        rating: instructor.rating,
+        students: instructor.students,
+      })
+    );
 
     const filteredTeachers = query
       ? instructorData.filter(
@@ -48,15 +50,6 @@ const TeachersPage = async ({ searchParams }: Props) => {
             teacher.title.toLowerCase().includes(query)
         )
       : instructorData;
-
-    // Debug logs
-    console.log("Resolved Search Params:", resolvedSearchParams);
-    console.log("Query:", query);
-    console.log("Found Courses:", foundCourses);
-    console.log("All Authors:", allAuthors);
-    console.log("Instructors Query Result:", instructors);
-    console.log("Instructor Data:", instructorData);
-    console.log("Filtered Teachers:", filteredTeachers);
 
     return (
       <>

@@ -31,6 +31,8 @@ interface Props {
 
 const StudentCoursesPage = async ({ searchParams }: Props) => {
   await connectDB();
+  const resolvedSearchParams = await searchParams;
+  const query = resolvedSearchParams.query?.toLowerCase();
 
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -39,7 +41,17 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
 
   const student = await studentModel
     .findOne({ user: session.user.id })
-    .populate<{ courses: CourseData[] }>("courses")
+    .populate<{ courses: CourseData[] }>({
+      path: "courses",
+      match: query
+        ? {
+            $or: [
+              { title: { $regex: query, $options: "i" } },
+              { subtitle: { $regex: query, $options: "i" } },
+            ],
+          }
+        : {},
+    })
     .lean<Student | null>();
   if (!student) {
     return redirect("/auth/signin");
@@ -47,19 +59,7 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
 
   const courses: CourseData[] = student.courses || [];
 
-  const resolvedSearchParams = await searchParams;
-
-  // TODO : replace this filter in database
-  const query = resolvedSearchParams.query?.toLowerCase();
-  const filteredCourses = query
-    ? courses.filter(
-        (course) =>
-          course.title.toLowerCase().includes(query) ||
-          course.subtitle.toLowerCase().includes(query)
-      )
-    : courses;
-
-  const mappedCourses = filteredCourses.map((course) => ({
+  const mappedCourses = courses.map((course) => ({
     id: course._id,
     name: course.title,
     subtitle: course.subtitle,
@@ -84,7 +84,7 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {mappedCourses.map((course) => (
+        {mappedCourses.map((course: any) => (
           <CourseCard
             key={course.id}
             title={course.name}
