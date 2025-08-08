@@ -1,6 +1,12 @@
+"use server"
 import Image from "next/image";
 import React from "react";
 import { Icon } from "@iconify/react";
+import studentModel from "@/lib/db/models/studentModel";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import { connectDB } from "@/lib/db/db";
+
 
 interface StudentProfileProps {
   name: string;
@@ -8,11 +14,16 @@ interface StudentProfileProps {
   image: string;
 }
 
-const StudentProfile: React.FC<StudentProfileProps> = ({
+const StudentProfile: React.FC<StudentProfileProps> = async ({
   name,
   job,
   image,
 }) => {
+  await connectDB()
+  const user = await getServerSession(authOptions)
+  console.log(user)
+  const foundStudent = await studentModel.findOne({user: user?.user.id});
+  console.log("foundStudent", foundStudent);
   return (
     <div className="bg-base-100 border-primary/20 relative mt-8 mb-0 flex flex-col items-center gap-4 border-2 p-4 sm:gap-6 sm:p-6 md:flex-row md:items-center">
       <Image
@@ -25,7 +36,7 @@ const StudentProfile: React.FC<StudentProfileProps> = ({
       />
       <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
         <h2 className="text-base-content text-lg font-bold sm:text-2xl">
-          {name}
+          {foundStudent?.firstname} {foundStudent?.lastname}
         </h2>
         <p className="text-base-content/50 mt-2 text-xs sm:mt-4 sm:text-base">
           {job}
