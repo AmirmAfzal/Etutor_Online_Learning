@@ -9,15 +9,14 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 const StudentSettingsPage = async () => {
-
   const userId = "USER_ID_FROM_AUTH";
-  await connectDB()
+  await connectDB();
   const session = await getServerSession(authOptions);
   if (!session) return redirect("/auth/signin");
   const foundUser: UserInterface | null = await userModel.findOne({
     _id: session?.user.id,
   });
-  
+
   if (!foundUser) return redirect("/auth/signin");
   const foundStudent: StudentInterface | null = await studentModel.findOne({
     user: foundUser._id,
@@ -25,7 +24,7 @@ const StudentSettingsPage = async () => {
   if (!foundStudent) return redirect("/auth/signin");
 
   return (
-    <div className="bg-base-100 max-w-5xl">
+    <div className="bg-base-100 mt-6 max-w-5xl">
       <h3 className="mb-6 text-lg font-semibold">Account settings</h3>
       <AccountSettingsForm
         _id={foundUser._id.toString()}
@@ -34,7 +33,6 @@ const StudentSettingsPage = async () => {
         email={foundUser.email}
         title={foundStudent.bio}
         username={foundStudent.username}
-        
       />
 
       <h3 className="mb-6 text-lg font-semibold">Change Password</h3>

@@ -4,7 +4,6 @@ import Search from "@/components/Student/Search";
 import TeacherSelect from "@/components/TeacherSelect";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
-import instructorModel from "@/lib/db/models/instructorModel";
 
 interface InstructorData {
   name: string;
@@ -53,7 +52,7 @@ const TeachersPage = async ({ searchParams }: Props) => {
 
     return (
       <>
-        <div className="mb-6 flex flex-col gap-4">
+        <div className="my-6 flex flex-col gap-4">
           <div className="text-base-content/80 mb-4 text-xl font-semibold">
             Instructors
             <span className="text-base-content/80">

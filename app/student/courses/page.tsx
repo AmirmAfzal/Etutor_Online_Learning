@@ -70,7 +70,7 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
 
   return (
     <>
-      <div className="mb-6 flex flex-col gap-4">
+      <div className="my-6 flex flex-col gap-4">
         <div className="text-base-content/80 mb-4 text-xl font-semibold">
           Courses
           <span className="text-base-content/80">{`(${mappedCourses.length})`}</span>

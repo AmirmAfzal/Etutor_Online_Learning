@@ -60,7 +60,7 @@ const WishlistPage = async () => {
 
   return (
     <>
-      <div className="mb-8">
+      <div className="my-8">
         <div className="text-base-content/80 mb-8 text-3xl font-bold">
           Wishlist
           <span className="text-base-content/60">({courses.length})</span>
