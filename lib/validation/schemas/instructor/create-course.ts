@@ -60,9 +60,19 @@ const SectionSchema = z.object({
 export const curriculumSchema = z.array(SectionSchema);
 
 // publish course
+export const Instructor = z.object({
+  id: z.number(),
+  profile: z.string(),
+  name: z.string(),
+  skill: z.string(),
+});
+
 export const publishMessageSchema = z.object({
   welcomeMessage: z.string().min(10).max(100),
   congratulationsMessage: z.string().min(10).max(100),
+  instructors: z
+    .array(Instructor)
+    .min(1, "At least one Instructor is required"),
 });
 
-export type publishMessageFormData = z.infer<typeof publishMessageSchema>;
+export type PublishMessageFormData = z.infer<typeof publishMessageSchema>;

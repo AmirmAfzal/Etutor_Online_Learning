@@ -1,24 +1,16 @@
 "use server";
 
 import { ActionData } from "@/lib/formTypes";
-import { publishMessageSchema } from "@/lib/validation/schemas/instructor/create-course";
-import { Instructor } from "./findInstructors";
+import {
+  PublishMessageFormData,
+  publishMessageSchema,
+} from "@/lib/validation/schemas/instructor/create-course";
 
-export async function publishCourse(prevState: ActionData, formData: FormData) {
-  const instructorsRaw = formData.get("instructors");
-  const instructors: Instructor[] = JSON.parse((instructorsRaw as string) || "[]");
-
-  if (!Array.isArray(instructors) || instructors.length === 0) {
-    return {
-      message: "ERROR",
-      errors: ["At least one instructor must be selected."],
-    };
-  }
-
-  const result = publishMessageSchema.safeParse({
-    welcomeMessage: formData.get("welcomeMessage"),
-    congratulationsMessage: formData.get("congratulationsMessage"),
-  });
+export async function publishCourse(
+  prevState: ActionData,
+  formData: PublishMessageFormData
+) {
+  const result = publishMessageSchema.safeParse(formData);
 
   if (!result.success) {
     return {
@@ -28,7 +20,7 @@ export async function publishCourse(prevState: ActionData, formData: FormData) {
   }
 
   try {
-    console.log(result.data, instructors);
+    console.log(result.data);
     return {
       message: "SUCCESS",
       errors: [],
