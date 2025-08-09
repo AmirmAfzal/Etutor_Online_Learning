@@ -26,6 +26,10 @@ export interface CourseData {
   learningOutcomes?: string[];
   targetAudience?: string[];
   requirements?: string[];
+  welcomeMessage?: string;
+  congratulationsMessage?: string;
+  instructors?: any[];
+  status?: "draft" | "published" | "archived";
 }
 
 export interface CourseInterface extends mongoose.Document, CourseData {
@@ -58,6 +62,10 @@ const courseSchema = new Schema<CourseInterface & Document>(
     learningOutcomes: { type: [String], default: [] },
     targetAudience: { type: [String], default: [] },
     requirements: { type: [String], default: [] },
+    welcomeMessage: { type: String },
+    congratulationsMessage: { type: String },
+    instructors: { type: Schema.Types.Mixed, default: [] },
+    status: { type: String, enum: ["draft", "published", "archived"], default: "draft" },
   },
   {
     timestamps: true,

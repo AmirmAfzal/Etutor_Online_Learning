@@ -24,9 +24,11 @@ import {
   findInstructor,
   Instructor,
 } from "@/lib/actions/instructor/create-course/findInstructors";
+import { CourseData } from "@/lib/db/models/courseModel";
 
 interface Props {
   onBack: () => void;
+  course: CourseData | null;
 }
 
 const initialState = {
@@ -34,7 +36,7 @@ const initialState = {
   errors: [],
 };
 
-const PublishCourse = ({ onBack }: Props) => {
+const PublishCourse = ({ onBack, course }: Props) => {
   const [state, formAction] = useActionState(publishCourse, initialState);
   const [searchState, formActionSearch] = useActionState(findInstructor, {
     message: "",
@@ -50,6 +52,7 @@ const PublishCourse = ({ onBack }: Props) => {
       welcomeMessage: "",
       congratulationsMessage: "",
       instructors: [],
+      courseId: course?._id?.toString() || "",
     },
   });
 
@@ -80,8 +83,19 @@ const PublishCourse = ({ onBack }: Props) => {
   };
 
   const submitHandler = (data: PublishMessageFormData) => {
+    console.log(data);
+    if (!course?._id) {
+      console.error("Course ID not found");
+      return;
+    }
+    
     startTransition(() => {
-      formAction(data);
+      // Add courseId to the form data
+      const formDataWithCourseId = {
+        ...data,
+        courseId: course._id.toString(),
+      };
+      formAction(formDataWithCourseId);
     });
   };
 
@@ -103,6 +117,7 @@ const PublishCourse = ({ onBack }: Props) => {
         <h3 className="text-xl font-bold">Message</h3>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submitHandler)}>
+            <input type="text" hidden name="courseId" defaultValue={course?._id.toString()} />
             <div className="grid grid-cols-2 gap-6">
               <FormField
                 control={form.control}

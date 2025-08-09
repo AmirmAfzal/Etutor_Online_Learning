@@ -68,6 +68,7 @@ export const Instructor = z.object({
 });
 
 export const publishMessageSchema = z.object({
+  courseId: z.string().min(1, "Course ID is required"),
   welcomeMessage: z.string().min(10).max(100),
   congratulationsMessage: z.string().min(10).max(100),
   instructors: z

@@ -82,7 +82,7 @@ const CreateCourseTabs = ({ course, tab }: Props) => {
           </TabsContent>
 
           <TabsContent value="PublishCourse">
-            <PublishCourse onBack={() => setCurrentTab("Curriculum")} />
+            <PublishCourse onBack={() => setCurrentTab("Curriculum")} course={course} />
           </TabsContent>
         </Tabs>
       </div>
