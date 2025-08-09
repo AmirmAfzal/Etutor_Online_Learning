@@ -70,7 +70,7 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
 
   return (
     <>
-      <div className="my-6 flex flex-col gap-4">
+      <div className="mb-6 flex flex-col gap-4">
         <div className="text-base-content/80 mb-4 text-xl font-semibold">
           Courses
           <span className="text-base-content/80">{`(${mappedCourses.length})`}</span>
@@ -84,7 +84,7 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {mappedCourses.map((course: any) => (
+        {mappedCourses.map((course) => (
           <CourseCard
             key={course.id}
             title={course.name}

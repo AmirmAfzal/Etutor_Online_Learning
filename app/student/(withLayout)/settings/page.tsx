@@ -24,7 +24,7 @@ const StudentSettingsPage = async () => {
   if (!foundStudent) return redirect("/auth/signin");
 
   return (
-    <div className="bg-base-100 mt-6 max-w-5xl">
+    <div className="bg-base-100 max-w-5xl">
       <h3 className="mb-6 text-lg font-semibold">Account settings</h3>
       <AccountSettingsForm
         _id={foundUser._id.toString()}

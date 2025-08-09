@@ -141,7 +141,7 @@ const mockChatMessages = [
 
 export default function MessagesPage() {
   return (
-    <div className="bg-base-100 border-base-300 mt-6 flex h-screen w-full border">
+    <div className="bg-base-100 border-base-300 flex h-screen w-full border">
       <div className="border-base-300 flex w-1/3 flex-col border-r">
         <MessageHeader mockContacts={mockContacts} />
         <ContactList mockContacts={mockContacts} />

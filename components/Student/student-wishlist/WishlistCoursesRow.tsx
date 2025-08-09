@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 
-interface WishlistCourseRowProps {
+interface Props {
   id: number;
   title: string;
   image: string;
@@ -12,7 +12,7 @@ interface WishlistCourseRowProps {
   reviews: number;
 }
 
-const WishlistCourseRow: React.FC<WishlistCourseRowProps> = ({
+const WishlistCourseRow = ({
   id,
   title,
   image,
@@ -21,7 +21,7 @@ const WishlistCourseRow: React.FC<WishlistCourseRowProps> = ({
   originalPrice,
   rating,
   reviews,
-}) => {
+}: Props) => {
   return (
     <div className="hover:bg-base-200/30 px-2 py-4 transition-colors">
       <div className="grid grid-cols-12 items-center gap-6">

@@ -73,7 +73,7 @@ const fakePurchases = [
 
 export default async function PurchaseHistoryPage() {
   return (
-    <div className="mt-6 max-w-5xl px-2 py-8">
+    <div className="max-w-5xl px-2 pb-8">
       <h2 className="text-base-content/80 mb-6 text-xl font-bold">
         Purchase History
       </h2>
