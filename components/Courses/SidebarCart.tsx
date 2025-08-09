@@ -1,17 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useActionState } from "react";
 import Icon from "../ui/Icon";
+import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
+import Form from "next/form";
 
-interface CartItem {
-  title: string;
-  price: number;
-  thumbnail: string;
-}
-
-const SidebarCart = ({
-  fakeSidebarCart,
-  courses,
-}: {
+interface SidebarCartProps {
   fakeSidebarCart: {
     price: number;
     originalPrice: number;
@@ -20,14 +13,21 @@ const SidebarCart = ({
     courseDetails: { label: string; value: string }[];
     includes: string[];
   };
-  courses: { title: string; price: number; thumbnail: string }[];
-}) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+}
+interface courseIdProps {
+  courseId: string;
+}
 
-  const addToCart = (course: CartItem) => {
-    setCart((prevCart) => [...prevCart, course]);
-    alert(`${course.title} has been added to your cart!`);
-  };
+const SidebarCart = ({
+  fakeSidebarCart,
+  courseId,
+}: SidebarCartProps & courseIdProps) => {
+  const initialState = { message: "", errors: [] as string[] };
+  const [state, wishlistAction, isPending] = useActionState(
+    actionAddToWishlist,
+    initialState
+  );
+
   return (
     <div className="md:col-span-1">
       <div className="bg-base-100 sticky top-8 flex flex-col gap-1 p-4 shadow">
@@ -42,10 +42,12 @@ const SidebarCart = ({
             {fakeSidebarCart.discount}
           </button>
         </div>
+
         <span className="text-error ml-1 flex flex-row items-start gap-1 text-xs">
           <Icon icon="ph:alarm" className="text-sm" />
           {fakeSidebarCart.timeLeft}
         </span>
+
         <div className="divider divider-base-300 w-full"></div>
 
         <div className="flex w-full flex-col gap-1 text-xs text-nowrap">
@@ -79,29 +81,40 @@ const SidebarCart = ({
         <div className="divider divider-base-300 my-1 w-full"></div>
 
         <div className="flex flex-col items-center gap-1">
-          <button
-            className="btn btn-primary w-full text-xs"
-            onClick={() =>
-              addToCart({
-                title: courses[0].title, // Access the first course's title
-                price: fakeSidebarCart.price,
-                thumbnail: "/images/courses/Trailer.jpg",
-              })
-            }
-          >
+          <button className="btn btn-primary w-full text-xs">
             Add To cart
           </button>
           <button className="btn btn-soft btn-primary w-full text-xs">
             Buy Now
           </button>
-          <div className="flex w-full flex-row items-center justify-between">
-            <button className="btn btn-ghost border-base-300 w-1/2 border text-xs">
-              Add to Wishlist
-            </button>
+
+          <div className="flex w-full flex-row items-center justify-between gap-1">
+            <Form action={wishlistAction} className="w-1/2">
+              <input type="hidden" name="courseId" value={courseId} />
+              <button
+                type="submit"
+                className="btn btn-ghost border-base-300 w-full border text-xs"
+                disabled={isPending}
+              >
+                {isPending ? "Adding..." : "Add to Wishlist"}
+              </button>
+            </Form>
+
             <button className="btn btn-ghost border-base-300 w-1/2 border text-xs">
               Gift course
             </button>
           </div>
+
+          {state.message && (
+            <p
+              className={`mt-1 text-xs ${
+                state.errors?.length > 0 ? "text-error" : "text-success"
+              }`}
+            >
+              {state.message}
+            </p>
+          )}
+
           <span className="text-base-content/60 text-xs">
             Note: all course have 30-days money-back guarantee
           </span>
@@ -127,7 +140,6 @@ const SidebarCart = ({
         </div>
 
         <div className="divider divider-base-300 my-1 w-full"></div>
-        {/* TODO : Add Share buttons */}
       </div>
     </div>
   );

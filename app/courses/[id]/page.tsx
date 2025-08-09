@@ -148,6 +148,7 @@ const fakeSidebarCart = {
 };
 
 interface Course {
+  _id: string;
   id?: string;
   thumbnail: string;
   name: string;
@@ -187,9 +188,7 @@ const CoursePage = async () => {
   const foundCourse = await courseModel.find().populate("category").lean();
 
   const foundInstructors = await courseModel.find().populate("authors");
-  const allAuthors = foundInstructors.flatMap((course) =>
-    course.authors.map((author: string) => author.toString())
-  );
+
   //  TODO : foundInstructors[0].authors is not a good way to get all instructors, it should be a separate query
   const instructors = foundInstructors[0].authors;
   const instructorData: Instructor[] = instructors.map((instructor: any) => ({
@@ -205,6 +204,7 @@ const CoursePage = async () => {
   }));
 
   const courses: Course[] = foundCourse.map((course) => ({
+    id: course._id.toString(),
     thumbnail: course.thumbnail,
     name: course.title,
     title: course.title,
@@ -347,6 +347,7 @@ const CoursePage = async () => {
                   <span className="text-base-content/80 text-2xl font-medium">
                     Description
                   </span>
+
                   {singleCourse.courseDescription
                     ?.split(/\n\s*\n|\n/)
                     .filter(Boolean)
@@ -440,6 +441,7 @@ const CoursePage = async () => {
         <SidebarCart
           fakeSidebarCart={fakeSidebarCart}
           courses={[singleCourse]}
+          courseId={singleCourse.id}
         />
       </div>
 
