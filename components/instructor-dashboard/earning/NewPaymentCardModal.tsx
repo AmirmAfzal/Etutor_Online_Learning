@@ -13,13 +13,18 @@ import {
 import { Input } from "@/components/ui/input";
 import Icon from "@/components/ui/Icon";
 import { Separator } from "@/components/ui/separator";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { startTransition, useActionState, useEffect } from "react";
+import { savePaymentCard } from "@/lib/actions/instructor/earning/paymentCard";
+import {
+  PaymentCardFormData,
+  paymentCardSchema,
+} from "@/lib/validation/schemas/instructor/newPaymentCard";
 
-// Define form values type
-type FormValues = {
-  name: string;
-  cardNumber: string;
-  date: string;
-  cvc: string;
+const initialState = {
+  message: "",
+  errors: [],
 };
 
 type Props = {
@@ -27,12 +32,29 @@ type Props = {
 };
 
 const NewPaymentCardModal = ({ closeModal }: Props) => {
-  const form = useForm<FormValues>();
+  const [state, formAction] = useActionState(savePaymentCard, initialState);
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    closeModal();
+  const form = useForm<PaymentCardFormData>({
+    resolver: zodResolver(paymentCardSchema),
+    defaultValues: {
+      name: "",
+      cardNumber: "",
+      expiration: "",
+      cvc: "",
+    },
+  });
+
+  const onSubmit = (data: PaymentCardFormData) => {
+    startTransition(() => {
+      formAction(data);
+    });
   };
+
+  useEffect(() => {
+    if (state.message === "SUCCESS") {
+      closeModal();
+    }
+  }, [state.message]);
 
   return (
     <div className="bg-base-content/70 fixed inset-0 z-50 flex items-center justify-center">
@@ -99,7 +121,7 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="date"
+                name="expiration"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>MM / YY</FormLabel>
