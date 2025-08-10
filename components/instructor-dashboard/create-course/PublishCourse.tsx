@@ -4,6 +4,7 @@ import { startTransition, useActionState, useState, useEffect } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -88,7 +89,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
       console.error("Course ID not found");
       return;
     }
-    
+
     startTransition(() => {
       // Add courseId to the form data
       const formDataWithCourseId = {
@@ -117,7 +118,12 @@ const PublishCourse = ({ onBack, course }: Props) => {
         <h3 className="text-xl font-bold">Message</h3>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submitHandler)}>
-            <input type="text" hidden name="courseId" defaultValue={course?._id.toString()} />
+            <input
+              type="text"
+              hidden
+              name="courseId"
+              defaultValue={course?._id.toString()}
+            />
             <div className="grid grid-cols-2 gap-6">
               <FormField
                 control={form.control}
@@ -177,10 +183,17 @@ const PublishCourse = ({ onBack, course }: Props) => {
                   />
                   {searchState.message === "SUCCESS" &&
                     searchState.data.map((instructor) => (
-                      <div
+                      <button
                         key={instructor.id}
+                        // role="button"
+                        // tabIndex={0}
                         className="bg-base-200 flex cursor-pointer flex-row items-center justify-between p-4"
                         onClick={() => addInstructorHandler(instructor)}
+                        // onKeyDown={(e) => {
+                        //   if (e.key === "Enter") {
+                        //     addInstructorHandler(instructor);
+                        //   }
+                        // }}
                       >
                         <div className="flex flex-row items-center gap-4">
                           <Image
@@ -195,7 +208,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
                         <p className="text-base-content/70 ml-8 text-xs">
                           {instructor.skill}
                         </p>
-                      </div>
+                      </button>
                     ))}
                 </div>
               </div>

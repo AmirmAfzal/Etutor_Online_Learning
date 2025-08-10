@@ -3,9 +3,7 @@ import Changepassword from "@/components/instructor-dashboard/settings/Changepas
 import Notifications from "@/components/instructor-dashboard/settings/Notifications";
 import SocialProfile from "@/components/instructor-dashboard/settings/SocialProfile";
 
-type Props = {};
-
-const SettingsPage = (props: Props) => {
+const SettingsPage = () => {
   return (
     <section className="bg-base-200 space-y-6 p-6">
       <AccountSettings />

@@ -1,11 +1,13 @@
 "use client";
 
-import Icon from "@/components/ui/Icon";
-import { Textarea } from "@/components/ui/textarea";
-import { ModalType, Section } from "../Curriculum";
 import { useEffect, useState } from "react";
 
-type Props = {
+import Icon from "@/components/ui/Icon";
+import { Textarea } from "@/components/ui/textarea";
+
+import { ModalType, Section } from "../Curriculum";
+
+interface Props {
   openModal: (type: ModalType) => void;
   sections: Section[];
   sectionId: number;

@@ -1,21 +1,18 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { startTransition, useActionState, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startTransition, useActionState, useState } from "react";
 
 import {
   saveBasicInformation,
-  saveAndPreviewBasicInformation,
+  // saveAndPreviewBasicInformation,
 } from "@/lib/actions/instructor/create-course/basicInformation";
-
 import {
   basicInformationSchema,
   BasicInformationFormData,
 } from "@/lib/validation/schemas/instructor/create-course";
-
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -24,7 +21,6 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-
 import {
   Form,
   FormControl,
@@ -38,10 +34,10 @@ import { CourseData } from "@/lib/db/models/courseModel";
 // Use the imported schema type
 type FormField = BasicInformationFormData;
 
-type Props = {
+interface Props {
   onNext: () => void;
   course: CourseData | null;
-};
+}
 
 const BasicInformation = ({ onNext, course }: Props) => {
   const [titleLength, setTitleLength] = useState(0);
@@ -74,10 +70,11 @@ const BasicInformation = ({ onNext, course }: Props) => {
     saveBasicInformation,
     initialState
   );
-  const [previewState, previewFormAction] = useActionState(
-    saveAndPreviewBasicInformation,
-    initialState
-  );
+  // TODO: state for "Save & Preview" button
+  // const [previewState, previewFormAction] = useActionState(
+  //   saveAndPreviewBasicInformation,
+  //   initialState
+  // );
   const handleSubmit = async (data: z.infer<typeof basicInformationSchema>) => {
     startTransition(() => {
       // Convert data to FormData
@@ -98,7 +95,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
     if (state.message === "SUCCESS") {
       onNext();
     }
-  }, [state.message]);
+  }, [state.message, onNext]);
 
   return (
     <div>

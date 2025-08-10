@@ -2,14 +2,14 @@
 
 import React from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 import { Input } from "../ui/input";
 import Icon from "../ui/Icon";
-import { usePathname } from "next/navigation";
 
-type Props = {
+interface Props {
   children: React.ReactNode;
-};
+}
 
 const Navbar = ({ children }: Props) => {
   const pathName = usePathname();
@@ -41,6 +41,9 @@ const Navbar = ({ children }: Props) => {
       default:
         header = "Dashboard";
         break;
+    }
+    if (urlArr.includes("my-courses")) {
+      header = "My Courses";
     }
     return header;
   }

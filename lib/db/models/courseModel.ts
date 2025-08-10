@@ -1,5 +1,7 @@
 import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
+import { Instructor } from "@/lib/actions/instructor/create-course/findInstructors";
+
 export interface CourseData {
   _id: ObjectId;
   title: string;
@@ -28,7 +30,7 @@ export interface CourseData {
   requirements?: string[];
   welcomeMessage?: string;
   congratulationsMessage?: string;
-  instructors?: any[];
+  instructors?: Instructor[];
   status?: "draft" | "published" | "archived";
 }
 
@@ -41,13 +43,25 @@ const courseSchema = new Schema<CourseInterface & Document>(
     title: { type: String, required: true },
     subtitle: { type: String, required: true },
     category: { type: Schema.Types.ObjectId, ref: "category", default: null },
-    subCategory: { type: Schema.Types.ObjectId, ref: "subcategory", default: null },
+    subCategory: {
+      type: Schema.Types.ObjectId,
+      ref: "subcategory",
+      default: null,
+    },
     topic: { type: String, required: true },
     language: { type: String, required: true },
     subtitleLanguage: { type: String },
-    level: { type: String, enum: ["Beginner", "Intermediate", "Advanced"], default: "Beginner" },
+    level: {
+      type: String,
+      enum: ["Beginner", "Intermediate", "Advanced"],
+      default: "Beginner",
+    },
     duration: { type: Number, default: 0 },
-    durationUnit: { type: String, enum: ["Day", "Week", "Hour"], default: "Hour" },
+    durationUnit: {
+      type: String,
+      enum: ["Day", "Week", "Hour"],
+      default: "Hour",
+    },
     thumbnail: { type: String, default: "" },
     description: { type: String, default: "" },
     authors: { type: [Schema.Types.ObjectId], ref: "user", default: [] },
@@ -65,7 +79,11 @@ const courseSchema = new Schema<CourseInterface & Document>(
     welcomeMessage: { type: String },
     congratulationsMessage: { type: String },
     instructors: { type: Schema.Types.Mixed, default: [] },
-    status: { type: String, enum: ["draft", "published", "archived"], default: "draft" },
+    status: {
+      type: String,
+      enum: ["draft", "published", "archived"],
+      default: "draft",
+    },
   },
   {
     timestamps: true,

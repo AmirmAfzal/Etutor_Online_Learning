@@ -1,5 +1,9 @@
 "use client";
 
+import { startTransition, useActionState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -15,18 +19,13 @@ import {
   SocialProfileFormData,
   socialProfileSchema,
 } from "@/lib/validation/schemas/instructor/settings/socialProfile";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { startTransition, useActionState } from "react";
-import { useForm } from "react-hook-form";
-
-type Props = {};
 
 const initialState = {
   message: "",
   errors: [],
 };
 
-const SocialProfile = (props: Props) => {
+const SocialProfile = () => {
   const formFields = [
     {
       id: 1,

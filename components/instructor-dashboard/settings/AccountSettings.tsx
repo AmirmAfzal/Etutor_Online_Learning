@@ -1,9 +1,10 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useState } from "react";
-import { CldImage, CldUploadButton } from "next-cloudinary";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { CldImage, CldUploadButton, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -28,14 +29,12 @@ import {
 } from "@/lib/validation/schemas/instructor/settings/accountSettings";
 import { saveAccountSettings } from "@/lib/actions/instructor/settings/accountSettings";
 
-type Props = {};
-
 const initialState = {
   message: "",
   errors: [],
 };
 
-const AccountSettings = (props: Props) => {
+const AccountSettings = () => {
   const [title, setTitle] = useState<string>("");
 
   const [state, formAction] = useActionState(saveAccountSettings, initialState);
@@ -70,7 +69,7 @@ const AccountSettings = (props: Props) => {
       form.reset();
       setTitle("");
     }
-  }, [state.message]);
+  }, [state.message, form]);
 
   return (
     <section className="bg-base-100 container mx-auto p-6">
@@ -189,8 +188,12 @@ const AccountSettings = (props: Props) => {
                     multiple: false,
                     resourceType: "image",
                   }}
-                  onSuccess={(result: any) => {
-                    if (result?.info?.secure_url) {
+                  onSuccess={(result: CloudinaryUploadWidgetResults) => {
+                    if (
+                      result.event === "success" &&
+                      typeof result.info === "object" &&
+                      "secure_url" in result.info
+                    ) {
                       form.setValue("profile", result.info.secure_url);
                     }
                   }}

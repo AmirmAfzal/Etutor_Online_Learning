@@ -1,7 +1,10 @@
 "use client";
 
-import Cleave from "cleave.js/react";
+import { startTransition, useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Cleave from "cleave.js/react";
+
 import {
   Form,
   FormItem,
@@ -13,9 +16,6 @@ import {
 import { Input } from "@/components/ui/input";
 import Icon from "@/components/ui/Icon";
 import { Separator } from "@/components/ui/separator";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { startTransition, useActionState, useEffect } from "react";
 import { savePaymentCard } from "@/lib/actions/instructor/earning/paymentCard";
 import {
   PaymentCardFormData,
@@ -27,9 +27,9 @@ const initialState = {
   errors: [],
 };
 
-type Props = {
+interface Props {
   closeModal: () => void;
-};
+}
 
 const NewPaymentCardModal = ({ closeModal }: Props) => {
   const [state, formAction] = useActionState(savePaymentCard, initialState);
@@ -54,7 +54,7 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
     if (state.message === "SUCCESS") {
       closeModal();
     }
-  }, [state.message]);
+  }, [state.message, closeModal]);
 
   return (
     <div className="bg-base-content/70 fixed inset-0 z-50 flex items-center justify-center">

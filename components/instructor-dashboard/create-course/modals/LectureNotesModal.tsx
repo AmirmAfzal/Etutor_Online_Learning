@@ -1,18 +1,24 @@
 "use client";
 
+import { useState } from "react";
+import {
+  CldUploadButton,
+  CloudinaryUploadWidgetInfo,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
+
 import Icon from "@/components/ui/Icon";
 import { Textarea } from "@/components/ui/textarea";
-import { ModalType, Section } from "../Curriculum";
-import { CldUploadButton } from "next-cloudinary";
-import { useState } from "react";
 
-type Props = {
+import { ModalType, Section } from "../Curriculum";
+
+interface Props {
   openModal: (type: ModalType) => void;
   sections: Section[];
   sectionId: number;
   lectureId: number;
   onSave: (note: string, noteFile: string) => void;
-};
+}
 
 const LectureNotesModal = ({
   openModal,
@@ -26,11 +32,11 @@ const LectureNotesModal = ({
     ?.lectures.find((l) => l.id === lectureId);
 
   const [note, setNote] = useState<string>(lecture?.note || "");
-  const [noteFile, setNoteFile] = useState<any>({});
+  const [noteFile, setNoteFile] = useState<CloudinaryUploadWidgetInfo>();
 
   const uploadHandler = () => {
     if (note || noteFile) {
-      onSave(note, noteFile.secure_url);
+      onSave(note, noteFile!.secure_url);
       openModal("note");
     }
   };
@@ -60,7 +66,7 @@ const LectureNotesModal = ({
           <div className="border-base-300 flex flex-col items-center justify-center gap-4 border p-4">
             <p className="font-semibold">Uploads Notes</p>
 
-            {noteFile.original_filename && (
+            {noteFile?.original_filename && (
               <p className="text-success">
                 File Uploaded:{" "}
                 <span className="text-base-content">
@@ -77,8 +83,12 @@ const LectureNotesModal = ({
                 multiple: false,
                 resourceType: "raw",
               }}
-              onSuccess={(result: any) => {
-                if (result?.info?.secure_url) {
+              onSuccess={(result: CloudinaryUploadWidgetResults) => {
+                if (
+                  result.event === "success" &&
+                  typeof result.info === "object" &&
+                  "secure_url" in result.info
+                ) {
                   setNoteFile(result.info);
                 }
               }}

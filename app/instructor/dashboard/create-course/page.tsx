@@ -1,6 +1,6 @@
 import CreateCourseTabs from "@/components/instructor-dashboard/create-course/CreateCourseTabs";
 import { connectDB } from "@/lib/db/db";
-import courseModel, { CourseData } from "@/lib/db/models/courseModel";
+import courseModel from "@/lib/db/models/courseModel";
 interface Props {
   searchParams: Promise<{ _id: string , tab: string }>;
 }

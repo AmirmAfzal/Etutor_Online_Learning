@@ -1,9 +1,19 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useState } from "react";
+import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
+import { saveCurriculum } from "@/lib/actions/instructor/create-course/curriculum";
+import { CourseData } from "@/lib/db/models/courseModel";
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
 import VideoUploaderModal, {
   formatDuration,
 } from "./modals/VideoUploaderModal";
@@ -11,15 +21,6 @@ import FileUploaderModal from "./modals/FileUploaderModal";
 import CaptionsModal from "./modals/CaptionsModal";
 import DescriptionModal from "./modals/DescriptionModal";
 import LectureNotesModal from "./modals/LectureNotesModal";
-import { saveCurriculum } from "@/lib/actions/instructor/create-course/curriculum";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { CourseData } from "@/lib/db/models/courseModel";
-
 
 export interface Lecture {
   id: number;
@@ -38,11 +39,11 @@ export interface Section {
   lectures: Lecture[];
 }
 
-type Props = {
+interface Props {
   onNext: () => void;
   onBack: () => void;
   course: CourseData | null;
-};
+}
 
 const initialState = {
   message: "",
@@ -51,7 +52,7 @@ const initialState = {
 
 export type ModalType = "video" | "file" | "caption" | "description" | "note";
 
-const Curriculum = ({ onNext, onBack  , course}: Props) => {
+const Curriculum = ({ onNext, onBack, course }: Props) => {
   const [state, formAction] = useActionState(saveCurriculum, initialState);
   const [sections, setSections] = useState<Section[]>([
     {
@@ -86,7 +87,7 @@ const Curriculum = ({ onNext, onBack  , course}: Props) => {
   const [descriptionOpenModal, setDescriptionOpenModal] = useState(false);
   const [noteOpenModal, setNoteOpenModal] = useState(false);
 
-  const [video, setVideo] = useState<any>({});
+  const [video, setVideo] = useState<CloudinaryUploadWidgetInfo>();
 
   const openLectureModalsHandler = (type: ModalType) => {
     switch (type) {
@@ -188,14 +189,14 @@ const Curriculum = ({ onNext, onBack  , course}: Props) => {
   const deleteLecture = (sectionId: number, lectureId: number) => {
     setSections((prev) =>
       prev.map((section) => {
-        let editedLectures = section.lectures
+        const editedLectures = section.lectures
           .filter((lecture) => lecture.id !== lectureId)
           .map((lecture, index) => ({
             ...lecture,
             id: index + 1,
             name: `Lecture name ${index + 1}`,
           }));
-        let editedSection = {
+        const editedSection = {
           ...section,
           lectures: editedLectures,
         };
@@ -239,7 +240,7 @@ const Curriculum = ({ onNext, onBack  , course}: Props) => {
 
   const sendData = () => {
     startTransition(() => {
-      formAction({sections , courseId: course?._id.toString() || ""});
+      formAction({ sections, courseId: course?._id.toString() || "" });
       console.log(sections);
     });
   };
@@ -251,7 +252,7 @@ const Curriculum = ({ onNext, onBack  , course}: Props) => {
     if (state.message === "ERROR") {
       console.log(state.errors);
     }
-  }, [state.message]);
+  }, [state.message, state.errors, onNext]);
 
   return (
     <div>
@@ -394,7 +395,7 @@ const Curriculum = ({ onNext, onBack  , course}: Props) => {
                           {lecture.videoUrl ? (
                             <div className="flex flex-row gap-4">
                               <video controls className="w-55 rounded-lg">
-                                <source src={video.secure_url} />
+                                <source src={video?.secure_url} />
                                 <track kind="captions" />
                               </video>
                               <div className="flex flex-col items-start justify-between gap-2">
@@ -404,11 +405,11 @@ const Curriculum = ({ onNext, onBack  , course}: Props) => {
                                   </p>
                                   <div className="bg-base-content h-1 w-1 rounded-full"></div>
                                   <p className="text-base-content/80">
-                                    {formatDuration(video.duration)}
+                                    {formatDuration(video?.duration as number)}
                                   </p>
                                 </span>
                                 <p className="text-sm">
-                                  {video.original_filename}
+                                  {video?.original_filename}
                                 </p>
                                 <button
                                   className="btn btn-secondary btn-soft"
@@ -567,7 +568,7 @@ const Curriculum = ({ onNext, onBack  , course}: Props) => {
       {videoOpenModal && activeLecture && (
         <VideoUploaderModal
           openModal={openLectureModalsHandler}
-          onSave={(video: any | { secure_url: string }) => {
+          onSave={(video: CloudinaryUploadWidgetInfo) => {
             updateLectureContent(
               activeLecture.sectionId,
               activeLecture.lectureId,

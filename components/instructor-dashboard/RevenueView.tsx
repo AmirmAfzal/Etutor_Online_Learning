@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   AreaChart,
   Area,
@@ -28,11 +27,11 @@ const data = [
   { name: "Aug 30", uv: 3490, pv: 4300, amt: 2100 },
 ];
 
-type Props = {
+interface Props {
   stroke: string;
   fill: string;
   height: number;
-};
+}
 
 const RevenueView = ({ stroke, fill, height }: Props) => {
   return (

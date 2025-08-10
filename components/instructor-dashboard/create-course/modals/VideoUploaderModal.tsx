@@ -1,14 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  CldUploadButton,
+  CloudinaryUploadWidgetInfo,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
+
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
-import { ModalType } from "../Curriculum";
-import { CldUploadButton } from "next-cloudinary";
 
-type Props = {
+import { ModalType } from "../Curriculum";
+
+interface Props {
   openModal: (type: ModalType) => void;
-  onSave: (videoUrl: string) => void;
+  onSave: (videoUrl: CloudinaryUploadWidgetInfo) => void;
 };
 
 export const formatDuration = (seconds: number) => {
@@ -18,7 +24,7 @@ export const formatDuration = (seconds: number) => {
 };
 
 const VideoUploaderModal = ({ openModal, onSave }: Props) => {
-  const [video, setVideo] = useState<any>({});
+  const [video, setVideo] = useState<CloudinaryUploadWidgetInfo>();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -51,7 +57,7 @@ const VideoUploaderModal = ({ openModal, onSave }: Props) => {
         </div>
 
         <div className="space-y-4 p-4">
-          {video.secure_url ? (
+          {video?.secure_url ? (
             <div className="flex flex-row gap-4">
               <video controls className="w-55 rounded-lg">
                 <source src={video.secure_url} />
@@ -62,7 +68,7 @@ const VideoUploaderModal = ({ openModal, onSave }: Props) => {
                   <p className="text-success text-xs">FILE UPLOADED</p>
                   <div className="bg-base-content h-1 w-1 rounded-full"></div>
                   <p className="text-base-content/80">
-                    {formatDuration(video.duration)}
+                    {formatDuration(video.duration as number)}
                   </p>
                 </span>
                 <p className="text-sm">{video.original_filename}</p>
@@ -74,8 +80,12 @@ const VideoUploaderModal = ({ openModal, onSave }: Props) => {
                     multiple: false,
                     resourceType: "video",
                   }}
-                  onSuccess={(result: any) => {
-                    if (result?.info?.secure_url) {
+                  onSuccess={(result: CloudinaryUploadWidgetResults) => {
+                    if (
+                      result.event === "success" &&
+                      typeof result.info === "object" &&
+                      "secure_url" in result.info
+                    ) {
                       setVideo(result.info);
                     }
                   }}
@@ -92,7 +102,7 @@ const VideoUploaderModal = ({ openModal, onSave }: Props) => {
                   placeholder="Upload Video"
                   className="w-full"
                   readOnly
-                  value={video.original_filename || "No video uploaded yet"}
+                  value={video?.original_filename || "No video uploaded yet"}
                 />
                 <CldUploadButton
                   uploadPreset="course"
@@ -102,8 +112,12 @@ const VideoUploaderModal = ({ openModal, onSave }: Props) => {
                     multiple: false,
                     resourceType: "video",
                   }}
-                  onSuccess={(result: any) => {
-                    if (result?.info?.secure_url) {
+                  onSuccess={(result: CloudinaryUploadWidgetResults) => {
+                    if (
+                      result.event === "success" &&
+                      typeof result.info === "object" &&
+                      "secure_url" in result.info
+                    )  {
                       setVideo(result.info);
                     }
                   }}
@@ -122,7 +136,7 @@ const VideoUploaderModal = ({ openModal, onSave }: Props) => {
               className="btn btn-outline"
               onClick={() => {
                 openModal("video");
-                setVideo({});
+                setVideo(undefined);
               }}
             >
               Cancel

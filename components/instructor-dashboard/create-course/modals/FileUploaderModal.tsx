@@ -1,17 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { CldUploadButton } from "next-cloudinary";
+import {
+  CldUploadButton,
+  CloudinaryUploadWidgetInfo,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
+
 import Icon from "@/components/ui/Icon";
+
 import { ModalType } from "../Curriculum";
 
-type Props = {
+interface Props {
   openModal: (type: ModalType) => void;
   onSave: (fileUrl: string) => void;
-};
+}
 
 const FileUploaderModal = ({ openModal, onSave }: Props) => {
-  const [file, setFile] = useState<any>({});
+  const [file, setFile] = useState<CloudinaryUploadWidgetInfo>();
 
   const uploadHandler = () => {
     if (file) {
@@ -38,11 +44,11 @@ const FileUploaderModal = ({ openModal, onSave }: Props) => {
           <div className="border-base-300 flex flex-col items-center justify-center gap-2 border p-4">
             <p className="font-semibold">Attach File</p>
 
-            {file.original_filename && (
+            {file?.original_filename && (
               <p className="text-success">
                 File Uploaded:{" "}
                 <span className="text-base-content">
-                  {file.original_filename}
+                  {file?.original_filename}
                 </span>
               </p>
             )}
@@ -55,9 +61,13 @@ const FileUploaderModal = ({ openModal, onSave }: Props) => {
                 multiple: false,
                 resourceType: "raw",
               }}
-              onSuccess={(result: any) => {
-                if (result?.info?.secure_url) {
-                  setFile(result.info);
+              onSuccess={(result: CloudinaryUploadWidgetResults) => {
+                if (
+                  result.event === "success" &&
+                  typeof result.info === "object" &&
+                  "secure_url" in result.info
+                ) {
+                  setFile(result.info as CloudinaryUploadWidgetInfo);
                 }
               }}
             >

@@ -1,9 +1,6 @@
 "use server";
 
-import {
-  Lecture,
-  Section,
-} from "@/components/instructor-dashboard/create-course/Curriculum";
+import { Section } from "@/components/instructor-dashboard/create-course/Curriculum";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import lectureModel from "@/lib/db/models/lectureModel";
@@ -26,12 +23,12 @@ export async function saveCurriculum(
     };
   }
 
-  const foundCourse = await courseModel.findOne({_id : formData.courseId});
+  const foundCourse = await courseModel.findOne({ _id: formData.courseId });
 
   try {
     for (const section of result.data) {
       console.log(section);
-      
+
       // Create section first
       const createdSection = await sectionModel.create({
         title: section.name,
@@ -44,9 +41,9 @@ export async function saveCurriculum(
       const lectureIds: string[] = [];
 
       // Create lectures with section ID
-      console.log("section.lectures",section.lectures)
+      console.log("section.lectures", section.lectures);
       for (const lecture of section.lectures) {
-        console.log("lecture" ,lecture);
+        console.log("lecture", lecture);
         const createdLecture = await lectureModel.create({
           title: lecture.name,
           description: lecture.description || "",
@@ -57,7 +54,7 @@ export async function saveCurriculum(
           caption: lecture.captions || "",
           section: createdSection._id,
         });
-        console.log("createdLecture",createdLecture)
+        console.log("createdLecture", createdLecture);
 
         lectureIds.push(createdLecture._id);
       }
@@ -73,7 +70,7 @@ export async function saveCurriculum(
       errors: [],
     };
   } catch (error) {
-    console.log("error",error)  
+    console.log("error", error);
     return {
       message: "ERROR",
       errors: [],

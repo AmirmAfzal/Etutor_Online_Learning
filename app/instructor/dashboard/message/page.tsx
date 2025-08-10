@@ -2,11 +2,8 @@ import ChatMessages from "@/components/Student/student-messages/ChatMessages";
 import ContactList from "@/components/Student/student-messages/ContactList";
 import MessageHeader from "@/components/Student/student-messages/MessageHeader";
 import MessageInput from "@/components/Student/student-messages/MessageInput";
-import React from "react";
 
-type Props = {};
-
-const MessagePage = (props: Props) => {
+const MessagePage = () => {
   const mockContacts = [
     {
       id: 1,

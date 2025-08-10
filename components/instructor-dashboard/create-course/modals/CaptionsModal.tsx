@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import Icon from "@/components/ui/Icon";
 import { Textarea } from "@/components/ui/textarea";
+
 import { ModalType, Section } from "../Curriculum";
 
-type Props = {
+interface Props {
   openModal: (type: ModalType) => void;
   sections: Section[];
   sectionId: number;
   lectureId: number;
   onSave: (caption: string) => void;
-};
+}
 
 const CaptionsModal = ({
   openModal,

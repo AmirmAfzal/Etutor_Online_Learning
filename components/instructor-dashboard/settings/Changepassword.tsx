@@ -1,5 +1,9 @@
 "use client";
 
+import { startTransition, useActionState, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -15,18 +19,13 @@ import {
   changePasswordFormData,
   changePasswordSchema,
 } from "@/lib/validation/schemas/instructor/settings/changePassword";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { startTransition, useActionState, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-
-type Props = {};
 
 const initialState = {
   message: "",
   errors: [],
 };
 
-const Changepassword = (props: Props) => {
+const Changepassword = () => {
   const [state, formAction, pendding] = useActionState(
     saveChangePassword,
     initialState
@@ -60,7 +59,7 @@ const Changepassword = (props: Props) => {
     if (state.message === "SUCCESS") {
       form.reset();
     }
-  }, [state.message]);
+  }, [state.message, form]);
 
   return (
     <section className="bg-base-100 space-y-4 p-6">

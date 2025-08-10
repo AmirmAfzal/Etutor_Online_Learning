@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import { CourseData } from "@/lib/db/models/courseModel";
 import Icon from "@/components/ui/Icon";
+
 import BasicInformation from "./BasicInformation";
 import AdvanceInformation from "./AdvanceInformation";
 import Curriculum from "./Curriculum";
 import PublishCourse from "./PublishCourse";
-import { CourseData } from "@/lib/db/models/courseModel";
 
 interface Props {
   course: CourseData | null;
@@ -82,7 +82,10 @@ const CreateCourseTabs = ({ course, tab }: Props) => {
           </TabsContent>
 
           <TabsContent value="PublishCourse">
-            <PublishCourse onBack={() => setCurrentTab("Curriculum")} course={course} />
+            <PublishCourse
+              onBack={() => setCurrentTab("Curriculum")}
+              course={course}
+            />
           </TabsContent>
         </Tabs>
       </div>

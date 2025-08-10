@@ -1,13 +1,13 @@
 "use client";
 
-import React, {
-  startTransition,
-  useActionState,
-  useEffect,
-  useState,
-} from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CldImage,
+  CldUploadButton,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 
 import Icon from "@/components/ui/Icon";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,7 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CldImage, CldUploadButton } from "next-cloudinary";
 import {
   AdvanceInformationFormData,
   advanceInformationSchema,
@@ -28,22 +27,21 @@ import {
 import { saveAdvanceInformation } from "@/lib/actions/instructor/create-course/advanceInformation";
 import { CourseData } from "@/lib/db/models/courseModel";
 
-
 const MAX_INPUTS = 8;
 const MAX_CHARS = 120;
 
-type Props = {
+interface Props {
   onNext: () => void;
   onBack: () => void;
   course: CourseData | null;
-};
+}
 
 const initialState = {
   message: "",
   errors: [],
 };
 
-const AdvanceInformation = ({ onNext, onBack , course }: Props) => {
+const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
   const [topics, setTopics] = useState(["", "", "", ""]);
   const [targetTopics, setTargetTopics] = useState(["", "", "", ""]);
   const [requirementsTopics, setRequirementsTopics] = useState([
@@ -136,7 +134,7 @@ const AdvanceInformation = ({ onNext, onBack , course }: Props) => {
     if (state.message === "SUCCESS") {
       onNext();
     }
-  }, [state.message]);
+  }, [state.message, onNext]);
 
   return (
     <div>
@@ -190,9 +188,16 @@ const AdvanceInformation = ({ onNext, onBack , course }: Props) => {
                     multiple: false,
                     resourceType: "image",
                   }}
-                  onSuccess={(result: any) => {
-                    if (result?.info?.secure_url) {
-                      form.setValue("thumbnail", result.info.secure_url);
+                  onSuccess={(result: CloudinaryUploadWidgetResults) => {
+                    if (
+                      result.event === "success" &&
+                      typeof result.info === "object" &&
+                      "secure_url" in result.info
+                    ) {
+                      form.setValue(
+                        "thumbnail",
+                        (result.info as { secure_url: string }).secure_url
+                      );
                     }
                   }}
                 >
@@ -237,9 +242,16 @@ const AdvanceInformation = ({ onNext, onBack , course }: Props) => {
                     multiple: false,
                     resourceType: "video",
                   }}
-                  onSuccess={(result: any) => {
-                    if (result?.info?.secure_url) {
-                      form.setValue("video", result.info.secure_url);
+                  onSuccess={(result: CloudinaryUploadWidgetResults) => {
+                    if (
+                      result.event === "success" &&
+                      typeof result.info === "object" &&
+                      "secure_url" in result.info
+                    ) {
+                      form.setValue(
+                        "video",
+                        (result.info as { secure_url: string }).secure_url
+                      );
                     }
                   }}
                 >
@@ -257,7 +269,7 @@ const AdvanceInformation = ({ onNext, onBack , course }: Props) => {
       {/* Form */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <input type="text"  hidden {...form.register("_id")} />
+          <input type="text" hidden {...form.register("_id")} />
           {/* course description */}
           <div className="border-base-300 border-b p-4">
             <div className="">

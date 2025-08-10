@@ -4,7 +4,6 @@ import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import { ActionData } from "@/lib/formTypes";
 import { advanceInformationSchema } from "@/lib/validation/schemas/instructor/create-course";
-import { redirect } from "next/navigation";
 
 export async function saveAdvanceInformation(
   prevState: ActionData,

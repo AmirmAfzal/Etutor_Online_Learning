@@ -159,7 +159,12 @@ const MyCoursesPage = async (props: Props) => {
           className="flex flex-row items-center justify-between gap-6"
         >
           <div className="relative">
-            <label className="text-base-content/80 mb-2 text-xs">Search:</label>
+            <label
+              htmlFor="search"
+              className="text-base-content/80 mb-2 text-xs"
+            >
+              Search:
+            </label>
             <Icon
               icon="ph:magnifying-glass"
               className="text-base-content/80 absolute top-11 left-3 -translate-y-1/2"
@@ -175,7 +180,7 @@ const MyCoursesPage = async (props: Props) => {
             />
           </div>
           <div className="w-full">
-            <label className="text-base-content/80 mb-2 text-xs">
+            <label htmlFor="sort" className="text-base-content/80 mb-2 text-xs">
               Sort by:
             </label>
             <Select name="sort" defaultValue={sort}>
@@ -190,7 +195,10 @@ const MyCoursesPage = async (props: Props) => {
           </div>
 
           <div className="w-full">
-            <label className="text-base-content/80 mb-2 text-xs">
+            <label
+              htmlFor="category"
+              className="text-base-content/80 mb-2 text-xs"
+            >
               Category:
             </label>
             <Select name="category" defaultValue={category}>
@@ -211,7 +219,12 @@ const MyCoursesPage = async (props: Props) => {
           </div>
 
           <div className="w-full">
-            <label className="text-base-content/80 mb-2 text-xs">Rating:</label>
+            <label
+              htmlFor="rating"
+              className="text-base-content/80 mb-2 text-xs"
+            >
+              Rating:
+            </label>
             <Select name="rating" defaultValue={rating}>
               <SelectTrigger className="bg-base-100 w-full border-0">
                 <SelectValue placeholder="Rating" />
