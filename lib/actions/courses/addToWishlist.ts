@@ -17,7 +17,7 @@ export const actionAddToWishlist = async (
 
     if (!session) {
       return {
-        message: "ERROR1",
+        message: "ERROR",
         errors: ["User not authenticated."],
       };
     }
@@ -26,7 +26,7 @@ export const actionAddToWishlist = async (
 
     if (!courseId || typeof courseId !== "string") {
       return {
-        message: "ERROR2",
+        message: "ERROR",
         errors: ["Invalid courseId."],
       };
     }
@@ -39,7 +39,7 @@ export const actionAddToWishlist = async (
 
     if (!updatedStudent) {
       return {
-        message: "ERROR3",
+        message: "ERROR",
         errors: ["Student not found."],
       };
     }
@@ -51,7 +51,7 @@ export const actionAddToWishlist = async (
   } catch (error) {
     console.error("Error updating student wishlist:", error);
     return {
-      message: "ERROR4",
+      message: "ERROR",
       errors: ["An unexpected error occurred."],
     };
   }

@@ -3,6 +3,7 @@ import React, { useActionState } from "react";
 import Icon from "../ui/Icon";
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
 import Form from "next/form";
+import { actionBuyNow } from "@/lib/actions/courses/buyNow";
 
 interface SidebarCartProps {
   fakeSidebarCart: {
@@ -22,10 +23,15 @@ const SidebarCart = ({
   fakeSidebarCart,
   courseId,
 }: SidebarCartProps & courseIdProps) => {
-  const initialState = { message: "", errors: [] as string[] };
-  const [state, wishlistAction, isPending] = useActionState(
+  const initialWishlistState = { message: "", errors: [] as string[] };
+  const initialBuyNowState = { message: "", errors: [] as string[] };
+  const [wishlistState, wishlistAction, wishlistPending] = useActionState(
     actionAddToWishlist,
-    initialState
+    initialWishlistState
+  );
+  const [buyNowState, buyNowAction, buyNowPending] = useActionState(
+    actionBuyNow,
+    initialBuyNowState
   );
 
   return (
@@ -84,9 +90,29 @@ const SidebarCart = ({
           <button className="btn btn-primary w-full text-xs">
             Add To cart
           </button>
-          <button className="btn btn-soft btn-primary w-full text-xs">
+          {/* <button className="btn btn-soft btn-primary w-full text-xs">
             Buy Now
-          </button>
+          </button> */}
+          <Form action={buyNowAction} className="w-full">
+            <input type="hidden" name="courseId" value={courseId} />
+            <button
+              type="submit"
+              className="btn btn-soft btn-primary w-full"
+              disabled={buyNowPending}
+            >
+              {buyNowPending ? "buy..." : "Buy Now"}
+            </button>
+          </Form>
+
+          {buyNowState.message && (
+            <p
+              className={`mt-1 text-xs ${
+                buyNowState.errors?.length > 0 ? "text-error" : "text-success"
+              }`}
+            >
+              {buyNowState.message}
+            </p>
+          )}
 
           <div className="flex w-full flex-row items-center justify-between gap-1">
             <Form action={wishlistAction} className="w-1/2">
@@ -94,9 +120,9 @@ const SidebarCart = ({
               <button
                 type="submit"
                 className="btn btn-ghost border-base-300 w-full border text-xs"
-                disabled={isPending}
+                disabled={wishlistPending}
               >
-                {isPending ? "Adding..." : "Add to Wishlist"}
+                {wishlistPending ? "Adding..." : "Add to Wishlist"}
               </button>
             </Form>
 
@@ -105,13 +131,13 @@ const SidebarCart = ({
             </button>
           </div>
 
-          {state.message && (
+          {wishlistState.message && (
             <p
               className={`mt-1 text-xs ${
-                state.errors?.length > 0 ? "text-error" : "text-success"
+                wishlistState.errors?.length > 0 ? "text-error" : "text-success"
               }`}
             >
-              {state.message}
+              {wishlistState.message}
             </p>
           )}
 
