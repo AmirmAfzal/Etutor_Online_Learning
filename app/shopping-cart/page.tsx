@@ -7,8 +7,46 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import CourseShoppingCart from "@/components/shoppingCart/CourseShoppingCart";
+import { connectDB } from "@/lib/db/db";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import studentModel from "@/lib/db/models/studentModel";
 
-const ShoppingCart = () => {
+interface CourseCartItem {
+  id: string;
+  title: string;
+  image: string;
+  rating: number;
+  reviews: number;
+  instructor: string;
+  price: number;
+  originalPrice?: number;
+}
+
+const fakeCartData: CourseCartItem[] = [
+  {
+    id: "1",
+    title: "The Python Mega Course: Build 10 Real World Applications",
+    image: "/images/course-images-1.png",
+    rating: 4.8,
+    reviews: 1520,
+    instructor: "Leslie Alexander",
+    price: 37.99,
+    originalPrice: 45.0,
+  },
+  {
+    id: "2",
+    title: "React & Next.js 15 Bootcamp: Build Fullstack Apps",
+    image: "/images/course-images-2.png",
+    rating: 4.6,
+    reviews: 980,
+    instructor: "Jacob Jones",
+    price: 29.99,
+  },
+];
+
+const ShoppingCart = async () => {
   return (
     <section className="flex flex-col items-center justify-start">
       <div className="bg-base-200 flex w-screen flex-col items-center justify-center gap-4 py-8">
@@ -46,7 +84,9 @@ const ShoppingCart = () => {
             </div>
 
             <div className="divide-base-content/10 divide-y">
-              <CourseShoppingCart />
+              {fakeCartData.map((course) => (
+                <CourseShoppingCart key={course.id} item={course} />
+              ))}
             </div>
           </div>
           <div className="bg-base-100 flex w-3/12 flex-col gap-2 p-4 pt-0">
