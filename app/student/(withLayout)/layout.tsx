@@ -1,18 +1,6 @@
-"use client";
-
+import StudentProfile from "@/components/Student/StudentProfile";
 import Link from "next/link";
 import React from "react";
-import { usePathname } from "next/navigation";
-
-import StudentProfile from "@/components/StudentProfile";
-
-const mockProfiles = [
-  {
-    name: "Kevin Gilbert",
-    job: "Web Designer & Best-Selling Instructor",
-    image: "/images/profile-student.jpg",
-  },
-];
 
 const tabLinks = [
   { label: "Dashboard", href: "/student" },
@@ -29,30 +17,18 @@ export default function StudentDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   return (
     <section className="bg-base-200 flex min-h-screen w-full flex-col items-center">
-      <div
-        className="bg-primary/10 flex w-full justify-center"
-        style={{ minHeight: 260 }}
-      >
+      <div className="bg-primary/10 flex min-h-[260px] w-full justify-center">
         <div className="w-full max-w-5xl">
-          {/* Profile Card */}
-          {mockProfiles.map((profile, idx) => (
-            <StudentProfile
-              key={idx}
-              name={profile.name}
-              job={profile.job}
-              image={profile.image}
-            />
-          ))}
-          {/* Tabs (Dynamic Links) */}
+          <StudentProfile />
           <div className="bg-base-100 border-primary/20 mb-0 flex justify-between overflow-x-auto border-2 border-t-0 px-6 py-2">
             {tabLinks.map((tab) => (
+              // TODO => active tab has a border-b-primary
               <Link
                 key={tab.href}
                 href={tab.href}
-                className={`cursor-pointer px-4 py-2 font-medium ${pathname === tab.href ? "border-primary text-base-content/80 border-b-3 font-bold" : "text-base-content/50"}`}
+                className={`text-base-content/80 cursor-pointer px-4 py-2 text-lg font-medium`}
                 prefetch={false}
               >
                 {tab.label}

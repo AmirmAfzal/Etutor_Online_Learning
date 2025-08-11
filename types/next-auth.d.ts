@@ -10,7 +10,6 @@ declare module "next-auth" {
         user: {
             id?: string;
             name?: string;
-            national_code?: string;
             role?: string;
         };
     }
@@ -18,7 +17,6 @@ declare module "next-auth" {
     interface JWT extends DefaultJWT {
         id?: string;
         name?: string;
-        national_code?: string;
         role?: string;
     }
 

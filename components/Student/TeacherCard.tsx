@@ -26,18 +26,17 @@ export default function TeacherCard({
         height={800}
         className="h-48 w-full object-cover"
       />
-      <div className="p-4">
-        <div className="mb-3 text-center">
+      <div>
+        <div className="py-3 text-center">
           <div className="text-base-content/80 mb-1 text-lg font-semibold">
             {name}
           </div>
           <div className="text-base-content/50 text-sm">{title}</div>
         </div>
-
-        <div className="border-base-content/10 border-t pt-3">
+        <div className="border-base-content/10 border-t p-3">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <Icon icon="ph:star-fill" className="text-sm text-yellow-500" />
+              <Icon icon="ph:star-fill" className="text-primary text-sm" />
               <span className="text-base-content/80 text-sm font-medium">
                 {rating}
               </span>

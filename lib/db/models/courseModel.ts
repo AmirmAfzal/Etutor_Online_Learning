@@ -2,7 +2,7 @@ import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
 export interface CourseInterface extends mongoose.Document {
   title: string;
-  subtitle : string
+  subtitle: string;
   thumbnail: string;
   description: string;
   authors: ObjectId[];
@@ -32,7 +32,9 @@ const courseSchema = new Schema<CourseInterface & Document>(
     title: { type: String, required: true },
     thumbnail: { type: String, required: true },
     description: { type: String, required: true },
-    authors: [{ type: Schema.Types.ObjectId, ref: "user", required: true }],
+    authors: [
+      { type: Schema.Types.ObjectId, ref: "instructor", required: true },
+    ],
     sections: [{ type: Schema.Types.ObjectId, ref: "section", required: true }],
     price: { type: Number, required: true },
     offer: { type: Number, required: true },
@@ -44,10 +46,22 @@ const courseSchema = new Schema<CourseInterface & Document>(
     category: { type: Schema.Types.ObjectId, ref: "category" },
     tags: [{ type: Schema.Types.ObjectId, ref: "tag" }],
     video: [{ type: Schema.Types.ObjectId, ref: "video" }],
-    subCategory: { type: Schema.Types.ObjectId, ref: "subcategory", required: true },
+    subCategory: {
+      type: Schema.Types.ObjectId,
+      ref: "subcategory",
+      required: true,
+    },
     topic: { type: String, required: true },
-    level: { type: String, enum: ["Beginner", "Intermediate", "Advanced"], required: true },
-    durationUnit: { type: String, enum: ["Day", "Week", "Hour"], required: true },
+    level: {
+      type: String,
+      enum: ["Beginner", "Intermediate", "Advanced"],
+      required: true,
+    },
+    durationUnit: {
+      type: String,
+      enum: ["Day", "Week", "Hour"],
+      required: true,
+    },
     trailer: { type: String },
     learningOutcomes: [{ type: String }],
     targetAudience: [{ type: String }],
