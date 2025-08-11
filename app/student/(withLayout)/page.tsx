@@ -1,11 +1,13 @@
 import React from "react";
 import { Icon } from "@iconify/react";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+
 import CourseCard from "@/components/Student/CourseCardStudent";
+
+import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/authOptions";
 
 interface CourseData {
   title: string;

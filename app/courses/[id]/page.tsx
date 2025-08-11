@@ -1,11 +1,12 @@
 import Image from "next/image";
-import Icon from "@/components/ui/Icon";
-// import CourseCard from "@/components/CourseCard";
-import Curriculum from "@/components/Courses/Curriculum";
-import CourseInstructors from "@/components/Courses/CourseInstructors";
+
 import Comments from "@/components/Courses/Comments";
+import CourseInstructors from "@/components/Courses/CourseInstructors";
 import CourseRating from "@/components/Courses/CourseRating";
+import Curriculum from "@/components/Courses/Curriculum";
 import SidebarCart from "@/components/Courses/SidebarCart";
+import CourseCard from "@/components/Student/CourseCard";
+import Icon from "@/components/ui/Icon";
 
 // Fake data that would come from a database
 
