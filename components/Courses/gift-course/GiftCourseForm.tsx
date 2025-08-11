@@ -14,7 +14,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const GiftCourseFormSchema = z.object({
-  name: z.string().min(1, "Recipient's name is required"),
+  name: z.string().min(1, "Recipient&#39;s name is required"),
   email: z.string().email("Invalid email address").min(1, "Email is required"),
   message: z.string().optional(),
 });
@@ -37,19 +37,18 @@ const GiftCourseForm = () => {
     <div className="flex flex-col p-2">
       <h3 className="mb-4 text-xl font-semibold">Gift course</h3>
       <span className="text-base-content/80 text-sm font-medium">
-        Recipient's Information
+        Recipient&#39;s Information
       </span>
 
       <Form {...form}>
         <form className="mt-4 space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-          {/* Name */}
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base-content/80 text-xs font-medium">
-                  Recipient's Name
+                  Recipient&#39;s Name
                 </FormLabel>
                 <FormControl>
                   <Input placeholder="Full name" {...field} />
@@ -59,14 +58,13 @@ const GiftCourseForm = () => {
             )}
           />
 
-          {/* Email */}
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base-content/80 text-xs font-medium">
-                  Recipient's Email
+                  Recipient&#39;s Email
                 </FormLabel>
                 <FormControl>
                   <Input placeholder="Email Address" {...field} />
@@ -76,7 +74,6 @@ const GiftCourseForm = () => {
             )}
           />
 
-          {/* Message */}
           <FormField
             control={form.control}
             name="message"
