@@ -15,7 +15,6 @@ const courses = [
 const GiftCourse = () => {
   return (
     <div className="border-base-300 flex w-3/12 flex-col border">
-      {/* Course Section */}
       <div className="p-4">
         <h2 className="mb-4 text-lg font-semibold">Course</h2>
         {courses.map((course, idx) => (

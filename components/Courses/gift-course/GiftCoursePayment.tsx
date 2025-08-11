@@ -36,7 +36,7 @@ const GiftCoursePayment = () => {
           {paymentMethods.map((pm) => (
             <div
               key={pm.id}
-              className={`bg-base-100/80 hover:border-primary/60 border-base-content/10 relative flex cursor-pointer items-center gap-3 border p-2 transition-all`}
+              className={`bg-base-100/80 hover:border-primary/60 border-base-content/10 relative flex cursor-pointer items-center gap-3 border p-4 transition-all`}
             >
               <Image src={pm.icon} alt={pm.id} width={32} height={32} />
               <span className="text-base-content/90 text-xs tracking-widest">
@@ -55,7 +55,7 @@ const GiftCoursePayment = () => {
           ))}
         </div>
         <div className="border-success bg-base-100 mb-6 flex items-center border p-2">
-          <span className="text-base-content/60 flex items-center gap-2 text-xs">
+          <span className="text-base-content/60 flex items-center gap-2 p-2 text-xs">
             <Icon icon="ph:credit-card" className="text-primary text-lg" />
             New Payment Card
           </span>
