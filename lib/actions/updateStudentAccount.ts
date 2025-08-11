@@ -1,10 +1,11 @@
 "use server";
 
+import { settingAccountSchema } from "@/lib/validation/Student-dashboard/settingAccountSchema";
+import { ActionData } from "@/lib/formTypes";
+
 import { connectDB } from "../db/db";
 import studentModel from "../db/models/studentModel";
 import userModel from "../db/models/userModel";
-import { settingAccountSchema } from "@/lib/validation/Student-dashboard/settingAccountSchema";
-import { ActionData } from "@/lib/formTypes";
 
 export const updateStudentAccount = async (
   prevState: ActionData,

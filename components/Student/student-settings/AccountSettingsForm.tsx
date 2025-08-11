@@ -1,11 +1,13 @@
 "use client";
 
+import { startTransition, useActionState } from "react";
 import Image from "next/image";
 import { z } from "zod";
-import { startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionState } from "react";
+
+import { settingAccountSchema } from "@/lib/validation/Student-dashboard/settingAccountSchema";
+import { updateStudentAccount } from "@/lib/actions/updateStudentAccount";
 
 import Icon from "@/components/ui/Icon";
 import {
@@ -17,8 +19,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { settingAccountSchema } from "@/lib/validation/Student-dashboard/settingAccountSchema";
-import { updateStudentAccount } from "@/lib/actions/updateStudentAccount";
 
 interface Props {
   _id: string;

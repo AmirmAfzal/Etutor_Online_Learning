@@ -1,12 +1,14 @@
 "use server";
-import Image from "next/image";
+
 import React from "react";
+import Image from "next/image";
 import { Icon } from "@iconify/react";
-import studentModel from "@/lib/db/models/studentModel";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
-import { redirect } from "next/navigation";
+import studentModel from "@/lib/db/models/studentModel";
 
 interface Student {
   user: string;

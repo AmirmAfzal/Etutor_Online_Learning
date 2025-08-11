@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Textarea } from "@/components/ui/textarea";
+
 import {
   Select,
   SelectContent,
@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 const NewMessageForm = ({
   mockContacts,

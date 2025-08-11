@@ -1,4 +1,5 @@
 import Form from "next/form";
+
 import Icon from "../ui/Icon";
 
 const Search = ({ action }: { action: string }) => {
