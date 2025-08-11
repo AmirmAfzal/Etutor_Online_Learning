@@ -7,13 +7,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import CourseShoppingCart from "@/components/shoppingCart/CourseShoppingCart";
-import { connectDB } from "@/lib/db/db";
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/authOptions";
-import studentModel from "@/lib/db/models/studentModel";
 
-interface CourseCartItem {
+interface props {
   id: string;
   title: string;
   image: string;
@@ -24,7 +19,7 @@ interface CourseCartItem {
   originalPrice?: number;
 }
 
-const fakeCartData: CourseCartItem[] = [
+const fakeCartData: props[] = [
   {
     id: "1",
     title: "The Python Mega Course: Build 10 Real World Applications",
@@ -85,24 +80,21 @@ const ShoppingCart = async () => {
 
             <div className="divide-base-content/10 divide-y">
               {fakeCartData.map((course) => (
-                <CourseShoppingCart key={course.id} item={course} />
+                <CourseShoppingCart key={course.id} {...course} />
               ))}
             </div>
           </div>
           <div className="bg-base-100 flex w-3/12 flex-col gap-2 p-4 pt-0">
-            {/* Subtotal */}
             <div className="mb-2 flex justify-between text-sm">
               <span className="text-base-content/70">Subtotal</span>
               <span className="font-medium">$61.97 USD</span>
             </div>
 
-            {/* Coupon Discount */}
             <div className="mb-2 flex justify-between text-sm">
               <span className="text-base-content/70">Coupon Discount</span>
               <span className="font-medium">8%</span>
             </div>
 
-            {/* Taxes */}
             <div className="flex justify-between text-sm">
               <span className="text-base-content/70">Taxes</span>
               <span className="font-medium">$17.99 USD</span>
@@ -110,20 +102,20 @@ const ShoppingCart = async () => {
 
             <div className="divider divider-base-content/80 w-full"></div>
 
-            {/* Total */}
             <div className="mb-4 flex items-center justify-between">
               <span className="text-base-content/70 font-medium">Total:</span>
               <span className="text-2xl font-semibold">$75.00 USD</span>
             </div>
 
-            {/* Checkout Button */}
             <button className="btn btn-primary">Proceed To Checkout →</button>
 
             <div className="divider divider-base-content/80 w-full"></div>
 
-            {/* Coupon Input */}
-            <div>
-              <label className="text-base-content/80 mb-2 block text-sm">
+            <form>
+              <label
+                className="text-base-content/80 mb-2 block text-sm"
+                htmlFor="coupon"
+              >
                 Apply coupon code
               </label>
               <div className="flex">
@@ -132,11 +124,14 @@ const ShoppingCart = async () => {
                   placeholder="Coupon code"
                   className="input input-bordered input-sm flex-1"
                 />
-                <button className="btn btn-sm btn-base-content/80 ml-2">
+                <button
+                  type="submit"
+                  className="btn btn-sm btn-base-content/80 ml-2"
+                >
                   Apply
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
