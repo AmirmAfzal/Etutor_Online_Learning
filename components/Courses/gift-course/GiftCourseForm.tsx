@@ -34,7 +34,7 @@ const GiftCourseForm = () => {
   }
 
   return (
-    <div className="flex w-1/3 flex-col p-2">
+    <div className="flex flex-col p-2">
       <h3 className="mb-4 text-xl font-semibold">Gift course</h3>
       <span className="text-base-content/80 text-sm font-medium">
         Recipient's Information

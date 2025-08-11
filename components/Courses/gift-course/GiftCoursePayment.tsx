@@ -27,7 +27,7 @@ const paymentMethods = [
 ];
 const GiftCoursePayment = () => {
   return (
-    <div className="flex w-1/3 flex-col gap-10 md:flex-row">
+    <div className="flex flex-col gap-10 md:flex-row">
       <div className="bg-base-100 flex-1 p-2">
         <h2 className="text-base-content/80 mb-4 text-lg font-semibold">
           Payment Method
