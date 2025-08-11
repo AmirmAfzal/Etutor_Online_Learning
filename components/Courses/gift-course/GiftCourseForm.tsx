@@ -34,22 +34,21 @@ const GiftCourseForm = () => {
   }
 
   return (
-    <>
+    <div className="flex w-1/3 flex-col p-2">
       <h3 className="mb-4 text-xl font-semibold">Gift course</h3>
-      <span className="text-md font-medium">Recipient's Information</span>
+      <span className="text-base-content/80 text-sm font-medium">
+        Recipient's Information
+      </span>
 
       <Form {...form}>
-        <form
-          className="mt-4 w-1/3 space-y-6"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
+        <form className="mt-4 space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
           {/* Name */}
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base-content/80 mb-2 text-xs font-medium">
+                <FormLabel className="text-base-content/80 text-xs font-medium">
                   Recipient's Name
                 </FormLabel>
                 <FormControl>
@@ -66,7 +65,7 @@ const GiftCourseForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base-content/80 mb-2 text-xs font-medium">
+                <FormLabel className="text-base-content/80 text-xs font-medium">
                   Recipient's Email
                 </FormLabel>
                 <FormControl>
@@ -83,7 +82,7 @@ const GiftCourseForm = () => {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base-content/80 mb-2 text-xs font-medium">
+                <FormLabel className="text-base-content/80 text-xs font-medium">
                   Gift Message
                 </FormLabel>
                 <FormControl>
@@ -99,7 +98,7 @@ const GiftCourseForm = () => {
           />
         </form>
       </Form>
-    </>
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 import GiftCourseForm from "@/components/Courses/gift-course/GiftCourseForm";
+import GiftCoursePayment from "@/components/Courses/gift-course/GiftCoursePayment";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -44,7 +45,10 @@ const GiftCoursePage = () => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <GiftCourseForm />
+      <div className="flex w-full flex-col items-center gap-4">
+        <GiftCourseForm />
+        <GiftCoursePayment />
+      </div>
     </section>
   );
 };
