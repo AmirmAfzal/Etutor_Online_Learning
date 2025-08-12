@@ -32,14 +32,17 @@ const TeachersPage = async ({ searchParams }: Props) => {
   try {
     await connectDB();
 
+    //FIXME :   این قسمت اتصال به دیتابیسش باید از استیودنت  مدل . کورس . اثورش باشه    همینطوریم که هستش اسور رو خالی نشون میده   ولی قبلا کار میکرد
+
     const resolvedSearchParams = await searchParams;
     const query = resolvedSearchParams.query?.toLowerCase();
 
-    const foundCourses = await courseModel.find().populate("authors");
+    const foundCourses = await courseModel.find().populate("authors").lean();
 
     //  TODO : foundCourses[0].authors is not a good way to get all instructors, it should be a separate query
     const instructors = foundCourses[0].authors;
-
+    console.log(foundCourses);
+    console.log(instructors);
     const instructorData: InstructorData[] = instructors.map(
       (instructor: Instructor) => ({
         name: `${instructor.firstname} ${instructor.lastname}`,
