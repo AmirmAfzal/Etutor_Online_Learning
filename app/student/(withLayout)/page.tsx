@@ -1,5 +1,3 @@
-"use server";
-
 import React from "react";
 import { Icon } from "@iconify/react";
 import { getServerSession } from "next-auth";
@@ -95,7 +93,7 @@ const StudentDashboard = async () => {
               />
             </div>
             <div>
-              <span className="text-base-content/80 text-lg font-semibold sm:text-xl md:text-2xl">
+              <span className="text-base-content/80 text-md font-medium sm:text-xl md:text-2xl md:font-semibold">
                 {stat.value}
               </span>
               <p className="text-base-content/60 text-xs sm:text-sm">
@@ -121,7 +119,7 @@ const StudentDashboard = async () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {courses.map((course, i) => (
           <CourseCard key={i} {...course} />
         ))}
