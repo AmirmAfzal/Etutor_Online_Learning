@@ -38,7 +38,10 @@ const initialState = {
 };
 
 const PublishCourse = ({ onBack, course }: Props) => {
-  const [state, formAction] = useActionState(publishCourse, initialState);
+  const [state, formAction, pending] = useActionState(
+    publishCourse,
+    initialState
+  );
   const [searchState, formActionSearch] = useActionState(findInstructor, {
     message: "",
     errors: [],
@@ -185,15 +188,8 @@ const PublishCourse = ({ onBack, course }: Props) => {
                     searchState.data.map((instructor) => (
                       <button
                         key={instructor.id}
-                        // role="button"
-                        // tabIndex={0}
                         className="bg-base-200 flex cursor-pointer flex-row items-center justify-between p-4"
                         onClick={() => addInstructorHandler(instructor)}
-                        // onKeyDown={(e) => {
-                        //   if (e.key === "Enter") {
-                        //     addInstructorHandler(instructor);
-                        //   }
-                        // }}
                       >
                         <div className="flex flex-row items-center gap-4">
                           <Image
@@ -261,7 +257,12 @@ const PublishCourse = ({ onBack, course }: Props) => {
                   Course creation completed successfully.
                 </div>
               )}
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn btn-primary"
+              >
+                {pending && <div className="loading loading-spinner" />}
                 Submit for Review
               </button>
             </div>

@@ -13,10 +13,10 @@ export async function saveAdvanceInformation(
   const data = {
     _id: formData.get("_id") as string,
     description: formData.get("description") as string,
-    requirementsTopics: formData.getAll("requirementsTopics") as string[],
-    targetTopics: formData.getAll("targetTopics") as string[],
+    requirements: formData.getAll("requirements") as string[],
+    targetAudience: formData.getAll("targetAudience") as string[],
     thumbnail: formData.get("thumbnail") as string,
-    topics: formData.getAll("topics") as string[],
+    learningOutcomes: formData.getAll("learningOutcomes") as string[],
     video: formData.get("video") as string,
   };
   console.log(data);
@@ -43,11 +43,11 @@ export async function saveAdvanceInformation(
       {
         $set: {
           description: data.description,
-          requirements: data.requirementsTopics,
-          targetAudience: data.targetTopics,
+          requirements: data.requirements,
+          targetAudience: data.targetAudience,
           trailer: data.video,
           thumbnail: data.thumbnail,
-          learningOutcomes: data.topics,
+          learningOutcomes: data.learningOutcomes,
         },
       }
     );

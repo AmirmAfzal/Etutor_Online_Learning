@@ -26,9 +26,9 @@ export type BasicInformationFormData = z.infer<typeof basicInformationSchema>;
 // Define the schema for course advance information validation
 export const advanceInformationSchema = z.object({
   _id: z.string().min(1, "Course ID is required"),
-  topics: z.array(z.string().min(1, "fields is required").max(120)),
-  targetTopics: z.array(z.string().min(1, "fields is required").max(120)),
-  requirementsTopics: z.array(z.string().min(1, "fields is required").max(120)),
+  learningOutcomes: z.array(z.string().min(1, "fields is required").max(120)),
+  targetAudience: z.array(z.string().min(1, "fields is required").max(120)),
+  requirements: z.array(z.string().min(1, "fields is required").max(120)),
   description: z.string().min(10).max(1000),
   thumbnail: z.string().url(),
   video: z.string().url(),

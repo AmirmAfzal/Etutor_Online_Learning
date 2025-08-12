@@ -32,7 +32,10 @@ interface Props {
 }
 
 const NewPaymentCardModal = ({ closeModal }: Props) => {
-  const [state, formAction] = useActionState(savePaymentCard, initialState);
+  const [state, formAction, pending] = useActionState(
+    savePaymentCard,
+    initialState
+  );
 
   const form = useForm<PaymentCardFormData>({
     resolver: zodResolver(paymentCardSchema),
@@ -152,8 +155,19 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
               />
             </div>
             <div className="mt-6 flex flex-row items-center justify-between">
-              <button className="btn btn-outline">Cancel</button>
-              <button className="btn btn-primary">
+              <button
+                type="button"
+                onClick={closeModal}
+                className="btn btn-outline"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn btn-primary"
+              >
+                {pending && <div className="loading loading-spinner" />}
                 Send Message
                 <Icon icon="ph:paper-plane-right-fill" width="24" height="24" />
               </button>

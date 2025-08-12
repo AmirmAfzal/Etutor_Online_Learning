@@ -65,7 +65,10 @@ const SocialProfile = () => {
     },
   ];
 
-  const [state, formAction] = useActionState(saveSocialProfile, initialState);
+  const [state, formAction, pending] = useActionState(
+    saveSocialProfile,
+    initialState
+  );
 
   const form = useForm<SocialProfileFormData>({
     resolver: zodResolver(socialProfileSchema),
@@ -153,7 +156,12 @@ const SocialProfile = () => {
               ))}
             </div>
             <div className="mt-6 flex flex-row items-center gap-6">
-              <button className="btn btn-primary" type="submit">
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn btn-primary"
+              >
+                {pending && <div className="loading loading-spinner" />}
                 Save Changes
               </button>
               {state.message === "SUCCESS" && (

@@ -53,7 +53,10 @@ const initialState = {
 export type ModalType = "video" | "file" | "caption" | "description" | "note";
 
 const Curriculum = ({ onNext, onBack, course }: Props) => {
-  const [state, formAction] = useActionState(saveCurriculum, initialState);
+  const [state, formAction, pending] = useActionState(
+    saveCurriculum,
+    initialState
+  );
   const [sections, setSections] = useState<Section[]>([
     {
       id: 1,
@@ -560,7 +563,13 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
         <button className="btn btn-outline" type="button" onClick={onBack}>
           Previous
         </button>
-        <button type="submit" onClick={sendData} className="btn btn-primary">
+        <button
+          type="submit"
+          disabled={pending}
+          onClick={sendData}
+          className="btn btn-primary"
+        >
+          {pending && <div className="loading loading-spinner" />}
           Save & Next
         </button>
       </div>

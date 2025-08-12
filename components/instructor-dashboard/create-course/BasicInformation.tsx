@@ -66,7 +66,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
   };
 
   // Use React's useFormState for server action
-  const [state, formAction] = useActionState(
+  const [state, formAction, pending] = useActionState(
     saveBasicInformation,
     initialState
   );
@@ -383,7 +383,12 @@ const BasicInformation = ({ onNext, course }: Props) => {
               <button className="btn btn-outline" type="button">
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn btn-primary"
+              >
+                {pending && <div className="loading loading-spinner" />}
                 Save & Next
               </button>
             </div>

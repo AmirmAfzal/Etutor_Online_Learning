@@ -1,7 +1,11 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useState } from "react";
-import { CldImage, CldUploadButton, CloudinaryUploadWidgetResults } from "next-cloudinary";
+import {
+  CldImage,
+  CldUploadButton,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -37,7 +41,10 @@ const initialState = {
 const AccountSettings = () => {
   const [title, setTitle] = useState<string>("");
 
-  const [state, formAction] = useActionState(saveAccountSettings, initialState);
+  const [state, formAction, pending] = useActionState(
+    saveAccountSettings,
+    initialState
+  );
 
   const form = useForm<AccountSettingFormData>({
     resolver: zodResolver(accountSettingSchema),
@@ -254,7 +261,12 @@ const AccountSettings = () => {
             )}
           />
           <div className="flex flex-row items-center gap-6">
-            <button className="btn btn-primary" type="submit">
+            <button
+              type="submit"
+              disabled={pending}
+              className="btn btn-primary"
+            >
+              {pending && <div className="loading loading-spinner" />}
               Save Changes
             </button>
             {state.message === "SUCCESS" && (
