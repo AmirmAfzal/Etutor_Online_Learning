@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
+
+import { Icon } from "@iconify/react";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Icon } from "@iconify/react";
 
 interface CurriculumProps {
   curriculum: {

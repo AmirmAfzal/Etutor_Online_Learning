@@ -1,7 +1,8 @@
 import React from "react";
 import Image from "next/image";
-import TruncatedText from "./TruncatedText";
+
 import Icon from "../ui/Icon";
+import TruncatedText from "./TruncatedText";
 
 interface Instructor {
   avatar: string;

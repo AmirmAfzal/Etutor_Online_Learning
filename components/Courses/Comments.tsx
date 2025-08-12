@@ -1,3 +1,7 @@
+import { FC } from "react";
+import Image from "next/image";
+
+import Icon from "@/components/ui/Icon";
 import {
   Select,
   SelectContent,
@@ -5,9 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Image from "next/image";
-import Icon from "@/components/ui/Icon";
-import { FC } from "react";
 
 type Comment = {
   name: string;

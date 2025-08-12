@@ -4,10 +4,12 @@ export interface StudentInterface extends Document {
   user: mongoose.Types.ObjectId;
   firstname: string;
   lastname: string;
+  username: string;
+  avatar: string;
   bio: string;
   courses: ObjectId[];
-  purchases : ObjectId[]
-  wishlist : ObjectId[]
+  purchases: ObjectId[];
+  wishlist: ObjectId[];
 }
 
 const studentSchema = new Schema<StudentInterface>(

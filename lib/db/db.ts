@@ -9,6 +9,16 @@ import instructorModel from "./models/instructorModel";
 import videoModel from "./models/videoModel";
 import tagModel from "./models/tagModel";
 
+import categoryModel from "./models/categoryModel";
+import courseModel from "./models/courseModel";
+import instructorModel from "./models/instructorModel";
+import lectureModel from "./models/lectureModel";
+import studentModel from "./models/studentModel";
+import subCategoryModel from "./models/subCategoryModel";
+import tagModel from "./models/tagModel";
+import userModel from "./models/userModel";
+import videoModel from "./models/videoModel";
+
 const DATABASE_URL = process.env.DATABASE_URL as string;
 
 export async function connectDB(): Promise<void> {
