@@ -203,7 +203,7 @@ const CoursesPage = async ({
           </div>
         </div>
       </div>
-      <div className="flex w-full gap-4 pt-6">
+      <div className="flex w-full items-start gap-4 pt-6">
         {isFiltered && (
           <CourseFilter
             categories={categories}

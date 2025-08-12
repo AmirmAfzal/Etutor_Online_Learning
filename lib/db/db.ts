@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import categoryModel from "./models/categoryModel";
 import courseModel from "./models/courseModel";
 import userModel from "./models/userModel";
 import lectureModel from "./models/lectureModel";
@@ -8,16 +7,7 @@ import subCategoryModel from "./models/subCategoryModel";
 import instructorModel from "./models/instructorModel";
 import videoModel from "./models/videoModel";
 import tagModel from "./models/tagModel";
-
 import categoryModel from "./models/categoryModel";
-import courseModel from "./models/courseModel";
-import instructorModel from "./models/instructorModel";
-import lectureModel from "./models/lectureModel";
-import studentModel from "./models/studentModel";
-import subCategoryModel from "./models/subCategoryModel";
-import tagModel from "./models/tagModel";
-import userModel from "./models/userModel";
-import videoModel from "./models/videoModel";
 
 const DATABASE_URL = process.env.DATABASE_URL as string;
 
@@ -25,8 +15,7 @@ export async function connectDB(): Promise<void> {
   if (mongoose.connection.readyState >= 1) return;
   try {
     await mongoose.connect(DATABASE_URL);
-    
- 
+
     const categoryCount = await categoryModel.countDocuments();
     const courseCount = await courseModel.countDocuments();
     const userCount = await userModel.countDocuments();
@@ -36,7 +25,7 @@ export async function connectDB(): Promise<void> {
     const instructorCount = await instructorModel.countDocuments();
     const videoCount = await videoModel.countDocuments();
     const tagCount = await tagModel.countDocuments();
-    
+
     console.log("✅ Connected to MongoDB");
     console.log("📊 Database Statistics:");
     console.log(`- Categories: ${categoryCount}`);
