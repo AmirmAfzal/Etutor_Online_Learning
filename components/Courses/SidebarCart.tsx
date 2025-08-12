@@ -4,6 +4,7 @@ import Icon from "../ui/Icon";
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
 import Form from "next/form";
 import { actionBuyNow } from "@/lib/actions/courses/buyNow";
+import Link from "next/link";
 
 interface SidebarCartProps {
   fakeSidebarCart: {
@@ -126,9 +127,12 @@ const SidebarCart = ({
               </button>
             </Form>
 
-            <button className="btn btn-ghost border-base-300 w-1/2 border text-xs">
+            <Link
+              href="/courses/gift"
+              className="btn btn-ghost border-base-300 w-1/2 border text-xs"
+            >
               Gift course
-            </button>
+            </Link>
           </div>
 
           {wishlistState.message && (

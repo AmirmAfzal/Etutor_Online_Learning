@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Icon from "@/components/ui/Icon";
-import CourseCard from "@/components/CourseCard";
 import Curriculum from "@/components/Courses/Curriculum";
 import CourseInstructors from "@/components/Courses/CourseInstructors";
 import Comments from "@/components/Courses/Comments";
@@ -9,6 +8,7 @@ import SidebarCart from "@/components/Courses/SidebarCart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
+import CourseCard from "@/components/Student/CourseCard";
 
 // Fake data that would come from a database
 
@@ -148,7 +148,7 @@ const fakeSidebarCart = {
 };
 
 interface Course {
-  _id: string;
+  _id?: string;
   id?: string;
   thumbnail: string;
   name: string;
@@ -440,7 +440,6 @@ const CoursePage = async () => {
         {/* side bar cart */}
         <SidebarCart
           fakeSidebarCart={fakeSidebarCart}
-          courses={[singleCourse]}
           courseId={singleCourse.id}
         />
       </div>

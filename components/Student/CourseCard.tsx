@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import Icon from "./ui/Icon";
+import Icon from "../ui/Icon";
 
 interface Props {
   thumbnail: string;
@@ -15,12 +15,19 @@ interface Props {
 const CourseCard = (props: Props) => {
   return (
     <Link href={`/courses/${props.name}`} className="block">
-      <div className="bg-base-100 border-base-300 border h-max">
-        <Image src={props.thumbnail} alt={props.name} width={400} height={200} />
+      <div className="bg-base-100 border-base-300 h-max border">
+        <Image
+          src={props.thumbnail}
+          alt={props.name}
+          width={400}
+          height={200}
+        />
         <div className="space-y-2 p-4">
           <div className="flex flex-row items-center justify-between">
             <span className="bg-base-200 p-1 text-xs">{props.category}</span>
-            <span className="text-primary text-2xl font-semibold">${props.price}</span>
+            <span className="text-primary text-2xl font-semibold">
+              ${props.price}
+            </span>
           </div>
           <div className="">
             <span className="text-lg font-medium">{props.name}</span>

@@ -4,12 +4,12 @@ import Icon from "@/components/ui/Icon";
 import Link from "next/link";
 
 import React from "react";
-import CourseCard from "@/components/CourseCard";
 import CoursesSearch from "@/components/Courses/CoursesSearch";
 import CoursesSelect from "@/components/Courses/CoursesSelect";
 import CourseFilter from "@/components/Courses/CourseFilter";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
+import CourseCard from "@/components/Student/CourseCard";
 
 // fake data for filtered courses
 interface Category {
