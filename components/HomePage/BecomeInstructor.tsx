@@ -32,7 +32,7 @@ const BecomeInstructor = () => {
 
   return (
     <section className="bg-base-300 mt-16 w-full pt-16 pb-64">
-      <div className="container mx-auto grid grid-cols-2 gap-6">
+      <div className="container mx-auto grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="from-primary flex h-full w-full flex-row items-center justify-between bg-gradient-to-l to-[#CC522B]">
           <div className="space-y-8 p-8 pr-0">
             <h3 className="text-base-100 text-3xl font-bold">
@@ -56,7 +56,7 @@ const BecomeInstructor = () => {
         </div>
         <div className="bg-base-100 p-8">
           <h3 className="text-3xl font-bold">Your teaching & earning steps</h3>
-          <div className="mt-8 grid grid-cols-2 gap-2 gap-y-6">
+          <div className="mt-8 grid grid-cols-1 gap-2 gap-y-6 md:grid-cols-2">
             {steps.map((step) => (
               <div key={step.id} className="flex flex-row items-center gap-2">
                 <div

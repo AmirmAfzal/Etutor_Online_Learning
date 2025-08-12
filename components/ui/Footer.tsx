@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="bg-neutral">
       <div className="border-base-300/60 border-b">
-        <div className="text-base-100/80 container mx-auto flex flex-row items-center gap-32 py-16">
+        <div className="text-base-100/80 container mx-auto flex flex-col items-center gap-32 py-16 md:flex-row">
           <div className="flex flex-col gap-6">
             <h3 className="max-w-md text-2xl font-bold">
               Start learning with 67.1k students around the world.
@@ -34,7 +34,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="border-base-300/60 border-b">
-        <div className="text-base-100/80 container mx-auto grid grid-cols-4 gap-8 py-16">
+        <div className="text-base-100/80 container mx-auto grid grid-cols-1 gap-8 py-16 md:grid-cols-4">
           <div className="col-span-1 space-y-4">
             <span className="flex flex-row items-center gap-2">
               <Icon
@@ -83,7 +83,7 @@ const Footer = () => {
             </span>
           </div>
           <div className="col-span-3">
-            <div className="grid grid-cols-4">
+            <div className="mg:grid-cols-4 grid grid-cols-2 gap-6">
               <div className="flex flex-col gap-4">
                 <p className="text-base-100 mb-2 text-sm">TOP 4 CATEGORY</p>
                 <Link href="" className="text-base-300/60 text-xs">

@@ -88,7 +88,7 @@ const TopCourse = () => {
     <section className="bg-base-200 w-full pt-16 pb-48">
       <div className="container mx-auto space-y-8">
         <h3 className="text-center text-3xl font-bold">Best selling courses</h3>
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {courses.map((course) => (
             <CourseCard key={course.name} {...course} />
           ))}

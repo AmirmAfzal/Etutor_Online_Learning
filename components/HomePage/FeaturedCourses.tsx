@@ -45,36 +45,34 @@ const FeaturedCourses = () => {
       instructor: "Kevin Gilbert",
     },
   ];
+
   return (
     <section className="bg-base-100 border-base-300 container mx-auto -mt-32 border">
       <div className="p-16">
-        <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col items-center justify-between md:flex-row">
           <h3 className="text-3xl font-bold">Our feature courses</h3>
           <p className="text-base-content/80 w-sm text-sm">
             Vestibulum sed dolor sed diam mollis maximus vel nec dolor. Donec
             varius purus et eleifend porta.
           </p>
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-6">
+        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
           {courses.map((course) => (
             <div
               key={course.id}
-              className="border-base-300 flex flex-row border text-sm transition-all duration-300 hover:shadow-lg"
+              className="border-base-300 flex flex-col border text-sm transition-all duration-300 hover:shadow-lg md:flex-row"
             >
               <Image
                 src={course.thumbnail}
                 alt="course image"
-                className="h-45 w-45"
-                width={200}
-                height={200}
+                className="h-50 w-full lg:h-45 lg:w-45"
+                width={600}
+                height={400}
               />
               <div className="flex w-full flex-col">
                 <div className="space-y-2 p-4">
                   <div className="flex flex-row items-center justify-between">
-                    <p className="bg-base-300 p-1 text-xs">
-                      {" "}
-                      {course.category}{" "}
-                    </p>
+                    <p className="bg-base-300 p-1 text-xs">{course.category}</p>
                     <div className="flex flex-row items-center gap-2">
                       <p>${course.price}</p>
                       <p className="text-base-content/50 line-through">

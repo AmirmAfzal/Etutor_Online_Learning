@@ -37,12 +37,12 @@ const RecentCourse = () => {
     <section className="container mx-auto py-16">
       <h3 className="text-center text-3xl font-bold">Recently added courses</h3>
       <div className="flex">
-        <div className="mt-8 grid grid-cols-3 gap-6">
+        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {courses.map((course) => (
             <CourseCard key={course.name} {...course} />
           ))}
         </div>
-        <div className="border-base-300 -mt-16 -mb-42 h-auto w-lg border shadow-lg">
+        <div className="border-base-300 -mt-16 -mb-42 hidden h-auto w-lg border shadow-lg lg:block">
           <div className="border-base-300 space-y-4 border-b p-4">
             <div>
               <p className="text-secondary bg-secondary/20 inline p-1 text-xs">
