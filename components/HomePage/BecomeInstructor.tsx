@@ -33,7 +33,7 @@ const BecomeInstructor = () => {
   return (
     <section className="bg-base-300 mt-16 w-full pt-16 pb-64">
       <div className="container mx-auto grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="from-primary flex h-full w-full flex-row items-center justify-between bg-gradient-to-l to-[#CC522B]">
+        <div className="from-primary flex h-full w-full flex-col items-center justify-between bg-gradient-to-l to-[#CC522B] md:flex-row">
           <div className="space-y-8 p-8 pr-0">
             <h3 className="text-base-100 text-3xl font-bold">
               Become an Instructor
@@ -50,6 +50,7 @@ const BecomeInstructor = () => {
           <Image
             src="/images/Become-an-Instructor.png"
             alt="Become an Instructor"
+            className=""
             width={600}
             height={700}
           />

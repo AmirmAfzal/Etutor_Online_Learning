@@ -48,10 +48,12 @@ const FeaturedCourses = () => {
 
   return (
     <section className="bg-base-100 border-base-300 container mx-auto -mt-32 border">
-      <div className="p-16">
-        <div className="flex flex-col items-center justify-between md:flex-row">
-          <h3 className="text-3xl font-bold">Our feature courses</h3>
-          <p className="text-base-content/80 w-sm text-sm">
+      <div className="p-8 md:p-16">
+        <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
+          <h3 className="text-2xl font-bold md:text-2xl">
+            Our feature courses
+          </h3>
+          <p className="text-base-content/80 max-w-sm text-center text-sm">
             Vestibulum sed dolor sed diam mollis maximus vel nec dolor. Donec
             varius purus et eleifend porta.
           </p>

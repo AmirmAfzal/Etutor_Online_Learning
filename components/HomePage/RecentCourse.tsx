@@ -34,8 +34,10 @@ const RecentCourse = () => {
   ];
 
   return (
-    <section className="container mx-auto py-16">
-      <h3 className="text-center text-3xl font-bold">Recently added courses</h3>
+    <section className="container mx-auto px-8 py-16 md:px-0">
+      <h3 className="text-center text-2xl font-bold md:text-3xl">
+        Recently added courses
+      </h3>
       <div className="flex">
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {courses.map((course) => (
