@@ -35,7 +35,7 @@ const StudentSettingsPage = async () => {
         username={foundStudent.username}
       />
 
-      <h3 className="mb-6 text-lg font-semibold">Change Password</h3>
+      <h3 className="mb-6 ml-4 text-lg font-semibold">Change Password</h3>
       <PasswordSettingsForm />
     </div>
   );

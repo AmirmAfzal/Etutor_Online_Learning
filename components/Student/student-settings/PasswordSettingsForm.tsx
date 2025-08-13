@@ -39,13 +39,13 @@ const PasswordSettingsForm = () => {
     <Form {...passwordForm}>
       <form
         onSubmit={passwordForm.handleSubmit(onSubmit)}
-        className="flex flex-col items-start gap-6"
+        className="flex flex-col items-center gap-6 md:ml-3 md:items-start"
       >
         <FormField
           control={passwordForm.control}
           name="currentPassword"
           render={({ field }) => (
-            <FormItem className="w-1/2">
+            <FormItem className="w-full md:w-1/2">
               <FormLabel>Current Password</FormLabel>
               <FormControl>
                 <div className="relative">
@@ -76,7 +76,7 @@ const PasswordSettingsForm = () => {
           control={passwordForm.control}
           name="newPassword"
           render={({ field }) => (
-            <FormItem className="w-1/2">
+            <FormItem className="w-full md:w-1/2">
               <FormLabel>New Password</FormLabel>
               <FormControl>
                 <div className="relative">
@@ -107,7 +107,7 @@ const PasswordSettingsForm = () => {
           control={passwordForm.control}
           name="confirmNewPassword"
           render={({ field }) => (
-            <FormItem className="w-1/2">
+            <FormItem className="w-full md:w-1/2">
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
                 <div className="relative">
@@ -134,11 +134,12 @@ const PasswordSettingsForm = () => {
             </FormItem>
           )}
         />
-        <div className="col-span-3">
-          <button type="submit" className="btn btn-primary mt-2 px-6 py-2">
-            Change Password
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="btn btn-primary mt-2 self-start px-2 py-0 sm:self-center md:self-start md:px-6 md:py-2"
+        >
+          Change Password
+        </button>
       </form>
     </Form>
   );
