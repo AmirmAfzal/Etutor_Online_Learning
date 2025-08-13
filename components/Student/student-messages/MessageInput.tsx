@@ -11,12 +11,12 @@ function MessageInput() {
         />
         <Icon
           icon="ph:pencil-simple-line"
-          className="text-primary/50 absolute top-1/2 right-4 -translate-y-1/2 text-lg"
+          className="text-primary/50 text-md absolute top-1/2 right-4 -translate-y-1/2 md:text-lg"
         />
       </div>
       <button className="btn btn-primary btn-sm gap-2 py-6">
         Send
-        <Icon icon="ph:paper-plane-right-fill" className="text-xl" />
+        <Icon icon="ph:paper-plane-right-fill" className="md:xt-xl text-lg" />
       </button>
     </div>
   );
