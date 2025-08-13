@@ -21,8 +21,15 @@ const MessageHeader = ({
     <div className="border-base-300 flex items-center justify-between border-b p-4">
       <h2 className="text-base-content text-lg font-semibold">Message</h2>
       <DialogPrimitive.Root>
-        <DialogPrimitive.Trigger asChild>
-          <Button variant="default" size="sm" className="!btn !btn-primary">
+        <DialogPrimitive.Trigger
+          asChild
+          className="absolute -bottom-120 md:static"
+        >
+          <Button
+            variant="default"
+            size="sm"
+            className="!btn !btn-primary z-10 !rounded-full md:!rounded-none"
+          >
             <Icon icon="ph:plus" />
             Compose
           </Button>

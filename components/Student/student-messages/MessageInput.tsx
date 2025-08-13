@@ -1,9 +1,8 @@
-
 import Icon from "@/components/ui/Icon";
 
 function MessageInput() {
   return (
-    <div className="border-base-300 flex items-center gap-2 border-t p-4">
+    <div className="border-base-300 bg-base-100 flex items-center gap-2 border-t p-4">
       <div className="relative flex-1">
         <input
           type="text"

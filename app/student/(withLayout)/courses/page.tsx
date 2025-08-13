@@ -72,9 +72,7 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
 
   return (
     <>
-      {/* Header Section */}
       <div className="mb-6 space-y-4">
-        {/* Title */}
         <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <h2 className="text-base-content text-lg font-semibold sm:text-xl">
