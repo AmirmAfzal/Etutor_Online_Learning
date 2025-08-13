@@ -1,8 +1,12 @@
-
+"use client";
 import Image from "next/image";
+import { useState } from "react";
+import ChatMessages from "./ChatMessages";
+import MessageInput from "./MessageInput";
 
 const ContactList = ({
   mockContacts,
+  mockChatMessages,
 }: {
   mockContacts: {
     id: number;
@@ -13,12 +17,36 @@ const ContactList = ({
     isActive: boolean;
     unread: boolean;
   }[];
+  mockChatMessages: {
+    id: number;
+    sender: string;
+    message: string;
+    timestamp: string;
+    isOwn: boolean;
+  }[];
 }) => {
+  const [chatOpen, setChatOpen] = useState(false);
+
+  if (chatOpen)
+    return (
+      <div className="!z-100 flex h-full w-full flex-col">
+        <ChatMessages mockChatMessages={mockChatMessages} />
+        <MessageInput />
+      </div>
+    );
+
   return (
     <div className="flex-1 overflow-y-auto">
       {mockContacts.map((contact) => (
         <div
           key={contact.id}
+          // initial
+          // FIXME
+          onClick={() => {
+            if (window.innerWidth < 768) {
+              setChatOpen(true);
+            }
+          }}
           className={`border-base-200 hover:bg-base-200 flex cursor-pointer items-center gap-3 border-b p-4 ${
             contact.isActive ? "bg-primary/10" : ""
           }`}

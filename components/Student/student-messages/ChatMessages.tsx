@@ -1,4 +1,3 @@
-
 const ChatMessages = ({
   mockChatMessages,
 }: {
@@ -10,7 +9,7 @@ const ChatMessages = ({
   }>;
 }) => {
   return (
-    <div className="flex-1 overflow-y-auto p-4">
+    <div className="bg-base-100 flex-1 overflow-y-auto p-4">
       <div className="space-y-4">
         <div className="text-center">
           <span className="text-base-content/50 text-sm">Today</span>
