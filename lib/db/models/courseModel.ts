@@ -64,7 +64,7 @@ const courseSchema = new Schema<CourseInterface & Document>(
     },
     thumbnail: { type: String, default: "" },
     description: { type: String, default: "" },
-    authors: { type: [Schema.Types.ObjectId], ref: "instructors", default: [] },
+    authors: { type: [Schema.Types.ObjectId], ref: "instructor", default: [] },
     sections: { type: [Schema.Types.ObjectId], ref: "section", default: [] },
     price: { type: Number, default: 0 },
     offer: { type: Number, default: 0 },
