@@ -59,22 +59,21 @@ const AccountSettingsForm = (props: Props) => {
   };
 
   return (
-    <div className="mb-12">
-      <div className="flex gap-10">
+    <div className="mb-8 md:mb-12">
+      <div className="flex flex-col items-center gap-10 sm:flex-row">
         {/* Profile Photo */}
-        <div className="w-1/3 flex-shrink-0">
-          <div className="border-base-content/10 flex flex-col items-center gap-2 border p-4">
-            <div className="bg-base-100 relative mb-2 flex h-52 w-52 items-center justify-center overflow-hidden">
+        <div className="w-2/3 p-2 sm:w-1/3 md:w-1/3 lg:w-1/4">
+          <div className="border-base-content/10 bg-base-100 flex flex-col items-center gap-2 border p-4">
+            <div className="relative aspect-square w-full overflow-hidden">
               <Image
-                width={192}
-                height={192}
                 src="/images/student-dashboard/profile-student.jpg"
                 alt="Profile"
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
               <button
-                className="bg-base-content/70 text-base-100 absolute bottom-0 left-0 flex w-full cursor-pointer items-center justify-center gap-2 py-2 text-sm font-medium"
                 type="button"
+                className="bg-base-content/70 text-base-100 hover:bg-base-content/80 absolute bottom-0 left-0 flex w-full items-center justify-center gap-2 py-2 text-sm font-medium transition-colors"
               >
                 <Icon icon="ph:upload-simple" width={16} height={16} />
                 Upload Photo
@@ -86,6 +85,7 @@ const AccountSettingsForm = (props: Props) => {
             </p>
           </div>
         </div>
+
         {/* User Info Form */}
         <Form {...accountForm}>
           <form
@@ -171,7 +171,10 @@ const AccountSettingsForm = (props: Props) => {
               )}
             />
             <div className="col-span-2">
-              <button type="submit" className="btn btn-primary mt-2 px-6 py-2">
+              <button
+                type="submit"
+                className="btn btn-primary mt-2 px-2 py-0 md:px-6 md:py-2"
+              >
                 Save Changes
               </button>
             </div>
