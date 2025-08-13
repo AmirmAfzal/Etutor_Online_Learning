@@ -115,70 +115,73 @@ export default async function PurchaseHistoryPage() {
             </AccordionTrigger>
             <AccordionContent>
               {purchase.details ? (
-                <div className="flex w-full flex-col gap-2 p-2 md:flex-row">
-                  <div className="w-3/5 space-y-2">
+                <div className="flex flex-col gap-6 p-3 md:flex-row md:gap-8">
+                  <div className="flex w-full flex-col gap-4 md:w-3/5">
                     {purchase.details.map((course, i) => (
                       <div
                         key={i}
-                        className="border-base-content/10 flex items-center gap-2 pr-4 pb-1 last:pb-0"
+                        className="border-base-content/10 bg-base-100 flex flex-col gap-1.5 border p-3 transition hover:shadow md:flex-row md:items-center md:gap-3"
                       >
-                        <div className="bg-base-200 relative h-24 w-1/4 overflow-hidden">
+                        <div className="relative h-48 w-full flex-shrink-0 overflow-hidden md:h-24 md:w-32">
                           <Image
                             src={course.image}
                             alt={course.title}
                             width={300}
                             height={256}
-                            className="object-cover"
+                            className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                           />
                         </div>
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center justify-start gap-2 text-base">
+
+                        <div className="flex flex-1 flex-col justify-between gap-1 md:pl-4">
+                          <div className="text-base-content/80 flex items-center gap-2 text-xs md:text-sm">
                             <Icon
                               icon="ph:star-fill"
-                              className="text-primary/80 text-md"
+                              className="text-primary md:text-md text-sm"
                             />
-                            <span className="text-xs">{course.rating}</span>
-                            <span className="text-base-content/50 text-xs">
+                            <span>{course.rating}</span>
+                            <span className="text-base-content/50">
                               ({course.reviews.toLocaleString()} Review)
                             </span>
                           </div>
-                          <div className="text-base-content/80 text-md mb-1 font-medium">
+                          <div className="md:text-md text-base-content/90 text-base font-semibold">
                             {course.title}
                           </div>
-                          <span className="text-base-content/60 text-xs">
+                          <div className="text-base-content/60 text-xs md:text-sm">
                             <span className="text-base-content/50">
                               Course by:
                             </span>
                             {course.teacher}
-                          </span>
+                          </div>
                         </div>
-                        <div className="text-primary p-4 text-lg font-semibold">
+
+                        <div className="text-primary mt-1 flex-shrink-0 text-lg font-bold md:mt-0 md:w-20 md:text-right">
                           ${course.price.toFixed(2)}
                         </div>
                       </div>
                     ))}
                   </div>
-                  <div className="border-base-content/10 flex w-2/5 flex-col items-center gap-6 border-l pl-2">
-                    <div className="flex w-3/4 flex-col items-center gap-2">
-                      <div className="text-base-content/80 font-medium text-nowrap md:text-lg">
+
+                  <div className="border-base-content/10 flex w-full flex-col items-center gap-6 border-t pt-4 md:w-2/5 md:border-t-0 md:border-l md:pt-0 md:pl-6">
+                    <div className="flex w-11/12 flex-col items-center gap-2 md:w-full">
+                      <div className="text-base-content/80 text-md text-center font-medium md:text-lg">
                         {purchase.date}
                       </div>
-                      <div className="text-base-content/60 mt-1 flex gap-2">
-                        <span className="flex items-center gap-1 text-xs">
+                      <div className="text-base-content/60 flex flex-wrap justify-center gap-3 text-xs md:justify-start">
+                        <span className="flex items-center gap-1">
                           <Icon
                             icon="ph:play-circle-duotone"
                             className="text-secondary text-md"
                           />
                           {purchase.summaryCourses} Courses
                         </span>
-                        <span className="flex items-center gap-1 text-xs">
+                        <span className="flex items-center gap-1">
                           <Icon
                             icon="ph:currency-dollar"
                             className="text-primary text-md"
                           />
                           ${purchase.summary.price.toFixed(2)} USD
                         </span>
-                        <span className="flex items-center gap-1 text-xs">
+                        <span className="flex items-center gap-1">
                           <Icon
                             icon="ph:credit-card"
                             className="text-success text-md"
@@ -187,16 +190,11 @@ export default async function PurchaseHistoryPage() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex w-3/4 flex-row justify-between gap-3 text-base">
-                      <span className="text-base-content/80 text-xs font-medium">
-                        {purchase.user.name}
-                      </span>
-                      <span className="text-base-content/80 text-sm">
-                        {purchase.user.card}
-                      </span>
-                      <span className="text-base-content/80 text-xs">
-                        {purchase.user.exp}
-                      </span>
+
+                    <div className="text-base-content/80 flex w-11/12 justify-between text-xs md:text-sm">
+                      <span className="font-medium">{purchase.user.name}</span>
+                      <span>{purchase.user.card}</span>
+                      <span>{purchase.user.exp}</span>
                     </div>
                   </div>
                 </div>
