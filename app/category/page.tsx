@@ -300,14 +300,21 @@ export default async function CategoryPage({
                 <Icon icon="ph:faders-fill" className="text-primary text-xl" />
                 <span className="text-sm">Filter</span>
               </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
+              <DialogContent className="flex flex-col items-center justify-center">
+                <DialogTitle>Filter Courses</DialogTitle>
+                {/* <DialogHeader>
                   <DialogTitle>Are you absolutely sure?</DialogTitle>
-                  <DialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
-                  </DialogDescription>
-                </DialogHeader>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader> */}
+                <CourseFilter
+                  categories={categories}
+                  tools={tools}
+                  rating={rating}
+                  courseLevel={courseLevel}
+                  duration={duration}
+                  price={price}
+                  classname="w-full overflow-y-auto h-96 "
+                />
               </DialogContent>
             </Dialog>
 

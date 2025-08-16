@@ -22,7 +22,7 @@ type Props = {
     label: string;
     count: number;
   }[];
-  classname: string;
+  classname?: string;
 };
 
 const CourseFilter = ({
