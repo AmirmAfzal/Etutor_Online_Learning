@@ -15,26 +15,38 @@ interface Props {
 const CourseCard = (props: Props) => {
   return (
     <div className="bg-base-100 border-base-300 border">
-      <Image src={props.thumbnail} alt={props.name} width={400} height={200} />
+      <Image
+        src={props.thumbnail}
+        alt={props.name}
+        width={400}
+        height={200}
+        className="w-full object-cover"
+      />
+
       <div className="space-y-2 p-4">
         <div className="flex flex-row items-center justify-between">
-          <span className="bg-base-200 p-1 text-xs">{props.category}</span>
-          <span className="text-primary text-2xl font-semibold">
+          <span className="bg-base-200 p-1 text-xs sm:text-sm">
+            {props.category}
+          </span>
+          <span className="text-primary text-lg font-semibold sm:text-xl">
             ${props.price}
           </span>
         </div>
-        <div className="">
-          <span className="text-lg font-medium">{props.name}</span>
+        <div>
+          <span className="text-sm font-medium sm:text-base lg:text-xl">
+            {props.name}
+          </span>
         </div>
       </div>
-      <div className="border-base-300 flex flex-row items-center justify-between border-t p-4">
+
+      <div className="border-base-300 flex flex-row items-center justify-between border-t p-4 text-sm sm:text-base">
         <div className="flex flex-row items-center gap-1">
-          <Icon width={20} className="text-primary" icon="ph:star-fill" />
+          <Icon width={18} className="text-primary" icon="ph:star-fill" />
           {props.rating}
         </div>
         <div className="flex items-center gap-2 font-semibold">
-          <Icon icon="ph:user" width={24} className="text-secondary" />
-          {props.students}
+          <Icon icon="ph:user" width={20} className="text-secondary" />
+          {props.students.toLocaleString()}
           <span className="text-base-content/60 font-normal"> students</span>
         </div>
       </div>
