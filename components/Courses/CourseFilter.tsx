@@ -22,6 +22,7 @@ type Props = {
     label: string;
     count: number;
   }[];
+  classname: string;
 };
 
 const CourseFilter = ({
@@ -31,9 +32,12 @@ const CourseFilter = ({
   courseLevel,
   duration,
   price,
+  classname,
 }: Props) => {
   return (
-    <aside className="border-base-300 bg-base-100 w-5/12 border-r p-4">
+    <aside
+      className={`border-base-300 bg-base-100 w-5/12 border-r p-4 ${classname}`}
+    >
       <Categories categories={categories} />
       <Tools tools={tools} />
       <Rating rating={rating} />

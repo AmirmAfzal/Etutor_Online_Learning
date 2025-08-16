@@ -7,6 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import instructorModel from "@/lib/db/models/instructorModel";
@@ -14,6 +22,7 @@ import CourseCard from "@/components/Student/CourseCard";
 import TeacherCard from "@/components/Student/TeacherCard";
 import Link from "next/link";
 import CourseFilter from "@/components/Courses/CourseFilter";
+import React from "react";
 
 type Category = {
   name: string;
@@ -271,25 +280,44 @@ export default async function CategoryPage({
 
       <section className="w-full max-w-6xl">
         <div className="mb-6 flex flex-col flex-wrap items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+          <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-3">
+            {/* Filter Button Desktop */}
             <a
               href={isFiltered ? "/category" : "/category?filter=true"}
-              className={`bg-base-100 flex flex-row items-center gap-3 rounded-none border px-2 py-3 ${isFiltered ? "border-primary text-primary" : "border-primary/20 text-base-content/80"}`}
+              className={`hidden items-center gap-3 rounded-none border px-2 py-3 md:flex ${isFiltered ? "border-primary text-primary bg-base-100" : "border-primary/20 text-base-content/80 bg-base-100"}`}
             >
               <Icon icon="ph:faders-fill" className="text-xl" />
               <span className="text-sm">Filter</span>
               <span
-                className={`${isFiltered ? "text-base-100 bg-primary px-2" : "text-primary bg-primary/10 px-2"}`}
+                className={`px-2 ${isFiltered ? "bg-primary text-base-100" : "bg-primary/10 text-primary"}`}
               >
                 {isFiltered ? "3" : "0"}
               </span>
             </a>
+
+            <Dialog>
+              <DialogTrigger className="bg-base-100 border-primary/20 text-base-content/80 flex items-center gap-3 rounded-none border px-2 py-3 md:hidden">
+                <Icon icon="ph:faders-fill" className="text-primary text-xl" />
+                <span className="text-sm">Filter</span>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+
+            {/* Search Form */}
             <Form action="/category" className="relative w-full sm:w-72">
               <input
                 type="text"
                 name="query"
                 placeholder="UI/UX Design"
-                className="border-base-300 w-full border px-4 py-2.5 text-sm sm:py-3 sm:text-base"
+                className="border-base-300 w-full rounded-none border px-4 py-2.5 text-sm sm:py-3 sm:text-base"
               />
               <Icon
                 icon="ph:magnifying-glass"
@@ -359,6 +387,7 @@ export default async function CategoryPage({
               courseLevel={courseLevel}
               duration={duration}
               price={price}
+              classname="hidden md:block"
             />
           )}
           <div
