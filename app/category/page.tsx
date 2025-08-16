@@ -1,5 +1,3 @@
-import CourseCard from "@/components/CourseCard";
-import TeacherCard from "@/components/TeacherCard";
 import Icon from "@/components/ui/Icon";
 import Form from "next/form";
 import {
@@ -12,6 +10,8 @@ import {
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import instructorModel from "@/lib/db/models/instructorModel";
+import CourseCard from "@/components/Student/CourseCard";
+import TeacherCard from "@/components/Student/TeacherCard";
 
 export default async function CategoryPage({
   searchParams,
@@ -84,51 +84,54 @@ export default async function CategoryPage({
 
   return (
     <section className="container mx-auto flex flex-col items-center px-4 py-8">
-      <div className="my-12 flex max-w-6xl flex-col items-center gap-12">
-        <h2 className="mb-6 text-4xl font-medium">
+      <div className="my-12 flex w-full max-w-6xl flex-col items-center gap-10">
+        <h2 className="mb-6 text-center text-2xl font-semibold sm:text-3xl lg:text-4xl">
           Best selling courses in Web Development
         </h2>
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-5">
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-5">
           {AllCourse.slice(0, 5).map((course, index) => (
             <CourseCard key={index} {...course} />
           ))}
         </div>
       </div>
 
-      <div className="my-12 mb-20 flex max-w-6xl flex-col gap-5">
-        <div className="flex flex-row items-center justify-between">
-          <h2 className="mb-6 text-4xl font-medium">Popular tools</h2>
+      <div className="my-12 mb-20 flex w-full max-w-6xl flex-col gap-6">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <h2 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">
+            Popular tools
+          </h2>
           <div className="flex flex-row items-center justify-center gap-2">
             <Icon
               icon="ph:arrow-left"
-              className="btn btn-primary btn-soft text-3xl"
+              className="btn btn-primary btn-soft text-2xl sm:text-3xl"
             />
             <Icon
               icon="ph:arrow-right"
-              className="btn btn-primary btn-soft text-3xl"
+              className="btn btn-primary btn-soft text-2xl sm:text-3xl"
             />
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-4">
           {popularTools.map((tool) => (
             <button
               key={tool.name}
-              className="border-base-300 hover:text-primary bg-base-100 border px-9 py-3 transition-all duration-300 hover:border-none hover:shadow-lg"
+              className="border-base-300 hover:text-primary bg-base-100 border px-5 py-2.5 text-sm font-medium transition-all duration-300 hover:border-none hover:shadow-lg sm:px-7 sm:py-3 sm:text-base"
             >
-              <div className="text-lg font-medium">{tool.name}</div>
-              <div className="text-base-content/60 mt-2 text-sm">
+              <div>{tool.name}</div>
+              <div className="text-base-content/60 mt-1 text-xs sm:mt-2 sm:text-sm">
                 {tool.courses.toLocaleString()} Courses
               </div>
             </button>
           ))}
         </div>
-        <div className="mt-4 flex items-center gap-3">
-          <span className="font-semibold text-nowrap">Popular keyword:</span>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-sm sm:text-base">
+          <span className="font-semibold">Popular keyword:</span>
           {popularKeywords.map((keyword) => (
             <button
               key={keyword}
-              className="hover:bg-primary bg-base-200 text-base-content/70 hover:text-base-100 px-4 py-2 text-xs text-nowrap transition"
+              className="hover:bg-primary bg-base-200 text-base-content/70 hover:text-base-100 rounded px-4 py-2 text-xs transition sm:text-sm"
             >
               {keyword}
             </button>
@@ -136,12 +139,12 @@ export default async function CategoryPage({
         </div>
       </div>
 
-      <div className="bg-base-200 mb-12 flex w-screen flex-row justify-center py-16">
-        <div className="max-w-6xl">
-          <h2 className="mb-6 text-3xl font-bold">
+      <div className="bg-base-200 mb-12 flex w-full justify-center py-16">
+        <div className="w-full max-w-6xl px-4">
+          <h2 className="mb-6 text-2xl font-semibold sm:text-3xl lg:text-4xl">
             Popular instructor in Web Development
           </h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-5">
             {instructors.map((instructor) => (
               <TeacherCard
                 key={instructor.name}
@@ -154,20 +157,19 @@ export default async function CategoryPage({
         </div>
       </div>
 
-      <section className="max-w-6xl">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <button className="border-primary/50 flex items-center gap-2 border px-4 py-3 font-semibold">
+      <section className="w-full max-w-6xl">
+        <div className="mb-6 flex flex-col flex-wrap items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <button className="border-primary/50 flex items-center gap-2 rounded border px-5 py-2.5 text-sm font-semibold sm:px-6 sm:py-3 sm:text-base">
               <Icon icon="ph:funnel" />
-              Filter
-              <span className="text-primary">03</span>
+              Filter <span className="text-primary">03</span>
             </button>
-            <Form action="/category" className="relative">
+            <Form action="/category" className="relative w-full sm:w-72">
               <input
                 type="text"
                 name="query"
                 placeholder="UI/UX Design"
-                className="border-base-300 w-full border py-3 pr-4 pl-10"
+                className="border-base-300 w-full rounded border px-4 py-2.5 text-sm sm:py-3 sm:text-base"
               />
               <Icon
                 icon="ph:magnifying-glass"
@@ -181,12 +183,15 @@ export default async function CategoryPage({
 
           <div className="flex flex-row gap-2">
             <div className="flex flex-row items-center gap-2">
-              <label htmlFor="sort" className="text-base-content/60 text-xs">
+              <label
+                htmlFor="sort"
+                className="text-base-content/60 text-xs sm:text-sm"
+              >
                 Sorted by:
               </label>
             </div>
             <Select name="sort">
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-32 sm:w-40">
                 <SelectValue placeholder="Sorted by" />
               </SelectTrigger>
               <SelectContent>
@@ -198,9 +203,9 @@ export default async function CategoryPage({
           </div>
         </div>
 
-        <div className="border-base-300 flex flex-row justify-between border-b">
-          <div className="text-primary mb-4 flex flex-row items-center gap-2">
-            <span className="text-base-content"> Suggestion:</span>
+        <div className="border-base-300 flex flex-col items-start justify-between gap-3 border-b pb-4 text-sm sm:flex-row sm:items-center sm:text-base">
+          <div className="text-primary flex flex-wrap items-center gap-2">
+            <span className="text-base-content">Suggestion:</span>
             <button className="hover:underline">User interface</button>
             <button className="hover:underline">User experience</button>
             <button className="hover:underline">Web design</button>
@@ -225,7 +230,7 @@ export default async function CategoryPage({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
           {courses.map((course, index) => (
             <CourseCard key={index} {...course} />
           ))}
