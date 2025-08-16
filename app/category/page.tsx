@@ -12,15 +12,29 @@ import courseModel from "@/lib/db/models/courseModel";
 import instructorModel from "@/lib/db/models/instructorModel";
 import CourseCard from "@/components/Student/CourseCard";
 import TeacherCard from "@/components/Student/TeacherCard";
+import Link from "next/link";
+import CourseFilter from "@/components/Courses/CourseFilter";
+
+type Category = {
+  name: string;
+  icon: string;
+  subcategories: { [key: string]: number };
+};
+
+type Rating = {
+  label: string;
+  count: number;
+};
 
 export default async function CategoryPage({
   searchParams,
 }: {
-  searchParams: Promise<{ query?: string }>;
+  searchParams: Promise<{ query?: string; filter?: string }>;
 }) {
   await connectDB();
   const resolvedParams = await searchParams;
   const query = resolvedParams.query?.toLowerCase();
+  const isFiltered = resolvedParams.filter === "true";
 
   const courseFilter = query
     ? {
@@ -82,6 +96,104 @@ export default async function CategoryPage({
     "Wordpress",
   ];
 
+  const categories: Category[] = [
+    {
+      name: "Development",
+      icon: "ph:cpu",
+      subcategories: {
+        "Web Development": 574,
+        "Mobile Development": 1345,
+        "Software Testing": 317,
+        "Software Engineering": 31,
+        "Software Development Tools": 58,
+        "No-Code Development": 37,
+      },
+    },
+    {
+      name: "Business",
+      icon: "ph:handshake",
+      subcategories: { "Finance & Accounting": 0 },
+    },
+    {
+      name: "IT & Software",
+      icon: "ph:chart-bar-horizontal",
+      subcategories: { "": 0 },
+    },
+    {
+      name: "Office Productivity",
+      icon: "ph:bug-droid",
+      subcategories: { "": 0 },
+    },
+    {
+      name: "Personal Development",
+      icon: "ph:receipt",
+      subcategories: { "": 0 },
+    },
+    { name: "Design", icon: "ph:pen-nib", subcategories: { "": 0 } },
+    { name: "Marketing", icon: "ph:megaphone", subcategories: { "": 0 } },
+    { name: "Lifestyle", icon: "ph:package", subcategories: { "": 0 } },
+    {
+      name: "Photography & Video",
+      icon: "ph:camera",
+      subcategories: { "": 0 },
+    },
+    { name: "Music", icon: "ph:headset", subcategories: { "": 0 } },
+    {
+      name: "Health & Fitness",
+      icon: "ph:first-aid-kit",
+      subcategories: { "": 0 },
+    },
+  ];
+
+  const tools = {
+    "HTML 5": 1234,
+    "GOLANG ": 1234,
+    "CSS 3": 1234,
+    "Node.js": 8454,
+  };
+
+  const price = {
+    Paid: 12863,
+    Free: 832,
+  };
+
+  const duration = {
+    "6-12 Months": 1312,
+    "3-6 Months": 42376,
+    "1-3 Months": 12,
+    "1-4 Weeks": 87423,
+    "1-7 Days": 23746,
+  };
+  const courseLevel = {
+    "All Level": 234234,
+    Beginner: 2345,
+    Intermediate: 124,
+    Expert: 826,
+  };
+
+  const rating: Rating[] = [
+    {
+      label: "5 Star",
+      count: 12345,
+    },
+    {
+      label: "4 Star & up",
+      count: 12345,
+    },
+    {
+      label: "3 Star & up",
+      count: 12345,
+    },
+    {
+      label: "2 Star & up",
+      count: 12345,
+    },
+    {
+      label: "1 Star & up",
+      count: 12345,
+    },
+  ];
+
   return (
     <section className="container mx-auto flex flex-col items-center px-4 py-8">
       <div className="my-12 flex w-full max-w-6xl flex-col items-center gap-10">
@@ -131,7 +243,7 @@ export default async function CategoryPage({
           {popularKeywords.map((keyword) => (
             <button
               key={keyword}
-              className="hover:bg-primary bg-base-200 text-base-content/70 hover:text-base-100 rounded px-4 py-2 text-xs transition sm:text-sm"
+              className="hover:bg-primary bg-base-200 text-base-content/70 hover:text-base-100 px-4 py-2 text-xs transition sm:text-sm"
             >
               {keyword}
             </button>
@@ -160,16 +272,24 @@ export default async function CategoryPage({
       <section className="w-full max-w-6xl">
         <div className="mb-6 flex flex-col flex-wrap items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
-            <button className="border-primary/50 flex items-center gap-2 rounded border px-5 py-2.5 text-sm font-semibold sm:px-6 sm:py-3 sm:text-base">
-              <Icon icon="ph:funnel" />
-              Filter <span className="text-primary">03</span>
-            </button>
+            <a
+              href={isFiltered ? "/category" : "/category?filter=true"}
+              className={`bg-base-100 flex flex-row items-center gap-3 rounded-none border px-2 py-3 ${isFiltered ? "border-primary text-primary" : "border-primary/20 text-base-content/80"}`}
+            >
+              <Icon icon="ph:faders-fill" className="text-xl" />
+              <span className="text-sm">Filter</span>
+              <span
+                className={`${isFiltered ? "text-base-100 bg-primary px-2" : "text-primary bg-primary/10 px-2"}`}
+              >
+                {isFiltered ? "3" : "0"}
+              </span>
+            </a>
             <Form action="/category" className="relative w-full sm:w-72">
               <input
                 type="text"
                 name="query"
                 placeholder="UI/UX Design"
-                className="border-base-300 w-full rounded border px-4 py-2.5 text-sm sm:py-3 sm:text-base"
+                className="border-base-300 w-full border px-4 py-2.5 text-sm sm:py-3 sm:text-base"
               />
               <Icon
                 icon="ph:magnifying-glass"
@@ -230,10 +350,33 @@ export default async function CategoryPage({
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+        {/* <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
           {courses.map((course, index) => (
             <CourseCard key={index} {...course} />
           ))}
+        </div> */}
+
+        <div className="flex w-full items-start gap-4 pt-6">
+          {isFiltered && (
+            <CourseFilter
+              categories={categories}
+              tools={tools}
+              rating={rating}
+              courseLevel={courseLevel}
+              duration={duration}
+              price={price}
+            />
+          )}
+          <div
+            className={`grid grid-cols-1 gap-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
+          >
+            {courses.map((course, index) => (
+              // FIXME : fix this route
+              <Link key={index} href={`/courses/`}>
+                <CourseCard {...course} />
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </section>
