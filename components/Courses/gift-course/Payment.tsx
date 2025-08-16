@@ -1,3 +1,4 @@
+//
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +26,7 @@ const paymentMethods = [
     desc: "You will be redirected to the PayPal site after reviewing your order.",
   },
 ];
-const GiftCoursePayment = () => {
+const Payment = () => {
   return (
     <div className="flex flex-col gap-10 md:flex-row">
       <div className="bg-base-100 flex-1 p-2">
@@ -135,4 +136,4 @@ const GiftCoursePayment = () => {
   );
 };
 
-export default GiftCoursePayment;
+export default Payment;

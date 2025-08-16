@@ -1,6 +1,7 @@
 import GiftCourse from "@/components/Courses/gift-course/GiftCourse";
 import GiftCourseForm from "@/components/Courses/gift-course/GiftCourseForm";
-import GiftCoursePayment from "@/components/Courses/gift-course/GiftCoursePayment";
+import Payment from "@/components/Courses/gift-course/Payment";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -49,7 +50,7 @@ const GiftCoursePage = () => {
       <div className="flex flex-row items-start justify-center gap-4 p-8">
         <div className="flex flex-col">
           <GiftCourseForm />
-          <GiftCoursePayment />
+          <Payment />
         </div>
         <GiftCourse />
       </div>
