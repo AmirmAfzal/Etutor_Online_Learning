@@ -14,7 +14,7 @@ const CourseDetailPage = () => {
           course / My Courses / Development / Web Development
         </div>
 
-        <div className="bg-base-100 flex flex-row gap-4 p-4">
+        <div className="bg-base-100 flex flex-col gap-4 p-4 md:flex-row">
           <Image
             src="/images/course-image.png"
             className="w-86"
@@ -42,7 +42,7 @@ const CourseDetailPage = () => {
               Webflow, and make a living freelancing.
             </p>
 
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
               <div className="flex flex-row items-center gap-4">
                 <div className="relative">
                   <Image
@@ -80,7 +80,7 @@ const CourseDetailPage = () => {
                 <p className="text-base-content/70 text-sm">(123,456 Rating)</p>
               </div>
             </div>
-            <div className="border-base-300 flex flex-row items-center justify-between border-t pt-4">
+            <div className="border-base-300 flex flex-col items-center justify-between gap-4 border-t pt-4 md:flex-row">
               <div className="flex flex-row items-center gap-4">
                 <span className="border-base-300 border-r-2 pr-4">
                   <p className="text-lg">$13.99</p>
@@ -103,15 +103,15 @@ const CourseDetailPage = () => {
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-6">
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
           <CourseInformation />
           <CourseRating />
         </div>
-        <div className="mt-6 grid grid-cols-12 gap-6">
-          <div className="col-span-5">
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-12">
+          <div className="col-span-1 md:col-span-5">
             <RevenueView stroke="#23BD33" fill="#E1F7E3" height={400} />
           </div>
-          <div className="col-span-7">
+          <div className="col-span-1 md:col-span-7">
             <CourseOverview />
           </div>
         </div>

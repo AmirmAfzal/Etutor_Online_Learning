@@ -49,7 +49,7 @@ const Bannar = () => {
       <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
           <div className="container mx-auto bg-[#111033] p-6">
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-col justify-between md:flex-row">
               <div className="flex flex-row items-center gap-4">
                 <Image
                   src="/images/dashboard-profile.png"
@@ -92,7 +92,7 @@ const Bannar = () => {
             </div>
           </div>
           <AccordionContent>
-            <div className="border-base-300/60 container mx-auto grid grid-cols-2 gap-6 border-t bg-[#111033] p-6">
+            <div className="border-base-300/60 container mx-auto grid grid-cols-1 gap-6 border-t bg-[#111033] p-6 md:grid-cols-2">
               {compeleted.map((item) => (
                 <div key={item.id} className="flex flex-row items-center gap-4">
                   {item.isCompelet ? (

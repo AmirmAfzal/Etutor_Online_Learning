@@ -105,7 +105,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
 
   return (
     <div>
-      <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
+      <div className="border-base-300 flex flex-col items-center justify-between gap-2 border-t border-b p-4 md:flex-row">
         <h2 className="text-xl font-bold">Publish Course</h2>
         <div>
           <button className="btn btn-primary btn-soft mr-4" type="button">
@@ -127,7 +127,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
               name="courseId"
               defaultValue={course?._id.toString()}
             />
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="welcomeMessage"
@@ -168,7 +168,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
               <h3 className="text-xl font-bold">
                 Add Instructor ({instructors.length})
               </h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="relative">
                   <Icon
                     icon="ph:magnifying-glass"
@@ -188,7 +188,8 @@ const PublishCourse = ({ onBack, course }: Props) => {
                     searchState.data.map((instructor) => (
                       <button
                         key={instructor.id}
-                        className="bg-base-200 flex cursor-pointer flex-row items-center justify-between p-4"
+                        type="button"
+                        className="bg-base-200 flex w-full cursor-pointer flex-row items-center justify-between p-4"
                         onClick={() => addInstructorHandler(instructor)}
                       >
                         <div className="flex flex-row items-center gap-4">
@@ -215,7 +216,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
                 </div>
               )}
 
-              <div className="grid grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-6">
                 {instructors.map((instructor) => (
                   <div
                     key={instructor.id}

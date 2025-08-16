@@ -156,7 +156,7 @@ const Changepassword = () => {
               </FormItem>
             )}
           />
-          <div className="flex flex-row items-center gap-6">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center">
             <button
               className="btn btn-primary"
               disabled={pendding}

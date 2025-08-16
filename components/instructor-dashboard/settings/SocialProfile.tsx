@@ -125,7 +125,7 @@ const SocialProfile = () => {
                 </FormItem>
               )}
             />
-            <div className="mt-4 grid grid-cols-3 gap-4">
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
               {formFields.map((item, index) => (
                 <FormField
                   key={index}
@@ -155,7 +155,7 @@ const SocialProfile = () => {
                 />
               ))}
             </div>
-            <div className="mt-6 flex flex-row items-center gap-6">
+            <div className="mt-6 flex flex-col gap-6 md:flex-row md:items-center">
               <button
                 type="submit"
                 disabled={pending}

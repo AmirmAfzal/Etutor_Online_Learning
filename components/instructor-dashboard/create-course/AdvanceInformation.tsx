@@ -44,12 +44,7 @@ const initialState = {
 const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
   const [learningOutcomes, setLearningOutcomes] = useState(["", "", "", ""]);
   const [targetAudience, setTargetAudience] = useState(["", "", "", ""]);
-  const [requirements, setRequirements] = useState([
-    "",
-    "",
-    "",
-    "",
-  ]);
+  const [requirements, setRequirements] = useState(["", "", "", ""]);
 
   const [state, formAction, pending] = useActionState(
     saveAdvanceInformation,
@@ -69,19 +64,21 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
     },
   });
 
-  const addField = (type: "learningOutcomes" | "targetAudience" | "requirements") => {
+  const addField = (
+    type: "learningOutcomes" | "targetAudience" | "requirements"
+  ) => {
     if (type === "learningOutcomes" && learningOutcomes.length < MAX_INPUTS) {
       const newLearningOutcomes = [...learningOutcomes, ""];
       setLearningOutcomes(newLearningOutcomes);
       form.setValue("learningOutcomes", newLearningOutcomes);
-    } else if (type === "targetAudience" && targetAudience.length < MAX_INPUTS) {
+    } else if (
+      type === "targetAudience" &&
+      targetAudience.length < MAX_INPUTS
+    ) {
       const newTargetAudience = [...targetAudience, ""];
       setTargetAudience(newTargetAudience);
       form.setValue("targetAudience", newTargetAudience);
-    } else if (
-      type === "requirements" &&
-      requirements.length < MAX_INPUTS
-    ) {
+    } else if (type === "requirements" && requirements.length < MAX_INPUTS) {
       const newRequirements = [...requirements, ""];
       setRequirements(newRequirements);
       form.setValue("requirements", newRequirements);
@@ -138,7 +135,7 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
 
   return (
     <div>
-      <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
+      <div className="border-base-300 flex flex-col items-center justify-between gap-2 border-y p-4 md:flex-row">
         <h2 className="text-xl font-bold">Advance Information</h2>
         <div>
           <button className="btn btn-primary btn-soft mr-4">Save</button>
@@ -148,10 +145,10 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
 
       {/* Upload Form */}
       <div className="border-base-300 border-b p-4">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <p className="mb-2">Course Thumbnail</p>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
               {form.watch("thumbnail") ? (
                 <CldImage
                   src={form.watch("thumbnail") || ""}
@@ -174,7 +171,7 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                   />
                 </div>
               )}
-              <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
+              <div className="text-base-content/70 flex flex-col items-start justify-between gap-2 text-sm">
                 <p>
                   Upload your course Thumbnail here. Important guidelines:
                   1200x800 pixels or 12:8 Ratio. Supported format: .jpg, .jpeg,
@@ -211,7 +208,7 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
           </div>
           <div>
             <p className="mb-2">Course Trailer</p>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
               {form.watch("video") ? (
                 <video controls className="w-45 rounded-lg">
                   <source src={form.watch("video")} />
@@ -228,7 +225,7 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                 </div>
               )}
 
-              <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
+              <div className="text-base-content/70 flex flex-col items-start justify-between gap-2 text-sm">
                 <p>
                   students who watch awell-made promo video are 5X more likely
                   to enroll in your course. Weve seen that statistic go up to
@@ -295,8 +292,8 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
           <div className="border-base-300 space-y-4 border-b p-6">
             <div className="flex flex-row items-center justify-between">
               <h3 className="text-lg font-semibold">
-                What you will teach in this course ({learningOutcomes.length}/{MAX_INPUTS}
-                )
+                What you will teach in this course ({learningOutcomes.length}/
+                {MAX_INPUTS})
               </h3>
               <button
                 onClick={() => addField("learningOutcomes")}
@@ -320,7 +317,11 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                           {...field}
                           value={value}
                           onChange={(e) =>
-                            handleChange("learningOutcomes", index, e.target.value)
+                            handleChange(
+                              "learningOutcomes",
+                              index,
+                              e.target.value
+                            )
                           }
                           placeholder="What you will teach in this course..."
                         />
@@ -363,7 +364,11 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                           {...field}
                           value={value}
                           onChange={(e) =>
-                            handleChange("targetAudience", index, e.target.value)
+                            handleChange(
+                              "targetAudience",
+                              index,
+                              e.target.value
+                            )
                           }
                           placeholder="Who this course is for..."
                         />
@@ -406,13 +411,9 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                           {...field}
                           value={value}
                           onChange={(e) =>
-                            handleChange(
-                              "requirements",
-                              index,
-                              e.target.value
-                            )
+                            handleChange("requirements", index, e.target.value)
                           }
-                          placeholder="Who this course is for..."
+                          placeholder="What is you course requirements..."
                         />
                         <span className="text-base-content/70 absolute top-3 right-3 text-xs">
                           {value.length}/{MAX_CHARS}

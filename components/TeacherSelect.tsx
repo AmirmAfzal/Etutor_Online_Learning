@@ -6,7 +6,7 @@ import {
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select";
 const TeacherSelect = () => {
   return (
     <Form className="flex flex-1 flex-row gap-2" action="">

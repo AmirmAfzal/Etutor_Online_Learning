@@ -37,7 +37,11 @@ const Notifications = () => {
           </div>
         ))}
       </div>
-      <button className="btn btn-primary">Save Changes</button>
+      <div className="flex flex-col gap-6 md:flex-row md:items-center">
+        <button type="submit" className="btn btn-primary">
+          Save Changes
+        </button>
+      </div>
     </section>
   );
 };

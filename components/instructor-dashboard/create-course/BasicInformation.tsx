@@ -99,7 +99,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
 
   return (
     <div>
-      <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
+      <div className="border-base-300 flex flex-col items-center justify-between gap-2 border-y p-4 md:flex-row">
         <h2 className="text-xl font-bold">Basic Information</h2>
         <div>
           <button

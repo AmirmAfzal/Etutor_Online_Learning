@@ -156,9 +156,9 @@ const MyCoursesPage = async (props: Props) => {
       <div className="container mx-auto">
         <form
           action={"/instructor/dashboard/my-courses"}
-          className="flex flex-row items-center justify-between gap-6"
+          className="grid grid-cols-1 gap-6 md:grid-cols-5"
         >
-          <div className="relative">
+          <div className="relative md:col-span-2">
             <label
               htmlFor="search"
               className="text-base-content/80 mb-2 text-xs"
@@ -174,7 +174,7 @@ const MyCoursesPage = async (props: Props) => {
             <Input
               type="text"
               name="search"
-              className="bg-base-100 min-w-lg pl-12"
+              className="bg-base-100 pl-12"
               placeholder="Search in your courses..."
               defaultValue={search}
             />
@@ -241,7 +241,7 @@ const MyCoursesPage = async (props: Props) => {
           <button type="submit" hidden />
         </form>
 
-        <div className="mt-6 grid grid-cols-4 gap-6">
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4">
           {filteredCourses.map((course) => (
             <div
               key={course.name}
