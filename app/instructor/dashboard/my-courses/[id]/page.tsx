@@ -1,22 +1,35 @@
 import Image from "next/image";
+import moment from "moment";
 
 import CourseInformation from "@/components/instructor-dashboard/course-detail/CourseInformation";
 import CourseOverview from "@/components/instructor-dashboard/CourseOverview";
 import CourseRating from "@/components/instructor-dashboard/CourseRating";
 import RevenueView from "@/components/instructor-dashboard/RevenueView";
 import Icon from "@/components/ui/Icon";
+import courseModel from "@/lib/db/models/courseModel";
+import { Instructor } from "@/lib/actions/instructor/create-course/findInstructors";
 
-const CourseDetailPage = () => {
+interface Props {
+  params: Promise<{ id: string }>;
+}
+
+const CourseDetailPage = async (props: Props) => {
+  const { id } = await props.params;
+  const course = await courseModel.findById(id).populate("category", "name");
+
   return (
     <section className="bg-base-200 w-full">
       <div className="container mx-auto p-6">
         <div className="py-4">
-          course / My Courses / Development / Web Development
+          course / My Courses /{" "}
+          {course.category.name.charAt(0).toUpperCase() +
+            course.category.name.slice(1)}{" "}
+          / Web Development / {course.title}
         </div>
 
         <div className="bg-base-100 flex flex-col gap-4 p-4 md:flex-row">
           <Image
-            src="/images/course-image.png"
+            src={course.thumbnail}
             className="w-86"
             alt="course-detail"
             width={400}
@@ -26,42 +39,46 @@ const CourseDetailPage = () => {
             <div className="flex flex-row items-center gap-6 text-xs">
               <p className="text-base-content/70">
                 <span>Uploaded: </span>
-                <span className="text-base-content">Jan 21, 2025</span>
+                <span className="text-base-content">
+                  {moment(course.createdAt).format("ll")}
+                </span>
               </p>
               <p className="text-base-content/80">
                 <span>Last Updated: </span>
-                <span className="text-base-content">Sep 11, 2025</span>
+                <span className="text-base-content">
+                  {moment(course.updatedAt).format("ll")}
+                </span>
               </p>
             </div>
 
-            <h3 className="text-2xl font-bold">
-              2021 Complete Python Bootcamp From Zero to Hero in Python
-            </h3>
-            <p className="text-base-content/70 text-sm">
-              3 in 1 Course: Learn to design websites with Figma, build with
-              Webflow, and make a living freelancing.
-            </p>
+            <h3 className="text-2xl font-bold">{course.title}</h3>
+            <p className="text-base-content/70 text-sm">{course.subtitle}</p>
 
             <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
               <div className="flex flex-row items-center gap-4">
-                <div className="relative">
-                  <Image
-                    src="/images/dashboard-profile.png"
-                    alt="instructor"
-                    width={40}
-                    height={40}
-                  />
-                  <Image
-                    src="/images/dashboard-profile.png"
-                    className="border-base-100 absolute top-0 left-6 rounded-full border-2"
-                    alt="instructor"
-                    width={40}
-                    height={40}
-                  />
-                </div>
+                {course.instructors.map((instructor: Instructor) => (
+                  <div key={instructor.id} className="relative">
+                    <Image
+                      src={instructor.profile}
+                      alt="instructor"
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                    {/* <Image
+                        src="/images/dashboard-profile.png"
+                        className="border-base-100 absolute top-0 left-6 rounded-full border-2"
+                        alt="instructor"
+                        width={40}
+                        height={40}
+                      /> */}
+                  </div>
+                ))}
                 <div className="ml-6">
                   <p className="text-base-content/70">Created by:</p>
-                  <p>Kevin Gilbert , Kristin Watson</p>
+                  {course.instructors.map((instructor: Instructor) => (
+                    <p key={instructor.name}>{instructor.name}</p>
+                  ))}
                 </div>
               </div>
               <div className="flex flex-row items-center gap-2">
@@ -83,7 +100,7 @@ const CourseDetailPage = () => {
             <div className="border-base-300 flex flex-col items-center justify-between gap-4 border-t pt-4 md:flex-row">
               <div className="flex flex-row items-center gap-4">
                 <span className="border-base-300 border-r-2 pr-4">
-                  <p className="text-lg">$13.99</p>
+                  <p className="text-lg">$57.00</p>
                   <p className="text-base-content/70 text-sm">Course prices</p>
                 </span>
                 <span>

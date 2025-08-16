@@ -58,7 +58,7 @@ const Navbar = ({ children }: Props) => {
             <h2 className="text-lg font-bold">{pageNameHandler()}</h2>
           </div>
         </div>
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center justify-between gap-4">
           <div className="relative">
             <Icon
               icon="ph:magnifying-glass"
