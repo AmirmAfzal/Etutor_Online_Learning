@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import CourseCard from "../CourseCard";
+import CourseCard from "../Student/CourseCard";
 import Icon from "../ui/Icon";
 
 const RecentCourse = () => {
