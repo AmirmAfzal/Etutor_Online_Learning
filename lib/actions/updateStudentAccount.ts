@@ -34,6 +34,7 @@ export const updateStudentAccount = async (
         lastname: result.data.lastName,
         username: result.data.username,
         bio: result.data.title || "",
+        avatar: result.data.avatar || "",
       },
       { new: true }
     );
