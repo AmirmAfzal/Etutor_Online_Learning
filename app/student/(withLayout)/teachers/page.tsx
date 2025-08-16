@@ -50,10 +50,10 @@ const TeachersPage = async (props: Props) => {
       path: "courses",
       populate: {
         path: "authors",
-        select: "firstname lastname avatar username bio rating students"
-      }
+        select: "firstname lastname avatar username bio rating students",
+      },
     });
-    
+
   if (!student) {
     return redirect("/auth/signin");
   }
@@ -62,13 +62,15 @@ const TeachersPage = async (props: Props) => {
   const allInstructors = student.courses.flatMap(
     (course: CourseInterface) => course.authors
   );
-  
+
   // Remove duplicates based on instructor ID
   const uniqueInstructors = allInstructors.filter(
-    (instructor: Instructor, index: number, self: Instructor[]) => 
-      index === self.findIndex((i: Instructor) => i._id.toString() === instructor._id.toString())
+    (instructor: Instructor, index: number, self: Instructor[]) =>
+      index ===
+      self.findIndex(
+        (i: Instructor) => i._id.toString() === instructor._id.toString()
+      )
   );
-  
 
   const instructorData: InstructorData[] = uniqueInstructors.map(
     (instructor: Instructor) => ({
@@ -100,14 +102,18 @@ const TeachersPage = async (props: Props) => {
             {`(${filteredTeachers.length})`}
           </span>
         </div>
-        <div className="flex flex-row gap-2">
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <div className="flex flex-1 items-center gap-2">
             <Search action="/student/teachers" />
           </div>
-          <TeacherSelect />
+          <div className="w-full sm:w-auto">
+            <TeacherSelect />
+          </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+
+      <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
         {filteredTeachers.map((teacher, i) => (
           <TeacherCard key={i} {...teacher} />
         ))}
