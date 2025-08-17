@@ -394,21 +394,22 @@ const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
                   {singleCourse.courseDescription
                     ?.split(/\n\s*\n|\n/)
                     .filter(Boolean)
-                    .map((para, idx) => (
+                    .map((para, i) => (
                       <p
-                        key={idx}
-                        className="text-base-content/70 mt-4 mb-4 text-sm"
+                        key={i}
+                        className="text-base-content/70 mt-4 mb-4 text-sm leading-relaxed"
                       >
                         {para}
                       </p>
                     ))}
                 </div>
-                <div className="bg-success/10 w-full p-4 pl-10">
-                  <span className="text-base-content/80 text-xl font-medium">
+
+                <div className="bg-success/10 w-full p-4 sm:p-6 lg:p-8">
+                  <span className="text-base-content/80 text-lg font-medium md:text-xl">
                     What you will learn in this course
                   </span>
                   <div className="mt-4">
-                    <ul className="grid grid-cols-2 gap-6 pl-5">
+                    <ul className="grid grid-cols-1 gap-4 pl-2 sm:grid-cols-2 sm:gap-6 sm:pl-5">
                       {singleCourse.whatYouWillLearn?.map((item, index) => (
                         <li
                           key={index}
@@ -416,20 +417,21 @@ const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
                         >
                           <Icon
                             icon="ph:check-circle-fill"
-                            className="text-success text-lg"
+                            className="text-success shrink-0 text-lg"
                           />
-                          {item}
+                          <span>{item}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
+
                 <div className="mt-12 w-full">
-                  <span className="text-base-content/80 text-2xl font-medium">
+                  <span className="text-base-content/80 text-lg font-medium md:text-2xl">
                     Who this course is for :
                   </span>
                   <div className="mt-4">
-                    <ul className="flex flex-col items-start gap-3 pl-5">
+                    <ul className="flex flex-col items-start gap-3 pl-2 sm:pl-5">
                       {singleCourse.thisCourseFor?.map((item, index) => (
                         <li
                           key={index}
@@ -437,24 +439,25 @@ const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
                         >
                           <Icon
                             icon="ph:arrow-right"
-                            className="text-primary text-lg"
+                            className="text-primary shrink-0 text-lg"
                           />
-                          {item}
+                          <span>{item}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
+
                 <div className="mt-12 w-full">
-                  <span className="text-base-content/80 text-2xl font-medium">
+                  <span className="text-base-content/80 text-lg font-medium md:text-2xl">
                     Course requirements
                   </span>
                   <div className="mt-4">
-                    <ul className="ml-5 flex list-disc flex-col items-start gap-3 pl-5">
+                    <ul className="ml-2 flex list-disc flex-col items-start gap-3 pl-5 sm:ml-5">
                       {singleCourse.courseRequirements?.map((item, index) => (
                         <li
                           key={index}
-                          className="text-base-content/70 text-sm"
+                          className="text-base-content/70 text-sm leading-relaxed"
                         >
                           {item}
                         </li>
@@ -462,6 +465,7 @@ const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
                     </ul>
                   </div>
                 </div>
+
                 <Curriculum curriculum={fakeCourses.curriculum} />
                 <CourseInstructors instructors={instructorData} />
                 <CourseRating rating={singleCourse.rating} />

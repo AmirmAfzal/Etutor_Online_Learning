@@ -159,7 +159,7 @@ const CoursesPage = async ({
 
   return (
     <section className="container mx-auto mt-8 flex max-w-6xl flex-col items-center justify-center">
-      <div className="border-base-300 flex w-full flex-col gap-4 border-b pb-2">
+      <div className="border-base-300 flex w-full flex-col gap-4 border-b px-4 pb-2">
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-2">
             <a
@@ -179,25 +179,27 @@ const CoursesPage = async ({
 
           <CoursesSelect />
         </div>
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center gap-2 text-xs">
-            <span className="text-base-content/70">Suggestions :</span>
-            <a href="" className="text-primary/80">
+        <div className="flex flex-row items-center justify-between gap-4">
+          <div className="flex flex-row flex-wrap items-center gap-2 text-xs">
+            <span className="text-base-content/70 whitespace-nowrap">
+              Suggestions :
+            </span>
+            <a href="" className="text-primary/80 whitespace-nowrap">
               user interface
             </a>
-            <a href="" className="text-primary/80">
+            <a href="" className="text-primary/80 whitespace-nowrap">
               user experience
             </a>
-            <a href="" className="text-primary/80">
+            <a href="" className="text-primary/80 whitespace-nowrap">
               web design
             </a>
-            <a href="" className="text-primary/80">
+            <a href="" className="text-primary/80 whitespace-nowrap">
               interface app
             </a>
           </div>
 
           {/* TODO: number of results for search */}
-          <div className="text-base-content/70 text-sm">
+          <div className="text-base-content/70 text-sm whitespace-nowrap">
             {query
               ? `${filteredCourses.length} results find for"${query}"`
               : `${filteredCourses.length} Course`}
@@ -216,7 +218,7 @@ const CoursesPage = async ({
           />
         )}
         <div
-          className={`grid grid-cols-1 gap-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
+          className={`grid grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
         >
           {filteredCourses.map((course, index) => (
             <CourseCard key={index} {...course} />
