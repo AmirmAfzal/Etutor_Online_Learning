@@ -24,7 +24,7 @@ interface Rating {
 }
 
 interface Course {
-  id?: string; // optional for the initial render
+  id?: string;
   thumbnail: string;
   name: string;
   category: string;
@@ -136,6 +136,7 @@ const CoursesPage = async ({
   const foundCourse = await courseModel.find().populate("category").lean();
 
   const courses: Course[] = foundCourse.map((course) => ({
+    id: course._id?.toString(),
     thumbnail: course.thumbnail,
     name: course.title,
     category: course.category?.name || "Unknown",
@@ -218,9 +219,7 @@ const CoursesPage = async ({
           className={`grid grid-cols-1 gap-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
         >
           {filteredCourses.map((course, index) => (
-            <Link key={index} href={`/courses/${course.id}`}>
-              <CourseCard {...course} />
-            </Link>
+            <CourseCard key={index} {...course} />
           ))}
         </div>
       </div>

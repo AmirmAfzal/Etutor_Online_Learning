@@ -4,6 +4,7 @@ import React from "react";
 import Icon from "../ui/Icon";
 
 interface Props {
+  id?: string;
   thumbnail: string;
   name: string;
   category: string;
@@ -14,7 +15,7 @@ interface Props {
 
 const CourseCard = (props: Props) => {
   return (
-    <Link href={`/courses/${props.name}`} className="block">
+    <Link href={`/courses/${props.id || props.name}`} className="block">
       <div className="bg-base-100 border-base-300 h-max border">
         <Image
           src={props.thumbnail}

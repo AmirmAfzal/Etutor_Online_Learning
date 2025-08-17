@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import CourseCard from "@/components/Student/CourseCard";
+import { notFound } from "next/navigation";
 
 // Fake data that would come from a database
 
@@ -182,37 +183,64 @@ interface Instructor {
   description: string;
 }
 
-const CoursePage = async () => {
+const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   await connectDB();
+  const { id } = await params;
 
-  const foundCourse = await courseModel.find().populate("category").lean();
+  if (!id) {
+    notFound();
+  }
+
+  console.log("🔍 Course ID:", id);
+
+  // First try to find by ID, then by title if ID doesn't work
+  let foundCourse = await courseModel.findById(id).populate("category").lean();
+
+  // If not found by ID, try to find by title (for backward compatibility)
+  if (!foundCourse) {
+    const foundByTitle = await courseModel
+      .find({ title: id })
+      .populate("category")
+      .lean();
+
+    if (foundByTitle && foundByTitle.length > 0) {
+      foundCourse = foundByTitle[0];
+    }
+  }
+
+  if (!foundCourse) {
+    notFound();
+  }
 
   const foundInstructors = await courseModel.find().populate("authors");
 
   //  TODO : foundInstructors[0].authors is not a good way to get all instructors, it should be a separate query
-  const instructors = foundInstructors[0].authors;
-  const instructorData: Instructor[] = instructors.map((instructor: any) => ({
-    name: `${instructor.firstname} ${instructor.lastname}`,
-    bio: instructor.bio || "Instructor",
-    avatar:
-      instructor.avatar || "/images/student-dashboard/Teacher-default.jpg",
-    rating: instructor.rating,
-    students: instructor.students,
-    courses: 12,
-    description:
-      "John is a seasoned web designer with over 10 years of experience in creating stunning websites. He specializes in Figma and Webflow, helping students turn their design ideas into reality.",
-  }));
+  const instructors = foundInstructors[0]?.authors || [];
+  const instructorData: Instructor[] = (instructors || []).map(
+    (instructor: any) => ({
+      name: `${instructor.firstname || "Unknown"} ${instructor.lastname || ""}`,
+      bio: instructor.bio || "Instructor",
+      avatar:
+        instructor.avatar || "/images/student-dashboard/Teacher-default.jpg",
+      rating: instructor.rating || 5,
+      students: instructor.students || 0,
+      courses: 12,
+      description:
+        "John is a seasoned web designer with over 10 years of experience in creating stunning websites. He specializes in Figma and Webflow, helping students turn their design ideas into reality.",
+    })
+  );
 
-  const courses: Course[] = foundCourse.map((course) => ({
-    id: course._id.toString(),
-    thumbnail: course.thumbnail,
-    name: course.title,
-    title: course.title,
-    description: course.description,
+  const courses: Course[] = [foundCourse].map((course: any) => ({
+    id: course._id?.toString() || id,
+    thumbnail: course.thumbnail || "/images/course-images-1.png",
+    name: course.title || "Untitled Course",
+    title: course.title || "Untitled Course",
+    description: course.description || "No description available",
     category: course.category?.name || "Unknown",
-    price: course.price,
-    students: course.studentsCount,
-    createdBy: course.authors.map((author: any) => author.name).join(", "),
+    price: course.price || 0,
+    students: course.studentsCount || 0,
+    createdBy:
+      course.authors?.map((author: any) => author.name).join(", ") || "Unknown",
 
     rating: 5, // TODO
     reviews: 244455,
@@ -249,10 +277,25 @@ const CoursePage = async () => {
     ],
   }));
 
-  const singleCourse = {
-    ...courses[0],
-    title: courses[0].title || "Untitled Course",
-  }; // Assuming the first course is used for display
+  const singleCourse = courses[0] || {
+    id: id,
+    thumbnail: "/images/course-images-1.png",
+    name: "Untitled Course",
+    title: "Untitled Course",
+    description: "No description available",
+    category: "Unknown",
+    price: 0,
+    students: 0,
+    createdBy: "Unknown",
+    rating: 5,
+    reviews: 0,
+    breadcrumb: ["Home", "Unknown"],
+    instructors: [],
+    courseDescription: "No description available",
+    whatYouWillLearn: [],
+    thisCourseFor: [],
+    courseRequirements: [],
+  };
 
   return (
     <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
@@ -440,7 +483,7 @@ const CoursePage = async () => {
         {/* side bar cart */}
         <SidebarCart
           fakeSidebarCart={fakeSidebarCart}
-          courseId={singleCourse.id}
+          courseId={singleCourse.id || id}
         />
       </div>
 
