@@ -24,7 +24,7 @@ const CourseDetailPage = async (props: Props) => {
           course / My Courses /{" "}
           {course.category.name.charAt(0).toUpperCase() +
             course.category.name.slice(1)}{" "}
-          / Web Development / {course.title}
+          / {course.title}
         </div>
 
         <div className="bg-base-100 flex flex-col gap-4 p-4 md:flex-row">
@@ -56,29 +56,31 @@ const CourseDetailPage = async (props: Props) => {
 
             <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
               <div className="flex flex-row items-center gap-4">
-                {course.instructors.map((instructor: Instructor) => (
-                  <div key={instructor.id} className="relative">
+                <div className="flex flex-row items-center -space-x-4">
+                  {course.instructors.map((instructor: Instructor) => (
                     <Image
+                      key={instructor.id}
                       src={instructor.profile}
                       alt="instructor"
                       width={40}
                       height={40}
-                      className="rounded-full"
+                      className="border-base-100 rounded-full border-2"
                     />
-                    {/* <Image
-                        src="/images/dashboard-profile.png"
-                        className="border-base-100 absolute top-0 left-6 rounded-full border-2"
-                        alt="instructor"
-                        width={40}
-                        height={40}
-                      /> */}
-                  </div>
-                ))}
-                <div className="ml-6">
-                  <p className="text-base-content/70">Created by:</p>
-                  {course.instructors.map((instructor: Instructor) => (
-                    <p key={instructor.name}>{instructor.name}</p>
                   ))}
+                </div>
+                <div>
+                  <p className="text-base-content/70">Created by:</p>
+                  <div className="flex flex-row items-center gap-2">
+                    {course.instructors.map((instructor: Instructor) => (
+                      <div
+                        key={instructor.id}
+                        className="flex flex-row items-center gap-2"
+                      >
+                        {instructor.name}
+                        <div className="bg-base-content h-1 w-1 rounded-full" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
               <div className="flex flex-row items-center gap-2">

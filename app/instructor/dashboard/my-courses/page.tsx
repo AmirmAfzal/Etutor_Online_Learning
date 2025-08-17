@@ -30,7 +30,10 @@ interface Props {
 
 const MyCoursesPage = async (props: Props) => {
   await connectDB();
-  const courses = await courseModel.find().populate("category", "name");
+  const courses = await courseModel
+    .find()
+    .populate("category", "name")
+    .sort({ createdAt: -1 });
 
   const searchParams = await props.searchParams;
   const search = searchParams.search?.toLowerCase() || "";
@@ -157,8 +160,8 @@ const MyCoursesPage = async (props: Props) => {
               />
               <div className="space-y-4 p-4">
                 <div>
-                  <span className="bg-base-200 p-1 text-xs">
-                    {course.category.name}
+                  <span className="bg-secondary/20 text-secondary p-1 text-xs">
+                    {course.category.name.toUpperCase()}
                   </span>
                 </div>
                 <div>
