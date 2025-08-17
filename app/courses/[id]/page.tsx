@@ -484,7 +484,6 @@ const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
 
-        {/* side bar cart */}
         <SidebarCart
           fakeSidebarCart={fakeSidebarCart}
           courseId={singleCourse.id || id}

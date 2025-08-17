@@ -88,9 +88,10 @@ const SidebarCart = ({
         <div className="divider divider-base-300 my-1 w-full"></div>
 
         <div className="flex flex-col items-center gap-1">
-          <button className="btn btn-primary w-full text-xs">
+          {/* FIXME */}
+          <Link href="shopping-cart" className="btn btn-primary w-full text-xs">
             Add To cart
-          </button>
+          </Link>
           {/* <button className="btn btn-soft btn-primary w-full text-xs">
             Buy Now
           </button> */}
