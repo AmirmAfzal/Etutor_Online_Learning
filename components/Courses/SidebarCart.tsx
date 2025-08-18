@@ -36,26 +36,36 @@ const SidebarCart = ({
     initialBuyNowState
   );
 
+  const price = singleCourse?.price ?? 0;
+  const original = singleCourse?.originalPrice ?? 0;
+  const discount = (singleCourse?.discount ?? "").trim();
+  const showDiscount = discount !== "" && original > price;
+
   return (
     <div className="md:col-span-1">
       <div className="bg-base-100 sticky top-8 flex flex-col gap-1 p-4 shadow">
         <div className="flex w-full flex-row items-center justify-between">
           <span className="text-base-content/80 mb-1 text-lg font-medium">
             ${singleCourse?.price?.toFixed(2)}
-            <span className="text-base-content/50 ml-1 text-xs line-through">
-              ${singleCourse?.originalPrice?.toFixed(2)}
-            </span>
+            {original > price && (
+              <span className="text-base-content/50 ml-1 text-xs line-through">
+                ${original.toFixed(2)}
+              </span>
+            )}
           </span>
-          <button className="btn btn-soft btn-primary text-xs">
-            {singleCourse?.discount}
-          </button>
+          {showDiscount && (
+            <span className="bg-primary/10 text-primary px-2 py-1 text-xs font-semibold">
+              {discount}
+            </span>
+          )}
         </div>
 
-        <span className="text-error ml-1 flex flex-row items-start gap-1 text-xs">
-          <Icon icon="ph:alarm" className="text-sm" />
-          {singleCourse?.timeLeft}
-        </span>
-
+        {singleCourse?.timeLeft && (
+          <span className="text-error ml-1 flex flex-row items-start gap-1 text-xs">
+            <Icon icon="ph:alarm" className="text-sm" />
+            {singleCourse?.timeLeft}
+          </span>
+        )}
         <div className="divider divider-base-300 w-full"></div>
 
         <div className="flex w-full flex-col gap-1 text-xs text-nowrap">
