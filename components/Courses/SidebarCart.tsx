@@ -6,24 +6,25 @@ import Form from "next/form";
 import { actionBuyNow } from "@/lib/actions/courses/buyNow";
 import Link from "next/link";
 
-interface SidebarCartProps {
+type SidebarCartProps = {
   fakeSidebarCart: {
+    includes: string[];
+  };
+  singleCourse: {
     price: number;
     originalPrice: number;
     discount: string;
     timeLeft: string;
     courseDetails: { label: string; value: string }[];
-    includes: string[];
   };
-}
-interface courseIdProps {
   courseId: string;
-}
+};
 
 const SidebarCart = ({
   fakeSidebarCart,
   courseId,
-}: SidebarCartProps & courseIdProps) => {
+  singleCourse,
+}: SidebarCartProps) => {
   const initialWishlistState = { message: "", errors: [] as string[] };
   const initialBuyNowState = { message: "", errors: [] as string[] };
   const [wishlistState, wishlistAction, wishlistPending] = useActionState(
@@ -40,25 +41,25 @@ const SidebarCart = ({
       <div className="bg-base-100 sticky top-8 flex flex-col gap-1 p-4 shadow">
         <div className="flex w-full flex-row items-center justify-between">
           <span className="text-base-content/80 mb-1 text-lg font-medium">
-            ${fakeSidebarCart.price.toFixed(2)}
+            ${singleCourse?.price?.toFixed(2)}
             <span className="text-base-content/50 ml-1 text-xs line-through">
-              ${fakeSidebarCart.originalPrice.toFixed(2)}
+              ${singleCourse?.originalPrice?.toFixed(2)}
             </span>
           </span>
           <button className="btn btn-soft btn-primary text-xs">
-            {fakeSidebarCart.discount}
+            {singleCourse?.discount}
           </button>
         </div>
 
         <span className="text-error ml-1 flex flex-row items-start gap-1 text-xs">
           <Icon icon="ph:alarm" className="text-sm" />
-          {fakeSidebarCart.timeLeft}
+          {singleCourse?.timeLeft}
         </span>
 
         <div className="divider divider-base-300 w-full"></div>
 
         <div className="flex w-full flex-col gap-1 text-xs text-nowrap">
-          {fakeSidebarCart.courseDetails.map((detail, index) => (
+          {singleCourse?.courseDetails?.map((detail, index) => (
             <div
               key={index}
               className="flex flex-row items-center justify-between gap-1"
@@ -89,12 +90,13 @@ const SidebarCart = ({
 
         <div className="flex flex-col items-center gap-1">
           {/* FIXME */}
-          <Link href="shopping-cart" className="btn btn-primary w-full text-xs">
+          <Link
+            href="/shopping-cart"
+            className="btn btn-primary w-full text-xs"
+          >
             Add To cart
           </Link>
-          {/* <button className="btn btn-soft btn-primary w-full text-xs">
-            Buy Now
-          </button> */}
+
           <Form action={buyNowAction} className="w-full">
             <input type="hidden" name="courseId" value={courseId} />
             <button

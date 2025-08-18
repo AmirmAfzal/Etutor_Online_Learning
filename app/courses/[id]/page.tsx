@@ -126,17 +126,6 @@ const RelatedCourses = [
 ];
 
 const fakeSidebarCart = {
-  price: 49.0,
-  originalPrice: 26.0,
-  discount: "56% Off",
-  timeLeft: "2 days left at this price!",
-  courseDetails: [
-    { label: "Course Duration", value: "6 Month" },
-    { label: "Course Level", value: "Beginner" },
-    { label: "Students Enrolled", value: "69,419,618" },
-    { label: "Language", value: "Mandarin" },
-    { label: "Subtitle Language", value: "English" },
-  ],
   includes: [
     "Lifetime access",
     "30-days money-back guarantee",
@@ -148,7 +137,7 @@ const fakeSidebarCart = {
   ],
 };
 
-interface Course {
+type Course = {
   _id?: string;
   id?: string;
   thumbnail: string;
@@ -161,6 +150,10 @@ interface Course {
   students: number;
   reviews?: number;
   breadcrumb?: string[];
+  originalPrice: number;
+  discount: string;
+  timeLeft: string;
+  courseDetails: { label: string; value: string }[];
   instructors?: {
     name: string;
     avatar: string;
@@ -171,9 +164,9 @@ interface Course {
   courseRequirements?: string[];
   createdBy?: string;
   curriculum?: any; // Added to match Curriculum usage
-}
+};
 
-interface Instructor {
+type Instructor = {
   name: string;
   bio: string;
   avatar: string;
@@ -181,9 +174,13 @@ interface Instructor {
   students: number;
   courses: number;
   description: string;
-}
+};
 
-const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
+const SingleCoursePage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   await connectDB();
   const { id } = await params;
 
@@ -243,7 +240,17 @@ const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
       course.authors?.map((author: any) => author.name).join(", ") || "Unknown",
 
     rating: 5, // TODO
+    originalPrice: course.originalPrice || 0,
+    discount: course.discount || "0%",
+    timeLeft: course.timeLeft || "0 days left at this price!",
     reviews: 244455,
+    courseDetails: [
+      { label: "Course Duration", value: "6 Month" },
+      { label: "Course Level", value: "Beginner" },
+      { label: "Students Enrolled", value: "69,419,618" },
+      { label: "Language", value: "Mandarin" },
+      { label: "Subtitle Language", value: "English" },
+    ],
     breadcrumb: ["Home", "Development", "Web Development", "Webflow"],
     instructors: [
       {
@@ -285,6 +292,10 @@ const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
     description: "No description available",
     category: "Unknown",
     price: 0,
+    originalPrice: 0,
+    discount: "0%",
+    timeLeft: "0 days left at this price!",
+    courseDetails: [],
     students: 0,
     createdBy: "Unknown",
     rating: 5,
@@ -487,6 +498,7 @@ const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
         <SidebarCart
           fakeSidebarCart={fakeSidebarCart}
           courseId={singleCourse.id || id}
+          singleCourse={singleCourse}
         />
       </div>
 
@@ -519,4 +531,4 @@ const CoursePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   );
 };
 
-export default CoursePage;
+export default SingleCoursePage;
