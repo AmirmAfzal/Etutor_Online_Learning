@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 import WishlistCourseRow from "@/components/Student/student-wishlist/WishlistCoursesRow";
-
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";

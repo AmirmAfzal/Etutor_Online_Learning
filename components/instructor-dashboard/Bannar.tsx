@@ -49,7 +49,7 @@ const Bannar = () => {
       <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
           <div className="container mx-auto bg-[#111033] p-6">
-            <div className="flex flex-col justify-between md:flex-row">
+            <div className="flex flex-col items-center justify-between space-y-6 md:flex-row md:space-y-0">
               <div className="flex flex-row items-center gap-4">
                 <Image
                   src="/images/dashboard-profile.png"
@@ -67,13 +67,15 @@ const Bannar = () => {
               </div>
               <div className="flex flex-row items-center gap-4">
                 <p className="text-base-100/60 text-xs">1/4 Steps</p>
-                <div className="bg-base-300 h-4 w-75">
+                <div className="bg-base-300 h-4 w-32 sm:w-75">
                   <div
                     className="bg-success h-full"
                     style={{ width: "25%" }}
                   ></div>
                 </div>
-                <p className="text-base-100 font-bold">25% Completed</p>
+                <p className="text-base-100 text-xs font-bold md:text-lg">
+                  25% Completed
+                </p>
               </div>
               <div className="flex flex-row items-center gap-4">
                 <button className="btn btn-primary">Edit Biography</button>
