@@ -1,15 +1,12 @@
-import Image from "next/image";
-import Icon from "@/components/ui/Icon";
-import Curriculum from "@/components/Courses/Curriculum";
-import CourseInstructors from "@/components/Courses/CourseInstructors";
-import Comments from "@/components/Courses/Comments";
-import CourseRating from "@/components/Courses/CourseRating";
+import SingleCourseHeader from "@/components/Courses/SingleCourseHeader";
+import CourseHero from "@/components/Courses/CourseHero";
+import CourseTabs from "@/components/Courses/CourseTabs";
+import RelatedCoursesSection from "@/components/Courses/RelatedCoursesSection";
 import SidebarCart from "@/components/Courses/SidebarCart";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
-import CourseCard from "@/components/Student/CourseCard";
 import { notFound } from "next/navigation";
+import CourseTrailer from "@/components/Courses/CourseHero";
 
 // Fake data that would come from a database
 
@@ -187,12 +184,8 @@ const SingleCoursePage = async ({
   if (!id) {
     notFound();
   }
-
-  console.log("🔍 Course ID:", id);
-
   // First try to find by ID, then by title if ID doesn't work
   let foundCourse = await courseModel.findById(id).populate("category").lean();
-
   // If not found by ID, try to find by title (for backward compatibility)
   if (!foundCourse) {
     const foundByTitle = await courseModel
@@ -312,186 +305,29 @@ const SingleCoursePage = async ({
     <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-3">
         <div className="md:col-span-2">
-          <div className="bg-base-200 w-full">
-            <div className="flex max-w-7xl items-center justify-center">
-              <div className="mt-12 mb-6 w-full px-2">
-                <span className="text-base-content/70 mb-4 flex items-center gap-2 text-sm">
-                  {singleCourse.breadcrumb?.join(" > ")}
-                </span>
-                <h1 className="mb-4 text-3xl font-semibold">
-                  {singleCourse.title}
-                </h1>
-                <p className="text-base-content/70 text-md mb-6 font-medium">
-                  {singleCourse.description}
-                </p>
-                <div className="mb-6 flex items-center gap-4">
-                  <div className="flex w-full flex-row items-center justify-between">
-                    <div className="flex flex-row items-center gap-2">
-                      <div className="flex -space-x-2">
-                        {singleCourse.instructors?.map((instructor, index) => (
-                          <Image
-                            key={index}
-                            src={instructor.avatar}
-                            alt={instructor.name}
-                            width={40}
-                            height={40}
-                            className="border-base-100 rounded-full border-2"
-                          />
-                        ))}
-                      </div>
-                      <p className="text-base-content/60 flex flex-col text-sm">
-                        Created by:
-                        <span className="text-base-content/80 font-semibold">
-                          {singleCourse.createdBy}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-2">
-                      <span className="text-md flex items-center justify-center gap-2">
-                        {/* TODO: add icons to number of reviews */}
-                        <Icon icon="ph:star-fill" className="text-primary" />
-                        {singleCourse.rating}(
-                        {singleCourse.reviews?.toLocaleString()} reviews)
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <SingleCourseHeader
+            title={singleCourse.title}
+            description={singleCourse.description}
+            breadcrumb={singleCourse.breadcrumb}
+            instructors={singleCourse.instructors}
+            createdBy={singleCourse.createdBy}
+            rating={singleCourse.rating}
+            reviews={singleCourse.reviews}
+          />
           <div className="bg-base-100 flex w-full flex-col items-center justify-center">
-            {/* this image will be replaced with a video*/}
-            <Image
-              src="/images/courses/Trailer.jpg"
-              alt="trailer"
-              width={1024}
-              height={800}
-              className="mt-8 h-auto w-full max-w-2xl object-cover"
+            <CourseTrailer />
+            <CourseTabs
+              overview={{
+                courseDescription: singleCourse.courseDescription,
+                whatYouWillLearn: singleCourse.whatYouWillLearn,
+                thisCourseFor: singleCourse.thisCourseFor,
+                courseRequirements: singleCourse.courseRequirements,
+              }}
+              curriculum={fakeCourses.curriculum}
+              instructors={instructorData}
+              rating={singleCourse.rating}
+              studentsComments={studentsComments}
             />
-
-            <Tabs defaultValue="description" className="mt-8 w-full">
-              <TabsList className="!bg-base-100 data- flex gap-6">
-                <TabsTrigger
-                  value="overview"
-                  className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
-                >
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger
-                  value="curriculum"
-                  className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
-                >
-                  Curriculum
-                </TabsTrigger>
-                <TabsTrigger
-                  value="instructors"
-                  className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
-                >
-                  Instructors
-                </TabsTrigger>
-                <TabsTrigger
-                  value="review"
-                  className="!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none"
-                >
-                  Review
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="overview">
-                <div className="p-4">
-                  <span className="text-base-content/80 text-2xl font-medium">
-                    Description
-                  </span>
-
-                  {singleCourse.courseDescription
-                    ?.split(/\n\s*\n|\n/)
-                    .filter(Boolean)
-                    .map((para, i) => (
-                      <p
-                        key={i}
-                        className="text-base-content/70 mt-4 mb-4 text-sm leading-relaxed"
-                      >
-                        {para}
-                      </p>
-                    ))}
-                </div>
-
-                <div className="bg-success/10 w-full p-4 sm:p-6 lg:p-8">
-                  <span className="text-base-content/80 text-lg font-medium md:text-xl">
-                    What you will learn in this course
-                  </span>
-                  <div className="mt-4">
-                    <ul className="grid grid-cols-1 gap-4 pl-2 sm:grid-cols-2 sm:gap-6 sm:pl-5">
-                      {singleCourse.whatYouWillLearn?.map((item, index) => (
-                        <li
-                          key={index}
-                          className="text-base-content/70 flex items-start gap-2 text-sm"
-                        >
-                          <Icon
-                            icon="ph:check-circle-fill"
-                            className="text-success shrink-0 text-lg"
-                          />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-12 w-full">
-                  <span className="text-base-content/80 text-lg font-medium md:text-2xl">
-                    Who this course is for :
-                  </span>
-                  <div className="mt-4">
-                    <ul className="flex flex-col items-start gap-3 pl-2 sm:pl-5">
-                      {singleCourse.thisCourseFor?.map((item, index) => (
-                        <li
-                          key={index}
-                          className="text-base-content/70 flex items-start gap-2 text-sm"
-                        >
-                          <Icon
-                            icon="ph:arrow-right"
-                            className="text-primary shrink-0 text-lg"
-                          />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-12 w-full">
-                  <span className="text-base-content/80 text-lg font-medium md:text-2xl">
-                    Course requirements
-                  </span>
-                  <div className="mt-4">
-                    <ul className="ml-2 flex list-disc flex-col items-start gap-3 pl-5 sm:ml-5">
-                      {singleCourse.courseRequirements?.map((item, index) => (
-                        <li
-                          key={index}
-                          className="text-base-content/70 text-sm leading-relaxed"
-                        >
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <Curriculum curriculum={fakeCourses.curriculum} />
-                <CourseInstructors instructors={instructorData} />
-                <CourseRating rating={singleCourse.rating} />
-                <Comments studentsComments={studentsComments} />
-              </TabsContent>
-              <TabsContent value="curriculum">
-                <Curriculum curriculum={fakeCourses.curriculum} />
-              </TabsContent>
-              <TabsContent value="instructors">
-                <CourseInstructors instructors={instructorData} />
-              </TabsContent>
-              <TabsContent value="review">
-                {/* TODO : what do we have here? */}
-              </TabsContent>
-            </Tabs>
           </div>
         </div>
 
@@ -502,31 +338,7 @@ const SingleCoursePage = async ({
         />
       </div>
 
-      <div className="border-base-300 mt-12 w-full border-t">
-        <div className="flex flex-row items-center justify-between gap-4 p-6">
-          <span className="text-base-content/80 text-2xl font-semibold">
-            Related Courses
-          </span>
-
-          <button className="btn btn-soft btn-primary mt-6">
-            view All <Icon icon="ph:arrow-right" className="ml-2 text-lg" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 p-6 md:grid-cols-3 lg:grid-cols-4">
-          {RelatedCourses.map((course, index) => (
-            <CourseCard
-              key={index}
-              thumbnail={course.thumbnail}
-              name={course.name}
-              category={course.category}
-              price={course.price}
-              rating={course.rating}
-              students={course.students}
-            />
-          ))}
-        </div>
-      </div>
+      <RelatedCoursesSection courses={RelatedCourses} />
     </section>
   );
 };
