@@ -1,10 +1,13 @@
 "use server";
 
-import { connectDB } from "../db/db";
-import userModel from "../db/models/userModel";
+import bcrypt from "bcrypt";
+
 import { signUpSchema } from "@/lib/validation/auth/signinSchema";
 import { ActionData } from "@/lib/formTypes";
-import bcrypt from "bcrypt";
+
+import { connectDB } from "../db/db";
+import userModel from "../db/models/userModel";
+
 
 export const createUser = async (
   prevState: ActionData,

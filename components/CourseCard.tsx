@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+
 import Icon from "./ui/Icon";
 
 interface Props {
