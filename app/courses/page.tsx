@@ -162,7 +162,7 @@ const CoursesPage = async ({
       <div className="border-base-300 flex w-full flex-col gap-4 border-b px-4 pb-2">
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-2">
-            <a
+            <Link
               href={isFiltered ? "/courses" : "/courses?filter=true"}
               className={`bg-base-100 flex flex-row items-center gap-3 rounded-none border px-2 py-3 ${isFiltered ? "border-primary text-primary" : "border-primary/20 text-base-content/80"}`}
             >
@@ -173,7 +173,7 @@ const CoursesPage = async ({
               >
                 {isFiltered ? "3" : "0"}
               </span>
-            </a>
+            </Link>
             <CoursesSearch />
           </div>
 
@@ -184,18 +184,18 @@ const CoursesPage = async ({
             <span className="text-base-content/70 whitespace-nowrap">
               Suggestions :
             </span>
-            <a href="" className="text-primary/80 whitespace-nowrap">
+            <Link href="" className="text-primary/80 whitespace-nowrap">
               user interface
-            </a>
-            <a href="" className="text-primary/80 whitespace-nowrap">
+            </Link>
+            <Link href="" className="text-primary/80 whitespace-nowrap">
               user experience
-            </a>
-            <a href="" className="text-primary/80 whitespace-nowrap">
+            </Link>
+            <Link href="" className="text-primary/80 whitespace-nowrap">
               web design
-            </a>
-            <a href="" className="text-primary/80 whitespace-nowrap">
+            </Link>
+            <Link href="" className="text-primary/80 whitespace-nowrap">
               interface app
-            </a>
+            </Link>
           </div>
 
           {/* TODO: number of results for search */}
