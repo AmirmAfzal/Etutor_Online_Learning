@@ -32,7 +32,7 @@ const CourseFilter = ({
   price,
 }: Props) => {
   return (
-    <aside className="border-base-300 bg-base-100 w-5/12 border-r p-4">
+    <aside className="border-base-300 bg-base-100 mt-8 w-full !space-y-1.5 md:mt-0 md:w-5/12 md:border-r md:p-4">
       <Categories categories={categories} />
       <Tools tools={tools} />
       <Rating rating={rating} />

@@ -3,6 +3,15 @@
 import Icon from "@/components/ui/Icon";
 import Link from "next/link";
 
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
 import React from "react";
 import CoursesSearch from "@/components/Courses/CoursesSearch";
 import CoursesSelect from "@/components/Courses/CoursesSelect";
@@ -164,7 +173,7 @@ const CoursesPage = async ({
           <div className="flex flex-row items-center gap-2">
             <Link
               href={isFiltered ? "/courses" : "/courses?filter=true"}
-              className={`bg-base-100 flex flex-row items-center gap-3 rounded-none border px-2 py-3 ${isFiltered ? "border-primary text-primary" : "border-primary/20 text-base-content/80"}`}
+              className={`bg-base-100 flex-row items-center gap-3 rounded-none border px-2 py-3 md:flex ${isFiltered ? "border-primary text-primary" : "border-primary/20 text-base-content/80"} hidden`}
             >
               <Icon icon="ph:faders-fill" className="text-xl" />
               <span className="text-sm">Filter</span>
@@ -174,6 +183,35 @@ const CoursesPage = async ({
                 {isFiltered ? "3" : "0"}
               </span>
             </Link>
+
+            <Sheet>
+              <SheetTrigger className="bg-base-100 border-primary text-primary flex flex-row items-center gap-2 rounded-none border p-2 md:hidden">
+                <Icon icon="ph:faders-fill" className="text-xl" />
+                <span className="text-sm">Filter</span>
+                <span className="text-primary bg-primary/10 px-2">
+                  {isFiltered ? "3" : "0"}
+                </span>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Courses Filter</SheetTitle>
+                  <SheetDescription className="flex flex-col items-center justify-between">
+                    <CourseFilter
+                      categories={categories}
+                      tools={tools}
+                      rating={rating}
+                      courseLevel={courseLevel}
+                      duration={duration}
+                      price={price}
+                    />
+                    <button className="btn btn-primary z-50 mt-8 w-full font-bold shadow-lg">
+                      Done
+                    </button>
+                  </SheetDescription>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+
             <CoursesSearch />
           </div>
 
