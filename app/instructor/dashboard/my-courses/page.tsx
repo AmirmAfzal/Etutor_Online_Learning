@@ -154,7 +154,7 @@ const MyCoursesPage = async (props: Props) => {
             >
               <Image
                 src={course.thumbnail}
-                alt="course image"
+                alt={course.title}
                 width={400}
                 height={200}
               />

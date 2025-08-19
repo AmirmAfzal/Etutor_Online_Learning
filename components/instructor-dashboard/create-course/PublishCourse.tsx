@@ -26,6 +26,7 @@ import {
   Instructor,
 } from "@/lib/actions/instructor/create-course/findInstructors";
 import { CourseData } from "@/lib/db/models/courseModel";
+import ErrorMessage from "@/components/ErrorMessage";
 
 interface Props {
   onBack: () => void;
@@ -267,6 +268,14 @@ const PublishCourse = ({ onBack, course }: Props) => {
                 Submit for Review
               </button>
             </div>
+            {state.message === "ERROR" && (
+              <div className="p-4">
+                <ErrorMessage
+                  title="Error saving publish course:"
+                  errors={state.errors}
+                />
+              </div>
+            )}
           </form>
         </Form>
       </div>

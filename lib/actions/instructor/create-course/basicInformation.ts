@@ -53,7 +53,7 @@ export async function saveBasicInformation(
     language: result.data.language,
     subtitleLang: result.data.subtitleLang,
     level: result.data.level,
-    durationValue: result.data.durationValue,
+    duration: result.data.durationValue,
     durationUnit: result.data.durationUnit,
   });
   redirect(

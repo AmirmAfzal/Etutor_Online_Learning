@@ -26,6 +26,7 @@ import {
 } from "@/lib/validation/schemas/instructor/create-course";
 import { saveAdvanceInformation } from "@/lib/actions/instructor/create-course/advanceInformation";
 import { CourseData } from "@/lib/db/models/courseModel";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const MAX_INPUTS = 8;
 const MAX_CHARS = 120;
@@ -426,10 +427,11 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
               />
             ))}
           </div>
-          <div className="mt-6 flex flex-row items-center justify-between p-4">
+          <div className="flex flex-row items-center justify-between p-4">
             <button className="btn btn-outline" type="button" onClick={onBack}>
               Previous
             </button>
+
             <button
               type="submit"
               disabled={pending}
@@ -439,6 +441,14 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
               Save & Next
             </button>
           </div>
+          {state.message === "ERROR" && (
+            <div className="p-4">
+              <ErrorMessage
+                title="Error saving advance information:"
+                errors={state.errors}
+              />
+            </div>
+          )}
         </form>
       </Form>
     </div>

@@ -19,6 +19,7 @@ import {
   SocialProfileFormData,
   socialProfileSchema,
 } from "@/lib/validation/schemas/instructor/settings/socialProfile";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const initialState = {
   message: "",
@@ -170,6 +171,14 @@ const SocialProfile = () => {
                 </div>
               )}
             </div>
+            {state.message === "ERROR" && (
+              <div className="p-4">
+                <ErrorMessage
+                  title="Error saving course information:"
+                  errors={state.errors}
+                />
+              </div>
+            )}
           </form>
         </Form>
       </div>

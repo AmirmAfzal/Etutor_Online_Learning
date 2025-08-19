@@ -13,6 +13,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import ErrorMessage from "@/components/ErrorMessage";
 
 import VideoUploaderModal, {
   formatDuration,
@@ -567,6 +568,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
         <button className="btn btn-outline" type="button" onClick={onBack}>
           Previous
         </button>
+
         <button
           type="submit"
           disabled={pending}
@@ -577,6 +579,14 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
           Save & Next
         </button>
       </div>
+      {state.message === "ERROR" && (
+        <div className="p-4">
+          <ErrorMessage
+            title="Error saving curriculum:"
+            errors={state.errors}
+          />
+        </div>
+      )}
 
       {videoOpenModal && activeLecture && (
         <VideoUploaderModal

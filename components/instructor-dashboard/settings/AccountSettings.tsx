@@ -32,6 +32,7 @@ import {
   accountSettingSchema,
 } from "@/lib/validation/schemas/instructor/settings/accountSettings";
 import { saveAccountSettings } from "@/lib/actions/instructor/settings/accountSettings";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const initialState = {
   message: "",
@@ -278,6 +279,14 @@ const AccountSettings = () => {
               </div>
             )}
           </div>
+          {state.message === "ERROR" && (
+            <div className="p-4">
+              <ErrorMessage
+                title="Error saving course information:"
+                errors={state.errors}
+              />
+            </div>
+          )}
         </form>
       </Form>
     </section>

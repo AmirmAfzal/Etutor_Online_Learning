@@ -19,6 +19,7 @@ import {
   changePasswordFormData,
   changePasswordSchema,
 } from "@/lib/validation/schemas/instructor/settings/changePassword";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const initialState = {
   message: "",
@@ -172,6 +173,14 @@ const Changepassword = () => {
               </div>
             )}
           </div>
+          {state.message === "ERROR" && (
+            <div className="p-4">
+              <ErrorMessage
+                title="Error saving course information:"
+                errors={state.errors}
+              />
+            </div>
+          )}
         </form>
       </Form>
     </section>
