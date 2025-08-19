@@ -39,16 +39,16 @@ const WatchDetails = ({
             ))}
           </div>
           <div className="flex flex-col items-start">
-            <span className="md:text-md text-sm font-medium">
+            <span className="text-md font-medium md:text-lg">
               {watchingStudents}
             </span>
-            <span className="text-base-content/60 text-sm">
+            <span className="text-base-content/60 text-sm md:text-base">
               student Watching
             </span>
           </div>
         </div>
 
-        <div className="text-base-content/70 flex flex-wrap items-center gap-4 text-xs sm:text-base">
+        <div className="text-base-content/70 flex flex-wrap items-center gap-4 text-sm md:text-base">
           <span>Last updated: 3 days ago</span>
           <span>Comments: {commentsCount}</span>
         </div>
