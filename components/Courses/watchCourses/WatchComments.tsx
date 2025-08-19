@@ -36,7 +36,9 @@ const CommentItem: FC<{
             alt={comment.name}
             className="h-12 w-12 rounded-full"
           />
-          <span className="font-semibold">{comment.name}</span>
+          <span className="text-md font-semibold md:text-lg">
+            {comment.name}
+          </span>
           {comment.ADMIN && (
             <span className="bg-secondary text-base-100 p-1 text-xs">
               ADMIN
@@ -48,7 +50,9 @@ const CommentItem: FC<{
         </div>
 
         <div className="ml-6 flex w-full flex-col">
-          <p className="text-base-content/60">{comment.comment}</p>
+          <p className="text-base-content/60 sm:text-md text-sm">
+            {comment.comment}
+          </p>
           {onReplyClick && (
             <button
               onClick={() => onReplyClick(comment.name)}

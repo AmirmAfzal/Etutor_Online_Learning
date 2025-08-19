@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Accordion,
   AccordionContent,
@@ -6,95 +5,128 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Progress } from "@/components/ui/progress";
-import { Icon } from "@iconify/react";
+import Icon from "@/components/ui/Icon";
 
-interface Props {
-  curriculum: {
+interface CurriculumItem {
+  title: string;
+  lectures: number;
+  duration: string;
+  content: {
     title: string;
-    lectures: number;
-    duration: string;
-    content: { title: string; info: string; type: "video" | "file" | string }[];
+    info: string;
+    type: "video" | "file" | string;
   }[];
 }
 
-const WatchCurriculum: React.FC<Props> = ({ curriculum }) => {
+interface WatchCurriculumProps {
+  curriculum: CurriculumItem[];
+  completionPercentage?: number;
+}
+
+const WatchCurriculum: React.FC<WatchCurriculumProps> = ({
+  curriculum,
+  completionPercentage = 15,
+}) => {
   return (
-    <div className="mt-12 w-full">
-      <div className="mb-6 flex w-full flex-col gap-6">
-        <div className="flex items-center justify-between">
-          <span className="text-base-content/80 mb-4 block text-xl font-semibold">
-            course Content
-          </span>
-          <span className="text-success mb-4 block text-lg font-semibold">
-            {/* FIXME */}
-            15% complete
+    <div className="w-full">
+      {/* Progress Section */}
+      <div className="mb-6 flex w-full flex-col gap-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-base-content/80 text-lg font-semibold md:text-xl lg:text-2xl">
+            Course Content
+          </h2>
+          <span className="text-success text-sm font-semibold md:text-base lg:text-lg">
+            {completionPercentage}% complete
           </span>
         </div>
-        {/* TODO: change value */}
-        <Progress value={33} className="!bg-base-300 !text-success" />
+        <Progress
+          value={completionPercentage}
+          className="bg-base-300 [&>div]:bg-success"
+        />
       </div>
-      <Accordion type="single" collapsible className="w-full">
-        {curriculum.map((section, index) => (
-          <AccordionItem
-            key={index}
-            value={`section-${index + 1}`}
-            className="bg-base-100 border-base-content/10 border transition-all duration-150 hover:translate-y-[-1px]"
-          >
-            <AccordionTrigger className="min-h-[72px] px-6">
-              <div className="flex w-full flex-row items-start justify-between gap-3">
-                <span className="text-base-content/80 text-base font-medium">
-                  {section.title}
-                </span>
-                <div className="flex flex-row gap-2 text-nowrap">
-                  <span className="text-base-content/60 flex items-center gap-2 text-sm">
-                    <Icon
-                      icon="ph:play-circle-duotone"
-                      className="text-secondary"
-                    />
-                    {section.lectures} Lectures
+
+      {/* Curriculum Sections */}
+      <Accordion type="single" collapsible className="w-full space-y-3">
+        {curriculum.map((section, index) => {
+          const completedLectures = Math.floor(section.lectures * 0.25); // Example calculation
+          const sectionCompletion = Math.floor(
+            (completedLectures / section.lectures) * 100
+          );
+
+          return (
+            <AccordionItem
+              key={`section-${index}`}
+              value={`section-${index}`}
+              className="border-base-content/10 bg-base-100 border transition-all duration-150 hover:shadow-sm"
+            >
+              <AccordionTrigger className="px-4 py-3 hover:no-underline sm:px-6 sm:py-4">
+                <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between lg:flex-col lg:items-start xl:flex-row xl:justify-between">
+                  <span className="text-base-content/80 text-base font-medium md:text-lg">
+                    {section.title}
                   </span>
-                  <span className="text-base-content/60 flex items-center gap-2 text-sm">
-                    <Icon icon="ph:clock" className="text-primary text-lg" />
-                    {section.duration}
-                  </span>
-                  <span className="text-base-content/60 flex items-center gap-2 text-sm">
-                    <Icon icon="ph:checks" className="text-success text-lg" />
-                    {/* FIXME */}
-                    {`25% finish (1/4)`}
-                  </span>
+
+                  <div className="text-base-content/60 flex flex-wrap items-center gap-2 text-xs sm:gap-4 sm:text-sm md:text-base">
+                    <span className="flex items-center gap-1">
+                      <Icon
+                        icon="ph:play-circle-duotone"
+                        className="text-secondary"
+                      />
+                      {section.lectures} Lectures
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Icon icon="ph:clock" className="text-primary" />
+                      {section.duration}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Icon icon="ph:checks" className="text-success" />
+                      {`${sectionCompletion}% (${completedLectures}/${section.lectures})`}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <ul className="px-4">
-                {section.content.map((item, i) => (
-                  <li key={i} className="flex items-center gap-2 py-1 text-sm">
-                    <form
-                      action=""
-                      className="flex w-full flex-row items-center justify-between gap-2"
-                    >
-                      <div className="flex gap-2">
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-primary"
-                        />
-                        <span>{item.title}</span>
-                      </div>
-                      <div className="flex gap-2">
-                        {/* TODO : video play => change icon  */}
-                        <Icon
-                          icon="ph:play-fill"
-                          className="text-base-content/70 text-md"
-                        />
-                        <span className="text-xs">{item.info}</span>
-                      </div>
-                    </form>
-                  </li>
-                ))}
-              </ul>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
+              </AccordionTrigger>
+
+              <AccordionContent className="px-4 py-3 sm:px-6 sm:py-4">
+                {section.content.length > 0 ? (
+                  <ul className="space-y-2">
+                    {section.content.map((item, itemIndex) => (
+                      <li
+                        key={`item-${index}-${itemIndex}`}
+                        className="flex items-center justify-between gap-3 py-1"
+                      >
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary checkbox-sm"
+                          />
+                          <span className="text-sm md:text-base">
+                            {item.title}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Icon
+                            icon={
+                              item.type === "video"
+                                ? "ph:play-fill"
+                                : "ph:file-text"
+                            }
+                            className="text-base-content/70 text-base"
+                          />
+                          <span className="text-xs md:text-sm">
+                            {item.info}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-base-content/60 py-2 text-sm md:text-base">
+                    No content available for this section yet.
+                  </p>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
       </Accordion>
     </div>
   );

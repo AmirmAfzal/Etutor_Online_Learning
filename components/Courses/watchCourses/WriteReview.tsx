@@ -4,7 +4,10 @@ import { Input } from "@/components/ui/input";
 const WriteReview = () => {
   return (
     <>
-      <label htmlFor="my_modal_6" className="btn bg-base-100 text-primary">
+      <label
+        htmlFor="my_modal_6"
+        className="btn bg-base-100 text-primary shadow md:shadow-none"
+      >
         Write A Review
       </label>
       <input type="checkbox" id="my_modal_6" className="modal-toggle" />
