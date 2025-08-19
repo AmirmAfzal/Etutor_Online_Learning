@@ -16,7 +16,7 @@ const WatchHeader = ({
   totalDuration,
 }: WatchHeaderProps) => {
   return (
-    <div className="bg-base-200 flex w-full flex-col items-start justify-between gap-4 p-4 md:flex-row md:items-center">
+    <div className="bg-base-200 flex w-full flex-col items-start justify-between gap-4 p-4 lg:flex-row lg:items-center">
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
         <Link
           href="#"
@@ -27,7 +27,7 @@ const WatchHeader = ({
         </Link>
 
         <div className="flex flex-col gap-1 md:gap-3">
-          <h1 className="text-base-content/80 text-lg font-semibold md:text-xl">
+          <h1 className="text-base-content/80 text-md font-semibold lg:text-xl">
             {title}
           </h1>
           <div className="flex flex-wrap items-center gap-2">
@@ -47,7 +47,7 @@ const WatchHeader = ({
         </div>
       </div>
 
-      <div className="flex w-full flex-row items-center justify-end gap-2 md:w-auto">
+      <div className="mt-3 flex w-full flex-row items-center justify-end gap-2 md:w-auto">
         <WriteReview />
         <button className="btn btn-primary text-xs whitespace-nowrap md:text-base">
           Next Lecture

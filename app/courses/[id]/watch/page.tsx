@@ -100,7 +100,7 @@ const comments: Comment[] = [
     time: "3 weeks ago",
     star: 5,
     comment:
-      "Now I know that I will spent that 5 minutes of my life with pure pleasure",
+      "Now I know that I will spent that 5 minutes of my life with pure pleasure and joy. I am so happy that I found this course. It is really amazing and I will recommend it to all my friends.",
     ADMIN: false,
     replies: [
       {

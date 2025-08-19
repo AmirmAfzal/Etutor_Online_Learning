@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 import { FC, useState } from "react";
+import TruncatedText from "../TruncatedText";
 
 type Comment = {
   name: string;
@@ -50,9 +51,7 @@ const CommentItem: FC<{
         </div>
 
         <div className="ml-6 flex w-full flex-col">
-          <p className="text-base-content/60 sm:text-md text-sm">
-            {comment.comment}
-          </p>
+          <TruncatedText text={comment.comment} maxLength={60} />
           {onReplyClick && (
             <button
               onClick={() => onReplyClick(comment.name)}
