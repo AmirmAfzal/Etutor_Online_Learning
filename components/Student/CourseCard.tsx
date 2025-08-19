@@ -15,7 +15,7 @@ interface Props {
 
 const CourseCard = (props: Props) => {
   return (
-    <Link href={`/courses/${props.id || props.name}`} className="block">
+    <Link href={`/courses/${props.id}`} className="block">
       <div className="bg-base-100 border-base-300 h-max border">
         <Image
           src={props.thumbnail}

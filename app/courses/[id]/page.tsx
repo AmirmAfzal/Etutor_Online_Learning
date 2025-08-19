@@ -1,5 +1,4 @@
 import SingleCourseHeader from "@/components/Courses/SingleCourseHeader";
-import CourseHero from "@/components/Courses/CourseHero";
 import CourseTabs from "@/components/Courses/CourseTabs";
 import RelatedCoursesSection from "@/components/Courses/RelatedCoursesSection";
 import SidebarCart from "@/components/Courses/SidebarCart";
@@ -184,19 +183,14 @@ const SingleCoursePage = async ({
   if (!id) {
     notFound();
   }
-  // First try to find by ID, then by title if ID doesn't work
-  let foundCourse = await courseModel.findById(id).populate("category").lean();
-  // If not found by ID, try to find by title (for backward compatibility)
-  if (!foundCourse) {
-    const foundByTitle = await courseModel
-      .find({ title: id })
-      .populate("category")
-      .lean();
 
-    if (foundByTitle && foundByTitle.length > 0) {
-      foundCourse = foundByTitle[0];
-    }
-  }
+  const foundCourse = await courseModel
+    .findOne({
+      // $or: [{ _id: id }, { title: id }],
+      _id: id,
+    })
+    .populate("category")
+    .lean();
 
   if (!foundCourse) {
     notFound();
