@@ -1,10 +1,17 @@
 "use client";
+
+import React, { startTransition, useActionState, useEffect, useState } from "react";
 import Image from "next/image";
-import React, { startTransition, useActionState, useEffect } from "react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpSchema } from "@/lib/validation/auth/signupSchema";
 import { z } from "zod";
+
+import { signUpSchema } from "@/lib/validation/auth/signupSchema";
+import { createUser } from "@/lib/actions/signup";
+
 import {
   Form,
   FormField,
@@ -14,12 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import Link from "next/link";
 import Icon from "@/components/ui/Icon";
-import { createUser } from "@/lib/actions/signup";
-import { signIn } from "next-auth/react";
-import { redirect } from "next/navigation";
 
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -64,7 +66,7 @@ const SignupPage = () => {
       }
     };
     handleSignin();
-  }, [state.message]);
+  }, [state.message, form]);
 
   return (
     <div className="grid h-screen grid-cols-5">

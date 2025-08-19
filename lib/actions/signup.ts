@@ -1,10 +1,12 @@
 "use server";
 
-import { connectDB } from "../db/db";
-import userModel from "../db/models/userModel";
+import { hash } from "bcrypt";
+
 import { signUpSchema } from "@/lib/validation/auth/signupSchema";
 import { ActionData } from "@/lib/formTypes";
-import bcrypt from "bcrypt";
+
+import { connectDB } from "../db/db";
+import userModel from "../db/models/userModel";
 import studentModel from "../db/models/studentModel";
 
 export const createUser = async (
@@ -40,7 +42,7 @@ export const createUser = async (
     };
   }
 
-  const hashedPassword = await bcrypt.hash(result.data.password, 10);
+  const hashedPassword = await hash(result.data.password, 10);
 
   const createdUser = await userModel.create({
     email: result.data.email,
