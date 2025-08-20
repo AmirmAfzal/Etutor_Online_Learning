@@ -21,6 +21,7 @@ import {
   PaymentCardFormData,
   paymentCardSchema,
 } from "@/lib/validation/schemas/instructor/newPaymentCard";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const initialState = {
   message: "",
@@ -55,7 +56,10 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
 
   useEffect(() => {
     if (state.message === "SUCCESS") {
-      closeModal();
+      form.reset();
+      setTimeout(() => {
+        closeModal();
+      }, 2000);
     }
   }, [state.message, closeModal]);
 
@@ -172,6 +176,22 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
                 <Icon icon="ph:paper-plane-right-fill" width="24" height="24" />
               </button>
             </div>
+
+            {state.message === "SUCCESS" && (
+              <div className="bg-success/10 text-success mt-4 flex flex-row items-center gap-4 rounded-md p-4">
+                <div className="loading loading-spinner" />
+                <p>add new payment card successfully!</p>
+              </div>
+            )}
+
+            {state.message === "ERROR" && (
+              <div className="p-4">
+                <ErrorMessage
+                  title="Error saving new payment card:"
+                  errors={state.errors}
+                />
+              </div>
+            )}
           </form>
         </Form>
       </div>

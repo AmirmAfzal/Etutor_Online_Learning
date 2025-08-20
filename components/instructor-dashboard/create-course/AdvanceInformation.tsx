@@ -113,18 +113,7 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
 
   const handleSubmit = (data: AdvanceInformationFormData) => {
     startTransition(() => {
-      const formData = new FormData();
-
-      Object.entries(data).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          value.forEach((item) => {
-            formData.append(key, item);
-          });
-        } else if (value !== undefined && value !== null) {
-          formData.append(key, value);
-        }
-      });
-      formAction(formData);
+      formAction(data);
     });
   };
 

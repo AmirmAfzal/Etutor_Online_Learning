@@ -96,17 +96,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
   // );
   const handleSubmit = async (data: z.infer<typeof basicInformationSchema>) => {
     startTransition(() => {
-      // Convert data to FormData
-      const formData = new FormData();
-
-      // Add each field to the FormData object
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(key, value);
-        }
-      });
-
-      formAction(formData);
+      formAction(data);
     });
   };
 
@@ -296,7 +286,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
                                   ))}
                               </CommandGroup>
                               {subCategoryPending ? (
-                                <div className="flex h-full w-full items-center justify-center">
+                                <div className="flex h-full w-full items-center justify-center py-6">
                                   <div className="loading loading-spinner" />
                                 </div>
                               ) : (

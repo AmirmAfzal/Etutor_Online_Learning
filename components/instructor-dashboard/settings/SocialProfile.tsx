@@ -167,17 +167,15 @@ const SocialProfile = () => {
               </button>
               {state.message === "SUCCESS" && (
                 <div className="bg-success/10 text-success rounded-md p-4">
-                  Account settings changes saved
+                  Social Profile changes saved
                 </div>
               )}
             </div>
             {state.message === "ERROR" && (
-              <div className="p-4">
-                <ErrorMessage
-                  title="Error saving course information:"
-                  errors={state.errors}
-                />
-              </div>
+              <ErrorMessage
+                title="Error saving Social Profile:"
+                errors={state.errors}
+              />
             )}
           </form>
         </Form>

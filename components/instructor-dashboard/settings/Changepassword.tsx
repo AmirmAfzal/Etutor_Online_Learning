@@ -174,12 +174,10 @@ const Changepassword = () => {
             )}
           </div>
           {state.message === "ERROR" && (
-            <div className="p-4">
-              <ErrorMessage
-                title="Error saving course information:"
-                errors={state.errors}
-              />
-            </div>
+            <ErrorMessage
+              title="Error changing password:"
+              errors={state.errors}
+            />
           )}
         </form>
       </Form>
