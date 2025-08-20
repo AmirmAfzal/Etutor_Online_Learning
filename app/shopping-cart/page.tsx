@@ -44,12 +44,15 @@ const fakeCartData: props[] = [
 const ShoppingCart = async () => {
   return (
     <section className="flex flex-col items-center justify-start">
-      <div className="bg-base-200 flex w-screen flex-col items-center justify-center gap-4 py-8">
-        <h3 className="text-xl font-semibold">Shopping Cart</h3>
+      {/* Header */}
+      <div className="bg-base-200 flex w-full flex-col items-center justify-center gap-4 px-4 py-8">
+        <h3 className="text-lg font-semibold md:text-xl">Shopping Cart</h3>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink href="/" className="md:text-md text-sm">
+                Home
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <SlashIcon />
@@ -57,7 +60,7 @@ const ShoppingCart = async () => {
             <BreadcrumbItem>
               <BreadcrumbLink
                 href="/shopping-cart"
-                className="text-base-content/80"
+                className="text-base-content/80 md:text-md text-sm"
               >
                 shopping cart
               </BreadcrumbLink>
@@ -66,14 +69,17 @@ const ShoppingCart = async () => {
         </Breadcrumb>
       </div>
 
-      <div className="flex max-w-7xl flex-col items-start justify-start">
-        <span className="my-4 text-lg font-semibold">shopping cart (03)</span>
-        <div className="flex w-full flex-row items-start justify-start gap-4">
-          <div className="bg-base-100 border-base-content/10 w-8/12 border">
-            <div className="border-base-content/10 bg-base-100 border-b px-8 py-5">
-              <div className="text-base-content/70 grid grid-cols-12 gap-4 text-base font-medium">
+      <div className="mt-8 flex w-full max-w-7xl flex-col items-start justify-start px-4">
+        <span className="text-md my-4 font-semibold md:text-lg">
+          shopping cart ({fakeCartData.length})
+        </span>
+
+        <div className="flex w-full flex-col items-center justify-start gap-6 lg:flex-row lg:items-start">
+          <div className="bg-base-100 border-base-content/10 w-full border lg:w-8/12">
+            <div className="border-base-content/10 bg-base-100 hidden border-b px-6 py-4 md:block">
+              <div className="text-base-content/70 grid grid-cols-12 gap-4 text-sm font-medium">
                 <div className="col-span-6">COURSE</div>
-                <div className="col-span-1 text-center">PRICES</div>
+                <div className="col-span-2 text-center">PRICE</div>
                 <div className="col-span-4 text-center">ACTION</div>
               </div>
             </div>
@@ -84,7 +90,8 @@ const ShoppingCart = async () => {
               ))}
             </div>
           </div>
-          <div className="bg-base-100 flex w-3/12 flex-col gap-2 p-4 pt-0">
+
+          <div className="bg-base-100 border-base-content/10 mt-4 flex w-full flex-col gap-2 border p-4 md:w-[70%] lg:mt-0 lg:w-4/12">
             <div className="mb-2 flex justify-between text-sm">
               <span className="text-base-content/70">Subtotal</span>
               <span className="font-medium">$61.97 USD</span>
@@ -107,7 +114,9 @@ const ShoppingCart = async () => {
               <span className="text-2xl font-semibold">$75.00 USD</span>
             </div>
 
-            <button className="btn btn-primary">Proceed To Checkout →</button>
+            <button className="btn btn-primary w-full">
+              Proceed To Checkout →
+            </button>
 
             <div className="divider divider-base-content/80 w-full"></div>
 
@@ -126,7 +135,7 @@ const ShoppingCart = async () => {
                 />
                 <button
                   type="submit"
-                  className="btn btn-sm btn-base-content/80 ml-2"
+                  className="btn btn-sm bg-base-200 ml-2 text-xs font-medium"
                 >
                   Apply
                 </button>
