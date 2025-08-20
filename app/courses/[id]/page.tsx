@@ -1,11 +1,162 @@
+import { notFound } from "next/navigation";
+
 import SingleCourseHeader from "@/components/Courses/SingleCourseHeader";
 import CourseTabs from "@/components/Courses/CourseTabs";
 import RelatedCoursesSection from "@/components/Courses/RelatedCoursesSection";
 import SidebarCart from "@/components/Courses/SidebarCart";
+import CourseTrailer from "@/components/Courses/CourseHero";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
-import { notFound } from "next/navigation";
-import CourseTrailer from "@/components/Courses/CourseHero";
+
+type CurriculumContentItem = {
+  title: string;
+  info: string;
+  type: "video" | "file";
+};
+
+type CurriculumSection = {
+  title: string;
+  lectures: number;
+  duration: string;
+  content: CurriculumContentItem[];
+};
+
+type Course = {
+  _id?: string;
+  id?: string;
+  thumbnail: string;
+  name: string;
+  title?: string;
+  description?: string;
+  category: string;
+  price: number;
+  rating: number;
+  students: number;
+  reviews?: number;
+  breadcrumb?: string[];
+  originalPrice: number;
+  discount: string;
+  timeLeft: string;
+  courseDetails: { label: string; value: string }[];
+  instructors?: { name: string; avatar: string }[];
+  courseDescription?: string;
+  whatYouWillLearn?: string[];
+  thisCourseFor?: string[];
+  courseRequirements?: string[];
+  createdBy?: string;
+  curriculum?: CurriculumSection[];
+};
+
+type Instructor = {
+  name: string;
+  bio: string;
+  avatar: string;
+  rating: number;
+  students: number;
+  courses: number;
+  description: string;
+};
+
+type InstructorDocument = {
+  firstname?: string;
+  lastname?: string;
+  bio?: string;
+  avatar?: string;
+  rating?: number;
+  students?: number;
+  name?: string;
+};
+
+type CourseAuthor = {
+  name?: string;
+};
+
+type FoundCourseDocument = {
+  _id?: { toString: () => string } | string;
+  thumbnail?: string;
+  title?: string;
+  description?: string;
+  category?: { name?: string } | null;
+  price?: number;
+  studentsCount?: number;
+  authors?: (CourseAuthor & InstructorDocument)[];
+  originalPrice?: number;
+  discount?: string;
+  timeLeft?: string;
+};
+
+const buildInstructorData = (
+  authors: InstructorDocument[] | undefined
+): Instructor[] => {
+  if (!authors || authors.length === 0) return [];
+  return authors.map((instructor) => ({
+    name: `${instructor.firstname || "Unknown"} ${instructor.lastname || ""}`.trim(),
+    bio: instructor.bio || "Instructor",
+    avatar:
+      instructor.avatar || "/images/student-dashboard/Teacher-default.jpg",
+    rating: instructor.rating || 5,
+    students: instructor.students || 0,
+    courses: 12,
+    description:
+      "John is a seasoned web designer with over 10 years of experience in creating stunning websites. He specializes in Figma and Webflow, helping students turn their design ideas into reality.",
+  }));
+};
+
+const buildCourse = (course: FoundCourseDocument, id: string): Course => {
+  const authors = course.authors || [];
+  return {
+    id:
+      (typeof course._id === "string" ? course._id : course._id?.toString()) ||
+      id,
+    thumbnail: course.thumbnail || "/images/course-images-1.png",
+    name: course.title || "Untitled Course",
+    title: course.title || "Untitled Course",
+    description: course.description || "No description available",
+    category: course.category?.name || "Unknown",
+    price: course.price || 0,
+    students: course.studentsCount || 0,
+    createdBy:
+      authors.map((author) => author.name || "Unknown").join(", ") || "Unknown",
+    rating: 5,
+    originalPrice: course.originalPrice || 0,
+    discount: course.discount || "0%",
+    timeLeft: course.timeLeft || "0 days left at this price!",
+    reviews: 244455,
+    courseDetails: [
+      { label: "Course Duration", value: "6 Month" },
+      { label: "Course Level", value: "Beginner" },
+      { label: "Students Enrolled", value: "69,419,618" },
+      { label: "Language", value: "Mandarin" },
+      { label: "Subtitle Language", value: "English" },
+    ],
+    breadcrumb: ["Home", "Development", "Web Development", "Webflow"],
+    instructors: [
+      { name: "Dianne Russell", avatar: "/images/profile-img.png" },
+      { name: "Kristin Watson", avatar: "/images/profile-img.png" },
+    ],
+    courseDescription:
+      "This course provides a comprehensive guide to designing and developing responsive websites. Learn the secrets of good design and how to turn your ideas into reality using Figma and Webflow.",
+    whatYouWillLearn: [
+      "How to design a complete website in Figma",
+      "How to create a responsive website in Webflow",
+      "How to export assets from Figma to Webflow",
+      "How to use Webflow CMS for dynamic content",
+      "How to publish and host your website on Webflow",
+    ],
+    thisCourseFor: [
+      "Anyone who wants to learn Web Design",
+      "Anyone who wants to learn Figma",
+      "Anyone who wants to learn Webflow",
+      "Anyone who wants to create responsive websites",
+    ],
+    courseRequirements: [
+      "Basic computer skills",
+      "A computer with internet access",
+      "Willingness to learn and practice",
+      "No prior design or coding experience required",
+    ],
+  };
+};
 
 // Fake data that would come from a database
 
@@ -94,7 +245,7 @@ const studentsComments = [
   },
 ];
 
-const RelatedCourses = [
+const relatedCourses = [
   {
     thumbnail: "/images/course-1.jpg",
     name: "Web Design Masterclass",
@@ -133,52 +284,9 @@ const fakeSidebarCart = {
   ],
 };
 
-type Course = {
-  _id?: string;
-  id?: string;
-  thumbnail: string;
-  name: string;
-  title?: string;
-  description?: string;
-  category: string;
-  price: number;
-  rating: number;
-  students: number;
-  reviews?: number;
-  breadcrumb?: string[];
-  originalPrice: number;
-  discount: string;
-  timeLeft: string;
-  courseDetails: { label: string; value: string }[];
-  instructors?: {
-    name: string;
-    avatar: string;
-  }[];
-  courseDescription?: string;
-  whatYouWillLearn?: string[];
-  thisCourseFor?: string[];
-  courseRequirements?: string[];
-  createdBy?: string;
-  curriculum?: any; // Added to match Curriculum usage
-};
-
-type Instructor = {
-  name: string;
-  bio: string;
-  avatar: string;
-  rating: number;
-  students: number;
-  courses: number;
-  description: string;
-};
-
-const SingleCoursePage = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+const SingleCoursePage = async ({ params }: { params: { id: string } }) => {
   await connectDB();
-  const { id } = await params;
+  const { id } = params;
 
   if (!id) {
     notFound();
@@ -186,114 +294,24 @@ const SingleCoursePage = async ({
 
   const foundCourse = await courseModel
     .findOne({
-      // $or: [{ _id: id }, { title: id }],
       _id: id,
     })
     .populate("category")
+    .populate("authors")
     .lean();
 
   if (!foundCourse) {
     notFound();
   }
 
-  const foundInstructors = await courseModel.find().populate("authors");
-
-  //  TODO : foundInstructors[0].authors is not a good way to get all instructors, it should be a separate query
-  const instructors = foundInstructors[0]?.authors || [];
-  const instructorData: Instructor[] = (instructors || []).map(
-    (instructor: any) => ({
-      name: `${instructor.firstname || "Unknown"} ${instructor.lastname || ""}`,
-      bio: instructor.bio || "Instructor",
-      avatar:
-        instructor.avatar || "/images/student-dashboard/Teacher-default.jpg",
-      rating: instructor.rating || 5,
-      students: instructor.students || 0,
-      courses: 12,
-      description:
-        "John is a seasoned web designer with over 10 years of experience in creating stunning websites. He specializes in Figma and Webflow, helping students turn their design ideas into reality.",
-    })
+  const instructorData: Instructor[] = buildInstructorData(
+    (foundCourse as unknown as FoundCourseDocument).authors
   );
 
-  const courses: Course[] = [foundCourse].map((course: any) => ({
-    id: course._id?.toString() || id,
-    thumbnail: course.thumbnail || "/images/course-images-1.png",
-    name: course.title || "Untitled Course",
-    title: course.title || "Untitled Course",
-    description: course.description || "No description available",
-    category: course.category?.name || "Unknown",
-    price: course.price || 0,
-    students: course.studentsCount || 0,
-    createdBy:
-      course.authors?.map((author: any) => author.name).join(", ") || "Unknown",
-
-    rating: 5, // TODO
-    originalPrice: course.originalPrice || 0,
-    discount: course.discount || "0%",
-    timeLeft: course.timeLeft || "0 days left at this price!",
-    reviews: 244455,
-    courseDetails: [
-      { label: "Course Duration", value: "6 Month" },
-      { label: "Course Level", value: "Beginner" },
-      { label: "Students Enrolled", value: "69,419,618" },
-      { label: "Language", value: "Mandarin" },
-      { label: "Subtitle Language", value: "English" },
-    ],
-    breadcrumb: ["Home", "Development", "Web Development", "Webflow"],
-    instructors: [
-      {
-        name: "Dianne Russell",
-        avatar: "/images/profile-img.png",
-      },
-      {
-        name: "Kristin Watson",
-        avatar: "/images/profile-img.png",
-      },
-    ],
-    courseDescription: `This course provides a comprehensive guide to designing and developing responsive websites. Learn the secrets of good design and how to turn your ideas into reality using Figma and Webflow.`,
-    whatYouWillLearn: [
-      "How to design a complete website in Figma",
-      "How to create a responsive website in Webflow",
-      "How to export assets from Figma to Webflow",
-      "How to use Webflow CMS for dynamic content",
-      "How to publish and host your website on Webflow",
-    ],
-    thisCourseFor: [
-      "Anyone who wants to learn Web Design",
-      "Anyone who wants to learn Figma",
-      "Anyone who wants to learn Webflow",
-      "Anyone who wants to create responsive websites",
-    ],
-    courseRequirements: [
-      "Basic computer skills",
-      "A computer with internet access",
-      "Willingness to learn and practice",
-      "No prior design or coding experience required",
-    ],
-  }));
-
-  const singleCourse = courses[0] || {
-    id: id,
-    thumbnail: "/images/course-images-1.png",
-    name: "Untitled Course",
-    title: "Untitled Course",
-    description: "No description available",
-    category: "Unknown",
-    price: 0,
-    originalPrice: 0,
-    discount: "0%",
-    timeLeft: "0 days left at this price!",
-    courseDetails: [],
-    students: 0,
-    createdBy: "Unknown",
-    rating: 5,
-    reviews: 0,
-    breadcrumb: ["Home", "Unknown"],
-    instructors: [],
-    courseDescription: "No description available",
-    whatYouWillLearn: [],
-    thisCourseFor: [],
-    courseRequirements: [],
-  };
+  const singleCourse = buildCourse(
+    foundCourse as unknown as FoundCourseDocument,
+    id
+  );
 
   return (
     <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
@@ -332,7 +350,7 @@ const SingleCoursePage = async ({
         />
       </div>
 
-      <RelatedCoursesSection courses={RelatedCourses} />
+      <RelatedCoursesSection courses={relatedCourses} />
     </section>
   );
 };
