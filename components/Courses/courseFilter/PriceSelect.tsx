@@ -4,8 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
+import PriceRange from "./PriceRange";
 
 const PriceSelect = ({ price }: { price: { [key: string]: number } }) => {
   return (
@@ -20,24 +19,8 @@ const PriceSelect = ({ price }: { price: { [key: string]: number } }) => {
         </AccordionTrigger>
         <AccordionContent>
           <div className="flex flex-col gap-4 px-2 py-4">
-            {/* FIXME : fix slider */}
-            <Slider
-              defaultValue={[20, 80]}
-              max={100}
-              step={1}
-              className="w-full"
-            >
-              <Slider.Track>
-                <Slider.Range />
-              </Slider.Track>
-              <Slider.Thumb />
-              <Slider.Thumb />
-            </Slider>
+            <PriceRange min={0} max={100} step={1} defaultValue={[20, 80]} />
             <form className="text-base-content/70 flex flex-col items-start gap-2 text-xs font-medium">
-              <div className="flex flex-row items-center gap-2">
-                <Input type="text" placeholder="$ min:" />
-                <Input type="text" placeholder="$ max:" />
-              </div>
               {Object.entries(price).map(
                 ([item, i]) =>
                   item && (

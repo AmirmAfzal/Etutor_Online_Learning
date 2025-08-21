@@ -284,9 +284,13 @@ const fakeSidebarCart = {
   ],
 };
 
-const SingleCoursePage = async ({ params }: { params: { id: string } }) => {
+const SingleCoursePage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   await connectDB();
-  const { id } = params;
+  const { id } = await params;
 
   if (!id) {
     notFound();
