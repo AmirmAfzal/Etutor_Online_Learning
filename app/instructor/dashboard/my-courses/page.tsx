@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/Select";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
+import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
 
 interface Props {
   searchParams: Promise<{
@@ -216,10 +217,14 @@ const MyCoursesPage = async (props: Props) => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
-                      <button>Edit Course</button>
+                      <Link
+                        href={`/instructor/dashboard/create-course?_id=${course._id}`}
+                      >
+                        Edit Course
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
-                      <button>Delete Course</button>
+                      <DeleteButton courseId={course._id.toString()} />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

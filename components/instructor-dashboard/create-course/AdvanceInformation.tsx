@@ -43,9 +43,24 @@ const initialState = {
 };
 
 const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
-  const [learningOutcomes, setLearningOutcomes] = useState(["", "", "", ""]);
-  const [targetAudience, setTargetAudience] = useState(["", "", "", ""]);
-  const [requirements, setRequirements] = useState(["", "", "", ""]);
+  const [learningOutcomes, setLearningOutcomes] = useState([
+    course?.learningOutcomes?.[0] || "",
+    course?.learningOutcomes?.[1] || "",
+    course?.learningOutcomes?.[2] || "",
+    course?.learningOutcomes?.[3] || "",
+  ]);
+  const [targetAudience, setTargetAudience] = useState([
+    course?.targetAudience?.[0] || "",
+    course?.targetAudience?.[1] || "",
+    course?.targetAudience?.[2] || "",
+    course?.targetAudience?.[3] || "",
+  ]);
+  const [requirements, setRequirements] = useState([
+    course?.requirements?.[0] || "",
+    course?.requirements?.[1] || "",
+    course?.requirements?.[2] || "",
+    course?.requirements?.[3] || "",
+  ]);
 
   const [state, formAction, pending] = useActionState(
     saveAdvanceInformation,
@@ -59,9 +74,9 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
       learningOutcomes,
       targetAudience,
       requirements,
-      description: "",
-      thumbnail: "",
-      video: "",
+      description: course?.description || "",
+      thumbnail: typeof course?.thumbnail === "string" ? course.thumbnail : "",
+      video: typeof course?.trailer === "string" ? course.trailer : "",
     },
   });
 

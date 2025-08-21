@@ -49,13 +49,15 @@ const PublishCourse = ({ onBack, course }: Props) => {
     data: [],
   });
   const [searchValue, setSearchValue] = useState<string>("");
-  const [instructors, setInstructors] = useState<Instructor[]>([]);
+  const [instructors, setInstructors] = useState<Instructor[]>(
+    course?.instructors || []
+  );
 
   const form = useForm<PublishMessageFormData>({
     resolver: zodResolver(publishMessageSchema),
     defaultValues: {
-      welcomeMessage: "",
-      congratulationsMessage: "",
+      welcomeMessage: course?.welcomeMessage || "",
+      congratulationsMessage: course?.congratulationsMessage || "",
       instructors: [],
       courseId: course?._id?.toString() || "",
     },

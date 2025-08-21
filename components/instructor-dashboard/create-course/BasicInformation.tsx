@@ -3,7 +3,6 @@
 import { startTransition, useActionState, useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -14,6 +13,8 @@ import {
   basicInformationSchema,
   BasicInformationFormData,
 } from "@/lib/validation/schemas/instructor/create-course";
+import { findCategories } from "@/lib/actions/instructor/create-course/findCategories";
+import { findSubCategories } from "@/lib/actions/instructor/create-course/findSubCategories";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -39,8 +40,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { findCategories } from "@/lib/actions/instructor/create-course/findCategories";
-import { findSubCategories } from "@/lib/actions/instructor/create-course/findSubCategories";
 
 // Use the imported schema type
 type FormField = BasicInformationFormData;
@@ -51,24 +50,33 @@ interface Props {
 }
 
 const BasicInformation = ({ onNext, course }: Props) => {
-  const [titleLength, setTitleLength] = useState(0);
-  const [subTitleLength, setSubTitleLength] = useState(0);
+  const [titleLength, setTitleLength] = useState(course?.title.length || 0);
+  const [subTitleLength, setSubTitleLength] = useState(
+    course?.subtitle.length || 0
+  );
   const [categories, setCategories] = useState<{ name: string }[]>([]);
   const [subCategories, setSubCategories] = useState<{ name: string }[]>([]);
 
   const form = useForm<FormField>({
     resolver: zodResolver(basicInformationSchema),
     defaultValues: {
+      _id: typeof course?._id === "string" ? course._id : "",
       title: course?.title || "",
       subtitle: course?.subtitle || "",
-      category: "",
-      subcategory: "",
-      topic: "",
-      language: "",
+      category:
+        typeof course?.category === "string"
+          ? course.category
+          : course?.category?.toString() || "",
+      subCategory:
+        typeof course?.subCategory === "string"
+          ? course.subCategory
+          : course?.subCategory?.toString() || "",
+      topic: course?.topic || "",
+      language: course?.language || "",
       subtitleLang: "",
-      level: "",
-      durationValue: "",
-      durationUnit: "",
+      level: course?.level || "",
+      durationValue: course?.duration?.toString() || "",
+      durationUnit: course?.durationUnit || "",
     },
   });
 
@@ -94,7 +102,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
   //   saveAndPreviewBasicInformation,
   //   initialState
   // );
-  const handleSubmit = async (data: z.infer<typeof basicInformationSchema>) => {
+  const handleSubmit = async (data: BasicInformationFormData) => {
     startTransition(() => {
       formAction(data);
     });
@@ -255,7 +263,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
 
               <FormField
                 control={form.control}
-                name="subcategory"
+                name="subCategory"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Course Sub-category</FormLabel>

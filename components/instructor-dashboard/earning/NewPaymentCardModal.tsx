@@ -61,7 +61,7 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
         closeModal();
       }, 2000);
     }
-  }, [state.message, closeModal]);
+  }, [state.message, closeModal, form]);
 
   return (
     <div className="bg-base-content/70 fixed inset-0 z-50 flex items-center justify-center">

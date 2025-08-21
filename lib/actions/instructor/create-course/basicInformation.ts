@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
 import { connectDB } from "@/lib/db/db";
 import categoryModel from "@/lib/db/models/categoryModel";
@@ -11,7 +12,6 @@ import {
   BasicInformationFormData,
   basicInformationSchema,
 } from "@/lib/validation/schemas/instructor/create-course";
-import { z } from "zod";
 
 export async function saveBasicInformation(
   prevState: ActionData,
@@ -38,29 +38,51 @@ export async function saveBasicInformation(
     });
   }
   let foundSubCategory = await subCategoryModel.findOne({
-    name: result.data.subcategory,
+    name: result.data.subCategory,
   });
   if (!foundSubCategory) {
     foundSubCategory = await subCategoryModel.create({
-      name: result.data.subcategory,
+      name: result.data.subCategory,
       category: foundCategory._id,
     });
   }
-  const createdCourse = await courseModel.create({
-    title: result.data.title,
-    subtitle: result.data.subtitle,
-    category: foundCategory._id,
-    subCategory: foundSubCategory._id,
-    topic: result.data.topic,
-    language: result.data.language,
-    subtitleLang: result.data.subtitleLang,
-    level: result.data.level,
-    duration: result.data.durationValue,
-    durationUnit: result.data.durationUnit,
-  });
-  redirect(
-    `/instructor/dashboard/create-course?tab=AdvanceInformation&_id=${createdCourse._id}`
-  );
+  if (result.data._id) {
+    const foundCourse = await courseModel.findOne({ _id: result.data._id });
+
+    await courseModel.findByIdAndUpdate(
+      foundCourse._id,
+      {
+        title: result.data.title,
+        subtitle: result.data.subtitle,
+        category: foundCategory._id,
+        subCategory: foundSubCategory._id,
+        topic: result.data.topic,
+        language: result.data.language,
+        subtitleLang: result.data.subtitleLang,
+        level: result.data.level,
+        duration: result.data.durationValue,
+        durationUnit: result.data.durationUnit,
+      },
+      { new: true }
+    );
+  } else {
+    const createdCourse = await courseModel.create({
+      title: result.data.title,
+      subtitle: result.data.subtitle,
+      category: foundCategory._id,
+      subCategory: foundSubCategory._id,
+      topic: result.data.topic,
+      language: result.data.language,
+      subtitleLang: result.data.subtitleLang,
+      level: result.data.level,
+      duration: result.data.durationValue,
+      durationUnit: result.data.durationUnit,
+    });
+    redirect(
+      `/instructor/dashboard/create-course?tab=AdvanceInformation&_id=${createdCourse._id}`
+    );
+  }
+  return { message: "SUCCESS", errors: [] };
   //   return {
   //     message: "SUCCESS",
   //     errors: [],
