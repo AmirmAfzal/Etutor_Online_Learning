@@ -54,7 +54,7 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
     if (state.message === "SUCCESS") {
       closeModal();
     }
-  }, [state.message, closeModal]);
+  }, [state.message, closeModal, form]);
 
   return (
     <div className="bg-base-content/70 fixed inset-0 z-50 flex items-center justify-center">

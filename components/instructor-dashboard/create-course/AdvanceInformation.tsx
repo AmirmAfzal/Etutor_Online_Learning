@@ -25,7 +25,8 @@ import {
   advanceInformationSchema,
 } from "@/lib/validation/schemas/instructor/create-course";
 import { saveAdvanceInformation } from "@/lib/actions/instructor/create-course/advanceInformation";
-import { CourseInterface } from "@/lib/db/models/courseModel";
+import { CourseData } from "@/lib/db/models/courseModel";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const MAX_INPUTS = 8;
 const MAX_CHARS = 120;
@@ -33,7 +34,7 @@ const MAX_CHARS = 120;
 interface Props {
   onNext: () => void;
   onBack: () => void;
-  course: CourseInterface | null;
+  course: CourseData | null;
 }
 
 const initialState = {
@@ -42,16 +43,26 @@ const initialState = {
 };
 
 const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
-  const [topics, setTopics] = useState(["", "", "", ""]);
-  const [targetTopics, setTargetTopics] = useState(["", "", "", ""]);
-  const [requirementsTopics, setRequirementsTopics] = useState([
-    "",
-    "",
-    "",
-    "",
+  const [learningOutcomes, setLearningOutcomes] = useState([
+    course?.learningOutcomes?.[0] || "",
+    course?.learningOutcomes?.[1] || "",
+    course?.learningOutcomes?.[2] || "",
+    course?.learningOutcomes?.[3] || "",
+  ]);
+  const [targetAudience, setTargetAudience] = useState([
+    course?.targetAudience?.[0] || "",
+    course?.targetAudience?.[1] || "",
+    course?.targetAudience?.[2] || "",
+    course?.targetAudience?.[3] || "",
+  ]);
+  const [requirements, setRequirements] = useState([
+    course?.requirements?.[0] || "",
+    course?.requirements?.[1] || "",
+    course?.requirements?.[2] || "",
+    course?.requirements?.[3] || "",
   ]);
 
-  const [state, formAction] = useActionState(
+  const [state, formAction, pending] = useActionState(
     saveAdvanceInformation,
     initialState
   );
@@ -60,73 +71,64 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
     resolver: zodResolver(advanceInformationSchema),
     defaultValues: {
       _id: typeof course?._id === "string" ? course._id : "",
-      topics,
-      targetTopics,
-      requirementsTopics,
-      description: "",
-      thumbnail: "",
-      video: "",
+      learningOutcomes,
+      targetAudience,
+      requirements,
+      description: course?.description || "",
+      thumbnail: typeof course?.thumbnail === "string" ? course.thumbnail : "",
+      video: typeof course?.trailer === "string" ? course.trailer : "",
     },
   });
 
-  const addField = (type: "topics" | "targetTopics" | "requirementsTopics") => {
-    if (type === "topics" && topics.length < MAX_INPUTS) {
-      const newTopics = [...topics, ""];
-      setTopics(newTopics);
-      form.setValue("topics", newTopics);
-    } else if (type === "targetTopics" && targetTopics.length < MAX_INPUTS) {
-      const newTargetTopics = [...targetTopics, ""];
-      setTargetTopics(newTargetTopics);
-      form.setValue("targetTopics", newTargetTopics);
+  const addField = (
+    type: "learningOutcomes" | "targetAudience" | "requirements"
+  ) => {
+    if (type === "learningOutcomes" && learningOutcomes.length < MAX_INPUTS) {
+      const newLearningOutcomes = [...learningOutcomes, ""];
+      setLearningOutcomes(newLearningOutcomes);
+      form.setValue("learningOutcomes", newLearningOutcomes);
     } else if (
-      type === "requirementsTopics" &&
-      requirementsTopics.length < MAX_INPUTS
+      type === "targetAudience" &&
+      targetAudience.length < MAX_INPUTS
     ) {
-      const newRequirementsTopics = [...requirementsTopics, ""];
-      setRequirementsTopics(newRequirementsTopics);
-      form.setValue("requirementsTopics", newRequirementsTopics);
+      const newTargetAudience = [...targetAudience, ""];
+      setTargetAudience(newTargetAudience);
+      form.setValue("targetAudience", newTargetAudience);
+    } else if (type === "requirements" && requirements.length < MAX_INPUTS) {
+      const newRequirements = [...requirements, ""];
+      setRequirements(newRequirements);
+      form.setValue("requirements", newRequirements);
     }
   };
 
   const handleChange = (
-    type: "topics" | "targetTopics" | "requirementsTopics",
+    type: "learningOutcomes" | "targetAudience" | "requirements",
     index: number,
     value: string
   ) => {
     const trimmedValue = value.slice(0, MAX_CHARS);
 
-    if (type === "topics") {
-      const updated = [...topics];
+    if (type === "learningOutcomes") {
+      const updated = [...learningOutcomes];
       updated[index] = trimmedValue;
-      setTopics(updated);
-      form.setValue("topics", updated);
-    } else if (type === "targetTopics") {
-      const updated = [...targetTopics];
+      setLearningOutcomes(updated);
+      form.setValue("learningOutcomes", updated);
+    } else if (type === "targetAudience") {
+      const updated = [...targetAudience];
       updated[index] = trimmedValue;
-      setTargetTopics(updated);
-      form.setValue("targetTopics", updated);
-    } else if (type === "requirementsTopics") {
-      const updated = [...requirementsTopics];
+      setTargetAudience(updated);
+      form.setValue("targetAudience", updated);
+    } else if (type === "requirements") {
+      const updated = [...requirements];
       updated[index] = trimmedValue;
-      setRequirementsTopics(updated);
-      form.setValue("requirementsTopics", updated);
+      setRequirements(updated);
+      form.setValue("requirements", updated);
     }
   };
 
   const handleSubmit = (data: AdvanceInformationFormData) => {
     startTransition(() => {
-      const formData = new FormData();
-
-      Object.entries(data).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          value.forEach((item) => {
-            formData.append(key, item);
-          });
-        } else if (value !== undefined && value !== null) {
-          formData.append(key, value);
-        }
-      });
-      formAction(formData);
+      formAction(data);
     });
   };
 
@@ -138,7 +140,7 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
 
   return (
     <div>
-      <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
+      <div className="border-base-300 flex flex-col items-center justify-between gap-2 border-y p-4 md:flex-row">
         <h2 className="text-xl font-bold">Advance Information</h2>
         <div>
           <button className="btn btn-primary btn-soft mr-4">Save</button>
@@ -148,10 +150,10 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
 
       {/* Upload Form */}
       <div className="border-base-300 border-b p-4">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <p className="mb-2">Course Thumbnail</p>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
               {form.watch("thumbnail") ? (
                 <CldImage
                   src={form.watch("thumbnail") || ""}
@@ -174,7 +176,7 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                   />
                 </div>
               )}
-              <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
+              <div className="text-base-content/70 flex flex-col items-start justify-between gap-2 text-sm">
                 <p>
                   Upload your course Thumbnail here. Important guidelines:
                   1200x800 pixels or 12:8 Ratio. Supported format: .jpg, .jpeg,
@@ -211,7 +213,7 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
           </div>
           <div>
             <p className="mb-2">Course Trailer</p>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
               {form.watch("video") ? (
                 <video controls className="w-45 rounded-lg">
                   <source src={form.watch("video")} />
@@ -228,7 +230,7 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                 </div>
               )}
 
-              <div className="text-base-content/70 flex flex-col items-start justify-between text-sm">
+              <div className="text-base-content/70 flex flex-col items-start justify-between gap-2 text-sm">
                 <p>
                   students who watch awell-made promo video are 5X more likely
                   to enroll in your course. Weve seen that statistic go up to
@@ -295,22 +297,22 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
           <div className="border-base-300 space-y-4 border-b p-6">
             <div className="flex flex-row items-center justify-between">
               <h3 className="text-lg font-semibold">
-                What you will teach in this course ({topics.length}/{MAX_INPUTS}
-                )
+                What you will teach in this course ({learningOutcomes.length}/
+                {MAX_INPUTS})
               </h3>
               <button
-                onClick={() => addField("topics")}
-                disabled={topics.length >= MAX_INPUTS}
+                onClick={() => addField("learningOutcomes")}
+                disabled={learningOutcomes.length >= MAX_INPUTS}
                 className="btn btn-soft btn-primary disabled:btn-disabled"
                 type="button"
               >
                 + Add new
               </button>
             </div>
-            {topics.map((value, index) => (
+            {learningOutcomes.map((value, index) => (
               <FormField
                 key={index}
-                name={`topics.${index}`}
+                name={`learningOutcomes.${index}`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>0{index + 1}</FormLabel>
@@ -320,7 +322,11 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                           {...field}
                           value={value}
                           onChange={(e) =>
-                            handleChange("topics", index, e.target.value)
+                            handleChange(
+                              "learningOutcomes",
+                              index,
+                              e.target.value
+                            )
                           }
                           placeholder="What you will teach in this course..."
                         />
@@ -339,21 +345,21 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
           <div className="border-base-300 space-y-4 border-b p-6">
             <div className="flex flex-row items-center justify-between">
               <h3 className="text-lg font-semibold">
-                Target Audience ({targetTopics.length}/{MAX_INPUTS})
+                Target Audience ({targetAudience.length}/{MAX_INPUTS})
               </h3>
               <button
-                onClick={() => addField("targetTopics")}
-                disabled={targetTopics.length >= MAX_INPUTS}
+                onClick={() => addField("targetAudience")}
+                disabled={targetAudience.length >= MAX_INPUTS}
                 className="btn btn-soft btn-primary disabled:btn-disabled"
                 type="button"
               >
                 + Add new
               </button>
             </div>
-            {targetTopics.map((value, index) => (
+            {targetAudience.map((value, index) => (
               <FormField
                 key={index}
-                name={`targetTopics.${index}`}
+                name={`targetAudience.${index}`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>0{index + 1}</FormLabel>
@@ -363,7 +369,11 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                           {...field}
                           value={value}
                           onChange={(e) =>
-                            handleChange("targetTopics", index, e.target.value)
+                            handleChange(
+                              "targetAudience",
+                              index,
+                              e.target.value
+                            )
                           }
                           placeholder="Who this course is for..."
                         />
@@ -382,21 +392,21 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
           <div className="border-base-300 space-y-4 border-b p-6">
             <div className="flex flex-row items-center justify-between">
               <h3 className="text-lg font-semibold">
-                Course requirements ({requirementsTopics.length}/{MAX_INPUTS})
+                Course requirements ({requirements.length}/{MAX_INPUTS})
               </h3>
               <button
-                onClick={() => addField("requirementsTopics")}
-                disabled={requirementsTopics.length >= MAX_INPUTS}
+                onClick={() => addField("requirements")}
+                disabled={requirements.length >= MAX_INPUTS}
                 className="btn btn-soft btn-primary disabled:btn-disabled"
                 type="button"
               >
                 + Add new
               </button>
             </div>
-            {requirementsTopics.map((value, index) => (
+            {requirements.map((value, index) => (
               <FormField
                 key={index}
-                name={`requirementsTopics.${index}`}
+                name={`requirements.${index}`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>0{index + 1}</FormLabel>
@@ -406,13 +416,9 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
                           {...field}
                           value={value}
                           onChange={(e) =>
-                            handleChange(
-                              "requirementsTopics",
-                              index,
-                              e.target.value
-                            )
+                            handleChange("requirements", index, e.target.value)
                           }
-                          placeholder="Who this course is for..."
+                          placeholder="What is you course requirements..."
                         />
                         <span className="text-base-content/70 absolute top-3 right-3 text-xs">
                           {value.length}/{MAX_CHARS}
@@ -425,14 +431,28 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
               />
             ))}
           </div>
-          <div className="mt-6 flex flex-row items-center justify-between p-4">
+          <div className="flex flex-row items-center justify-between p-4">
             <button className="btn btn-outline" type="button" onClick={onBack}>
               Previous
             </button>
-            <button type="submit" className="btn btn-primary">
+
+            <button
+              type="submit"
+              disabled={pending}
+              className="btn btn-primary"
+            >
+              {pending && <div className="loading loading-spinner" />}
               Save & Next
             </button>
           </div>
+          {state.message === "ERROR" && (
+            <div className="p-4">
+              <ErrorMessage
+                title="Error saving advance information:"
+                errors={state.errors}
+              />
+            </div>
+          )}
         </form>
       </Form>
     </div>

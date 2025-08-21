@@ -83,6 +83,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@hookform/devtools": "^4.4.0",
     "@iconify/react": "^6.0.0",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.1",

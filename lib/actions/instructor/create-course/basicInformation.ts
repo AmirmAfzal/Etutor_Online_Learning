@@ -1,24 +1,25 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
 import { connectDB } from "@/lib/db/db";
 import categoryModel from "@/lib/db/models/categoryModel";
 import courseModel from "@/lib/db/models/courseModel";
 import subCategoryModel from "@/lib/db/models/subCategoryModel";
 import { ActionData } from "@/lib/formTypes";
-import { basicInformationSchema } from "@/lib/validation/schemas/instructor/create-course";
-
+import {
+  BasicInformationFormData,
+  basicInformationSchema,
+} from "@/lib/validation/schemas/instructor/create-course";
 
 export async function saveBasicInformation(
   prevState: ActionData,
-  formData: FormData
+  formData: BasicInformationFormData
 ): Promise<ActionData> {
   await connectDB();
-  const data = Object.fromEntries(formData.entries());
-  console.log(data);
 
-  const result = basicInformationSchema.safeParse(data);
+  const result = basicInformationSchema.safeParse(formData);
 
   if (!result.success) {
     return {
@@ -37,48 +38,51 @@ export async function saveBasicInformation(
     });
   }
   let foundSubCategory = await subCategoryModel.findOne({
-    name: result.data.subcategory,
+    name: result.data.subCategory,
   });
   if (!foundSubCategory) {
     foundSubCategory = await subCategoryModel.create({
-      name: result.data.subcategory,
+      name: result.data.subCategory,
       category: foundCategory._id,
     });
   }
-  
-  const durationValue = parseFloat(result.data.durationValue);
-  
-  // Convert duration to hours
-  let durationInHours: number;
-  switch (result.data.durationUnit.toLowerCase()) {
-    case 'hour':
-      durationInHours = durationValue;
-      break;
-    case 'day':
-      durationInHours = durationValue * 24; // 1 day = 24 hours
-      break;
-    case 'week':
-      durationInHours = durationValue * 24 * 7; // 1 week = 24 * 7 hours
-      break;
-    default:
-      durationInHours = durationValue; // Default to hours if unit is not recognized
-  }
+  if (result.data._id) {
+    const foundCourse = await courseModel.findOne({ _id: result.data._id });
 
-  const createdCourse = await courseModel.create({
-    title: result.data.title,
-    subtitle: result.data.subtitle,
-    category: foundCategory._id,
-    subcategory: foundSubCategory._id,
-    topic: result.data.topic,
-    language: result.data.language,
-    subtitleLang: result.data.subtitleLang,
-    level: result.data.level,
-    duration: durationInHours, // Save duration in hours
-    durationUnit: result.data.durationUnit, // Keep the original unit for reference
-  });
-  redirect(
-    `/instructor/dashboard/create-course?tab=AdvanceInformation&_id=${createdCourse._id}`
-  );
+    await courseModel.findByIdAndUpdate(
+      foundCourse._id,
+      {
+        title: result.data.title,
+        subtitle: result.data.subtitle,
+        category: foundCategory._id,
+        subCategory: foundSubCategory._id,
+        topic: result.data.topic,
+        language: result.data.language,
+        subtitleLang: result.data.subtitleLang,
+        level: result.data.level,
+        duration: result.data.durationValue,
+        durationUnit: result.data.durationUnit,
+      },
+      { new: true }
+    );
+  } else {
+    const createdCourse = await courseModel.create({
+      title: result.data.title,
+      subtitle: result.data.subtitle,
+      category: foundCategory._id,
+      subCategory: foundSubCategory._id,
+      topic: result.data.topic,
+      language: result.data.language,
+      subtitleLang: result.data.subtitleLang,
+      level: result.data.level,
+      duration: result.data.durationValue,
+      durationUnit: result.data.durationUnit,
+    });
+    redirect(
+      `/instructor/dashboard/create-course?tab=AdvanceInformation&_id=${createdCourse._id}`
+    );
+  }
+  return { message: "SUCCESS", errors: [] };
   //   return {
   //     message: "SUCCESS",
   //     errors: [],
@@ -94,7 +98,7 @@ export async function saveBasicInformation(
 
 export async function saveAndPreviewBasicInformation(
   prevState: ActionData,
-  formData: FormData
+  formData: z.infer<typeof basicInformationSchema>
 ): Promise<ActionData> {
   // This function could be used for the "Save & Preview" button
   // It would save the data and then redirect to a preview page
