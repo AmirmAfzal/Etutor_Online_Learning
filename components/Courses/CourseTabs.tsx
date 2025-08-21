@@ -82,6 +82,10 @@ const CourseTabs = ({
           thisCourseFor={overview.thisCourseFor}
           courseRequirements={overview.courseRequirements}
         />
+        <Curriculum curriculum={curriculum} />
+        <CourseInstructors instructors={instructors} />
+        <CourseRating rating={rating} />
+        <Comments studentsComments={studentsComments} />
       </TabsContent>
       <TabsContent value="curriculum">
         <Curriculum curriculum={curriculum} />

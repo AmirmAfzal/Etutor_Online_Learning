@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
+
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 

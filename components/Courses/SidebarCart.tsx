@@ -1,10 +1,11 @@
 "use client";
-import React, { useActionState } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import Icon from "../ui/Icon";
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
 import Form from "next/form";
 import { actionBuyNow } from "@/lib/actions/courses/buyNow";
 import Link from "next/link";
+import CoursesLoading from "@/app/courses/loading";
 
 type SidebarCartProps = {
   fakeSidebarCart: {
@@ -20,36 +21,89 @@ type SidebarCartProps = {
   courseId: string;
 };
 
+type ToastState = {
+  message: string;
+  errors?: string[];
+};
+
 const SidebarCart = ({
   fakeSidebarCart,
   courseId,
   singleCourse,
 }: SidebarCartProps) => {
-  const initialWishlistState = { message: "", errors: [] as string[] };
-  const initialBuyNowState = { message: "", errors: [] as string[] };
+  const [showBuyNowToast, setShowBuyNowToast] = useState(false);
+  const [showWishlistToast, setShowWishlistToast] = useState(false);
+
   const [wishlistState, wishlistAction, wishlistPending] = useActionState(
     actionAddToWishlist,
-    initialWishlistState
+    { message: "", errors: [] as string[] }
   );
   const [buyNowState, buyNowAction, buyNowPending] = useActionState(
     actionBuyNow,
-    initialBuyNowState
+    { message: "", errors: [] as string[] }
   );
 
   const price = singleCourse?.price ?? 0;
-  const original = singleCourse?.originalPrice ?? 0;
+  const originalPrice = singleCourse?.originalPrice ?? 0;
   const discount = (singleCourse?.discount ?? "").trim();
-  const showDiscount = discount !== "" && original > price;
+  const showDiscount = discount !== "" && originalPrice > price;
+
+  useEffect(() => {
+    if (buyNowState.message) {
+      setShowBuyNowToast(true);
+      const timer = setTimeout(() => setShowBuyNowToast(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [buyNowState.message]);
+
+  useEffect(() => {
+    if (wishlistState.message) {
+      setShowWishlistToast(true);
+      const timer = setTimeout(() => setShowWishlistToast(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [wishlistState.message]);
+
+  // Helper function to get icon based on detail label
+  const getDetailIcon = (label: string) => {
+    const iconMap: Record<string, string> = {
+      "Course Duration": "ph:clock-duotone",
+      "Course Level": "ph:chart-bar-duotone",
+      "Students Enrolled": "ph:users-duotone",
+      Language: "ph:notebook-duotone",
+    };
+    return iconMap[label] || "ph:notepad-duotone";
+  };
+
+  // Helper function to render toast
+  const renderToast = (show: boolean, state: ToastState) => (
+    <div className="toast toast-top toast-end">
+      {show && state.message && (
+        <div
+          role="alert"
+          className={`alert ${
+            state.errors?.length ? "alert-error" : "alert-success"
+          }`}
+        >
+          <Icon
+            icon={state.errors?.length ? "ph:x-circle" : "ph:check-circle"}
+            className="text-lg"
+          />
+          <span className="text-xs">{state.message}</span>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="md:col-span-1">
       <div className="bg-base-100 sticky top-8 flex flex-col gap-1 p-4 shadow">
         <div className="flex w-full flex-row items-center justify-between">
           <span className="text-base-content/80 mb-1 text-lg font-medium">
-            ${singleCourse?.price?.toFixed(2)}
-            {original > price && (
+            ${price.toFixed(2)}
+            {originalPrice > price && (
               <span className="text-base-content/50 ml-1 text-xs line-through">
-                ${original.toFixed(2)}
+                ${originalPrice.toFixed(2)}
               </span>
             )}
           </span>
@@ -63,10 +117,11 @@ const SidebarCart = ({
         {singleCourse?.timeLeft && (
           <span className="text-error ml-1 flex flex-row items-start gap-1 text-xs">
             <Icon icon="ph:alarm" className="text-sm" />
-            {singleCourse?.timeLeft}
+            {singleCourse.timeLeft}
           </span>
         )}
-        <div className="divider divider-base-300 w-full"></div>
+
+        <div className="divider divider-base-300 w-full" />
 
         <div className="flex w-full flex-col gap-1 text-xs text-nowrap">
           {singleCourse?.courseDetails?.map((detail, index) => (
@@ -76,17 +131,7 @@ const SidebarCart = ({
             >
               <span className="flex items-center gap-1">
                 <Icon
-                  icon={
-                    detail.label === "Course Duration"
-                      ? "ph:clock-duotone"
-                      : detail.label === "Course Level"
-                        ? "ph:chart-bar-duotone"
-                        : detail.label === "Students Enrolled"
-                          ? "ph:users-duotone"
-                          : detail.label === "Language"
-                            ? "ph:notebook-duotone"
-                            : "ph:notepad-duotone"
-                  }
+                  icon={getDetailIcon(detail.label)}
                   className="text-base-content/60 text-sm"
                 />
                 {detail.label}
@@ -96,7 +141,7 @@ const SidebarCart = ({
           ))}
         </div>
 
-        <div className="divider divider-base-300 my-1 w-full"></div>
+        <div className="divider divider-base-300 my-1 w-full" />
 
         <div className="flex flex-col items-center gap-1">
           {/* FIXME */}
@@ -104,7 +149,7 @@ const SidebarCart = ({
             href="/shopping-cart"
             className="btn btn-primary w-full text-xs"
           >
-            Add To cart
+            Add To Cart
           </Link>
 
           <Form action={buyNowAction} className="w-full">
@@ -114,19 +159,11 @@ const SidebarCart = ({
               className="btn btn-soft btn-primary w-full"
               disabled={buyNowPending}
             >
-              {buyNowPending ? "buy..." : "Buy Now"}
+              {buyNowPending ? <CoursesLoading /> : "Buy Now"}
             </button>
           </Form>
 
-          {buyNowState.message && (
-            <p
-              className={`mt-1 text-xs ${
-                buyNowState.errors?.length > 0 ? "text-error" : "text-success"
-              }`}
-            >
-              {buyNowState.message}
-            </p>
-          )}
+          {renderToast(showBuyNowToast, buyNowState)}
 
           <div className="flex w-full flex-row items-center justify-between gap-1">
             <Form action={wishlistAction} className="w-1/2">
@@ -136,7 +173,7 @@ const SidebarCart = ({
                 className="btn btn-ghost border-base-300 w-full border text-xs"
                 disabled={wishlistPending}
               >
-                {wishlistPending ? "Adding..." : "Add to Wishlist"}
+                {wishlistPending ? <CoursesLoading /> : "Add to Wishlist"}
               </button>
             </Form>
 
@@ -144,26 +181,18 @@ const SidebarCart = ({
               href="/courses/gift"
               className="btn btn-ghost border-base-300 w-1/2 border text-xs"
             >
-              Gift course
+              Gift Course
             </Link>
           </div>
 
-          {wishlistState.message && (
-            <p
-              className={`mt-1 text-xs ${
-                wishlistState.errors?.length > 0 ? "text-error" : "text-success"
-              }`}
-            >
-              {wishlistState.message}
-            </p>
-          )}
+          {renderToast(showWishlistToast, wishlistState)}
 
           <span className="text-base-content/60 text-xs">
-            Note: all course have 30-days money-back guarantee
+            Note: All courses have 30-day money-back guarantee
           </span>
         </div>
 
-        <div className="divider divider-base-300 my-1 w-full"></div>
+        <div className="divider divider-base-300 my-1 w-full" />
 
         <div>
           <span className="text-base-content/80 text-md font-medium">
@@ -182,7 +211,8 @@ const SidebarCart = ({
           </ul>
         </div>
 
-        <div className="divider divider-base-300 my-1 w-full"></div>
+        <div className="divider divider-base-300 my-1 w-full" />
+        {/* TODO : add share buttons */}
       </div>
     </div>
   );
