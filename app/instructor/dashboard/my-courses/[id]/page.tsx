@@ -71,15 +71,19 @@ const CourseDetailPage = async (props: Props) => {
                 <div>
                   <p className="text-base-content/70">Created by:</p>
                   <div className="flex flex-row items-center gap-2">
-                    {course.instructors.map((instructor: Instructor) => (
-                      <div
-                        key={instructor.id}
-                        className="flex flex-row items-center gap-2"
-                      >
-                        {instructor.name}
-                        <div className="bg-base-content h-1 w-1 rounded-full" />
-                      </div>
-                    ))}
+                    {course.instructors.map(
+                      (instructor: Instructor, index: number) => (
+                        <div
+                          key={instructor.id}
+                          className="flex flex-row items-center gap-2"
+                        >
+                          {index > 0 && (
+                            <div className="bg-base-content h-1 w-1 rounded-full" />
+                          )}
+                          {instructor.name}
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
