@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-interface Props {
+type Props = {
   _id: string;
   firstName: string;
   lastName: string;
@@ -32,7 +32,7 @@ interface Props {
   email: string;
   title: string;
   avatar?: string;
-}
+};
 
 const AccountSettingsForm = (props: Props) => {
   const [profileImage, setProfileImage] = useState(props.avatar || "");
@@ -118,7 +118,7 @@ const AccountSettingsForm = (props: Props) => {
                     accountForm.setValue("avatar", imageUrl);
                   }
                 }}
-                onError={(error) => {
+                onError={(error: unknown) => {
                   console.error("Upload error:", error);
                 }}
               >
