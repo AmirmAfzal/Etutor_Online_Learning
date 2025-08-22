@@ -1,10 +1,270 @@
-import React from "react";
+// TODO: single course updated => merge to this branch
 
-const CoursesPage = () => {
+import Icon from "@/components/ui/Icon";
+import Link from "next/link";
+
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
+import React from "react";
+import CoursesSearch from "@/components/Courses/CoursesSearch";
+import CoursesSelect from "@/components/Courses/CoursesSelect";
+import CourseFilter from "@/components/Courses/CourseFilter";
+import { connectDB } from "@/lib/db/db";
+import courseModel from "@/lib/db/models/courseModel";
+import CourseCard from "@/components/Student/CourseCard";
+
+// fake data for filtered courses
+interface Category {
+  name: string;
+  icon: string;
+  subcategories: { [key: string]: number };
+}
+
+interface Rating {
+  label: string;
+  count: number;
+}
+
+interface Course {
+  id?: string;
+  thumbnail: string;
+  name: string;
+  category: string;
+  price: number;
+  rating: number;
+  students: number;
+}
+
+const categories: Category[] = [
+  {
+    name: "Development",
+    icon: "ph:cpu",
+    subcategories: {
+      "Web Development": 574,
+      "Mobile Development": 1345,
+      "Software Testing": 317,
+      "Software Engineering": 31,
+      "Software Development Tools": 58,
+      "No-Code Development": 37,
+    },
+  },
+  {
+    name: "Business",
+    icon: "ph:handshake",
+    subcategories: { "Finance & Accounting": 0 },
+  },
+  {
+    name: "IT & Software",
+    icon: "ph:chart-bar-horizontal",
+    subcategories: { "": 0 },
+  },
+  {
+    name: "Office Productivity",
+    icon: "ph:bug-droid",
+    subcategories: { "": 0 },
+  },
+  {
+    name: "Personal Development",
+    icon: "ph:receipt",
+    subcategories: { "": 0 },
+  },
+  { name: "Design", icon: "ph:pen-nib", subcategories: { "": 0 } },
+  { name: "Marketing", icon: "ph:megaphone", subcategories: { "": 0 } },
+  { name: "Lifestyle", icon: "ph:package", subcategories: { "": 0 } },
+  { name: "Photography & Video", icon: "ph:camera", subcategories: { "": 0 } },
+  { name: "Music", icon: "ph:headset", subcategories: { "": 0 } },
+  {
+    name: "Health & Fitness",
+    icon: "ph:first-aid-kit",
+    subcategories: { "": 0 },
+  },
+];
+
+const tools = {
+  "HTML 5": 1234,
+  "GOLANG ": 1234,
+  "CSS 3": 1234,
+  "Node.js": 8454,
+};
+
+const price = {
+  Paid: 12863,
+  Free: 832,
+};
+
+const duration = {
+  "6-12 Months": 1312,
+  "3-6 Months": 42376,
+  "1-3 Months": 12,
+  "1-4 Weeks": 87423,
+  "1-7 Days": 23746,
+};
+const courseLevel = {
+  "All Level": 234234,
+  Beginner: 2345,
+  Intermediate: 124,
+  Expert: 826,
+};
+
+const rating: Rating[] = [
+  {
+    label: "5 Star",
+    count: 12345,
+  },
+  {
+    label: "4 Star & up",
+    count: 12345,
+  },
+  {
+    label: "3 Star & up",
+    count: 12345,
+  },
+  {
+    label: "2 Star & up",
+    count: 12345,
+  },
+  {
+    label: "1 Star & up",
+    count: 12345,
+  },
+];
+
+const CoursesPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ query?: string; filter?: string }>;
+}) => {
+  await connectDB();
+  const foundCourse = await courseModel.find().populate("category").lean();
+
+  const courses: Course[] = foundCourse.map((course) => ({
+    id: course._id?.toString(),
+    thumbnail: course.thumbnail,
+    name: course.title,
+    category: course.category?.name || "Unknown",
+    price: course.price,
+    rating: 5, // TODO
+    students: course.studentsCount,
+  }));
+
+  const searchParam = await searchParams;
+  const isFiltered = searchParam.filter === "true";
+  const query = searchParam.query?.toLowerCase();
+  let filteredCourses = courses;
+  if (query) {
+    filteredCourses = filteredCourses.filter(
+      (course) =>
+        course.name.toLowerCase().includes(query) ||
+        course.category.toLowerCase().includes(query)
+    );
+  }
+
   return (
-    <div>
-      <h1>Courses Page</h1>
-    </div>
+    <section className="container mx-auto mt-8 flex max-w-6xl flex-col items-center justify-center">
+      <div className="border-base-300 flex w-full flex-col gap-4 border-b px-4 pb-2">
+        <div className="flex w-full flex-row items-center justify-between">
+          <div className="flex flex-row items-center gap-2">
+            <Link
+              href={isFiltered ? "/courses" : "/courses?filter=true"}
+              className={`bg-base-100 flex-row items-center gap-3 rounded-none border px-2 py-3 md:flex ${isFiltered ? "border-primary text-primary" : "border-primary/20 text-base-content/80"} hidden`}
+            >
+              <Icon icon="ph:faders-fill" className="text-xl" />
+              <span className="text-sm">Filter</span>
+              <span
+                className={`${isFiltered ? "text-base-100 bg-primary px-2" : "text-primary bg-primary/10 px-2"}`}
+              >
+                {isFiltered ? "3" : "0"}
+              </span>
+            </Link>
+
+            <Sheet>
+              <SheetTrigger className="bg-base-100 border-primary text-primary flex flex-row items-center gap-2 rounded-none border p-2 md:hidden">
+                <Icon icon="ph:faders-fill" className="text-xl" />
+                <span className="text-sm">Filter</span>
+                <span className="text-primary bg-primary/10 px-2">
+                  {isFiltered ? "3" : "0"}
+                </span>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Courses Filter</SheetTitle>
+                  <SheetDescription className="flex flex-col items-center justify-between">
+                    <CourseFilter
+                      categories={categories}
+                      tools={tools}
+                      rating={rating}
+                      courseLevel={courseLevel}
+                      duration={duration}
+                      price={price}
+                    />
+                    <button className="btn btn-primary z-50 mt-8 w-full font-bold shadow-lg">
+                      Done
+                    </button>
+                  </SheetDescription>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+
+            <CoursesSearch />
+          </div>
+
+          <CoursesSelect />
+        </div>
+        <div className="flex flex-row items-center justify-between gap-4">
+          <div className="flex flex-row flex-wrap items-center gap-2 text-xs">
+            <span className="text-base-content/70 whitespace-nowrap">
+              Suggestions :
+            </span>
+            <Link href="" className="text-primary/80 whitespace-nowrap">
+              user interface
+            </Link>
+            <Link href="" className="text-primary/80 whitespace-nowrap">
+              user experience
+            </Link>
+            <Link href="" className="text-primary/80 whitespace-nowrap">
+              web design
+            </Link>
+            <Link href="" className="text-primary/80 whitespace-nowrap">
+              interface app
+            </Link>
+          </div>
+
+          {/* TODO: number of results for search */}
+          <div className="text-base-content/70 text-sm whitespace-nowrap">
+            {query
+              ? `${filteredCourses.length} results find for"${query}"`
+              : `${filteredCourses.length} Course`}
+          </div>
+        </div>
+      </div>
+      <div className="flex w-full items-start gap-4 pt-6">
+        {isFiltered && (
+          <CourseFilter
+            categories={categories}
+            tools={tools}
+            rating={rating}
+            courseLevel={courseLevel}
+            duration={duration}
+            price={price}
+          />
+        )}
+        <div
+          className={`grid grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
+        >
+          {filteredCourses.map((course, index) => (
+            <CourseCard key={index} {...course} />
+          ))}
+        </div>
+      </div>
+      {/*TODO: Implement pagination */}
+    </section>
   );
 };
 
