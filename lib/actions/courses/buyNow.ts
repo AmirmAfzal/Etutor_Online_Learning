@@ -46,6 +46,7 @@ export const actionBuyNow = async (
 
     return {
       message: "SUCCESS",
+      errors: [],
       data: JSON.parse(JSON.stringify(updatedStudent.courses)),
     };
   } catch (error) {

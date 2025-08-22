@@ -4,7 +4,7 @@ import { startTransition, useActionState, useEffect, useState } from "react";
 import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
 import { saveCurriculum } from "@/lib/actions/instructor/create-course/curriculum";
-import { CourseData } from "@/lib/db/models/courseModel";
+import { CourseInterface } from "@/lib/db/models/courseModel";
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
 import {
@@ -42,7 +42,7 @@ export interface Section {
 interface Props {
   onNext: () => void;
   onBack: () => void;
-  course: CourseData | null;
+  course: CourseInterface | null;
 }
 
 const initialState = {
@@ -240,7 +240,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
 
   const sendData = () => {
     startTransition(() => {
-      formAction({ sections, courseId: course?._id.toString() || "" });
+      formAction({ sections, courseId: (course?._id as string) || "" });
       console.log(sections);
     });
   };

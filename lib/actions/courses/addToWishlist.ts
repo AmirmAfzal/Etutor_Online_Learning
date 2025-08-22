@@ -46,6 +46,7 @@ export const actionAddToWishlist = async (
 
     return {
       message: "SUCCESS",
+      errors: [],
       data: JSON.parse(JSON.stringify(updatedStudent.wishlist)),
     };
   } catch (error) {
