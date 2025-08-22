@@ -5,7 +5,7 @@ import Search from "@/components/Student/Search";
 import TeacherSelect from "@/components/TeacherSelect";
 
 import { connectDB } from "@/lib/db/db";
-import courseModel, { CourseInterface } from "@/lib/db/models/courseModel";
+import { CourseInterface } from "@/lib/db/models/courseModel";
 import { getServerSession } from "next-auth";
 import studentModel from "@/lib/db/models/studentModel";
 import { authOptions } from "@/lib/auth/authOptions";

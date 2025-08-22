@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+
 import ChatMessages from "./ChatMessages";
 import MessageInput from "./MessageInput";
 
@@ -27,6 +28,12 @@ const ContactList = ({
 }) => {
   const [chatOpen, setChatOpen] = useState(false);
 
+  const openChatIfMobile = () => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setChatOpen(true);
+    }
+  };
+
   if (chatOpen)
     return (
       <div className="!z-100 flex h-full w-full flex-col">
@@ -40,13 +47,10 @@ const ContactList = ({
       {mockContacts.map((contact) => (
         <div
           key={contact.id}
-          // initial
-          // FIXME
-          onClick={() => {
-            if (window.innerWidth < 768) {
-              setChatOpen(true);
-            }
-          }}
+          role="button"
+          tabIndex={0}
+          aria-label={`Open chat with ${contact.name}`}
+          onClick={openChatIfMobile}
           className={`border-base-200 hover:bg-base-200 flex cursor-pointer items-center gap-3 border-b p-1 md:p-4 ${
             contact.isActive ? "bg-primary/10" : ""
           }`}
