@@ -22,7 +22,7 @@ import CourseCard from "@/components/Student/CourseCard";
 import categoryModel from "@/lib/db/models/categoryModel";
 import subCategoryModel from "@/lib/db/models/subCategoryModel";
 
-// fake data for filtered courses
+// Types for filtered courses
 type Category = {
   name: string;
   icon: string;
@@ -43,20 +43,17 @@ type Course = {
   rating: number;
   students: number;
 };
+
 type SubCategory = {
   [key: string]: { [key: string]: number };
 };
 
+// Static data for other filters
 const tools = {
   "HTML 5": 1234,
   "GOLANG ": 1234,
   "CSS 3": 1234,
   "Node.js": 8454,
-};
-
-const price = {
-  Paid: 12863,
-  Free: 832,
 };
 
 const duration = {
@@ -66,6 +63,7 @@ const duration = {
   "1-4 Weeks": 87423,
   "1-7 Days": 23746,
 };
+
 const courseLevel = {
   "All Level": 234234,
   Beginner: 2345,
@@ -99,11 +97,26 @@ const rating: Rating[] = [
 const CoursesPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ query?: string; filter?: string }>;
+  searchParams: Promise<{
+    query?: string;
+    filter?: string;
+    priceFree?: string;
+    pricePaid?: string;
+  }>;
 }) => {
+  const searchParam = await searchParams;
+  const isFiltered = searchParam.filter === "true";
+  const query = searchParam.query?.toLowerCase();
+  const priceFree = searchParam.priceFree === "true";
+  const pricePaid = searchParam.pricePaid === "true";
+
+  const initialPriceFilters = {
+    Free: priceFree,
+    Paid: pricePaid,
+  };
+
   await connectDB();
 
-  // Method 1: Simple approach with reduce
   const foundCategory = await categoryModel.find().lean();
   const foundSubCategories = await subCategoryModel
     .find()
@@ -115,7 +128,6 @@ const CoursesPage = async ({
     .populate("subCategory")
     .lean();
 
-  // Count courses per subcategory
   const courseCounts = foundCourse.reduce(
     (acc, course) => {
       const subCategoryId = course.subCategory?._id?.toString();
@@ -127,7 +139,6 @@ const CoursesPage = async ({
     {} as Record<string, number>
   );
 
-  // Group subcategories by category
   const subcategoriesByCategory = foundSubCategories.reduce(
     (acc, subCategory) => {
       const categoryId = subCategory.category._id?.toString();
@@ -162,9 +173,8 @@ const CoursesPage = async ({
     students: course.studentsCount,
   }));
 
-  const searchParam = await searchParams;
-  const isFiltered = searchParam.filter === "true";
-  const query = searchParam.query?.toLowerCase();
+  // Calculate price counts from database
+
   let filteredCourses = courses;
   if (query) {
     filteredCourses = filteredCourses.filter(
@@ -172,6 +182,24 @@ const CoursesPage = async ({
         course.name.toLowerCase().includes(query) ||
         course.category.toLowerCase().includes(query)
     );
+  }
+
+  const priceCounts: { Free: number; Paid: number } = { Free: 0, Paid: 0 };
+  for (const course of foundCourse) {
+    course.price === 0 ? priceCounts.Free++ : priceCounts.Paid++;
+  }
+
+  if (priceFree || pricePaid) {
+    filteredCourses = filteredCourses.filter((course) => {
+      if (priceFree && pricePaid) {
+        return true; // Show all courses if both are selected
+      } else if (priceFree) {
+        return course.price === 0; // Show only free courses
+      } else if (pricePaid) {
+        return course.price > 0; // Show only paid courses
+      }
+      return false;
+    });
   }
 
   return (
@@ -210,7 +238,8 @@ const CoursesPage = async ({
                       rating={rating}
                       courseLevel={courseLevel}
                       duration={duration}
-                      price={price}
+                      price={priceCounts}
+                      initialPriceFilters={initialPriceFilters}
                     />
                     <button className="btn btn-primary z-50 mt-8 w-full font-bold shadow-lg">
                       Done
@@ -260,7 +289,8 @@ const CoursesPage = async ({
             rating={rating}
             courseLevel={courseLevel}
             duration={duration}
-            price={price}
+            price={priceCounts}
+            initialPriceFilters={initialPriceFilters}
           />
         )}
         <div
