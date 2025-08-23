@@ -139,12 +139,15 @@ const MessagePage = () => {
 
   return (
     <div className="bg-base-200 border-base-300 flex h-screen w-full flex-row gap-6 border p-6">
-      <div className="border-base-300 bg-base-100 flex w-1/3 flex-col border-r">
+      <div className="border-base-300 bg-base-100 flex w-full flex-col border-r md:w-1/3">
         <MessageHeader mockContacts={mockContacts} />
-        <ContactList mockContacts={mockContacts} />
+        <ContactList
+          mockContacts={mockContacts}
+          mockChatMessages={mockChatMessages}
+        />
       </div>
 
-      <div className="bg-base-100 flex w-2/3 flex-col">
+      <div className="bg-base-100 hidden w-2/3 flex-col md:flex">
         <ChatMessages mockChatMessages={mockChatMessages} />
         <MessageInput />
       </div>
