@@ -92,8 +92,10 @@ const Category = () => {
 
   return (
     <section className="container mx-auto space-y-8 py-16">
-      <h3 className="text-center text-3xl font-bold">Browse top category</h3>
-      <div className="grid grid-cols-4 gap-6">
+      <h3 className="text-center text-2xl font-bold md:text-3xl">
+        Browse top category
+      </h3>
+      <div className="grid grid-cols-1 gap-6 px-8 md:grid-cols-3 md:px-0 lg:grid-cols-4">
         {category.map((item) => (
           <div
             key={item.label}
@@ -116,7 +118,7 @@ const Category = () => {
           </div>
         ))}
       </div>
-      <div className="flex flex-row items-center justify-center gap-4">
+      <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
         <p className="text-base-content/80 text-sm">
           We have more category & subcategory.
         </p>
