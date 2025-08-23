@@ -7,7 +7,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import Icon from "@/components/ui/Icon";
 
-interface CurriculumItem {
+type CurriculumItem = {
   title: string;
   lectures: number;
   duration: string;
@@ -16,17 +16,25 @@ interface CurriculumItem {
     info: string;
     type: "video" | "file" | string;
   }[];
-}
+};
 
-interface WatchCurriculumProps {
+type WatchCurriculumProps = {
   curriculum: CurriculumItem[];
   completionPercentage?: number;
-}
+};
 
-const WatchCurriculum: React.FC<WatchCurriculumProps> = ({
+/**
+ * WatchCurriculum component displays course curriculum with progress tracking
+ * @param {CurriculumItem[]} curriculum - Array of curriculum sections
+ * @param {number} [completionPercentage=15] - Overall course completion percentage
+ */
+
+// TODO : add completionPercentage
+
+const WatchCurriculum = ({
   curriculum,
   completionPercentage = 15,
-}) => {
+}: WatchCurriculumProps) => {
   return (
     <div className="w-full">
       {/* Progress Section */}

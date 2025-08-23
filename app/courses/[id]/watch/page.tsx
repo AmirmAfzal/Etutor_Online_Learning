@@ -4,7 +4,7 @@ import WatchPlayer from "@/components/Courses/watchCourses/WatchPlayer";
 import WatchDetails from "@/components/Courses/watchCourses/WatchDetails";
 import WatchTabs from "@/components/Courses/watchCourses/WatchTabs";
 
-interface CurriculumItem {
+type CurriculumItem = {
   title: string;
   lectures: number;
   duration: string;
@@ -13,9 +13,9 @@ interface CurriculumItem {
     info: string;
     type: string;
   }[];
-}
+};
 
-interface Comment {
+type Comment = {
   name: string;
   avatar: string;
   time: string;
@@ -23,7 +23,7 @@ interface Comment {
   comment: string;
   ADMIN: boolean;
   replies?: Comment[];
-}
+};
 
 const curriculum: CurriculumItem[] = [
   {

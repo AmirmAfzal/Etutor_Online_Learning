@@ -61,8 +61,14 @@ const WriteReview = () => {
               </div>
             </div>
             <form className="w-full">
-              <label className="text-base-content/70 text-sm">feedback</label>
+              <label
+                htmlFor="feedback-input"
+                className="text-base-content/70 text-sm"
+              >
+                feedback
+              </label>
               <Input
+                id="feedback-input"
                 placeholder="Write down your feedback here"
                 className="pt-3 pb-20"
               />
