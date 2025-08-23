@@ -1,8 +1,5 @@
-// TODO: single course updated => merge to this branch
-
 import Icon from "@/components/ui/Icon";
 import Link from "next/link";
-
 import {
   Sheet,
   SheetContent,
@@ -11,7 +8,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
 import React from "react";
 import CoursesSearch from "@/components/Courses/CoursesSearch";
 import CoursesSelect from "@/components/Courses/CoursesSelect";
@@ -104,29 +100,45 @@ const CoursesPage = async ({
     pricePaid?: string;
   }>;
 }) => {
-  const searchParam = await searchParams;
-  const isFiltered = searchParam.filter === "true";
-  const query = searchParam.query?.toLowerCase();
-  const priceFree = searchParam.priceFree === "true";
-  const pricePaid = searchParam.pricePaid === "true";
+  const isFiltered = (await searchParams).filter === "true";
+  const query = (await searchParams).query?.toLowerCase();
+  const priceFree = (await searchParams).priceFree === "true";
+  const pricePaid = (await searchParams).pricePaid === "true";
 
-  const initialPriceFilters = {
+  const currentPriceFilters = {
     Free: priceFree,
     Paid: pricePaid,
   };
 
   await connectDB();
 
+  const mongoQuery: any = {};
+  if (query) {
+    mongoQuery.title = { $regex: new RegExp(query, "i") };
+  }
+
+  if (priceFree && !pricePaid) {
+    mongoQuery.price = 0;
+  } else if (!priceFree && pricePaid) {
+    mongoQuery.price = { $gt: 0 };
+  }
+
   const foundCategory = await categoryModel.find().lean();
   const foundSubCategories = await subCategoryModel
     .find()
     .populate("category")
     .lean();
+
   const foundCourse = await courseModel
-    .find()
+    .find(mongoQuery)
     .populate("category")
     .populate("subCategory")
     .lean();
+
+  const totalFreeCount = await courseModel.countDocuments({ price: 0 });
+  const totalPaidCount = await courseModel.countDocuments({
+    price: { $gt: 0 },
+  });
 
   const courseCounts = foundCourse.reduce(
     (acc, course) => {
@@ -173,34 +185,10 @@ const CoursesPage = async ({
     students: course.studentsCount,
   }));
 
-  // Calculate price counts from database
-
-  let filteredCourses = courses;
-  if (query) {
-    filteredCourses = filteredCourses.filter(
-      (course) =>
-        course.name.toLowerCase().includes(query) ||
-        course.category.toLowerCase().includes(query)
-    );
-  }
-
-  const priceCounts: { Free: number; Paid: number } = { Free: 0, Paid: 0 };
-  for (const course of foundCourse) {
-    course.price === 0 ? priceCounts.Free++ : priceCounts.Paid++;
-  }
-
-  if (priceFree || pricePaid) {
-    filteredCourses = filteredCourses.filter((course) => {
-      if (priceFree && pricePaid) {
-        return true; // Show all courses if both are selected
-      } else if (priceFree) {
-        return course.price === 0; // Show only free courses
-      } else if (pricePaid) {
-        return course.price > 0; // Show only paid courses
-      }
-      return false;
-    });
-  }
+  const priceCounts: { Free: number; Paid: number } = {
+    Free: totalFreeCount,
+    Paid: totalPaidCount,
+  };
 
   return (
     <section className="container mx-auto mt-8 flex max-w-6xl flex-col items-center justify-center">
@@ -239,7 +227,8 @@ const CoursesPage = async ({
                       courseLevel={courseLevel}
                       duration={duration}
                       price={priceCounts}
-                      initialPriceFilters={initialPriceFilters}
+                      currentPriceFilters={currentPriceFilters}
+                      searchParams={searchParams as any}
                     />
                     <button className="btn btn-primary z-50 mt-8 w-full font-bold shadow-lg">
                       Done
@@ -276,8 +265,8 @@ const CoursesPage = async ({
           {/* TODO: number of results for search */}
           <div className="text-base-content/70 text-sm whitespace-nowrap">
             {query
-              ? `${filteredCourses.length} results find for"${query}"`
-              : `${filteredCourses.length} Course`}
+              ? `${foundCourse.length} results find for"${query}"`
+              : `${foundCourse.length} Course`}
           </div>
         </div>
       </div>
@@ -290,13 +279,14 @@ const CoursesPage = async ({
             courseLevel={courseLevel}
             duration={duration}
             price={priceCounts}
-            initialPriceFilters={initialPriceFilters}
+            currentPriceFilters={currentPriceFilters}
+            searchParams={searchParams as any}
           />
         )}
         <div
           className={`grid grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
         >
-          {filteredCourses.map((course, index) => (
+          {courses.map((course, index) => (
             <CourseCard key={index} {...course} />
           ))}
         </div>

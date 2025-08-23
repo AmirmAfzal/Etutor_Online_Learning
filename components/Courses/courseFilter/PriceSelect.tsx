@@ -5,42 +5,39 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import PriceRange from "./PriceRange";
-import { useState, useEffect } from "react";
+import Link from "next/link";
 
 type PriceSelectProps = {
   price: { [key: string]: number };
-  onPriceFilterChange?: (filters: { Free: boolean; Paid: boolean }) => void;
-  initialFilters?: { Free: boolean; Paid: boolean };
+  currentPriceFilters: { Free: boolean; Paid: boolean };
+  searchParams: Promise<{
+    query?: string;
+    filter?: string;
+    priceFree?: string;
+    pricePaid?: string;
+  }>;
 };
 
-const PriceSelect = ({
+const PriceSelect = async ({
   price,
-  onPriceFilterChange,
-  initialFilters,
+  currentPriceFilters,
+  searchParams,
 }: PriceSelectProps) => {
-  const [priceFilters, setPriceFilters] = useState<{
-    Free: boolean;
-    Paid: boolean;
-  }>(initialFilters || { Free: false, Paid: false });
+  const createPriceFilterUrl = async (priceType: "Free" | "Paid") => {
+    const newSearchParams = { ...(await searchParams) };
 
-  const handleCheckboxChange = (priceType: "Free" | "Paid") => {
-    const newFilters = {
-      ...priceFilters,
-      [priceType]: !priceFilters[priceType],
-    };
-    setPriceFilters(newFilters);
-
-    if (onPriceFilterChange) {
-      onPriceFilterChange(newFilters);
+    if (currentPriceFilters[priceType]) {
+      delete newSearchParams[`price${priceType}`];
+    } else {
+      newSearchParams[`price${priceType}`] = "true";
     }
+
+    const queryString = Object.entries(newSearchParams)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
+
+    return `/courses${queryString ? `?${queryString}` : ""}`;
   };
-
-  // Update local state when initialFilters change
-  useEffect(() => {
-    if (initialFilters) {
-      setPriceFilters(initialFilters);
-    }
-  }, [initialFilters]);
 
   return (
     <Accordion
@@ -56,35 +53,61 @@ const PriceSelect = ({
           <div className="flex flex-col gap-4 px-2 py-4">
             <PriceRange min={0} max={100} step={1} defaultValue={[20, 80]} />
             <div className="text-base-content/70 flex flex-col items-start gap-2 text-xs font-medium">
-              {Object.entries(price).map(
-                ([item, count]) =>
-                  item && (
-                    <div
-                      key={item}
-                      className="text-base-content/70 flex items-center justify-between px-2 text-sm"
-                    >
-                      <div className="flex flex-row items-center gap-2 p-2">
-                        <input
-                          type="checkbox"
-                          id={item}
-                          checked={
-                            priceFilters[item as "Free" | "Paid"] || false
-                          }
-                          onChange={() =>
-                            handleCheckboxChange(item as "Free" | "Paid")
-                          }
-                          className="checkbox checkbox-primary checkbox-xs"
-                        />
-                        <span className="text-base-content/80 text-xs font-medium">
-                          {item}
-                        </span>
-                      </div>
-                      <span className="text-base-content/60 text-xs font-medium">
-                        {count.toLocaleString()}
+              {/* Filter for Free courses using daisyUI checkbox */}
+              <div
+                key="Free"
+                className="text-base-content/70 flex w-full items-center justify-between px-2 text-sm"
+              >
+                <div className="flex flex-row items-center gap-2 p-2">
+                  <Link
+                    href={await createPriceFilterUrl("Free")}
+                    className="flex items-center gap-2"
+                  >
+                    <label className="label flex cursor-pointer gap-2">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-primary checkbox-xs"
+                        checked={currentPriceFilters["Free"]}
+                        readOnly
+                      />
+                      <span className="text-base-content/80 text-xs font-medium">
+                        Free
                       </span>
-                    </div>
-                  )
-              )}
+                    </label>
+                  </Link>
+                </div>
+                <span className="text-base-content/60 text-xs font-medium">
+                  {price["Free"]?.toLocaleString() || "0"}
+                </span>
+              </div>
+
+              {/* Filter for Paid courses using daisyUI checkbox */}
+              <div
+                key="Paid"
+                className="text-base-content/70 flex w-full items-center justify-between px-2 text-sm"
+              >
+                <div className="flex flex-row items-center gap-2 p-2">
+                  <Link
+                    href={await createPriceFilterUrl("Paid")}
+                    className="flex items-center gap-2"
+                  >
+                    <label className="label flex cursor-pointer gap-2">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-primary checkbox-xs"
+                        checked={currentPriceFilters["Paid"]}
+                        readOnly
+                      />
+                      <span className="text-base-content/80 text-xs font-medium">
+                        Paid
+                      </span>
+                    </label>
+                  </Link>
+                </div>
+                <span className="text-base-content/60 text-xs font-medium">
+                  {price["Paid"]?.toLocaleString() || "0"}
+                </span>
+              </div>
             </div>
           </div>
         </AccordionContent>
