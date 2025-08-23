@@ -19,20 +19,22 @@ import CourseFilter from "@/components/Courses/CourseFilter";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import CourseCard from "@/components/Student/CourseCard";
+import categoryModel from "@/lib/db/models/categoryModel";
+import subCategoryModel from "@/lib/db/models/subCategoryModel";
 
 // fake data for filtered courses
-interface Category {
+type Category = {
   name: string;
   icon: string;
   subcategories: { [key: string]: number };
-}
+};
 
-interface Rating {
+type Rating = {
   label: string;
   count: number;
-}
+};
 
-interface Course {
+type Course = {
   id?: string;
   thumbnail: string;
   name: string;
@@ -40,52 +42,10 @@ interface Course {
   price: number;
   rating: number;
   students: number;
-}
-
-const categories: Category[] = [
-  {
-    name: "Development",
-    icon: "ph:cpu",
-    subcategories: {
-      "Web Development": 574,
-      "Mobile Development": 1345,
-      "Software Testing": 317,
-      "Software Engineering": 31,
-      "Software Development Tools": 58,
-      "No-Code Development": 37,
-    },
-  },
-  {
-    name: "Business",
-    icon: "ph:handshake",
-    subcategories: { "Finance & Accounting": 0 },
-  },
-  {
-    name: "IT & Software",
-    icon: "ph:chart-bar-horizontal",
-    subcategories: { "": 0 },
-  },
-  {
-    name: "Office Productivity",
-    icon: "ph:bug-droid",
-    subcategories: { "": 0 },
-  },
-  {
-    name: "Personal Development",
-    icon: "ph:receipt",
-    subcategories: { "": 0 },
-  },
-  { name: "Design", icon: "ph:pen-nib", subcategories: { "": 0 } },
-  { name: "Marketing", icon: "ph:megaphone", subcategories: { "": 0 } },
-  { name: "Lifestyle", icon: "ph:package", subcategories: { "": 0 } },
-  { name: "Photography & Video", icon: "ph:camera", subcategories: { "": 0 } },
-  { name: "Music", icon: "ph:headset", subcategories: { "": 0 } },
-  {
-    name: "Health & Fitness",
-    icon: "ph:first-aid-kit",
-    subcategories: { "": 0 },
-  },
-];
+};
+type SubCategory = {
+  [key: string]: { [key: string]: number };
+};
 
 const tools = {
   "HTML 5": 1234,
@@ -142,7 +102,55 @@ const CoursesPage = async ({
   searchParams: Promise<{ query?: string; filter?: string }>;
 }) => {
   await connectDB();
-  const foundCourse = await courseModel.find().populate("category").lean();
+
+  // Method 1: Simple approach with reduce
+  const foundCategory = await categoryModel.find().lean();
+  const foundSubCategories = await subCategoryModel
+    .find()
+    .populate("category")
+    .lean();
+  const foundCourse = await courseModel
+    .find()
+    .populate("category")
+    .populate("subCategory")
+    .lean();
+
+  // Count courses per subcategory
+  const courseCounts = foundCourse.reduce(
+    (acc, course) => {
+      const subCategoryId = course.subCategory?._id?.toString();
+      if (subCategoryId) {
+        acc[subCategoryId] = (acc[subCategoryId] || 0) + 1;
+      }
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  // Group subcategories by category
+  const subcategoriesByCategory = foundSubCategories.reduce(
+    (acc, subCategory) => {
+      const categoryId = subCategory.category._id?.toString();
+      if (categoryId) {
+        if (!acc[categoryId]) {
+          acc[categoryId] = {};
+        }
+        const subCategoryId = subCategory._id?.toString();
+        if (subCategoryId) {
+          acc[categoryId][subCategory.name] = courseCounts[subCategoryId] || 0;
+        }
+      }
+      return acc;
+    },
+    {} as SubCategory
+  );
+
+  const categories: Category[] = foundCategory.map((category) => ({
+    name: category?.name,
+    icon: category?.icon || "ph:cpu", // Use category icon or default
+    subcategories:
+      subcategoriesByCategory[category._id?.toString() || ""] || {},
+  }));
 
   const courses: Course[] = foundCourse.map((course) => ({
     id: course._id?.toString(),
@@ -223,7 +231,7 @@ const CoursesPage = async ({
               Suggestions :
             </span>
             <Link href="" className="text-primary/80 whitespace-nowrap">
-              user interface
+              user type
             </Link>
             <Link href="" className="text-primary/80 whitespace-nowrap">
               user experience
@@ -232,7 +240,7 @@ const CoursesPage = async ({
               web design
             </Link>
             <Link href="" className="text-primary/80 whitespace-nowrap">
-              interface app
+              type app
             </Link>
           </div>
 
