@@ -95,20 +95,30 @@ const CoursesPage = async ({
 }: {
   searchParams: Promise<{
     query?: string;
-    filter?: string;
-    priceFree?: string;
-    pricePaid?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    level?: string;
+    duration?: string;
+    tool?: string;
+    category?: string;
+    subCategories?: string;
   }>;
 }) => {
-  const isFiltered = (await searchParams).filter === "true";
-  const query = (await searchParams).query?.toLowerCase();
-  const priceFree = (await searchParams).priceFree === "true";
-  const pricePaid = (await searchParams).pricePaid === "true";
+  const resolvedSearchParams = await searchParams;
+  const query = resolvedSearchParams.query?.toLowerCase();
+  const minPrice = resolvedSearchParams.minPrice
+    ? parseFloat(resolvedSearchParams.minPrice)
+    : undefined;
+  const maxPrice = resolvedSearchParams.maxPrice
+    ? parseFloat(resolvedSearchParams.maxPrice)
+    : undefined;
 
-  const currentPriceFilters = {
-    Free: priceFree,
-    Paid: pricePaid,
-  };
+  // const isFiltered = Object.keys(resolvedSearchParams).length > 0;
+  let isFiltered = false;
+  for (const key in resolvedSearchParams) {
+    isFiltered = true;
+    break;
+  }
 
   await connectDB();
 
@@ -117,19 +127,21 @@ const CoursesPage = async ({
     mongoQuery.title = { $regex: new RegExp(query, "i") };
   }
 
-  if (priceFree && !pricePaid) {
-    mongoQuery.price = 0;
-  } else if (!priceFree && pricePaid) {
-    mongoQuery.price = { $gt: 0 };
+  if (minPrice !== undefined && maxPrice !== undefined) {
+    mongoQuery.price = { $gte: minPrice, $lte: maxPrice };
+  } else if (minPrice !== undefined) {
+    mongoQuery.price = { $gte: minPrice };
+  } else if (maxPrice !== undefined) {
+    mongoQuery.price = { $lte: maxPrice };
   }
 
-  const foundCategory = await categoryModel.find().lean();
+  const foundCategories = await categoryModel.find().lean();
   const foundSubCategories = await subCategoryModel
     .find()
     .populate("category")
     .lean();
 
-  const foundCourse = await courseModel
+  const foundCourses = await courseModel
     .find(mongoQuery)
     .populate("category")
     .populate("subCategory")
@@ -139,43 +151,38 @@ const CoursesPage = async ({
   const totalPaidCount = await courseModel.countDocuments({
     price: { $gt: 0 },
   });
+  const courseCounts: Record<string, number> = {};
+  foundCourses.forEach((course) => {
+    const subCategoryId = course.subCategory?._id?.toString();
+    if (subCategoryId) {
+      courseCounts[subCategoryId] = (courseCounts[subCategoryId] || 0) + 1;
+    }
+  });
 
-  const courseCounts = foundCourse.reduce(
-    (acc, course) => {
-      const subCategoryId = course.subCategory?._id?.toString();
-      if (subCategoryId) {
-        acc[subCategoryId] = (acc[subCategoryId] || 0) + 1;
-      }
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+  const subcategoriesByCategory: SubCategory = {};
+  foundSubCategories.forEach((subCategory) => {
+    const categoryId = subCategory.category._id?.toString();
+    if (!categoryId) return;
 
-  const subcategoriesByCategory = foundSubCategories.reduce(
-    (acc, subCategory) => {
-      const categoryId = subCategory.category._id?.toString();
-      if (categoryId) {
-        if (!acc[categoryId]) {
-          acc[categoryId] = {};
-        }
-        const subCategoryId = subCategory._id?.toString();
-        if (subCategoryId) {
-          acc[categoryId][subCategory.name] = courseCounts[subCategoryId] || 0;
-        }
-      }
-      return acc;
-    },
-    {} as SubCategory
-  );
+    if (!subcategoriesByCategory[categoryId]) {
+      subcategoriesByCategory[categoryId] = {};
+    }
 
-  const categories: Category[] = foundCategory.map((category) => ({
+    const subCategoryId = subCategory._id?.toString();
+    if (subCategoryId) {
+      subcategoriesByCategory[categoryId][subCategory.name] =
+        courseCounts[subCategoryId] || 0;
+    }
+  });
+
+  const categories: Category[] = foundCategories.map((category) => ({
     name: category?.name,
-    icon: category?.icon || "ph:cpu", // Use category icon or default
+    icon: category?.icon || "ph:cpu",
     subcategories:
       subcategoriesByCategory[category._id?.toString() || ""] || {},
   }));
 
-  const courses: Course[] = foundCourse.map((course) => ({
+  const courses: Course[] = foundCourses.map((course) => ({
     id: course._id?.toString(),
     thumbnail: course.thumbnail,
     name: course.title,
@@ -190,6 +197,15 @@ const CoursesPage = async ({
     Paid: totalPaidCount,
   };
 
+  const isFreeSelected =
+    minPrice === 0 && (maxPrice === undefined || maxPrice === 0);
+  const isPaidSelected = minPrice !== undefined && minPrice > 0;
+
+  const currentPriceFilters = {
+    Free: isFreeSelected,
+    Paid: isPaidSelected,
+  };
+
   return (
     <section className="container mx-auto mt-8 flex max-w-6xl flex-col items-center justify-center">
       <div className="border-base-300 flex w-full flex-col gap-4 border-b px-4 pb-2">
@@ -197,14 +213,22 @@ const CoursesPage = async ({
           <div className="flex flex-row items-center gap-2">
             <Link
               href={isFiltered ? "/courses" : "/courses?filter=true"}
-              className={`bg-base-100 flex-row items-center gap-3 rounded-none border px-2 py-3 md:flex ${isFiltered ? "border-primary text-primary" : "border-primary/20 text-base-content/80"} hidden`}
+              className={`bg-base-100 flex-row items-center gap-3 rounded-none border px-2 py-3 md:flex ${
+                isFiltered
+                  ? "border-primary text-primary"
+                  : "border-primary/20 text-base-content/80"
+              } hidden`}
             >
               <Icon icon="ph:faders-fill" className="text-xl" />
               <span className="text-sm">Filter</span>
               <span
-                className={`${isFiltered ? "text-base-100 bg-primary px-2" : "text-primary bg-primary/10 px-2"}`}
+                className={`${
+                  isFiltered
+                    ? "text-base-100 bg-primary px-2"
+                    : "text-primary bg-primary/10 px-2"
+                }`}
               >
-                {isFiltered ? "3" : "0"}
+                {isFiltered ? "1" : "0"}
               </span>
             </Link>
 
@@ -213,7 +237,7 @@ const CoursesPage = async ({
                 <Icon icon="ph:faders-fill" className="text-xl" />
                 <span className="text-sm">Filter</span>
                 <span className="text-primary bg-primary/10 px-2">
-                  {isFiltered ? "3" : "0"}
+                  {isFiltered ? "1" : "0"}
                 </span>
               </SheetTrigger>
               <SheetContent>
@@ -262,11 +286,10 @@ const CoursesPage = async ({
             </Link>
           </div>
 
-          {/* TODO: number of results for search */}
           <div className="text-base-content/70 text-sm whitespace-nowrap">
             {query
-              ? `${foundCourse.length} results find for"${query}"`
-              : `${foundCourse.length} Course`}
+              ? `${foundCourses.length} results find for"${query}"`
+              : `${foundCourses.length} Course`}
           </div>
         </div>
       </div>
@@ -280,18 +303,25 @@ const CoursesPage = async ({
             duration={duration}
             price={priceCounts}
             currentPriceFilters={currentPriceFilters}
-            searchParams={searchParams as any}
+            searchParams={searchParams}
           />
         )}
         <div
-          className={`grid grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
+          className={`grid w-full grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:${
+            isFiltered ? "grid-cols-3" : "grid-cols-4"
+          }`}
         >
-          {courses.map((course, index) => (
-            <CourseCard key={index} {...course} />
-          ))}
+          {foundCourses.length > 0 ? (
+            courses.map((course, index) => (
+              <CourseCard key={index} {...course} />
+            ))
+          ) : (
+            <div className="text-base-content/70 col-span-full text-center">
+              No courses found.
+            </div>
+          )}
         </div>
       </div>
-      {/*TODO: Implement pagination */}
     </section>
   );
 };
