@@ -53,7 +53,6 @@ const CoursesGrid = ({
           courseLevel={courseLevel}
           duration={duration}
           price={price}
-          classname="hidden md:block"
         />
       )}
       <div

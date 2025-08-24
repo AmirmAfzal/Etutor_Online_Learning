@@ -87,7 +87,6 @@ const SearchFilterAndResults = ({
                 courseLevel={courseLevel}
                 duration={duration}
                 price={price}
-                classname="!w-full !overflow-y-auto !h-96 !p-0"
               />
             </DialogContent>
           </Dialog>
