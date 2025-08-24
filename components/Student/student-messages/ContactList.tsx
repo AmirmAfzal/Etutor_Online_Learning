@@ -1,6 +1,8 @@
 "use client";
+
 import Image from "next/image";
 import { useState } from "react";
+
 import ChatMessages from "./ChatMessages";
 import MessageInput from "./MessageInput";
 
@@ -38,7 +40,7 @@ const ContactList = ({
   return (
     <div className="h-80 flex-1 overflow-y-auto md:h-auto">
       {mockContacts.map((contact) => (
-        <div
+        <button
           key={contact.id}
           // initial
           // FIXME
@@ -76,7 +78,7 @@ const ContactList = ({
               {contact.lastMessage}
             </p>
           </div>
-        </div>
+        </button>
       ))}
     </div>
   );
