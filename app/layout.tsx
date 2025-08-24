@@ -18,7 +18,7 @@ const poppins = Poppins({
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const url = pathname.includes("/dashboard");
+  const url = pathname.includes("/instructor/dashboard");
   return (
     <html lang="fa">
       <body className={`bg-base-100 ${poppins.variable}`}>

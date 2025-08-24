@@ -1,3 +1,5 @@
+import { SlashIcon } from "lucide-react";
+
 import GiftCourse from "@/components/Courses/gift-course/GiftCourse";
 import GiftCourseForm from "@/components/Courses/gift-course/GiftCourseForm";
 import GiftCoursePayment from "@/components/Courses/gift-course/GiftCoursePayment";
@@ -8,7 +10,6 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { SlashIcon } from "lucide-react";
 
 const GiftCoursePage = () => {
   return (
