@@ -1,5 +1,8 @@
 "use client";
 
+import { useRef } from "react";
+import Form from "next/form";
+
 import {
   Select,
   SelectContent,
@@ -7,8 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
-import Form from "next/form";
-import { useRef } from "react";
 
 async function formAction(formData: FormData) {
   const data = Object.fromEntries(formData);
