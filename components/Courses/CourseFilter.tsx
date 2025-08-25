@@ -48,12 +48,12 @@ const tools = {
   "Node.js": 8454,
 };
 
-const courseLevel = {
-  "All Level": 234234,
-  Beginner: 2345,
-  Intermediate: 124,
-  Expert: 826,
-};
+// const courseLevel = {
+//   "All Level": 234234,
+//   Beginner: 2345,
+//   Intermediate: 124,
+//   Expert: 826,
+// };
 
 const rating: RatingItem[] = [
   {
@@ -99,6 +99,7 @@ const CourseFilter = async (props: Props) => {
     .find()
     .populate("category")
     .populate("duration")
+    .populate("level")
     .lean();
 
   const totalFreeCount = await courseModel.countDocuments({ price: 0 });
@@ -137,7 +138,7 @@ const CourseFilter = async (props: Props) => {
   }));
 
   const durations: number[] = foundCourses.map((course) => course.duration);
-
+  const levels: string[] = foundCourses.map((course) => course.level);
   const priceCounts = {
     Free: totalFreeCount,
     Paid: totalPaidCount,
@@ -157,7 +158,11 @@ const CourseFilter = async (props: Props) => {
       <Categories categories={categories} />
       <Tools tools={tools} />
       <Rating rating={rating} />
-      <CourseLevel courseLevel={courseLevel} />
+      <CourseLevel
+        // promise => for lint error
+        searchParams={Promise.resolve(searchParams)}
+        courseLevel={levels}
+      />
       <PriceSelect
         price={priceCounts}
         currentPriceFilters={currentPriceFilters}

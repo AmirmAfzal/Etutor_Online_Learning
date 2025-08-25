@@ -51,7 +51,6 @@ const CoursesPage = async (props: Props) => {
   const maxPrice = searchParams.maxPrice
     ? parseFloat(searchParams.maxPrice)
     : undefined;
-  // Filter by duration using the new mapping
 
   const isFiltered = Object.keys(searchParams).length > 0;
 
@@ -84,6 +83,11 @@ const CoursesPage = async (props: Props) => {
 
   if (durationQuery) {
     mongoQuery.duration = durationQuery;
+  }
+
+  const level = searchParams?.level;
+  if (level && level !== "All Levels") {
+    mongoQuery.level = level;
   }
 
   const foundCourses = await courseModel
@@ -184,6 +188,7 @@ const CoursesPage = async (props: Props) => {
 
       <div className="flex w-full items-start gap-4 pt-6">
         {isFiltered && (
+          // promise : for linting error
           <CourseFilter searchParams={Promise.resolve(searchParams)} />
         )}
         <div
