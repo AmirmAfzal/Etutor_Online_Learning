@@ -1,7 +1,8 @@
+import Image from "next/image";
+
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
 
 const paymentMethods = [
   {
