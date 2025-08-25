@@ -51,6 +51,13 @@ const ContactList = ({
           tabIndex={0}
           aria-label={`Open chat with ${contact.name}`}
           onClick={openChatIfMobile}
+          // for lint error
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              openChatIfMobile();
+            }
+          }}
           className={`border-base-200 hover:bg-base-200 flex cursor-pointer items-center gap-3 border-b p-1 md:p-4 ${
             contact.isActive ? "bg-primary/10" : ""
           }`}
