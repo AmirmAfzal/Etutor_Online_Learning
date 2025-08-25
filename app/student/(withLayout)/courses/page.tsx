@@ -1,12 +1,14 @@
 import React from "react";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+
 import CourseCard from "@/components/Student/CourseCardStudent";
 import Search from "@/components/Student/Search";
 import CoursesSelect from "@/components/Student/CoursesSelect";
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+
 // Temporary logging for debugging
 
 interface CourseData {

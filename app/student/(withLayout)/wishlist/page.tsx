@@ -1,12 +1,12 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-
 import Link from "next/link";
-import WishlistCourseRow from "@/components/Student/student-wishlist/WishlistCoursesRow";
-import { connectDB } from "@/lib/db/db";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/authOptions";
 import { redirect } from "next/navigation";
+
+import WishlistCourseRow from "@/components/Student/student-wishlist/WishlistCoursesRow";
+import { authOptions } from "@/lib/auth/authOptions";
+import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 
 interface CourseData {

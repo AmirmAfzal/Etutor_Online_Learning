@@ -18,12 +18,14 @@ const TruncatedText = ({
       <span className="text-base-content/70 text-sm">
         {isExpanded ? text : displayedText}
       </span>
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="text-base-content/80 text-sm font-semibold"
-      >
-        {isExpanded ? "Show Less" : "Read More"}
-      </button>
+      {isTruncated && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-base-content/80 text-sm font-semibold"
+        >
+          {isExpanded ? "Show Less" : "Read More"}
+        </button>
+      )}
     </>
   );
 };

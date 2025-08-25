@@ -1,7 +1,13 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { Poppins } from "next/font/google";
+
 import Navbar from "@/components/ui/Navbar";
-import AuthProvider from "./auth/AuthProvider";
 import Footer from "@/components/ui/Footer";
+
+import AuthProvider from "./auth/AuthProvider";
+
 import "./globals.css";
 
 const poppins = Poppins({
@@ -11,13 +17,15 @@ const poppins = Poppins({
 });
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const url = pathname.includes("/instructor/dashboard");
   return (
     <html lang="fa">
       <body className={`bg-base-100 ${poppins.variable}`}>
         <AuthProvider>
-          <Navbar />
+          {!url && <Navbar />}
           <main className="no-scrollbar min-h-screen">{children}</main>
-          <Footer />
+          {!url && <Footer />}
         </AuthProvider>
       </body>
     </html>

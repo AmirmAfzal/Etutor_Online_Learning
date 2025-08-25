@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import Icon from "@/components/ui/Icon";
 
 interface Props {

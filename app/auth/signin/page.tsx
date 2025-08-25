@@ -1,10 +1,14 @@
 "use client";
-import Image from "next/image";
+
 import React, { useState } from "react";
+import Image from "next/image";
+import { redirect } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signInSchema } from "@/lib/validation/auth/signinSchema";
 import { z } from "zod";
+
+import { signInSchema } from "@/lib/validation/auth/signinSchema";
 import {
   Form,
   FormField,
@@ -15,8 +19,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Icon from "@/components/ui/Icon";
-import { signIn } from "next-auth/react";
-import { redirect } from "next/navigation";
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);

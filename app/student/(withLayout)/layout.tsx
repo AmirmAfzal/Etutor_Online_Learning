@@ -1,6 +1,7 @@
-import StudentProfile from "@/components/Student/StudentProfile";
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
+
+import StudentProfile from "@/components/Student/StudentProfile";
 
 const tabLinks = [
   { label: "Dashboard", href: "/student" },

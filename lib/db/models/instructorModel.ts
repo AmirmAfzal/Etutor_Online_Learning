@@ -3,8 +3,8 @@ import mongoose, { Document, ObjectId, Schema } from "mongoose";
 export interface InstructorInterface extends Document {
   firstname: string;
   lastname: string;
-  avatar : string;
-  username : string
+  avatar: string;
+  username: string;
   user: mongoose.Types.ObjectId;
   bio: string;
   rating: number;

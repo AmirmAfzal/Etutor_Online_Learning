@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
+import { Icon } from "@iconify/react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Icon } from "@iconify/react";
 
 interface CurriculumProps {
   curriculum: {
@@ -19,14 +19,14 @@ interface CurriculumProps {
 const Curriculum: React.FC<CurriculumProps> = ({ curriculum }) => {
   return (
     <div className="mt-12 w-full">
-      <div className="flex-rew flex items-center justify-between">
-        <span className="text-base-content/80 mb-4 block text-2xl font-semibold">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <span className="text-base-content/80 block text-xl font-semibold sm:text-2xl">
           Curriculum
         </span>
 
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row gap-3 sm:items-center sm:gap-6">
           <span className="text-base-content/60 flex items-center text-sm">
-            <Icon icon="ph:folder-open" className="text-primary mx-2 text-lg" />
+            <Icon icon="ph:folder-open" className="text-primary mr-2 text-lg" />
             {curriculum.length} Sections
           </span>
           <span className="text-base-content/60 flex items-center gap-2 text-sm">
@@ -38,43 +38,48 @@ const Curriculum: React.FC<CurriculumProps> = ({ curriculum }) => {
             Lectures
           </span>
           <span className="text-base-content/60 flex items-center gap-2 text-sm">
-            {/* TODO : Add course time */}
+            {/* TODO: Add total course time */}
           </span>
         </div>
       </div>
-      <Accordion type="single" collapsible className="w-full">
+
+      {/* Accordion */}
+      <Accordion type="single" collapsible className="mt-6 w-full">
         {curriculum.map((section, index) => (
           <AccordionItem
             key={index}
             value={`section-${index + 1}`}
             className="bg-base-100 border-base-content/10 border transition-all duration-150 hover:translate-y-[-1px]"
           >
-            <AccordionTrigger className="min-h-[72px] px-6">
-              <div className="flex w-full flex-row items-start justify-between gap-3">
-                <span className="text-base-content/80 font-semibold">
+            <AccordionTrigger className="min-h-[72px] p-2 sm:px-4 md:px-6 md:py-4">
+              <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <span className="text-base-content/80 text-sm font-semibold sm:text-base">
                   {section.title}
                 </span>
-                <div className="flex flex-wrap gap-5">
-                  <span className="text-base-content/60 flex items-center gap-2 text-sm">
+                <div className="flex flex-wrap gap-3 sm:gap-5">
+                  <span className="text-base-content/60 flex items-center gap-2 text-xs sm:text-sm">
                     <Icon
                       icon="ph:play-circle-duotone"
-                      className="text-secondary"
+                      className="text-secondary shrink-0"
                     />
                     {section.lectures} Lectures
                   </span>
-                  <span className="text-base-content/60 flex items-center gap-2 text-sm">
-                    <Icon icon="ph:clock" className="text-primary text-lg" />
+                  <span className="text-base-content/60 flex items-center gap-2 text-xs sm:text-sm">
+                    <Icon
+                      icon="ph:clock"
+                      className="text-primary shrink-0 text-lg"
+                    />
                     {section.duration}
                   </span>
                 </div>
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              <ul className="px-4">
+              <ul className="px-3 sm:px-6">
                 {section.content.map((item, idx) => (
                   <li
                     key={idx}
-                    className="flex items-center gap-2 py-1 text-sm"
+                    className="flex items-center gap-2 py-2 text-xs sm:text-sm"
                   >
                     <Icon
                       icon={
@@ -82,10 +87,12 @@ const Curriculum: React.FC<CurriculumProps> = ({ curriculum }) => {
                           ? "ph:play-circle"
                           : "ph:file-text"
                       }
-                      className="text-primary text-lg"
+                      className="text-primary shrink-0 text-lg"
                     />
-                    {item.title}
-                    <span className="ml-auto text-xs">{item.info}</span>
+                    <span className="truncate">{item.title}</span>
+                    <span className="text-base-content/60 ml-auto text-xs">
+                      {item.info}
+                    </span>
                   </li>
                 ))}
               </ul>

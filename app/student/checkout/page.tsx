@@ -1,9 +1,10 @@
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 // FIXME: فعلا مشکلی نداره چون بعد قراره اینارو به سرور وصل کنیم ولی صفحه ای اگر باشه که دیتا داره اونو تو فولدر پایین میزاریم
 // مثلا : /lib/data/student/courses.ts

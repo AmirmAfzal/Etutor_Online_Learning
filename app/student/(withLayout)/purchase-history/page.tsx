@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
 import Icon from "@/components/ui/Icon";
 
 const fakePurchases = [
