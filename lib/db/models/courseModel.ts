@@ -25,6 +25,8 @@ export interface CourseInterface extends mongoose.Document {
   learningOutcomes?: string[];
   targetAudience?: string[];
   requirements?: string[];
+  tools: string[];
+  rating: number;
 }
 
 const courseSchema = new Schema<CourseInterface & Document>(
@@ -66,6 +68,8 @@ const courseSchema = new Schema<CourseInterface & Document>(
     learningOutcomes: [{ type: String }],
     targetAudience: [{ type: String }],
     requirements: [{ type: String }],
+    tools: {type : [String] , default : []},
+    rating : {type : Number ,default :0}
   },
   {
     timestamps: true,
