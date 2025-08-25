@@ -18,7 +18,7 @@ const ContactList = ({
     isActive: boolean;
     unread: boolean;
   }[];
-  mockChatMessages: {
+  mockChatMessages?: {
     id: number;
     sender: string;
     message: string;
@@ -37,7 +37,7 @@ const ContactList = ({
   if (chatOpen)
     return (
       <div className="!z-100 flex h-full w-full flex-col">
-        <ChatMessages mockChatMessages={mockChatMessages} />
+        <ChatMessages mockChatMessages={mockChatMessages || []} />
         <MessageInput />
       </div>
     );
