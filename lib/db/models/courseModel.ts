@@ -25,6 +25,15 @@ export interface CourseInterface extends mongoose.Document {
   learningOutcomes?: string[];
   targetAudience?: string[];
   requirements?: string[];
+  // Added for publish step
+  welcomeMessage?: string;
+  congratulationsMessage?: string;
+  instructors?: Array<{
+    id: number;
+    profile: string;
+    name: string;
+    skill: string;
+  }>;
 }
 
 const courseSchema = new Schema<CourseInterface & Document>(
@@ -66,6 +75,18 @@ const courseSchema = new Schema<CourseInterface & Document>(
     learningOutcomes: [{ type: String }],
     targetAudience: [{ type: String }],
     requirements: [{ type: String }],
+    // Fields updated by publish step
+    welcomeMessage: { type: String },
+    congratulationsMessage: { type: String },
+    instructors: [
+      {
+        id: { type: Number, required: true },
+        profile: { type: String, required: true },
+        name: { type: String, required: true },
+        skill: { type: String, required: true },
+        _id: false,
+      },
+    ],
   },
   {
     timestamps: true,

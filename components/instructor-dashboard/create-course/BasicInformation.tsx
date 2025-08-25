@@ -63,8 +63,8 @@ const BasicInformation = ({ onNext, course }: Props) => {
       _id: typeof course?._id === "string" ? course._id : "",
       title: course?.title || "",
       subtitle: course?.subtitle || "",
-      category: JSON.parse(JSON.stringify(course?.category)).name || "",
-      subCategory: JSON.parse(JSON.stringify(course?.subCategory)).name || "",
+      category: course ? JSON.parse(JSON.stringify(course?.category)).name : "",
+      subCategory: course ? JSON.parse(JSON.stringify(course?.subCategory)).name : "",
       topic: course?.topic || "",
       language: course?.language || "",
       subtitleLang: "",
@@ -138,7 +138,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
         searchSubCategoryFormAction(initialSubCategory);
       });
     }
-  }, []);
+  }, [form, searchCategoryFormAction, searchSubCategoryFormAction]);
 
   return (
     <div>
