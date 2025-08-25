@@ -8,7 +8,7 @@ interface Props {
 const CreateNewCoursePage = async ({ searchParams }: Props) => {
   await connectDB();
   const { _id , tab } = await searchParams;
-  const foundCourse = await courseModel.findOne({ _id }).populate("category").lean().exec()
+  const foundCourse = await courseModel.findOne({ _id }).populate("category").populate("subCategory").lean().exec()
   const plainCourse = JSON.parse(JSON.stringify(foundCourse));
   return <CreateCourseTabs course={plainCourse} tab={tab} />;
 };

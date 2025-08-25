@@ -63,14 +63,8 @@ const BasicInformation = ({ onNext, course }: Props) => {
       _id: typeof course?._id === "string" ? course._id : "",
       title: course?.title || "",
       subtitle: course?.subtitle || "",
-      category:
-        typeof course?.category === "string"
-          ? course.category
-          : course?.category?.toString() || "",
-      subCategory:
-        typeof course?.subCategory === "string"
-          ? course.subCategory
-          : course?.subCategory?.toString() || "",
+      category: JSON.parse(JSON.stringify(course?.category)).name || "",
+      subCategory: JSON.parse(JSON.stringify(course?.subCategory)).name || "",
       topic: course?.topic || "",
       language: course?.language || "",
       subtitleLang: "",
@@ -129,6 +123,22 @@ const BasicInformation = ({ onNext, course }: Props) => {
       searchSubCategoryFormAction(e.target.value);
     });
   };
+  useEffect(() => {
+    const initialCategory = form.getValues("category");
+    const initialSubCategory = form.getValues("subCategory");
+
+    if (initialCategory && initialCategory.trim() !== "") {
+      startTransition(() => {
+        searchCategoryFormAction(initialCategory);
+      });
+    }
+
+    if (initialSubCategory && initialSubCategory.trim() !== "") {
+      startTransition(() => {
+        searchSubCategoryFormAction(initialSubCategory);
+      });
+    }
+  }, []);
 
   return (
     <div>
