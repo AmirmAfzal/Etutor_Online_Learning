@@ -10,20 +10,35 @@ import categoryModel from "@/lib/db/models/categoryModel";
 import subCategoryModel from "@/lib/db/models/subCategoryModel";
 
 // Types for filtered courses
-type Category = {
+interface Category {
   name: string;
   icon: string;
   subcategories: { [key: string]: number };
-};
+}
 
-type RatingItem = {
+interface RatingItem {
   label: string;
   count: number;
-};
+}
 
-type SubCategory = {
+interface SubCategory {
   [key: string]: { [key: string]: number };
-};
+}
+interface Props {
+  searchParams: Promise<{
+    query?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    level?: string;
+    duration?: string;
+    tool?: string;
+    category?: string;
+    subCategories?: string;
+    filter?: string;
+    priceFree?: string;
+    pricePaid?: string;
+  }>;
+}
 
 // Static data for other filters
 const tools = {
@@ -31,14 +46,6 @@ const tools = {
   "GOLANG ": 1234,
   "CSS 3": 1234,
   "Node.js": 8454,
-};
-
-const duration = {
-  "6-12 Months": 1312,
-  "3-6 Months": 42376,
-  "1-3 Months": 12,
-  "1-4 Weeks": 87423,
-  "1-7 Days": 23746,
 };
 
 const courseLevel = {
@@ -71,31 +78,15 @@ const rating: RatingItem[] = [
   },
 ];
 
-type Props = {
-  searchParams: Promise<{
-    query?: string;
-    minPrice?: string;
-    maxPrice?: string;
-    level?: string;
-    duration?: string;
-    tool?: string;
-    category?: string;
-    subCategories?: string;
-    filter?: string;
-    priceFree?: string;
-    pricePaid?: string;
-  }>;
-};
-
-const CourseFilter = async ({ searchParams }: Props) => {
+const CourseFilter = async (props: Props) => {
   await connectDB();
 
-  const resolvedSearchParams = await searchParams;
-  const minPrice = resolvedSearchParams.minPrice
-    ? parseFloat(resolvedSearchParams.minPrice)
+  const searchParams = await props.searchParams;
+  const minPrice = searchParams.minPrice
+    ? parseFloat(searchParams.minPrice)
     : undefined;
-  const maxPrice = resolvedSearchParams.maxPrice
-    ? parseFloat(resolvedSearchParams.maxPrice)
+  const maxPrice = searchParams.maxPrice
+    ? parseFloat(searchParams.maxPrice)
     : undefined;
 
   const foundCategories = await categoryModel.find().lean();
@@ -104,7 +95,11 @@ const CourseFilter = async ({ searchParams }: Props) => {
     .populate("category")
     .lean();
 
-  const foundCourses = await courseModel.find().lean();
+  const foundCourses = await courseModel
+    .find()
+    .populate("category")
+    .populate("duration")
+    .lean();
 
   const totalFreeCount = await courseModel.countDocuments({ price: 0 });
   const totalPaidCount = await courseModel.countDocuments({
@@ -141,6 +136,8 @@ const CourseFilter = async ({ searchParams }: Props) => {
       subcategoriesByCategory[category._id?.toString() || ""] || {},
   }));
 
+  const durations: number[] = foundCourses.map((course) => course.duration);
+
   const priceCounts = {
     Free: totalFreeCount,
     Paid: totalPaidCount,
@@ -164,9 +161,10 @@ const CourseFilter = async ({ searchParams }: Props) => {
       <PriceSelect
         price={priceCounts}
         currentPriceFilters={currentPriceFilters}
-        searchParams={searchParams as any}
+        // promise => for lint error
+        searchParams={Promise.resolve(searchParams)}
       />
-      <Duration duration={duration} />
+      <Duration duration={durations} searchParams={searchParams} />
     </aside>
   );
 };

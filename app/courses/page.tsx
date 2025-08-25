@@ -16,7 +16,7 @@ import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import CourseCard from "@/components/Student/CourseCard";
 
-type Course = {
+interface Course {
   id?: string;
   thumbnail: string;
   name: string;
@@ -24,11 +24,9 @@ type Course = {
   price: number;
   rating: number;
   students: number;
-};
+}
 
-const CoursesPage = async ({
-  searchParams,
-}: {
+interface Props {
   searchParams: Promise<{
     query?: string;
     minPrice?: string;
@@ -39,26 +37,26 @@ const CoursesPage = async ({
     category?: string;
     subCategories?: string;
     filter?: string;
+    priceFree?: string;
+    pricePaid?: string;
   }>;
-}) => {
-  const resolvedSearchParams = await searchParams;
-  const query = resolvedSearchParams.query?.toLowerCase();
-  const minPrice = resolvedSearchParams.minPrice
-    ? parseFloat(resolvedSearchParams.minPrice)
-    : undefined;
-  const maxPrice = resolvedSearchParams.maxPrice
-    ? parseFloat(resolvedSearchParams.maxPrice)
-    : undefined;
+}
 
-  // const isFiltered = Object.keys(resolvedSearchParams).length > 0;
-  let isFiltered = false;
-  for (const key in resolvedSearchParams) {
-    isFiltered = true;
-    break;
-  }
+const CoursesPage = async (props: Props) => {
+  const searchParams = await props.searchParams;
+  const query = searchParams.query?.toLowerCase();
+  const minPrice = searchParams.minPrice
+    ? parseFloat(searchParams.minPrice)
+    : undefined;
+  const maxPrice = searchParams.maxPrice
+    ? parseFloat(searchParams.maxPrice)
+    : undefined;
+  // Filter by duration using the new mapping
+
+  const isFiltered = Object.keys(searchParams).length > 0;
 
   await connectDB();
-  const mongoQuery: any = {};
+  const mongoQuery: Record<string, unknown> = {};
 
   if (query) {
     mongoQuery.title = { $regex: new RegExp(query, "i") };
@@ -70,6 +68,22 @@ const CoursesPage = async ({
     mongoQuery.price = { $gte: minPrice };
   } else if (maxPrice !== undefined) {
     mongoQuery.price = { $lte: maxPrice };
+  }
+
+  const durationMappings = {
+    "Less than 6 hours": { $lte: 6 },
+    "6-12 Hours": { $gte: 6, $lte: 12 },
+    "12-24 Hours": { $gte: 12, $lte: 24 },
+    "24-48 Hours": { $gte: 24, $lte: 48 },
+    "More than 48 Hours": { $gte: 48 },
+  };
+
+  const duration = searchParams?.duration;
+  const durationQuery =
+    durationMappings[duration as keyof typeof durationMappings];
+
+  if (durationQuery) {
+    mongoQuery.duration = durationQuery;
   }
 
   const foundCourses = await courseModel
@@ -126,7 +140,9 @@ const CoursesPage = async ({
                 <SheetHeader>
                   <SheetTitle>Courses Filter</SheetTitle>
                   <SheetDescription className="flex flex-col items-center justify-between">
-                    <CourseFilter searchParams={searchParams} />
+                    <CourseFilter
+                      searchParams={Promise.resolve(searchParams)}
+                    />
                     <button className="btn btn-primary z-50 mt-8 w-full font-bold shadow-lg">
                       Done
                     </button>
@@ -167,7 +183,9 @@ const CoursesPage = async ({
       </div>
 
       <div className="flex w-full items-start gap-4 pt-6">
-        {isFiltered && <CourseFilter searchParams={searchParams} />}
+        {isFiltered && (
+          <CourseFilter searchParams={Promise.resolve(searchParams)} />
+        )}
         <div
           className={`grid w-full grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:${
             isFiltered ? "grid-cols-3" : "grid-cols-4"

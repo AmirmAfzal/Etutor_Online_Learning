@@ -4,8 +4,76 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Link from "next/link";
 
-const Duration = ({ duration }: { duration: { [key: string]: number } }) => {
+interface Props {
+  duration: number[];
+  searchParams: {
+    query?: string;
+    duration?: string;
+  };
+}
+
+const durationOptions = [
+  {
+    label: "Less than 6 hours",
+    checked: (hours: number) => hours < 6,
+  },
+  {
+    label: "6-12 Hours",
+    checked: (hours: number) => hours >= 6 && hours <= 12,
+  },
+  {
+    label: "12-24 Hours",
+    checked: (hours: number) => hours >= 12 && hours <= 24,
+  },
+  {
+    label: "24-48 Hours",
+    checked: (hours: number) => hours >= 24 && hours <= 48,
+  },
+  {
+    label: "More than 48 Hours",
+    checked: (hours: number) => hours > 48,
+  },
+];
+
+const Duration = (props: Props) => {
+  const { searchParams, duration } = props;
+  const currentDurationFilter = searchParams.duration;
+
+  const createDurationFilterUrl = (label: string) => {
+    const newSearchParams = { ...searchParams };
+
+    if (currentDurationFilter === label) {
+      delete newSearchParams.duration;
+    } else {
+      newSearchParams.duration = label;
+    }
+
+    for (const key in newSearchParams) {
+      if (newSearchParams[key as keyof typeof newSearchParams] === undefined) {
+        delete newSearchParams[key as keyof typeof newSearchParams];
+      }
+    }
+
+    let queryString = "";
+    for (const key in newSearchParams) {
+      const value = newSearchParams[key as keyof typeof newSearchParams];
+      if (value !== undefined && value !== "") {
+        if (queryString !== "") {
+          queryString += "&";
+        }
+        queryString += `${key}=${value}`;
+      }
+    }
+
+    return `/courses${queryString ? `?${queryString}` : ""}`;
+  };
+
+  const getDurationCount = (option: (typeof durationOptions)[0]) => {
+    return duration.filter((hours) => option.checked(hours)).length;
+  };
+
   return (
     <Accordion
       type="single"
@@ -17,29 +85,44 @@ const Duration = ({ duration }: { duration: { [key: string]: number } }) => {
           DURATION
         </AccordionTrigger>
         <AccordionContent className="mt-2">
-          {Object.entries(duration).map(
-            ([duration, i]) =>
-              duration && (
-                <div
-                  key={duration}
-                  className="text-base-content/70 flex items-center justify-between px-2 text-sm"
+          {durationOptions.map((option) => {
+            const count = getDurationCount(option);
+            const isActive = currentDurationFilter === option.label;
+
+            return (
+              <div
+                key={option.label}
+                className="text-base-content/70 hover:bg-base-200 flex items-center justify-between px-2 py-1 text-sm"
+              >
+                <Link
+                  href={count > 0 ? createDurationFilterUrl(option.label) : ""}
+                  className="flex flex-1 items-center gap-2"
+                  scroll={false}
                 >
-                  <form className="flex flex-row items-center gap-2 p-2">
-                    <input
-                      type="checkbox"
-                      id={duration}
-                      className="checkbox checkbox-primary checkbox-xs"
-                    />
-                    <span className="text-base-content/80 text-xs font-medium">
-                      {duration}
-                    </span>
-                  </form>
-                  <span className="text-base-content/60 text-xs font-medium">
-                    {i.toLocaleString()}
+                  <input
+                    type="checkbox"
+                    id={option.label}
+                    className="checkbox checkbox-primary checkbox-xs"
+                    checked={isActive}
+                    disabled={count === 0}
+                    readOnly
+                  />
+                  <span
+                    className={`text-base-content/80 text-xs font-medium ${isActive ? "text-primary font-bold" : ""}`}
+                  >
+                    {option.label}
                   </span>
-                </div>
-              )
-          )}
+                </Link>
+                {count > 0 ? (
+                  <span className="text-base-content/60 text-xs font-medium">
+                    {count.toLocaleString()}
+                  </span>
+                ) : (
+                  "0"
+                )}
+              </div>
+            );
+          })}
         </AccordionContent>
       </AccordionItem>
     </Accordion>

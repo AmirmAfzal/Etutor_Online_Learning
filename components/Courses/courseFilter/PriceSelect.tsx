@@ -7,7 +7,7 @@ import {
 import PriceRange from "./PriceRange";
 import Link from "next/link";
 
-type PriceSelectProps = {
+type Props = {
   price: { [key: string]: number };
   currentPriceFilters: { Free: boolean; Paid: boolean };
   searchParams: Promise<{
@@ -17,20 +17,17 @@ type PriceSelectProps = {
   }>;
 };
 
-const PriceSelect = async ({
-  price,
-  currentPriceFilters,
-  searchParams,
-}: PriceSelectProps) => {
-  const resolvedSearchParams = await searchParams;
+const PriceSelect = async (props: Props) => {
+  const searchParams = await props.searchParams;
+  const newSearchParams = { ...searchParams };
+  const currentPriceFilters = props.currentPriceFilters;
+  const price = props.price;
 
   const createPriceFilterUrl = (
     priceType: "Free" | "Paid" | "Range",
     min?: number,
     max?: number
   ) => {
-    const newSearchParams = { ...resolvedSearchParams };
-
     if (priceType === "Free") {
       if (currentPriceFilters.Free) {
         delete newSearchParams.minPrice;
