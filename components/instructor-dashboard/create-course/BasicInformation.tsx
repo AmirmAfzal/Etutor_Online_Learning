@@ -29,14 +29,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CourseData } from "@/lib/db/models/courseModel";
+import { CourseInterface } from "@/lib/db/models/courseModel";
 
 // Use the imported schema type
 type FormField = BasicInformationFormData;
 
 interface Props {
   onNext: () => void;
-  course: CourseData | null;
+  course: CourseInterface | null;
 }
 
 const BasicInformation = ({ onNext, course }: Props) => {

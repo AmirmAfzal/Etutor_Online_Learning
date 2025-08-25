@@ -8,6 +8,8 @@ interface TeacherCardProps {
   image: string;
   rating: number;
   students: number;
+  sendMessage?: boolean;
+  className?: string;
 }
 
 export default function TeacherCard({
@@ -16,6 +18,7 @@ export default function TeacherCard({
   image,
   rating,
   students,
+  sendMessage = true,
 }: TeacherCardProps) {
   return (
     <div className="border-base-content/10 flex flex-col overflow-hidden border transition-all duration-300 hover:translate-y-[-2px]">
@@ -51,9 +54,11 @@ export default function TeacherCard({
             </div>
           </div>
 
-          <button className="btn btn-soft btn-primary w-full text-sm">
-            Send Message
-          </button>
+          {sendMessage && (
+            <button className="btn btn-soft btn-primary w-full text-sm">
+              Send Message
+            </button>
+          )}
         </div>
       </div>
     </div>
