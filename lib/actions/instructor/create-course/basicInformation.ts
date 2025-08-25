@@ -9,6 +9,7 @@ import subCategoryModel from "@/lib/db/models/subCategoryModel";
 import { ActionData } from "@/lib/formTypes";
 import { basicInformationSchema } from "@/lib/validation/schemas/instructor/create-course";
 
+
 export async function saveBasicInformation(
   prevState: ActionData,
   formData: FormData
@@ -44,6 +45,25 @@ export async function saveBasicInformation(
       category: foundCategory._id,
     });
   }
+  
+  const durationValue = parseFloat(result.data.durationValue);
+  
+  // Convert duration to hours
+  let durationInHours: number;
+  switch (result.data.durationUnit.toLowerCase()) {
+    case 'hour':
+      durationInHours = durationValue;
+      break;
+    case 'day':
+      durationInHours = durationValue * 24; // 1 day = 24 hours
+      break;
+    case 'week':
+      durationInHours = durationValue * 24 * 7; // 1 week = 24 * 7 hours
+      break;
+    default:
+      durationInHours = durationValue; // Default to hours if unit is not recognized
+  }
+
   const createdCourse = await courseModel.create({
     title: result.data.title,
     subtitle: result.data.subtitle,
@@ -53,8 +73,8 @@ export async function saveBasicInformation(
     language: result.data.language,
     subtitleLang: result.data.subtitleLang,
     level: result.data.level,
-    durationValue: result.data.durationValue,
-    durationUnit: result.data.durationUnit,
+    duration: durationInHours, // Save duration in hours
+    durationUnit: result.data.durationUnit, // Keep the original unit for reference
   });
   redirect(
     `/instructor/dashboard/create-course?tab=AdvanceInformation&_id=${createdCourse._id}`
