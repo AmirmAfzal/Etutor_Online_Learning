@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CourseData } from "@/lib/db/models/courseModel";
+import { CourseInterface } from "@/lib/db/models/courseModel";
 import Icon from "@/components/ui/Icon";
 
 import BasicInformation from "./BasicInformation";
@@ -12,7 +12,7 @@ import Curriculum from "./Curriculum";
 import PublishCourse from "./PublishCourse";
 
 interface Props {
-  course: CourseData | null;
+  course: CourseInterface | null;
   tab: string;
 }
 

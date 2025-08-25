@@ -25,12 +25,12 @@ import {
   findInstructor,
   Instructor,
 } from "@/lib/actions/instructor/create-course/findInstructors";
-import { CourseData } from "@/lib/db/models/courseModel";
+import { CourseInterface } from "@/lib/db/models/courseModel";
 import ErrorMessage from "@/components/ErrorMessage";
 
 interface Props {
   onBack: () => void;
-  course: CourseData | null;
+  course: CourseInterface | null;
 }
 
 const initialState = {
@@ -100,7 +100,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
       // Add courseId to the form data
       const formDataWithCourseId = {
         ...data,
-        courseId: course._id.toString(),
+        courseId: (course._id as string),
       };
       formAction(formDataWithCourseId);
     });
@@ -128,7 +128,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
               type="text"
               hidden
               name="courseId"
-              defaultValue={course?._id.toString()}
+              defaultValue={(course?._id as string) || ""}
             />
             <div className="grid gap-6 md:grid-cols-2">
               <FormField

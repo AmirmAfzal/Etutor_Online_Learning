@@ -22,29 +22,31 @@ const CourseInstructors: React.FC<CourseInstructorsProps> = ({
   instructors,
 }) => {
   return (
-    <div className="mt-12 w-full space-y-3">
-      <span className="text-base-content/80 mb-4 block text-2xl font-semibold">
+    <div className="mt-12 w-full space-y-4">
+      <span className="text-base-content/80 mb-4 block text-xl font-semibold sm:text-2xl">
         Course instructors{` (${instructors.length})`}
       </span>
+
       {instructors.map((instructor, index) => (
-        <div key={index} className="border-base-300 w-full border p-4">
-          <div className="flex flex-row items-center gap-4">
+        <div key={index} className="border-base-300 bg-base-100 border p-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
             <Image
               width={64}
               height={64}
               src={instructor.avatar}
               alt={instructor.name}
-              className="border-base-300 mb-6 w-2/5 rounded-full border"
+              className="border-base-300 mx-auto h-26 w-26 rounded-full border object-cover shadow sm:mx-0 sm:h-16 sm:w-16 sm:shadow-none"
             />
-            <div className="flex flex-col gap-2">
-              <span className="text-base-content/80 font-semibold">
+
+            <div className="flex flex-1 flex-col gap-2">
+              <span className="text-base-content/80 text-base font-semibold sm:text-lg">
                 {instructor.name}
               </span>
               <span className="text-base-content/60 text-sm">
                 {instructor.bio}
               </span>
 
-              <div className="text-base-content/80 flex flex-row items-center justify-between gap-4 text-sm font-semibold">
+              <div className="text-base-content/80 mt-2 flex flex-col gap-3 text-sm font-semibold sm:flex-row sm:items-center sm:justify-between">
                 <span className="flex items-center gap-1">
                   <Icon icon="ph:star-fill" className="text-primary" />
                   {instructor.rating}
@@ -63,8 +65,9 @@ const CourseInstructors: React.FC<CourseInstructorsProps> = ({
                   <span className="text-base-content/60 ml-1">Courses</span>
                 </span>
               </div>
-              <div className="mt-4">
-                <TruncatedText text={instructor.description} maxLength={150} />
+
+              <div className="mt-3">
+                <TruncatedText text={instructor.description} maxLength={80} />
               </div>
             </div>
           </div>

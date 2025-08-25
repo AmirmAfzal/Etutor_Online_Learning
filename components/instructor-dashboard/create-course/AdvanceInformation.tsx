@@ -25,7 +25,7 @@ import {
   advanceInformationSchema,
 } from "@/lib/validation/schemas/instructor/create-course";
 import { saveAdvanceInformation } from "@/lib/actions/instructor/create-course/advanceInformation";
-import { CourseData } from "@/lib/db/models/courseModel";
+import { CourseInterface } from "@/lib/db/models/courseModel";
 import ErrorMessage from "@/components/ErrorMessage";
 
 const MAX_INPUTS = 8;
@@ -34,7 +34,7 @@ const MAX_CHARS = 120;
 interface Props {
   onNext: () => void;
   onBack: () => void;
-  course: CourseData | null;
+  course: CourseInterface | null;
 }
 
 const initialState = {

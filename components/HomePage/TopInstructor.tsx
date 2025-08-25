@@ -48,11 +48,11 @@ const TopInstructor = () => {
   ];
 
   return (
-    <section className="bg-base-100 border-base-300 container mx-auto -mt-48 space-y-8 border p-16">
-      <h3 className="text-center text-3xl font-bold">
+    <section className="bg-base-100 border-base-300 container mx-auto -mt-48 space-y-8 border p-8 md:p-16">
+      <h3 className="text-center text-2xl font-bold md:text-3xl">
         Top instructor of the month
       </h3>
-      <div className="grid grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {instructors.map((item) => (
           <div key={item.id} className="border-base-300 border">
             <Image
@@ -84,7 +84,7 @@ const TopInstructor = () => {
           </div>
         ))}
       </div>
-      <div className="flex flex-row items-center justify-center gap-4 text-sm">
+      <div className="flex flex-col items-center justify-center gap-4 text-sm md:flex-row">
         <p className="text-base-content/50">
           Thousands of students waiting for a instructor. Start teaching &
           earning now!
