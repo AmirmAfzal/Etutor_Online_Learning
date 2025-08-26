@@ -69,7 +69,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
         : "",
       topic: course?.topic || "",
       language: course?.language || "",
-      subtitleLang: "",
+      subtitleLang: course?.subtitleLanguage || "",
       level: course?.level || "",
       durationValue: course?.duration?.toString() || "",
       durationUnit: course?.durationUnit || "",

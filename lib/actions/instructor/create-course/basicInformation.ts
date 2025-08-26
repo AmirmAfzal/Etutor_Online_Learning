@@ -73,7 +73,7 @@ export async function saveBasicInformation(
       subCategory: foundSubCategory._id,
       topic: result.data.topic,
       language: result.data.language,
-      subtitleLang: result.data.subtitleLang,
+      subtitleLanguage: result.data.subtitleLang,
       level: result.data.level,
       duration: result.data.durationValue,
       durationUnit: result.data.durationUnit,

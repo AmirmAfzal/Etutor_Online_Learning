@@ -39,6 +39,7 @@ export interface CourseInterface extends mongoose.Document {
 const courseSchema = new Schema<CourseInterface & Document>(
   {
     title: { type: String, required: true },
+    subtitle: { type: String, required: true },
     thumbnail: { type: String },
     description: { type: String },
     authors: [
