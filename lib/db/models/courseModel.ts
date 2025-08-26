@@ -39,14 +39,14 @@ export interface CourseInterface extends mongoose.Document {
 const courseSchema = new Schema<CourseInterface & Document>(
   {
     title: { type: String, required: true },
-    thumbnail: { type: String, required: true },
-    description: { type: String, required: true },
+    thumbnail: { type: String },
+    description: { type: String },
     authors: [
       { type: Schema.Types.ObjectId, ref: "instructor", required: true },
     ],
     sections: [{ type: Schema.Types.ObjectId, ref: "section", required: true }],
-    price: { type: Number, required: true },
-    offer: { type: Number, required: true },
+    price: { type: Number },
+    offer: { type: Number },
     offerEndsAt: { type: Date },
     language: { type: String, required: true },
     subtitleLanguage: { type: String },

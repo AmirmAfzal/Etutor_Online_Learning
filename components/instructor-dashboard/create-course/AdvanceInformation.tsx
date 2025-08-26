@@ -1,8 +1,9 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import dynamic from "next/dynamic";
 import {
   CldImage,
   CldUploadButton,
@@ -10,7 +11,6 @@ import {
 } from "next-cloudinary";
 
 import Icon from "@/components/ui/Icon";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -27,6 +27,8 @@ import {
 import { saveAdvanceInformation } from "@/lib/actions/instructor/create-course/advanceInformation";
 import { CourseInterface } from "@/lib/db/models/courseModel";
 import ErrorMessage from "@/components/ErrorMessage";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 const MAX_INPUTS = 8;
 const MAX_CHARS = 120;
@@ -278,13 +280,25 @@ const AdvanceInformation = ({ onNext, onBack, course }: Props) => {
               <h3 className="text-lg font-bold">Course Description</h3>
               <FormField
                 name="description"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
                     <FormControl>
-                      <Textarea
-                        {...field}
-                        placeholder="Enter you course descriptions"
-                        className="border-base-300 mt-4 min-h-32 w-full border p-2"
+                      <Controller
+                        control={form.control}
+                        name="description"
+                        render={({ field: { onChange, value } }) => (
+                          <MDEditor
+                            value={value}
+                            onChange={onChange}
+                            height={200}
+                            className="border-base-300 mt-4 w-full rounded-md border"
+                            data-color-mode="light"
+                            preview="edit"
+                            textareaProps={{
+                              placeholder: "Enter your course description",
+                            }}
+                          />
+                        )}
                       />
                     </FormControl>
                     <FormMessage />

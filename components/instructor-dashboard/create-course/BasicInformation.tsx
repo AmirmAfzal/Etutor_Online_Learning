@@ -50,9 +50,9 @@ interface Props {
 }
 
 const BasicInformation = ({ onNext, course }: Props) => {
-  const [titleLength, setTitleLength] = useState(course?.title.length || 0);
+  const [titleLength, setTitleLength] = useState(course?.title?.length || 0);
   const [subTitleLength, setSubTitleLength] = useState(
-    course?.subtitle.length || 0
+    course?.subtitle?.length || 0
   );
   const [categories, setCategories] = useState<{ name: string }[]>([]);
   const [subCategories, setSubCategories] = useState<{ name: string }[]>([]);
@@ -64,7 +64,9 @@ const BasicInformation = ({ onNext, course }: Props) => {
       title: course?.title || "",
       subtitle: course?.subtitle || "",
       category: course ? JSON.parse(JSON.stringify(course?.category)).name : "",
-      subCategory: course ? JSON.parse(JSON.stringify(course?.subCategory)).name : "",
+      subCategory: course
+        ? JSON.parse(JSON.stringify(course?.subCategory)).name
+        : "",
       topic: course?.topic || "",
       language: course?.language || "",
       subtitleLang: "",
