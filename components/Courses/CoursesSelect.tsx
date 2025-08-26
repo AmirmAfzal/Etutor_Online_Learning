@@ -23,7 +23,10 @@ const CoursesSelect = () => {
   };
 
   return (
-    <Form className="flex flex-row items-center gap-3" action={formAction}>
+    <Form
+      className="flex w-full flex-row items-center justify-between gap-3 sm:justify-center"
+      action={formAction}
+    >
       <label htmlFor="sorted" className="text-base-content/60 text-sm">
         Sorted by:
       </label>

@@ -1,13 +1,6 @@
 import Icon from "@/components/ui/Icon";
 import Link from "next/link";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+
 import React from "react";
 import CoursesSearch from "@/components/Courses/CoursesSearch";
 import CoursesSelect from "@/components/Courses/CoursesSelect";
@@ -15,6 +8,8 @@ import CourseFilter from "@/components/Courses/CourseFilter";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import CourseCard from "@/components/Student/CourseCard";
+import { Filter } from "lucide-react";
+import FilterMobile from "@/components/Courses/courseFilter/FilterMobile";
 
 interface Course {
   id?: string;
@@ -52,7 +47,14 @@ const CoursesPage = async (props: Props) => {
     ? parseFloat(searchParams.maxPrice)
     : undefined;
 
-  const isFiltered = Object.keys(searchParams).length > 0;
+  const isFilterPanelVisible = searchParams.filter === "true";
+
+  const filterUrl = new URLSearchParams(searchParams);
+  if (isFilterPanelVisible) {
+    filterUrl.delete("filter");
+  } else {
+    filterUrl.set("filter", "true");
+  }
 
   await connectDB();
   const mongoQuery: Record<string, unknown> = {};
@@ -109,12 +111,12 @@ const CoursesPage = async (props: Props) => {
   return (
     <section className="container mx-auto mt-8 flex max-w-6xl flex-col items-center justify-center">
       <div className="border-base-300 flex w-full flex-col gap-4 border-b px-4 pb-2">
-        <div className="flex w-full flex-row items-center justify-between">
+        <div className="flex w-full flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
           <div className="flex flex-row items-center gap-2">
             <Link
-              href={isFiltered ? "/courses" : "/courses?filter=true"}
-              className={`bg-base-100 flex-row items-center gap-3 rounded-none border px-2 py-3 md:flex ${
-                isFiltered
+              href={`/courses?${filterUrl.toString()}`}
+              className={`bg-base-100 flex-row items-center gap-3 rounded-none border p-2 md:flex ${
+                isFilterPanelVisible
                   ? "border-primary text-primary"
                   : "border-primary/20 text-base-content/80"
               } hidden`}
@@ -123,37 +125,18 @@ const CoursesPage = async (props: Props) => {
               <span className="text-sm">Filter</span>
               <span
                 className={`${
-                  isFiltered
+                  isFilterPanelVisible
                     ? "text-base-100 bg-primary px-2"
                     : "text-primary bg-primary/10 px-2"
                 }`}
               >
-                {isFiltered ? "1" : "0"}
+                {isFilterPanelVisible ? "1" : "0"}
               </span>
             </Link>
 
-            <Sheet>
-              <SheetTrigger className="bg-base-100 border-primary text-primary flex flex-row items-center gap-2 rounded-none border p-2 md:hidden">
-                <Icon icon="ph:faders-fill" className="text-xl" />
-                <span className="text-sm">Filter</span>
-                <span className="text-primary bg-primary/10 px-2">
-                  {isFiltered ? "1" : "0"}
-                </span>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Courses Filter</SheetTitle>
-                  <SheetDescription className="flex flex-col items-center justify-between">
-                    <CourseFilter
-                      searchParams={Promise.resolve(searchParams)}
-                    />
-                    <button className="btn btn-primary z-50 mt-8 w-full font-bold shadow-lg">
-                      Done
-                    </button>
-                  </SheetDescription>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
+            <FilterMobile searchParams={searchParams}>
+              <CourseFilter searchParams={Promise.resolve(searchParams)} />
+            </FilterMobile>
 
             <CoursesSearch />
           </div>
@@ -187,13 +170,12 @@ const CoursesPage = async (props: Props) => {
       </div>
 
       <div className="flex w-full items-start gap-4 pt-6">
-        {isFiltered && (
-          // promise : for linting error
+        {isFilterPanelVisible && (
           <CourseFilter searchParams={Promise.resolve(searchParams)} />
         )}
         <div
           className={`grid w-full grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:${
-            isFiltered ? "grid-cols-3" : "grid-cols-4"
+            isFilterPanelVisible ? "grid-cols-3" : "grid-cols-4"
           }`}
         >
           {foundCourses.length > 0 ? (
