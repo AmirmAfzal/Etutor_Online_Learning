@@ -9,7 +9,7 @@ import {
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select";
 
 async function formAction(formData: FormData) {
   const data = Object.fromEntries(formData);

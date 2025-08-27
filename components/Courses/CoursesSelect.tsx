@@ -1,14 +1,15 @@
 "use client";
 
+import { useRef } from "react";
+import Form from "next/form";
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import Form from "next/form";
-import { useRef } from "react";
+} from "@/components/ui/Select";
 
 async function formAction(formData: FormData) {
   const data = Object.fromEntries(formData);

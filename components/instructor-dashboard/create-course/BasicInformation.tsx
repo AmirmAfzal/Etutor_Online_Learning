@@ -1,8 +1,8 @@
 "use client";
 
 import { startTransition, useActionState, useState, useEffect } from "react";
+import type { ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -13,6 +13,8 @@ import {
   basicInformationSchema,
   BasicInformationFormData,
 } from "@/lib/validation/schemas/instructor/create-course";
+import { findCategories } from "@/lib/actions/instructor/create-course/findCategories";
+import { findSubCategories } from "@/lib/actions/instructor/create-course/findSubCategories";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -20,7 +22,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
+} from "@/components/ui/Select";
 import {
   Form,
   FormControl,
@@ -30,6 +32,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { CourseInterface } from "@/lib/db/models/courseModel";
+import ErrorMessage from "@/components/ErrorMessage";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 // Use the imported schema type
 type FormField = BasicInformationFormData;
@@ -40,22 +50,29 @@ interface Props {
 }
 
 const BasicInformation = ({ onNext, course }: Props) => {
-  const [titleLength, setTitleLength] = useState(0);
-  const [subTitleLength, setSubTitleLength] = useState(0);
+  const [titleLength, setTitleLength] = useState(course?.title?.length || 0);
+  const [subTitleLength, setSubTitleLength] = useState(
+    course?.subtitle?.length || 0
+  );
+  const [categories, setCategories] = useState<{ name: string }[]>([]);
+  const [subCategories, setSubCategories] = useState<{ name: string }[]>([]);
 
   const form = useForm<FormField>({
     resolver: zodResolver(basicInformationSchema),
     defaultValues: {
+      _id: typeof course?._id === "string" ? course._id : "",
       title: course?.title || "",
       subtitle: course?.subtitle || "",
-      category: "",
-      subcategory: "",
-      topic: "",
-      language: "",
-      subtitleLang: "",
-      level: "",
-      durationValue: "",
-      durationUnit: "",
+      category: course ? JSON.parse(JSON.stringify(course?.category)).name : "",
+      subCategory: course
+        ? JSON.parse(JSON.stringify(course?.subCategory)).name
+        : "",
+      topic: course?.topic || "",
+      language: course?.language || "",
+      subtitleLang: course?.subtitleLanguage || "",
+      level: course?.level || "",
+      durationValue: course?.duration?.toString() || "",
+      durationUnit: course?.durationUnit || "",
     },
   });
 
@@ -65,8 +82,14 @@ const BasicInformation = ({ onNext, course }: Props) => {
     errors: [],
   };
 
+  const [categoryState, searchCategoryFormAction, categoryPending] =
+    useActionState(findCategories, { message: "", errors: [], data: [] });
+
+  const [subCategoryState, searchSubCategoryFormAction, subCategoryPending] =
+    useActionState(findSubCategories, { message: "", errors: [], data: [] });
+
   // Use React's useFormState for server action
-  const [state, formAction] = useActionState(
+  const [state, formAction, pending] = useActionState(
     saveBasicInformation,
     initialState
   );
@@ -75,19 +98,9 @@ const BasicInformation = ({ onNext, course }: Props) => {
   //   saveAndPreviewBasicInformation,
   //   initialState
   // );
-  const handleSubmit = async (data: z.infer<typeof basicInformationSchema>) => {
+  const handleSubmit = async (data: BasicInformationFormData) => {
     startTransition(() => {
-      // Convert data to FormData
-      const formData = new FormData();
-
-      // Add each field to the FormData object
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(key, value);
-        }
-      });
-
-      formAction(formData);
+      formAction(data);
     });
   };
 
@@ -97,9 +110,41 @@ const BasicInformation = ({ onNext, course }: Props) => {
     }
   }, [state.message, onNext]);
 
+  useEffect(() => {
+    setCategories(categoryState.data);
+    setSubCategories(subCategoryState.data);
+  }, [categoryState.data, subCategoryState.data]);
+
+  const findCategoriesHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    startTransition(() => {
+      searchCategoryFormAction(e.target.value);
+    });
+  };
+  const findSubCategoriesHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    startTransition(() => {
+      searchSubCategoryFormAction(e.target.value);
+    });
+  };
+  useEffect(() => {
+    const initialCategory = form.getValues("category");
+    const initialSubCategory = form.getValues("subCategory");
+
+    if (initialCategory && initialCategory.trim() !== "") {
+      startTransition(() => {
+        searchCategoryFormAction(initialCategory);
+      });
+    }
+
+    if (initialSubCategory && initialSubCategory.trim() !== "") {
+      startTransition(() => {
+        searchSubCategoryFormAction(initialSubCategory);
+      });
+    }
+  }, [form, searchCategoryFormAction, searchSubCategoryFormAction]);
+
   return (
     <div>
-      <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
+      <div className="border-base-300 flex flex-col items-center justify-between gap-2 border-y p-4 md:flex-row">
         <h2 className="text-xl font-bold">Basic Information</h2>
         <div>
           <button
@@ -135,7 +180,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
                   <FormControl>
                     <Input
                       {...field}
-                      onChange={(e) => {
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         setTitleLength(e.target.value.length);
                         field.onChange(e);
                       }}
@@ -162,7 +207,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
                     <Input
                       placeholder="Your course subtitle"
                       {...field}
-                      onChange={(e) => {
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         setSubTitleLength(e.target.value.length);
                         field.onChange(e);
                       }}
@@ -194,11 +239,32 @@ const BasicInformation = ({ onNext, course }: Props) => {
                           <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="development">
-                            Development
-                          </SelectItem>
-                          <SelectItem value="design">Design</SelectItem>
-                          <SelectItem value="marketing">Marketing</SelectItem>
+                          <Command>
+                            <Input
+                              className="w-full border-0"
+                              placeholder="Type a command or search..."
+                              onChange={findCategoriesHandler}
+                            />
+                            <CommandList className="w-full">
+                              <CommandGroup heading="Categories">
+                                {categories &&
+                                  categories.map((category, index) => (
+                                    <CommandItem key={index}>
+                                      <SelectItem value={category.name}>
+                                        {category.name}
+                                      </SelectItem>
+                                    </CommandItem>
+                                  ))}
+                              </CommandGroup>
+                              {categoryPending ? (
+                                <div className="flex h-full w-full items-center justify-center py-6">
+                                  <div className="loading loading-spinner" />
+                                </div>
+                              ) : (
+                                <CommandEmpty>No results found.</CommandEmpty>
+                              )}
+                            </CommandList>
+                          </Command>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -209,7 +275,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
 
               <FormField
                 control={form.control}
-                name="subcategory"
+                name="subCategory"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Course Sub-category</FormLabel>
@@ -222,9 +288,32 @@ const BasicInformation = ({ onNext, course }: Props) => {
                           <SelectValue placeholder="Select..." />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="web">Web</SelectItem>
-                          <SelectItem value="mobile">Mobile</SelectItem>
-                          <SelectItem value="ai">AI</SelectItem>
+                          <Command>
+                            <Input
+                              className="w-full border-0"
+                              placeholder="Type a command or search..."
+                              onChange={findSubCategoriesHandler}
+                            />
+                            <CommandList className="w-full">
+                              <CommandGroup heading="SubCategories">
+                                {subCategories &&
+                                  subCategories.map((subCategory, index) => (
+                                    <CommandItem key={index}>
+                                      <SelectItem value={subCategory.name}>
+                                        {subCategory.name}
+                                      </SelectItem>
+                                    </CommandItem>
+                                  ))}
+                              </CommandGroup>
+                              {subCategoryPending ? (
+                                <div className="flex h-full w-full items-center justify-center py-6">
+                                  <div className="loading loading-spinner" />
+                                </div>
+                              ) : (
+                                <CommandEmpty>No results found.</CommandEmpty>
+                              )}
+                            </CommandList>
+                          </Command>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -383,7 +472,12 @@ const BasicInformation = ({ onNext, course }: Props) => {
               <button className="btn btn-outline" type="button">
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn btn-primary"
+              >
+                {pending && <div className="loading loading-spinner" />}
                 Save & Next
               </button>
             </div>
@@ -396,13 +490,11 @@ const BasicInformation = ({ onNext, course }: Props) => {
             )}
 
             {state.message === "ERROR" && (
-              <div className="bg-error/10 text-error mt-4 rounded-md p-4">
-                <p>Error saving course information:</p>
-                <ul className="ml-4 list-disc">
-                  {state.errors.map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </ul>
+              <div className="p-4">
+                <ErrorMessage
+                  title="Error saving course information:"
+                  errors={state.errors}
+                />
               </div>
             )}
 

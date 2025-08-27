@@ -36,7 +36,7 @@ const LectureNotesModal = ({
 
   const uploadHandler = () => {
     if (note || noteFile) {
-      onSave(note, noteFile!.secure_url);
+      onSave(note, noteFile?.secure_url || "");
       openModal("note");
     }
   };

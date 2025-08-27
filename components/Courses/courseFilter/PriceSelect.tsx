@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
 import PriceRange from "./PriceRange";
 
 const PriceSelect = ({ price }: { price: { [key: string]: number } }) => {

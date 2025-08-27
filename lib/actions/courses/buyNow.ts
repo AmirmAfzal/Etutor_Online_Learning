@@ -1,10 +1,11 @@
 "use server";
 
+import { getServerSession } from "next-auth";
+
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 import { ActionData } from "@/lib/formTypes";
-import { getServerSession } from "next-auth";
 
 export const actionBuyNow = async (
   prevState: ActionData,

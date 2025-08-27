@@ -24,7 +24,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/textarea";
 import Icon from "@/components/ui/Icon";
 import {
@@ -32,6 +32,7 @@ import {
   accountSettingSchema,
 } from "@/lib/validation/schemas/instructor/settings/accountSettings";
 import { saveAccountSettings } from "@/lib/actions/instructor/settings/accountSettings";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const initialState = {
   message: "",
@@ -41,7 +42,10 @@ const initialState = {
 const AccountSettings = () => {
   const [title, setTitle] = useState<string>("");
 
-  const [state, formAction] = useActionState(saveAccountSettings, initialState);
+  const [state, formAction, pending] = useActionState(
+    saveAccountSettings,
+    initialState
+  );
 
   const form = useForm<AccountSettingFormData>({
     resolver: zodResolver(accountSettingSchema),
@@ -77,12 +81,15 @@ const AccountSettings = () => {
 
   return (
     <section className="bg-base-100 container mx-auto p-6">
+      <h3 className="text-2xl font-bold">Account Settings</h3>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(submitHandler)} className="space-y-6">
-          <div className="flex flex-row gap-4">
+        <form
+          onSubmit={form.handleSubmit(submitHandler)}
+          className="mt-6 space-y-6"
+        >
+          <div className="flex flex-col-reverse items-center gap-4 md:flex-row">
             <div className="w-full space-y-6">
-              <h3 className="text-2xl font-bold">Account Settings</h3>
-              <div className="flex flex-row items-end gap-4">
+              <div className="flex flex-col items-end gap-4 md:flex-row">
                 <FormField
                   control={form.control}
                   name="firstName"
@@ -214,7 +221,7 @@ const AccountSettings = () => {
                 >
                   <span className="flex flex-row items-center gap-4">
                     <Icon icon="ph:upload-simple" width="24" height="24" />
-                    Upload Photo
+                    Upload Profile
                   </span>
                 </CldUploadButton>
               </div>
@@ -267,8 +274,13 @@ const AccountSettings = () => {
               </FormItem>
             )}
           />
-          <div className="flex flex-row items-center gap-6">
-            <button className="btn btn-primary" type="submit">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center">
+            <button
+              type="submit"
+              disabled={pending}
+              className="btn btn-primary"
+            >
+              {pending && <div className="loading loading-spinner" />}
               Save Changes
             </button>
             {state.message === "SUCCESS" && (
@@ -277,6 +289,12 @@ const AccountSettings = () => {
               </div>
             )}
           </div>
+          {state.message === "ERROR" && (
+            <ErrorMessage
+              title="Error saving Account settings:"
+              errors={state.errors}
+            />
+          )}
         </form>
       </Form>
     </section>
