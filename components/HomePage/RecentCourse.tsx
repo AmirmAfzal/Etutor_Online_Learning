@@ -2,58 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import CourseCard from "../Student/CourseCard";
-import Icon from "../ui/Icon";
+import { CourseTypes } from "@/app/page";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-const RecentCourse = () => {
-  const courses = [
-    {
-      id: "1",
-      thumbnail: "/images/course-images-1.png",
-      name: "The Python Mega Course: Build 10 Real Applications",
-      category: "Design",
-      price: 46,
-      offer: 26,
-      rating: 4.5,
-      students: 375.7,
-    },
-    {
-      id: "2",
-      thumbnail: "/images/course-images-2.png",
-      name: "Facebook Ads & Facebook Marketing MASTERY 2021...",
-      category: "IT & Software",
-      price: 57,
-      offer: 26,
-      rating: 5,
-      students: 465.7,
-    },
-    {
-      id: "3",
-      thumbnail: "/images/course-images-3.png",
-      name: "2021 Python Bootcamp From Zero to Hero in Python",
-      category: "Developments",
-      price: 57,
-      offer: 26,
-      rating: 4.9,
-      students: 265,
-    },
-    {
-      id: "4",
-      thumbnail: "/images/course-images-3.png",
-      name: "2021 Python Bootcamp From Zero to Hero in Python",
-      category: "Developments",
-      price: 23,
-      offer: 26,
-      rating: 4.8,
-      students: 265.7,
-    },
-  ];
+import CourseCard from "../CourseCard";
+import Icon from "../ui/Icon";
 
+interface Props {
+  courses: CourseTypes[];
+}
+
+const RecentCourse = ({ courses }: Props) => {
   return (
     <section className="container mx-auto px-8 py-16 md:px-0">
       <h3 className="text-center text-2xl font-bold md:text-3xl">
@@ -61,37 +24,49 @@ const RecentCourse = () => {
       </h3>
       <div>
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-4">
-          {courses.map((course) => (
-            <HoverCard key={course.id}>
-              <HoverCardTrigger>
-                <CourseCard {...course} />
+          {courses.map((course: CourseTypes) => (
+            <HoverCard key={course.title}>
+              <HoverCardTrigger asChild>
+                <CourseCard course={course} />
               </HoverCardTrigger>
               <HoverCardContent className="w-full p-0" side="right">
                 <div className="border-base-300 h-auto max-w-sm border shadow-lg">
                   <div className="border-base-300 space-y-4 border-b p-4">
                     <div>
                       <p className="text-secondary bg-secondary/20 inline p-1 text-xs">
-                        {course.category.toUpperCase()}
+                        {course.category.name.toUpperCase()}
                       </p>
                     </div>
                     <div>
-                      <p className="font-semibold">{course.name}</p>
+                      <p className="font-semibold">{course.title}</p>
                     </div>
                     <div className="flex flex-row items-center justify-between">
                       <div className="flex flex-row items-center gap-2">
                         <div>
-                          <Image
-                            src="/images/profile-img.png"
-                            alt="profile"
-                            width={50}
-                            height={50}
-                          />
+                          <div className="flex flex-row items-center -space-x-4">
+                            {course.instructors.map((instructor) => (
+                              <Image
+                                key={instructor.id}
+                                src={instructor.profile}
+                                alt={instructor.name}
+                                className="border-base-100 rounded-full border-2"
+                                width={40}
+                                height={40}
+                              />
+                            ))}
+                          </div>
                         </div>
                         <div className="flex flex-col gap-1">
                           <p className="text-base-content/70 text-xs">
                             Course by
                           </p>
-                          <p className="text-sm font-semibold">Kevin Gilbert</p>
+                          <div className="flex flex-col">
+                            {course.instructors.map((instructor) => (
+                              <p key={instructor.id} className="text-sm">
+                                {instructor.name}
+                              </p>
+                            ))}
+                          </div>
                         </div>
                       </div>
                       <div className="flex flex-row items-center gap-1 text-xs">
@@ -101,9 +76,9 @@ const RecentCourse = () => {
                           className="text-primary"
                           icon="ph:star-fill"
                         />
-                        {course.rating}
+                        {course.rating}5
                         <span className="text-base-content/70 ml-1">
-                          ({course.students})
+                          (365,654)
                         </span>
                       </div>
                     </div>
@@ -115,7 +90,7 @@ const RecentCourse = () => {
                           height="20"
                           className="text-secondary"
                         />
-                        265.7K
+                        {course.studentsCount}K
                         <span className="text-base-content/70 ml-1">
                           student
                         </span>
@@ -127,7 +102,7 @@ const RecentCourse = () => {
                           height="20"
                           className="text-error"
                         />
-                        Beginner
+                        {course.level}
                       </div>
                       <div className="flex flex-row items-center gap-1">
                         <Icon
@@ -136,14 +111,12 @@ const RecentCourse = () => {
                           height="20"
                           className="text-success"
                         />
-                        6 hour
+                        {course.duration} {course.durationUnit}
                       </div>
                     </div>
                     <div className="flex flex-row items-center justify-between">
                       <div className="flex flex-row items-center gap-2">
-                        <p className="text-2xl font-light">
-                          ${course.price}.00
-                        </p>
+                        <p className="text-2xl font-light">${course.price}</p>
                         <p className="text-base-content/50 line-through">
                           ${course.offer}.00
                         </p>
