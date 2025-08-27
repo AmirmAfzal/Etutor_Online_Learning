@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -21,7 +23,7 @@ interface Props {
   courseId: string;
 }
 
-const AddToCartModal = async ({
+const AddToCartModal = ({
   courseTitle,
   courseThumbnail,
   courseInstructor,

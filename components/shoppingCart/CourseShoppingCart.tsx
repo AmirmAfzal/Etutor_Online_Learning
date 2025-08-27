@@ -1,7 +1,13 @@
-// components/CourseShoppingCart.tsx
+"use client";
+
 import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
+import { useActionState, useEffect } from "react";
+import { actionDeleteCourse } from "@/lib/actions/courses/actionDeleteCourse";
+import Form from "next/form";
+import { useRouter } from "next/navigation";
+import CoursesLoading from "@/app/courses/loading";
 
 type Props = {
   id?: string;
@@ -22,15 +28,46 @@ const CourseShoppingCart = ({
   instructor,
   price,
   originalPrice,
+  id: courseId,
 }: Props) => {
+  const [deleteCourseState, deleteCourseAction, deleteCoursePending] =
+    useActionState(actionDeleteCourse, { message: "", errors: [] as string[] });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (deleteCourseState?.message === "SUCCESS" && !deleteCoursePending) {
+      router.refresh();
+    }
+  }, [deleteCourseState, deleteCoursePending, router]);
+
   return (
     <div className="hover:bg-base-200/30 flex flex-col gap-4 p-4 transition-colors md:flex-row md:items-center">
-      <button className="self-start md:mr-4 md:self-center">
+      {/* <button className="self-start md:mr-4 md:self-center">
         <Icon
           icon="ph:x-circle"
           className="text-base-content/70 hover:text-error text-xl"
         />
-      </button>
+      </button> */}
+      <Form
+        action={deleteCourseAction}
+        className="self-start md:mr-4 md:self-center"
+      >
+        <input type="hidden" name="courseId" value={courseId} />
+        <button
+          type="submit"
+          className="hover:bg-base-200/40 rounded-full p-1 transition-colors"
+          disabled={deleteCoursePending}
+        >
+          {deleteCoursePending ? (
+            <CoursesLoading />
+          ) : (
+            <Icon
+              icon="ph:x-circle"
+              className="text-base-content/70 hover:text-error text-xl"
+            />
+          )}
+        </button>
+      </Form>
 
       <div className="flex flex-1 flex-col gap-3 md:flex-row md:items-center md:gap-6">
         <div className="mx-auto flex-shrink-0 md:mx-0">
@@ -60,7 +97,6 @@ const CourseShoppingCart = ({
           </span>
         </div>
       </div>
-
       <div className="flex flex-col gap-2 md:ml-auto md:flex-row md:items-center md:gap-4">
         <div className="flex items-center gap-2 md:justify-end">
           <span className="text-primary text-lg font-semibold">{price}$</span>

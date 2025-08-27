@@ -39,8 +39,8 @@ const ShoppingCart = async () => {
 
   const coursesCart = foundStudent?.coursesCart;
 
-  const courseData: Props[] = coursesCart.flatMap((course: any) => ({
-    id: course._id,
+  const courseData: Props[] = coursesCart.map((course: any) => ({
+    id: course._id.toString(),
     title: course.title,
     image: course?.thumbnail,
     rating: course.rating,
@@ -102,7 +102,13 @@ const ShoppingCart = async () => {
           <div className="bg-base-100 border-base-content/10 mt-4 flex w-full flex-col gap-2 border p-4 md:w-[70%] lg:mt-0 lg:w-4/12">
             <div className="mb-2 flex justify-between text-sm">
               <span className="text-base-content/70">Subtotal</span>
-              <span className="font-medium">$61.97 USD</span>
+              <span className="font-medium">
+                $
+                {courseData
+                  .reduce((sum, c) => sum + (c.price || 0), 0)
+                  .toFixed(2)}
+                USD
+              </span>
             </div>
 
             <div className="mb-2 flex justify-between text-sm">
@@ -119,10 +125,17 @@ const ShoppingCart = async () => {
 
             <div className="mb-4 flex items-center justify-between">
               <span className="text-base-content/70 font-medium">Total:</span>
-              <span className="text-2xl font-semibold">$75.00 USD</span>
+              <span className="text-2xl font-semibold">
+                $
+                {courseData
+                  .reduce((sum, c) => sum + (c.price || 0), 0)
+                  .toFixed(2)}
+                USD
+              </span>
             </div>
 
             <button className="btn btn-primary w-full">
+              {/* TODO : add icon  */}
               Proceed To Checkout →
             </button>
 
