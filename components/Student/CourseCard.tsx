@@ -4,7 +4,7 @@ import React from "react";
 import Icon from "../ui/Icon";
 
 interface Props {
-  id?: number;
+  id?: string;
   thumbnail: string;
   name: string;
   category: string;

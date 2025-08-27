@@ -13,7 +13,7 @@ import {
 const RecentCourse = () => {
   const courses = [
     {
-      id: 1,
+      id: "1",
       thumbnail: "/images/course-images-1.png",
       name: "The Python Mega Course: Build 10 Real Applications",
       category: "Design",
@@ -23,7 +23,7 @@ const RecentCourse = () => {
       students: 375.7,
     },
     {
-      id: 2,
+      id: "2",
       thumbnail: "/images/course-images-2.png",
       name: "Facebook Ads & Facebook Marketing MASTERY 2021...",
       category: "IT & Software",
@@ -33,7 +33,7 @@ const RecentCourse = () => {
       students: 465.7,
     },
     {
-      id: 3,
+      id: "3",
       thumbnail: "/images/course-images-3.png",
       name: "2021 Python Bootcamp From Zero to Hero in Python",
       category: "Developments",
@@ -43,7 +43,7 @@ const RecentCourse = () => {
       students: 265,
     },
     {
-      id: 4,
+      id: "4",
       thumbnail: "/images/course-images-3.png",
       name: "2021 Python Bootcamp From Zero to Hero in Python",
       category: "Developments",
