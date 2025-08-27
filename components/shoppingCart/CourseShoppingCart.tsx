@@ -4,13 +4,13 @@ import Image from "next/image";
 import Icon from "@/components/ui/Icon";
 
 type Props = {
-  id: string;
-  title: string;
+  id?: string;
+  title?: string;
   image: string;
-  rating: number;
+  rating?: number;
   reviews?: number;
-  instructor: string;
-  price: number;
+  instructor?: string;
+  price?: number;
   originalPrice?: number;
 };
 
@@ -36,7 +36,7 @@ const CourseShoppingCart = ({
         <div className="mx-auto flex-shrink-0 md:mx-0">
           <Image
             src={image}
-            alt={title}
+            alt={title || "course image"}
             width={160}
             height={100}
             className="h-36 w-48 object-cover transition-transform duration-300 hover:scale-105 md:h-28 md:w-40"

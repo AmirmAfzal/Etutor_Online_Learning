@@ -8,41 +8,48 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import CourseShoppingCart from "@/components/shoppingCart/CourseShoppingCart";
+import { connectDB } from "@/lib/db/db";
+import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
+import { authOptions } from "@/lib/auth/authOptions";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-interface props {
+interface Props {
+  _id?: string;
   id: string;
-  title: string;
+  title?: string;
   image: string;
-  rating: number;
-  reviews: number;
-  instructor: string;
-  price: number;
+  rating?: number;
+  reviews?: number;
+  instructor?: string;
+  price?: number;
   originalPrice?: number;
 }
 
-const fakeCartData: props[] = [
-  {
-    id: "1",
-    title: "The Python Mega Course: Build 10 Real World Applications",
-    image: "/images/course-images-1.png",
-    rating: 4.8,
-    reviews: 1520,
-    instructor: "Leslie Alexander",
-    price: 37.99,
-    originalPrice: 45.0,
-  },
-  {
-    id: "2",
-    title: "React & Next.js 15 Bootcamp: Build Fullstack Apps",
-    image: "/images/course-images-2.png",
-    rating: 4.6,
-    reviews: 980,
-    instructor: "Jacob Jones",
-    price: 29.99,
-  },
-];
-
 const ShoppingCart = async () => {
+  await connectDB();
+
+  const session = await getServerSession(authOptions);
+  const foundStudent: StudentInterface | null = await studentModel
+    .findOne({
+      user: session?.user.id,
+    })
+    .populate("coursesCart");
+  if (!foundStudent) return redirect("/auth/signin");
+
+  const coursesCart = foundStudent?.coursesCart;
+
+  const courseData: Props[] = coursesCart.flatMap((course: any) => ({
+    id: course._id,
+    title: course.title,
+    image: course?.thumbnail,
+    rating: course.rating,
+    reviews: course.reviews,
+    instructor: course.instructor,
+    price: course.price,
+    originalPrice: course.originalPrice,
+  }));
+
   return (
     <section className="flex flex-col items-center justify-start">
       {/* Header */}
@@ -72,7 +79,7 @@ const ShoppingCart = async () => {
 
       <div className="mt-8 flex w-full max-w-7xl flex-col items-start justify-start px-4">
         <span className="text-md my-4 font-semibold md:text-lg">
-          shopping cart ({fakeCartData.length})
+          shopping cart ({courseData.length})
         </span>
 
         <div className="flex w-full flex-col items-center justify-start gap-6 lg:flex-row lg:items-start">
@@ -86,7 +93,7 @@ const ShoppingCart = async () => {
             </div>
 
             <div className="divide-base-content/10 divide-y">
-              {fakeCartData.map((course) => (
+              {courseData.map((course: Props) => (
                 <CourseShoppingCart key={course.id} {...course} />
               ))}
             </div>
