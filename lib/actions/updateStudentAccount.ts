@@ -25,12 +25,16 @@ export const updateStudentAccount = async (
     }
 
     const updatedStudent = await studentModel.findOneAndUpdate(
+      // FIXME: Security issue
+      //  وقتی یه عملیاتی با آیدی یوزر آپدیت بشه مشکل امنیتی ایجاد میکنه چون یکی که به یوزر آیدی همه دسترسی داره میتونه پروفایل و رمز همرو آپدیت کنه برای همین سعی کن کاربر رو از روی سشن برداری
+      // const user = await getServerSession(authOptions);
       { user: result.data.id },
       {
-        firstName: result.data.firstName,
-        lastName: result.data.lastName,
+        firstname: result.data.firstName,
+        lastname: result.data.lastName,
         username: result.data.username,
         bio: result.data.title || "",
+        avatar: result.data.avatar || "",
       },
       { new: true }
     );
