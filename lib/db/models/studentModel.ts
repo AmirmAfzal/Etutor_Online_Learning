@@ -8,6 +8,8 @@ export interface StudentInterface extends Document {
   avatar: string;
   bio: string;
   courses: ObjectId[];
+  coursesCart: ObjectId[];
+  checkout: ObjectId[];
   purchases: ObjectId[];
   wishlist: ObjectId[];
 }
@@ -39,6 +41,19 @@ const studentSchema = new Schema<StudentInterface>(
         ref: "course",
       },
     ],
+    coursesCart: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "course",
+      },
+    ],
+    checkout: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "course",
+      },
+    ],
+
     purchases: [
       {
         type: Schema.Types.ObjectId,
