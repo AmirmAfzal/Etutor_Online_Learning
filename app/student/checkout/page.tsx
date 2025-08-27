@@ -108,7 +108,7 @@ const page = () => {
               Card Number
               <span className="text-error align-middle text-base">*</span>
             </Label>
-            <div className="border-base-content/10 focus-within:border-primary bg-base-100 flex items-center overflow-hidden rounded-lg border">
+            <div className="border-base-content/10 focus-within:border-primary bg-base-100 flex items-center overflow-hidden border">
               <span className="text-primary flex items-center pr-2 pl-3 text-xl">
                 <Icon icon="ph:credit-card" />
               </span>

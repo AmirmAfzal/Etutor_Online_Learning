@@ -1,7 +1,11 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useState } from "react";
-import { CldImage, CldUploadButton, CloudinaryUploadWidgetResults } from "next-cloudinary";
+import {
+  CldImage,
+  CldUploadButton,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -171,8 +175,8 @@ const AccountSettings = () => {
                       src={form.watch("profile") || ""}
                       width="500"
                       height="500"
-                      className="h-48"
-                      alt="uploade image"
+                      className="h-48 w-full object-cover"
+                      alt="uploaded image"
                       crop={{
                         type: "auto",
                         source: true,
@@ -187,6 +191,10 @@ const AccountSettings = () => {
                     sources: ["local"],
                     multiple: false,
                     resourceType: "image",
+                    maxFileSize: 1048576, // 1MB
+                    clientAllowedFormats: ["jpg", "jpeg", "png"],
+                    maxImageWidth: 500,
+                    maxImageHeight: 500,
                   }}
                   onSuccess={(result: CloudinaryUploadWidgetResults) => {
                     if (
@@ -194,8 +202,14 @@ const AccountSettings = () => {
                       typeof result.info === "object" &&
                       "secure_url" in result.info
                     ) {
-                      form.setValue("profile", result.info.secure_url);
+                      form.setValue(
+                        "profile",
+                        (result.info as { secure_url: string }).secure_url
+                      );
                     }
+                  }}
+                  onError={(error) => {
+                    console.error("Upload error:", error);
                   }}
                 >
                   <span className="flex flex-row items-center gap-4">
@@ -205,7 +219,7 @@ const AccountSettings = () => {
                 </CldUploadButton>
               </div>
               <p className="text-base-content/60 text-xs">
-                Image size should be under 1MB and image ration needs to be 1:1
+                Image size should be under 1MB and image ratio needs to be 1:1
               </p>
             </div>
           </div>
@@ -219,12 +233,12 @@ const AccountSettings = () => {
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Your tittle, proffesion or small biography"
+                      placeholder="Your title, profession or small biography"
                       maxLength={50}
                       value={title}
                       onChange={(e) => {
                         setTitle(e.target.value);
-                        form.setValue("title", title);
+                        form.setValue("title", e.target.value);
                       }}
                     />
                     <span className="text-base-content/60 absolute top-2 right-2">
@@ -246,7 +260,7 @@ const AccountSettings = () => {
                   <Textarea
                     {...field}
                     className="min-h-32"
-                    placeholder="Your tittle, proffesion or small biography"
+                    placeholder="Your title, profession or small biography"
                   />
                 </FormControl>
                 <FormMessage />

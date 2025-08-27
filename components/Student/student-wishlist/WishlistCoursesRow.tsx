@@ -24,29 +24,29 @@ const WishlistCourseRow = ({
   reviews,
 }: Props) => {
   return (
-    <div className="hover:bg-base-200/30 px-2 py-4 transition-colors">
-      <div className="grid grid-cols-12 items-center gap-6">
-        <div className="col-span-6">
-          <div className="flex items-center gap-5">
+    <div className="hover:bg-base-200/60 px-2 py-4 transition-colors">
+      <div className="grid grid-cols-2 !items-center !justify-center gap-6 md:grid-cols-10 lg:grid-cols-12">
+        <div className="md:col-span-4 lg:col-span-6">
+          <div className="flex w-full flex-row items-center gap-5">
             <div className="flex-shrink-0">
               <Image
                 src={image}
                 alt={title}
                 width={96}
                 height={64}
-                className="h-30 w-40 object-cover"
+                className="h-35 w-55 object-cover md:h-30 md:w-40"
               />
             </div>
 
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 space-y-0 whitespace-nowrap">
               <div className="mb-2 flex items-center gap-1">
                 <Icon icon="ph:star-fill" className="text-primary text-sm" />
-                <span className="text-base-content/70 text-xs font-semibold">
+                <span className="text-base-content/70 text-sm font-semibold md:text-xs">
                   {rating} ({reviews.toLocaleString()} Review)
                 </span>
               </div>
 
-              <h3 className="text-base-content/80 mb-2 text-sm font-medium">
+              <h3 className="text-base-content/80 md:text-md text-lg font-medium md:mb-2">
                 {title}
               </h3>
 
@@ -59,7 +59,7 @@ const WishlistCourseRow = ({
         </div>
 
         <div className="col-span-3 text-center">
-          <div className="flex flex-row items-center gap-1">
+          <div className="flex flex-row items-center justify-center gap-1">
             <span className="text-primary text-xl font-medium">{price}</span>
             {originalPrice && (
               <span className="text-base-content/40 text-xs line-through">
@@ -70,7 +70,7 @@ const WishlistCourseRow = ({
         </div>
 
         <div className="col-span-2 ml-8 text-center text-nowrap">
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-2">
             {/* TODO: fix btn actions */}
             <form method="POST" action="/api/cart/buy-now">
               <input type="hidden" name="courseId" value={id} />

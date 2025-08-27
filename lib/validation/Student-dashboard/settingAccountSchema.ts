@@ -32,4 +32,5 @@ export const settingAccountSchema = z.object({
     .string()
     .min(4, { message: "Title must be at least 4 characters" })
     .max(50, { message: "Title must be at most 50 characters" }),
+  avatar: z.string().optional(),
 });

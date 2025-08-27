@@ -1,4 +1,3 @@
-
 const ChatMessages = ({
   mockChatMessages,
 }: {
@@ -10,10 +9,10 @@ const ChatMessages = ({
   }>;
 }) => {
   return (
-    <div className="flex-1 overflow-y-auto p-4">
+    <div className="bg-base-100 flex-1 overflow-y-auto p-4">
       <div className="space-y-4">
         <div className="text-center">
-          <span className="text-base-content/50 text-sm">Today</span>
+          <span className="text-base-content/50 text-xs md:text-sm">Today</span>
         </div>
 
         {mockChatMessages.map((message) => (
@@ -28,7 +27,7 @@ const ChatMessages = ({
                   : "bg-primary/20 text-base-content"
               }`}
             >
-              <p className="text-sm">{message.message}</p>
+              <p className="text-xs md:text-sm">{message.message}</p>
               <p className="mt-1 text-xs opacity-70">{message.timestamp}</p>
             </div>
           </div>

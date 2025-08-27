@@ -30,6 +30,12 @@ const studentSchema = new Schema<StudentInterface>(
       type: String,
       required: true,
     },
+    username: {
+      type: String,
+      required: false,
+      unique: true,
+      default: "",
+    },
     bio: {
       type: String,
       required: false,
