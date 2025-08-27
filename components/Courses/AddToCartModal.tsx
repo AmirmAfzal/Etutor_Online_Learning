@@ -8,12 +8,39 @@ import {
 } from "@/components/ui/dialog";
 import Icon from "../ui/Icon";
 import Image from "next/image";
+import Link from "next/link";
+import { useActionState } from "react";
+import { actionAddToCart } from "@/lib/actions/courses/addToCart";
+import CoursesLoading from "@/app/courses/loading";
+import Form from "next/form";
 
-const AddToCartModal = () => {
+interface Props {
+  courseTitle: string;
+  courseThumbnail: string;
+  courseInstructor: string;
+  courseId: string;
+}
+
+const AddToCartModal = async ({
+  courseTitle,
+  courseThumbnail,
+  courseInstructor,
+  courseId,
+}: Props) => {
+  const [courseCartState, courseCartAction, courseCartPending] = useActionState(
+    actionAddToCart,
+    { message: "", errors: [] as string[] }
+  );
+
   return (
     <Dialog>
-      <DialogTrigger className="btn btn-primary w-full text-xs">
-        Add To Cart
+      <DialogTrigger className="btn btn-primary w-full">
+        <Form action={courseCartAction}>
+          <input type="hidden" name="courseId" value={courseId} />
+          <button type="submit" disabled={courseCartPending}>
+            {courseCartPending ? <CoursesLoading /> : "Add to Cart"}
+          </button>
+        </Form>
       </DialogTrigger>
 
       <DialogContent>
@@ -23,7 +50,7 @@ const AddToCartModal = () => {
             <div className="flex flex-col items-center justify-center gap-4">
               <div className="border-base-300 flex flex-col items-start justify-between gap-2 border-2">
                 <Image
-                  src="/images/course-images-1.png"
+                  src={courseThumbnail}
                   width={600}
                   height={400}
                   alt="Course Thumbnail"
@@ -36,15 +63,17 @@ const AddToCartModal = () => {
                   />
                   <div className="flex w-full flex-col items-center gap-2">
                     <span className="text-base-content/80 text-2xl font-semibold">
-                      course title
+                      {courseTitle}
                     </span>
                     <span className="text-base-content/70 p-4 pt-0 text-sm">
-                      instructor name
+                      {courseInstructor}
                     </span>
                   </div>
                 </div>
               </div>
-              <button className="btn btn-primary w-full">Go to Cart</button>
+              <Link href="/shopping-cart" className="btn btn-primary w-full">
+                Go to Cart
+              </Link>
             </div>
           </DialogDescription>
         </DialogHeader>

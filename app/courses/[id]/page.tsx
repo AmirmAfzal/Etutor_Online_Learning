@@ -26,7 +26,7 @@ type Course = {
   id?: string;
   thumbnail: string;
   name: string;
-  title?: string;
+  title: string;
   description?: string;
   category: string;
   price: number;
@@ -43,7 +43,7 @@ type Course = {
   whatYouWillLearn?: string[];
   thisCourseFor?: string[];
   courseRequirements?: string[];
-  createdBy?: string;
+  createdBy: string;
   curriculum?: CurriculumSection[];
 };
 
@@ -73,6 +73,8 @@ type CourseAuthor = {
 
 type FoundCourseDocument = {
   _id?: { toString: () => string } | string;
+  createdBy?: string;
+
   thumbnail?: string;
   title?: string;
   description?: string;

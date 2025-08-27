@@ -15,6 +15,9 @@ type SidebarCartProps = {
   singleCourse: {
     price: number;
     originalPrice: number;
+    title: string;
+    thumbnail: string;
+    createdBy: string;
     discount: string;
     timeLeft: string;
     courseDetails: { label: string; value: string }[];
@@ -48,6 +51,9 @@ const SidebarCart = ({
   const originalPrice = singleCourse?.originalPrice ?? 0;
   const discount = (singleCourse?.discount ?? "").trim();
   const showDiscount = discount !== "" && originalPrice > price;
+  const courseThumbnail = singleCourse?.thumbnail ?? "";
+  const courseTitle = singleCourse?.title ?? "";
+  const courseInstructor = singleCourse?.createdBy ?? "";
 
   useEffect(() => {
     if (buyNowState.message) {
@@ -146,7 +152,12 @@ const SidebarCart = ({
 
         <div className="flex flex-col items-center gap-1">
           {/* FIXME */}
-          <AddToCartModal />
+          <AddToCartModal
+            courseTitle={courseTitle}
+            courseThumbnail={courseThumbnail}
+            courseInstructor={courseInstructor}
+            courseId={courseId}
+          />
 
           <Form action={buyNowAction} className="w-full">
             <input type="hidden" name="courseId" value={courseId} />
