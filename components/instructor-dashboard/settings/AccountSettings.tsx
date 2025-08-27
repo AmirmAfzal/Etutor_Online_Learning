@@ -24,7 +24,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Icon from "@/components/ui/Icon";
 import {

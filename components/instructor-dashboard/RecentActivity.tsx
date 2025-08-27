@@ -6,7 +6,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/Select";
+} from "../ui/select";
 import Icon from "../ui/Icon";
 
 const RecentActivity = () => {
