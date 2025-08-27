@@ -6,6 +6,7 @@ import Form from "next/form";
 import { actionBuyNow } from "@/lib/actions/courses/buyNow";
 import Link from "next/link";
 import CoursesLoading from "@/app/courses/loading";
+import AddToCartModal from "./AddToCartModal";
 
 type SidebarCartProps = {
   fakeSidebarCart: {
@@ -145,12 +146,7 @@ const SidebarCart = ({
 
         <div className="flex flex-col items-center gap-1">
           {/* FIXME */}
-          <Link
-            href="/shopping-cart"
-            className="btn btn-primary w-full text-xs"
-          >
-            Add To Cart
-          </Link>
+          <AddToCartModal />
 
           <Form action={buyNowAction} className="w-full">
             <input type="hidden" name="courseId" value={courseId} />
