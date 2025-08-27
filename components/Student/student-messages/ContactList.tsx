@@ -48,7 +48,6 @@ const ContactList = ({
       {mockContacts.map((contact) => (
         <button
           key={contact.id}
-          role="button"
           tabIndex={0}
           aria-label={`Open chat with ${contact.name}`}
           onClick={openChatIfMobile}
