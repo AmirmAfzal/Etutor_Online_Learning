@@ -15,7 +15,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/Select";
+} from "../ui/select";
 
 const data = [
   { name: "Aug 01", uv: 4000, pv: 2400, amt: 2400 },

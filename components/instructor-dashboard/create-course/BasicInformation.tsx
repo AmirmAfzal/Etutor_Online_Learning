@@ -22,7 +22,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/Select";
+} from "@/components/ui/select";
 import {
   Form,
   FormControl,
