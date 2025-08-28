@@ -6,8 +6,8 @@ import Icon from "@/components/ui/Icon";
 import { useActionState, useEffect } from "react";
 import { actionDeleteCourse } from "@/lib/actions/courses/actionDeleteCourse";
 import Form from "next/form";
-import { useRouter } from "next/navigation";
 import CoursesLoading from "@/app/courses/loading";
+import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
 
 type Props = {
   id?: string;
@@ -32,22 +32,15 @@ const CourseShoppingCart = ({
 }: Props) => {
   const [deleteCourseState, deleteCourseAction, deleteCoursePending] =
     useActionState(actionDeleteCourse, { message: "", errors: [] as string[] });
-  const router = useRouter();
 
-  useEffect(() => {
-    if (deleteCourseState?.message === "SUCCESS" && !deleteCoursePending) {
-      router.refresh();
-    }
-  }, [deleteCourseState, deleteCoursePending, router]);
+  const [moveWishlistState, moveWishlistAction, moveWishlistPending] =
+    useActionState(actionAddToWishlist, {
+      message: "",
+      errors: [] as string[],
+    });
 
   return (
     <div className="hover:bg-base-200/30 flex flex-col gap-4 p-4 transition-colors md:flex-row md:items-center">
-      {/* <button className="self-start md:mr-4 md:self-center">
-        <Icon
-          icon="ph:x-circle"
-          className="text-base-content/70 hover:text-error text-xl"
-        />
-      </button> */}
       <Form
         action={deleteCourseAction}
         className="self-start md:mr-4 md:self-center"
@@ -107,9 +100,19 @@ const CourseShoppingCart = ({
           )}
         </div>
 
-        <button className="btn btn-soft btn-primary h-10 w-full text-xs md:w-36">
-          Move to Wishlist
-        </button>
+        <Form
+          action={moveWishlistAction}
+          className="self-start md:mr-4 md:self-center"
+        >
+          <input type="hidden" name="courseId" value={courseId} />
+          <button
+            type="submit"
+            className="btn btn-soft btn-primary h-10 w-full text-xs md:w-36"
+            disabled={deleteCoursePending}
+          >
+            {deleteCoursePending ? <CoursesLoading /> : "Move to Wishlist"}
+          </button>
+        </Form>
       </div>
     </div>
   );
