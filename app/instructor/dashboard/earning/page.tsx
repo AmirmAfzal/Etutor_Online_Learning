@@ -43,7 +43,7 @@ const EarningPage = () => {
   return (
     <section className="bg-base-200 w-full">
       <div className="container mx-auto p-6">
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
           {earningInformation.map((item) => (
             <div key={item.id} className="bg-base-100 flex flex-row gap-4 p-4">
               <div
@@ -64,17 +64,17 @@ const EarningPage = () => {
           ))}
         </div>
 
-        <div className="mt-6 grid grid-cols-12 gap-6">
-          <div className="col-span-8">
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-12">
+          <div className="col-span-1 md:col-span-8">
             <Statistic stroke="#23BD33" fill="#E1F7E3" height={400} />
           </div>
-          <div className="col-span-4">
+          <div className="col-span-1 md:col-span-4">
             <Cards />
           </div>
-          <div className="col-span-5">
+          <div className="col-span-1 md:col-span-5">
             <WithdrawMoney />
           </div>
-          <div className="col-span-7">
+          <div className="col-span-1 md:col-span-7">
             <WithdrawHistory />
           </div>
         </div>

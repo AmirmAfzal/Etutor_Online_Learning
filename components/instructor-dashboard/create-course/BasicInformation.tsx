@@ -22,7 +22,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/Select";
+} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -31,7 +31,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CourseData } from "@/lib/db/models/courseModel";
+import { CourseInterface } from "@/lib/db/models/courseModel";
 import ErrorMessage from "@/components/ErrorMessage";
 import {
   Command,
@@ -46,13 +46,13 @@ type FormField = BasicInformationFormData;
 
 interface Props {
   onNext: () => void;
-  course: CourseData | null;
+  course: CourseInterface | null;
 }
 
 const BasicInformation = ({ onNext, course }: Props) => {
-  const [titleLength, setTitleLength] = useState(course?.title.length || 0);
+  const [titleLength, setTitleLength] = useState(course?.title?.length || 0);
   const [subTitleLength, setSubTitleLength] = useState(
-    course?.subtitle.length || 0
+    course?.subtitle?.length || 0
   );
   const [categories, setCategories] = useState<{ name: string }[]>([]);
   const [subCategories, setSubCategories] = useState<{ name: string }[]>([]);
@@ -63,17 +63,13 @@ const BasicInformation = ({ onNext, course }: Props) => {
       _id: typeof course?._id === "string" ? course._id : "",
       title: course?.title || "",
       subtitle: course?.subtitle || "",
-      category:
-        typeof course?.category === "string"
-          ? course.category
-          : course?.category?.toString() || "",
-      subCategory:
-        typeof course?.subCategory === "string"
-          ? course.subCategory
-          : course?.subCategory?.toString() || "",
+      category: course ? JSON.parse(JSON.stringify(course?.category)).name : "",
+      subCategory: course
+        ? JSON.parse(JSON.stringify(course?.subCategory)).name
+        : "",
       topic: course?.topic || "",
       language: course?.language || "",
-      subtitleLang: "",
+      subtitleLang: course?.subtitleLanguage || "",
       level: course?.level || "",
       durationValue: course?.duration?.toString() || "",
       durationUnit: course?.durationUnit || "",
@@ -129,6 +125,22 @@ const BasicInformation = ({ onNext, course }: Props) => {
       searchSubCategoryFormAction(e.target.value);
     });
   };
+  useEffect(() => {
+    const initialCategory = form.getValues("category");
+    const initialSubCategory = form.getValues("subCategory");
+
+    if (initialCategory && initialCategory.trim() !== "") {
+      startTransition(() => {
+        searchCategoryFormAction(initialCategory);
+      });
+    }
+
+    if (initialSubCategory && initialSubCategory.trim() !== "") {
+      startTransition(() => {
+        searchSubCategoryFormAction(initialSubCategory);
+      });
+    }
+  }, [form, searchCategoryFormAction, searchSubCategoryFormAction]);
 
   return (
     <div>

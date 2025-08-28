@@ -8,7 +8,7 @@ const SettingsPage = () => {
     <section className="bg-base-200 space-y-6 p-6">
       <AccountSettings />
       <SocialProfile />
-      <div className="container mx-auto grid grid-cols-2 gap-6">
+      <div className="container mx-auto grid grid-cols-1 gap-6 md:grid-cols-2">
         <Notifications />
         <Changepassword />
       </div>

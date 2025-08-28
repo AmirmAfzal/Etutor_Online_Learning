@@ -27,19 +27,29 @@ export interface CourseInterface extends mongoose.Document {
   requirements?: string[];
   tools: string[];
   rating: number;
+  // Added for publish step
+  welcomeMessage?: string;
+  congratulationsMessage?: string;
+  instructors?: Array<{
+    id: number;
+    profile: string;
+    name: string;
+    skill: string;
+  }>;
 }
 
 const courseSchema = new Schema<CourseInterface & Document>(
   {
     title: { type: String, required: true },
-    thumbnail: { type: String, required: true },
-    description: { type: String, required: true },
+    subtitle: { type: String, required: true },
+    thumbnail: { type: String },
+    description: { type: String },
     authors: [
       { type: Schema.Types.ObjectId, ref: "instructor", required: true },
     ],
     sections: [{ type: Schema.Types.ObjectId, ref: "section", required: true }],
-    price: { type: Number, required: true },
-    offer: { type: Number, required: true },
+    price: { type: Number },
+    offer: { type: Number },
     offerEndsAt: { type: Date },
     language: { type: String, required: true },
     subtitleLanguage: { type: String },
@@ -69,7 +79,19 @@ const courseSchema = new Schema<CourseInterface & Document>(
     targetAudience: [{ type: String }],
     requirements: [{ type: String }],
     tools: {type : [String] , default : []},
-    rating : {type : Number ,default :0}
+    rating : {type : Number ,default :0},
+    // Fields updated by publish step
+    welcomeMessage: { type: String },
+    congratulationsMessage: { type: String },
+    instructors: [
+      {
+        id: { type: Number, required: true },
+        profile: { type: String, required: true },
+        name: { type: String, required: true },
+        skill: { type: String, required: true },
+        _id: false,
+      },
+    ],
   },
   {
     timestamps: true,

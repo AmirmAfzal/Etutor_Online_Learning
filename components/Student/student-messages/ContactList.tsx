@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import { useState } from "react";
 
@@ -18,7 +19,7 @@ const ContactList = ({
     isActive: boolean;
     unread: boolean;
   }[];
-  mockChatMessages?: {
+  mockChatMessages: {
     id: number;
     sender: string;
     message: string;
@@ -37,7 +38,7 @@ const ContactList = ({
   if (chatOpen)
     return (
       <div className="!z-100 flex h-full w-full flex-col">
-        <ChatMessages mockChatMessages={mockChatMessages || []} />
+        <ChatMessages mockChatMessages={mockChatMessages} />
         <MessageInput />
       </div>
     );
@@ -45,9 +46,8 @@ const ContactList = ({
   return (
     <div className="h-80 flex-1 overflow-y-auto md:h-auto">
       {mockContacts.map((contact) => (
-        <div
+        <button
           key={contact.id}
-          role="button"
           tabIndex={0}
           aria-label={`Open chat with ${contact.name}`}
           onClick={openChatIfMobile}
@@ -87,7 +87,7 @@ const ContactList = ({
               {contact.lastMessage}
             </p>
           </div>
-        </div>
+        </button>
       ))}
     </div>
   );

@@ -15,10 +15,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
+} from "@/components/ui/select";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
+import MyCoursesPagination from "@/components/instructor-dashboard/my-courses/MyCoursesPagination";
 
 interface Props {
   searchParams: Promise<{
@@ -61,7 +62,7 @@ const MyCoursesPage = async (props: Props) => {
     <section className="bg-base-200 p-6">
       <div className="container mx-auto">
         <form
-          action={"/instructor/dashboard/my-courses"}
+          action={"/instructor/dashboard/my-courses?page=1"}
           className="grid grid-cols-1 gap-6 md:grid-cols-5"
         >
           <div className="relative md:col-span-2">
@@ -231,6 +232,10 @@ const MyCoursesPage = async (props: Props) => {
               </div>
             </div>
           ))}
+        </div>
+        {/* pagination */}
+        <div className="mt-4">
+          <MyCoursesPagination />
         </div>
       </div>
     </section>

@@ -71,17 +71,17 @@ const CourseOverview = () => {
           </SelectContent>
         </Select>
       </div>
-      <div className="p-4">
+      <div className="pr-4">
         <ResponsiveContainer width="100%" height={380}>
           <AreaChart data={data}>
             <XAxis
               dataKey="name"
-              className="text-base-content/70 text-sm"
+              className="text-base-content/70 text-xs"
               tickLine={false}
               axisLine={false}
             />
             <YAxis
-              className="text-base-content/70 text-sm"
+              className="text-base-content/70 text-xs"
               tickLine={false}
               axisLine={false}
             />

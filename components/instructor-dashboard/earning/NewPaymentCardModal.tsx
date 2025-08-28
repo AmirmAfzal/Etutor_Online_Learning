@@ -21,6 +21,7 @@ import {
   PaymentCardFormData,
   paymentCardSchema,
 } from "@/lib/validation/schemas/instructor/newPaymentCard";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const initialState = {
   message: "",
@@ -32,7 +33,10 @@ interface Props {
 }
 
 const NewPaymentCardModal = ({ closeModal }: Props) => {
-  const [state, formAction] = useActionState(savePaymentCard, initialState);
+  const [state, formAction, pending] = useActionState(
+    savePaymentCard,
+    initialState
+  );
 
   const form = useForm<PaymentCardFormData>({
     resolver: zodResolver(paymentCardSchema),
@@ -52,7 +56,10 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
 
   useEffect(() => {
     if (state.message === "SUCCESS") {
-      closeModal();
+      form.reset();
+      setTimeout(() => {
+        closeModal();
+      }, 2000);
     }
   }, [state.message, closeModal, form]);
 
@@ -152,12 +159,39 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
               />
             </div>
             <div className="mt-6 flex flex-row items-center justify-between">
-              <button className="btn btn-outline">Cancel</button>
-              <button className="btn btn-primary">
+              <button
+                type="button"
+                onClick={closeModal}
+                className="btn btn-outline"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn btn-primary"
+              >
+                {pending && <div className="loading loading-spinner" />}
                 Send Message
                 <Icon icon="ph:paper-plane-right-fill" width="24" height="24" />
               </button>
             </div>
+
+            {state.message === "SUCCESS" && (
+              <div className="bg-success/10 text-success mt-4 flex flex-row items-center gap-4 rounded-md p-4">
+                <div className="loading loading-spinner" />
+                <p>add new payment card successfully!</p>
+              </div>
+            )}
+
+            {state.message === "ERROR" && (
+              <div className="p-4">
+                <ErrorMessage
+                  title="Error saving new payment card:"
+                  errors={state.errors}
+                />
+              </div>
+            )}
           </form>
         </Form>
       </div>

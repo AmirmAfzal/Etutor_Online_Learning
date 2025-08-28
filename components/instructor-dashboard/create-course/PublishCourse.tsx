@@ -26,6 +26,7 @@ import {
   Instructor,
 } from "@/lib/actions/instructor/create-course/findInstructors";
 import { CourseInterface } from "@/lib/db/models/courseModel";
+import ErrorMessage from "@/components/ErrorMessage";
 
 interface Props {
   onBack: () => void;
@@ -38,7 +39,10 @@ const initialState = {
 };
 
 const PublishCourse = ({ onBack, course }: Props) => {
-  const [state, formAction] = useActionState(publishCourse, initialState);
+  const [state, formAction, pending] = useActionState(
+    publishCourse,
+    initialState
+  );
   const [searchState, formActionSearch] = useActionState(findInstructor, {
     message: "",
     errors: [],
@@ -104,7 +108,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
 
   return (
     <div>
-      <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
+      <div className="border-base-300 flex flex-col items-center justify-between gap-2 border-t border-b p-4 md:flex-row">
         <h2 className="text-xl font-bold">Publish Course</h2>
         <div>
           <button className="btn btn-primary btn-soft mr-4" type="button">
@@ -126,7 +130,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
               name="courseId"
               defaultValue={(course?._id as string) || ""}
             />
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="welcomeMessage"
@@ -167,7 +171,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
               <h3 className="text-xl font-bold">
                 Add Instructor ({instructors.length})
               </h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="relative">
                   <Icon
                     icon="ph:magnifying-glass"
@@ -187,15 +191,9 @@ const PublishCourse = ({ onBack, course }: Props) => {
                     searchState.data.map((instructor) => (
                       <button
                         key={instructor.id}
-                        // role="button"
-                        // tabIndex={0}
-                        className="bg-base-200 flex cursor-pointer flex-row items-center justify-between p-4"
+                        type="button"
+                        className="bg-base-200 flex w-full cursor-pointer flex-row items-center justify-between p-4"
                         onClick={() => addInstructorHandler(instructor)}
-                        // onKeyDown={(e) => {
-                        //   if (e.key === "Enter") {
-                        //     addInstructorHandler(instructor);
-                        //   }
-                        // }}
                       >
                         <div className="flex flex-row items-center gap-4">
                           <Image
@@ -221,7 +219,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
                 </div>
               )}
 
-              <div className="grid grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-6">
                 {instructors.map((instructor) => (
                   <div
                     key={instructor.id}
@@ -263,10 +261,23 @@ const PublishCourse = ({ onBack, course }: Props) => {
                   Course creation completed successfully.
                 </div>
               )}
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn btn-primary"
+              >
+                {pending && <div className="loading loading-spinner" />}
                 Submit for Review
               </button>
             </div>
+            {state.message === "ERROR" && (
+              <div className="p-4">
+                <ErrorMessage
+                  title="Error saving publish course:"
+                  errors={state.errors}
+                />
+              </div>
+            )}
           </form>
         </Form>
       </div>
