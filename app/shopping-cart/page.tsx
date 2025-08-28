@@ -13,6 +13,7 @@ import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
 import { authOptions } from "@/lib/auth/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 interface Props {
   _id?: string;
@@ -134,10 +135,10 @@ const ShoppingCart = async () => {
               </span>
             </div>
 
-            <button className="btn btn-primary w-full">
+            <Link href="/student/checkout" className="btn btn-primary w-full">
               {/* TODO : add icon  */}
               Proceed To Checkout →
-            </button>
+            </Link>
 
             <div className="divider divider-base-content/80 w-full"></div>
 
