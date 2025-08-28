@@ -1,5 +1,6 @@
-import Icon from "@/components/ui/Icon";
 import Form from "next/form";
+
+import Icon from "@/components/ui/Icon";
 import {
   Select,
   SelectItem,

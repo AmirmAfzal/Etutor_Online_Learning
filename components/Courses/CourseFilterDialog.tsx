@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { Filter } from "lucide-react";
+
 import {
   Dialog,
   DialogContent,
@@ -8,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Filter } from "lucide-react";
+
 import Categories from "./courseFilter/Categories";
 import Tools from "./courseFilter/Tools";
 import Rating from "./courseFilter/Rating";
