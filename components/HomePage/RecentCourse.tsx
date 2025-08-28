@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import CourseCard from "../Student/CourseCard";
-import Icon from "../ui/Icon";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+
+import CourseCard from "../Student/CourseCard";
+import Icon from "../ui/Icon";
 
 const RecentCourse = () => {
   const courses = [
@@ -63,7 +64,7 @@ const RecentCourse = () => {
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-4">
           {courses.map((course) => (
             <HoverCard key={course.id}>
-              <HoverCardTrigger>
+              <HoverCardTrigger asChild>
                 <CourseCard {...course} />
               </HoverCardTrigger>
               <HoverCardContent className="w-full p-0" side="right">

@@ -5,7 +5,10 @@ export interface InstructorInterface extends Document {
   lastname: string;
   avatar: string;
   username: string;
+  phoneCode: string;
+  phoneNumber: string;
   user: mongoose.Types.ObjectId;
+  title: string;
   bio: string;
   rating: number;
   students: number;
@@ -26,17 +29,21 @@ const instructorSchema = new Schema<InstructorInterface>(
     lastname: { type: String, required: true },
     avatar: { type: String, required: false },
     username: { type: String, required: true },
+    phoneCode: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
     user: {
       type: Schema.Types.ObjectId,
       ref: "user",
       required: true,
       unique: true,
     },
+    title: { type: String, required: true },
     bio: { type: String, required: true },
-    rating: { type: Number, required: true, default: 0 },
-    students: { type: Number, required: true, default: 0 },
+    rating: { type: Number, required: false, default: 0 },
+    students: { type: Number, required: false, default: 0 },
     courses: [{ type: Schema.Types.ObjectId, ref: "course" }],
     social: {
+      website: { type: String, default: null },
       facebook: { type: String, default: null },
       instagram: { type: String, default: null },
       linkedin: { type: String, default: null },
