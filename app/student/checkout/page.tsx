@@ -1,8 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
-
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { connectDB } from "@/lib/db/db";
@@ -10,8 +8,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
 import { redirect } from "next/navigation";
+import PaymentBtn from "@/components/Student/PaymentBtn";
 
 interface Props {
+  id?: string;
   title?: string;
   image: string;
   instructor?: string;
@@ -56,6 +56,7 @@ const Page = async () => {
   const coursesCart = foundStudent?.coursesCart;
 
   const courseData: Props[] = coursesCart.map((course: any) => ({
+    id: typeof course._id === "string" ? course._id : course._id?.toString(),
     title: course.title,
     image: course.thumbnail,
     instructor: course.instructor,
@@ -252,9 +253,12 @@ const Page = async () => {
             </span>
           </div>
         </div>
-        <Button className="!btn !btn-primary mt-6 w-full py-3 text-lg font-bold tracking-wide transition-all">
+        {/* <Button className="!btn !btn-primary mt-6 w-full py-3 text-lg font-bold tracking-wide transition-all">
           Complete Payment
-        </Button>
+        </Button> */}
+        <PaymentBtn
+          courseIds={courseData.map((course) => course.id!).filter(Boolean)}
+        />
       </div>
     </div>
   );
