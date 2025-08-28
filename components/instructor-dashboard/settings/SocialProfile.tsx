@@ -26,7 +26,21 @@ const initialState = {
   errors: [],
 };
 
-const SocialProfile = () => {
+interface Props {
+  instructor: {
+    social: {
+      website: string;
+      facebook: string;
+      instagram: string;
+      linkedin: string;
+      youtube: string;
+      whatsapp: string;
+      twitter: string;
+    };
+  };
+}
+
+const SocialProfile = ({ instructor }: Props) => {
   const formFields = [
     {
       id: 1,
@@ -74,13 +88,13 @@ const SocialProfile = () => {
   const form = useForm<SocialProfileFormData>({
     resolver: zodResolver(socialProfileSchema),
     defaultValues: {
-      website: "",
-      facebook: "",
-      instagram: "",
-      linkedin: "",
-      twitter: "",
-      whatsapp: "",
-      youtube: "",
+      website: instructor.social.website || "",
+      facebook: instructor.social.facebook || "",
+      instagram: instructor.social.instagram || "",
+      linkedin: instructor.social.linkedin || "",
+      twitter: instructor.social.twitter || "",
+      whatsapp: instructor.social.whatsapp || "",
+      youtube: instructor.social.youtube || "",
     },
   });
 
