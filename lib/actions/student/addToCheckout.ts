@@ -33,7 +33,12 @@ export const addToCheckout = async (
 
     const updatedStudent = await studentModel.findOneAndUpdate(
       { user: session.user.id },
-      { $addToSet: { checkout: { $each: courseIds } } },
+      {
+        $addToSet: {
+          checkout: { $each: courseIds },
+          courses: { $each: courseIds },
+        },
+      },
       { new: true }
     );
 
