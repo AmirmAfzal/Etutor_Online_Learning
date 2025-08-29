@@ -25,10 +25,10 @@ type SidebarCartProps = {
   courseId: string;
 };
 
-type ToastState = {
+interface ToastState {
   message: string;
   errors?: string[];
-};
+}
 
 const SidebarCart = ({
   fakeSidebarCart,
