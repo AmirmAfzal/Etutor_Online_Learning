@@ -9,16 +9,10 @@ import courseModel from "@/lib/db/models/courseModel";
 import categoryModel from "@/lib/db/models/categoryModel";
 import subCategoryModel from "@/lib/db/models/subCategoryModel";
 
-// Types for filtered courses
 interface Category {
   name: string;
   icon: string;
   subcategories: { [key: string]: number };
-}
-
-interface RatingItem {
-  label: string;
-  count: number;
 }
 
 interface SubCategory {
@@ -30,6 +24,7 @@ interface Props {
     minPrice?: string;
     maxPrice?: string;
     level?: string;
+    rating?: string;
     duration?: string;
     tool?: string;
     category?: string;
@@ -47,36 +42,6 @@ const tools = {
   "CSS 3": 1234,
   "Node.js": 8454,
 };
-
-// const courseLevel = {
-//   "All Level": 234234,
-//   Beginner: 2345,
-//   Intermediate: 124,
-//   Expert: 826,
-// };
-
-const rating: RatingItem[] = [
-  {
-    label: "5 Star",
-    count: 12345,
-  },
-  {
-    label: "4 Star & up",
-    count: 12345,
-  },
-  {
-    label: "3 Star & up",
-    count: 12345,
-  },
-  {
-    label: "2 Star & up",
-    count: 12345,
-  },
-  {
-    label: "1 Star & up",
-    count: 12345,
-  },
-];
 
 const CourseFilter = async (props: Props) => {
   await connectDB();
@@ -139,6 +104,7 @@ const CourseFilter = async (props: Props) => {
 
   const durations: number[] = foundCourses.map((course) => course.duration);
   const levels: string[] = foundCourses.map((course) => course.level);
+  const rating: number[] = foundCourses.map((course) => course.rating);
   const priceCounts = {
     Free: totalFreeCount,
     Paid: totalPaidCount,
@@ -157,7 +123,10 @@ const CourseFilter = async (props: Props) => {
     <aside className="border-base-300 bg-base-100 mt-8 w-full !space-y-1.5 md:mt-0 md:w-5/12 md:border-r md:p-4">
       <Categories categories={categories} />
       <Tools tools={tools} />
-      <Rating rating={rating} />
+      <Rating
+        searchParams={Promise.resolve(searchParams)}
+        courseRating={rating}
+      />
       <CourseLevel
         // promise => for lint error
         searchParams={Promise.resolve(searchParams)}

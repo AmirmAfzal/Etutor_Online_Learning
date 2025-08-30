@@ -8,7 +8,6 @@ import CourseFilter from "@/components/Courses/CourseFilter";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import CourseCard from "@/components/Student/CourseCard";
-import { Filter } from "lucide-react";
 import FilterMobile from "@/components/Courses/courseFilter/FilterMobile";
 
 interface Course {
@@ -27,6 +26,7 @@ interface Props {
     minPrice?: string;
     maxPrice?: string;
     level?: string;
+    rating?: string;
     duration?: string;
     tool?: string;
     category?: string;
@@ -92,6 +92,11 @@ const CoursesPage = async (props: Props) => {
     mongoQuery.level = level;
   }
 
+  const rating = searchParams?.rating;
+  if (rating) {
+    mongoQuery.rating = { $gte: Number(rating) };
+  }
+
   const foundCourses = await courseModel
     .find(mongoQuery)
     .populate("category")
@@ -104,7 +109,7 @@ const CoursesPage = async (props: Props) => {
     name: course.title,
     category: course.category?.name || "Unknown",
     price: course.price,
-    rating: 5, // TODO
+    rating: course.rating,
     students: course.studentsCount,
   }));
 
