@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import CourseCard from "@/components/Student/CourseCard";
 import CourseFilter from "@/components/Courses/CourseFilter";
 

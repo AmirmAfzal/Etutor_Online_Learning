@@ -57,16 +57,42 @@ const BasicInformation = ({ onNext, course }: Props) => {
   const [categories, setCategories] = useState<{ name: string }[]>([]);
   const [subCategories, setSubCategories] = useState<{ name: string }[]>([]);
 
+  const categoryName = (() => {
+    if (!course) return "";
+    const value = course.category;
+    if (
+      value &&
+      typeof value === "object" &&
+      "name" in value &&
+      value.name
+    ) {
+      return value.name as string;
+    }
+    return "";
+  })();
+
+  const subCategoryName = (() => {
+    if (!course) return "";
+    const value = course.subCategory;
+    if (
+      value &&
+      typeof value === "object" &&
+      "name" in value &&
+      value.name
+    ) {
+      return value.name as string;
+    }
+    return "";
+  })();
+
   const form = useForm<FormField>({
     resolver: zodResolver(basicInformationSchema),
     defaultValues: {
       _id: typeof course?._id === "string" ? course._id : "",
       title: course?.title || "",
       subtitle: course?.subtitle || "",
-      category: course ? JSON.parse(JSON.stringify(course?.category)).name : "",
-      subCategory: course
-        ? JSON.parse(JSON.stringify(course?.subCategory)).name
-        : "",
+      category: categoryName,
+      subCategory: subCategoryName,
       topic: course?.topic || "",
       language: course?.language || "",
       subtitleLang: course?.subtitleLanguage || "",
