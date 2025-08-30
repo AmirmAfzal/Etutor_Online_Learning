@@ -11,21 +11,17 @@ import {
 import Icon from "../ui/Icon";
 import Image from "next/image";
 import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState } from "react";
 import { actionAddToCart } from "@/lib/actions/courses/addToCart";
 import CoursesLoading from "@/app/courses/loading";
 import Form from "next/form";
+import Toast from "../Toast";
 
 interface Props {
   courseTitle: string;
   courseThumbnail: string;
   courseInstructor: string;
   courseId: string;
-}
-
-interface ToastState {
-  message: string;
-  errors?: string[];
 }
 
 const AddToCartModal = ({
@@ -37,35 +33,6 @@ const AddToCartModal = ({
   const [courseCartState, courseCartAction, courseCartPending] = useActionState(
     actionAddToCart,
     { message: "", errors: [] as string[] }
-  );
-
-  const [showCourseCartToast, setShowCourseCartToast] = useState(false);
-
-  useEffect(() => {
-    if (courseCartState.message) {
-      setShowCourseCartToast(true);
-      const timer = setTimeout(() => setShowCourseCartToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [courseCartState.message]);
-
-  const renderToast = (show: boolean, state: ToastState) => (
-    <div className="toast toast-top toast-end">
-      {show && state.message && (
-        <div
-          role="alert"
-          className={`alert ${
-            state.errors?.length ? "alert-error" : "alert-success"
-          }`}
-        >
-          <Icon
-            icon={state.errors?.length ? "ph:x-circle" : "ph:check-circle"}
-            className="text-lg"
-          />
-          <span className="text-xs">{state.message}</span>
-        </div>
-      )}
-    </div>
   );
 
   return (
@@ -114,7 +81,13 @@ const AddToCartModal = ({
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
-      {renderToast(showCourseCartToast, courseCartState)}
+
+      {courseCartState.message && (
+        <Toast
+          message={courseCartState.message}
+          isError={!!courseCartState.errors?.length}
+        />
+      )}
     </Dialog>
   );
 };

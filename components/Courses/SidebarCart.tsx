@@ -1,5 +1,5 @@
 "use client";
-import React, { useActionState, useEffect, useState } from "react";
+import React, { useActionState } from "react";
 import Icon from "../ui/Icon";
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
 import Form from "next/form";
@@ -7,6 +7,7 @@ import { actionBuyNow } from "@/lib/actions/courses/buyNow";
 import Link from "next/link";
 import CoursesLoading from "@/app/courses/loading";
 import AddToCartModal from "./AddToCartModal";
+import Toast from "../Toast";
 
 type SidebarCartProps = {
   fakeSidebarCart: {
@@ -25,19 +26,11 @@ type SidebarCartProps = {
   courseId: string;
 };
 
-interface ToastState {
-  message: string;
-  errors?: string[];
-}
-
 const SidebarCart = ({
   fakeSidebarCart,
   courseId,
   singleCourse,
 }: SidebarCartProps) => {
-  const [showBuyNowToast, setShowBuyNowToast] = useState(false);
-  const [showWishlistToast, setShowWishlistToast] = useState(false);
-
   const [wishlistState, wishlistAction, wishlistPending] = useActionState(
     actionAddToWishlist,
     { message: "", errors: [] as string[] }
@@ -55,22 +48,6 @@ const SidebarCart = ({
   const courseTitle = singleCourse?.title ?? "";
   const courseInstructor = singleCourse?.createdBy ?? "";
 
-  useEffect(() => {
-    if (buyNowState.message) {
-      setShowBuyNowToast(true);
-      const timer = setTimeout(() => setShowBuyNowToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [buyNowState.message]);
-
-  useEffect(() => {
-    if (wishlistState.message) {
-      setShowWishlistToast(true);
-      const timer = setTimeout(() => setShowWishlistToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [wishlistState.message]);
-
   // Helper function to get icon based on detail label
   const getDetailIcon = (label: string) => {
     const iconMap: Record<string, string> = {
@@ -81,26 +58,6 @@ const SidebarCart = ({
     };
     return iconMap[label] || "ph:notepad-duotone";
   };
-
-  // Helper function to render toast
-  const renderToast = (show: boolean, state: ToastState) => (
-    <div className="toast toast-top toast-end">
-      {show && state.message && (
-        <div
-          role="alert"
-          className={`alert ${
-            state.errors?.length ? "alert-error" : "alert-success"
-          }`}
-        >
-          <Icon
-            icon={state.errors?.length ? "ph:x-circle" : "ph:check-circle"}
-            className="text-lg"
-          />
-          <span className="text-xs">{state.message}</span>
-        </div>
-      )}
-    </div>
-  );
 
   return (
     <div className="md:col-span-1">
@@ -170,7 +127,12 @@ const SidebarCart = ({
             </button>
           </Form>
 
-          {renderToast(showBuyNowToast, buyNowState)}
+          {wishlistState.message && (
+            <Toast
+              message={wishlistState.message}
+              isError={!!wishlistState.errors?.length}
+            />
+          )}
 
           <div className="flex w-full flex-row items-center justify-between gap-1">
             <Form action={wishlistAction} className="w-1/2">
@@ -192,7 +154,12 @@ const SidebarCart = ({
             </Link>
           </div>
 
-          {renderToast(showWishlistToast, wishlistState)}
+          {buyNowState.message && (
+            <Toast
+              message={buyNowState.message}
+              isError={!!buyNowState.errors?.length}
+            />
+          )}
 
           <span className="text-base-content/60 text-xs">
             Note: All courses have 30-day money-back guarantee

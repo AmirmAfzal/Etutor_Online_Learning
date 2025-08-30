@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
-
 import Icon from "@/components/ui/Icon";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState } from "react";
 import { actionDeleteCourse } from "@/lib/actions/courses/actionDeleteCourse";
 import Form from "next/form";
 import CoursesLoading from "@/app/courses/loading";
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
+import Toast from "../Toast";
 
 type Props = {
   id?: string;
@@ -19,11 +19,6 @@ type Props = {
   price?: number;
   originalPrice?: number;
 };
-
-interface ToastState {
-  message: string;
-  errors?: string[];
-}
 
 const CourseShoppingCart = ({
   title,
@@ -43,44 +38,6 @@ const CourseShoppingCart = ({
       message: "",
       errors: [] as string[],
     });
-
-  const [showDeleteCourseToast, setShowDeleteCourseToast] = useState(false);
-  const [showMoveWishlistToast, setShowMoveWishlistToast] = useState(false);
-
-  useEffect(() => {
-    if (deleteCourseState.message) {
-      setShowDeleteCourseToast(true);
-      const timer = setTimeout(() => setShowDeleteCourseToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [deleteCourseState.message]);
-
-  useEffect(() => {
-    if (moveWishlistState.message) {
-      setShowMoveWishlistToast(true);
-      const timer = setTimeout(() => setShowMoveWishlistToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [moveWishlistState.message]);
-
-  const renderToast = (show: boolean, state: ToastState) => (
-    <div className="toast toast-top toast-end">
-      {show && state.message && (
-        <div
-          role="alert"
-          className={`alert ${
-            state.errors?.length ? "alert-error" : "alert-success"
-          }`}
-        >
-          <Icon
-            icon={state.errors?.length ? "ph:x-circle" : "ph:check-circle"}
-            className="text-lg"
-          />
-          <span className="text-xs">{state.message}</span>
-        </div>
-      )}
-    </div>
-  );
 
   return (
     <div className="hover:bg-base-200/30 flex flex-col gap-4 p-4 transition-colors md:flex-row md:items-center">
@@ -151,14 +108,25 @@ const CourseShoppingCart = ({
           <button
             type="submit"
             className="btn btn-soft btn-primary h-10 w-full text-xs md:w-36"
-            disabled={deleteCoursePending}
+            disabled={moveWishlistPending}
           >
-            {deleteCoursePending ? <CoursesLoading /> : "Move to Wishlist"}
+            {moveWishlistPending ? <CoursesLoading /> : "Move to Wishlist"}
           </button>
         </Form>
       </div>
-      {renderToast(showDeleteCourseToast, deleteCourseState)}
-      {renderToast(showMoveWishlistToast, moveWishlistState)}
+
+      {deleteCourseState.message && (
+        <Toast
+          message={deleteCourseState.message}
+          isError={!!deleteCourseState.errors?.length}
+        />
+      )}
+      {moveWishlistState.message && (
+        <Toast
+          message={moveWishlistState.message}
+          isError={!!moveWishlistState.errors?.length}
+        />
+      )}
     </div>
   );
 };
