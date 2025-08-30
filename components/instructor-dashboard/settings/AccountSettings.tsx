@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import {
   CldImage,
   CldUploadButton,
@@ -72,7 +72,7 @@ const AccountSettings = ({ instructor }: Props) => {
           ? (instructor.phoneCode as "+87" | "+880" | "+98" | "+95")
           : undefined,
       phoneNumber: instructor.phoneNumber || "",
-      title: "",
+      title: title || "",
       biography: instructor.bio || "",
       profile: instructor.avatar || "",
     },
@@ -88,13 +88,6 @@ const AccountSettings = ({ instructor }: Props) => {
       formAction(formData);
     });
   };
-
-  useEffect(() => {
-    if (state.message === "SUCCESS") {
-      form.reset();
-      setTitle("");
-    }
-  }, [state.message, form]);
 
   return (
     <section className="bg-base-100 container mx-auto p-6">
