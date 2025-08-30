@@ -253,9 +253,6 @@ const Page = async () => {
             </span>
           </div>
         </div>
-        {/* <Button className="!btn !btn-primary mt-6 w-full py-3 text-lg font-bold tracking-wide transition-all">
-          Complete Payment
-        </Button> */}
         <PaymentBtn
           courseIds={courseData.map((course) => course.id!).filter(Boolean)}
         />

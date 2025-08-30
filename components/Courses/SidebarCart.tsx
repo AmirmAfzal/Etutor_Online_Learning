@@ -9,7 +9,7 @@ import CoursesLoading from "@/app/courses/loading";
 import AddToCartModal from "./AddToCartModal";
 import Toast from "../Toast";
 
-type SidebarCartProps = {
+interface SidebarCartProps {
   fakeSidebarCart: {
     includes: string[];
   };
@@ -24,7 +24,7 @@ type SidebarCartProps = {
     courseDetails: { label: string; value: string }[];
   };
   courseId: string;
-};
+}
 
 const SidebarCart = ({
   fakeSidebarCart,

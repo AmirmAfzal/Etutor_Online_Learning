@@ -2,7 +2,7 @@
 import CoursesLoading from "@/app/courses/loading";
 import { addToCheckout } from "@/lib/actions/student/addToCheckout";
 import Form from "next/form";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState } from "react";
 import Toast from "../Toast";
 
 interface Props {

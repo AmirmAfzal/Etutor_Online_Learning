@@ -53,7 +53,6 @@ const ShoppingCart = async () => {
 
   return (
     <section className="flex flex-col items-center justify-start">
-      {/* Header */}
       <div className="bg-base-200 flex w-full flex-col items-center justify-center gap-4 px-4 py-8">
         <h3 className="text-lg font-semibold md:text-xl">Shopping Cart</h3>
         <Breadcrumb>
