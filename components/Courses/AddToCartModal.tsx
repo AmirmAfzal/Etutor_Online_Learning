@@ -1,9 +1,7 @@
-"use client";
-
+import React, { useActionState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -11,7 +9,6 @@ import {
 import Icon from "../ui/Icon";
 import Image from "next/image";
 import Link from "next/link";
-import { useActionState } from "react";
 import { actionAddToCart } from "@/lib/actions/courses/addToCart";
 import CoursesLoading from "@/app/courses/loading";
 import Form from "next/form";
@@ -36,59 +33,59 @@ const AddToCartModal = ({
   );
 
   return (
-    <Dialog>
-      <DialogTrigger className="btn btn-primary w-full">
-        <Form action={courseCartAction}>
-          <input type="hidden" name="courseId" value={courseId} />
-          <button type="submit" disabled={courseCartPending}>
-            {courseCartPending ? <CoursesLoading /> : "Add to Cart"}
-          </button>
-        </Form>
-      </DialogTrigger>
+    <Form action={courseCartAction} className="w-full">
+      <input type="hidden" name="courseId" value={courseId} />
+      <Dialog>
+        <DialogTrigger
+          type="submit"
+          className="btn btn-primary w-full"
+          disabled={courseCartPending}
+        >
+          {courseCartPending ? <CoursesLoading /> : "Add to Cart"}
+        </DialogTrigger>
 
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Added to cart</DialogTitle>
-          <DialogDescription>
-            <div className="flex flex-col items-center justify-center gap-4">
-              <div className="border-base-300 flex flex-col items-start justify-between gap-2 border-2">
-                <Image
-                  src={courseThumbnail}
-                  width={600}
-                  height={400}
-                  alt="Course Thumbnail"
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Added to cart</DialogTitle>
+          </DialogHeader>
+
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="border-base-300 flex flex-col items-start justify-between gap-2 border-2">
+              <Image
+                src={courseThumbnail}
+                width={600}
+                height={400}
+                alt="Course Thumbnail"
+              />
+              <div className="flex flex-row items-center gap-4 p-2">
+                <Icon
+                  icon="ph:check-circle"
+                  className="text-success text-3xl"
                 />
-
-                <div className="flex flex-row items-center gap-4 p-2">
-                  <Icon
-                    icon="ph:check-circle"
-                    className="text-success text-3xl"
-                  />
-                  <div className="flex w-full flex-col items-center gap-2">
-                    <span className="text-base-content/80 text-2xl font-semibold">
-                      {courseTitle}
-                    </span>
-                    <span className="text-base-content/70 p-4 pt-0 text-sm">
-                      {courseInstructor}
-                    </span>
-                  </div>
+                <div className="flex w-full flex-col items-center gap-2">
+                  <span className="text-base-content/80 text-2xl font-semibold">
+                    {courseTitle}
+                  </span>
+                  <span className="text-base-content/70 p-4 pt-0 text-sm">
+                    {courseInstructor}
+                  </span>
                 </div>
               </div>
-              <Link href="/shopping-cart" className="btn btn-primary w-full">
-                Go to Cart
-              </Link>
             </div>
-          </DialogDescription>
-        </DialogHeader>
-      </DialogContent>
+            <Link href="/shopping-cart" className="btn btn-primary w-full">
+              Go to Cart
+            </Link>
+          </div>
+        </DialogContent>
 
-      {courseCartState.message && (
-        <Toast
-          message={courseCartState.message}
-          isError={!!courseCartState.errors?.length}
-        />
-      )}
-    </Dialog>
+        {courseCartState.message && (
+          <Toast
+            message={courseCartState.message}
+            isError={!!courseCartState.errors?.length}
+          />
+        )}
+      </Dialog>
+    </Form>
   );
 };
 
