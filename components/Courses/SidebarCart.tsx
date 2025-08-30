@@ -2,12 +2,12 @@
 import React, { useActionState } from "react";
 import Icon from "../ui/Icon";
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
-import Form from "next/form";
 import { actionBuyNow } from "@/lib/actions/courses/buyNow";
-import Link from "next/link";
 import CoursesLoading from "@/app/courses/loading";
 import AddToCartModal from "./AddToCartModal";
 import Toast from "../Toast";
+import Form from "next/form";
+import Link from "next/link";
 
 interface SidebarCartProps {
   fakeSidebarCart: {

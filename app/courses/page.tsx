@@ -1,8 +1,9 @@
 // TODO: single course updated => merge to this branch
 
-import Icon from "@/components/ui/Icon";
+import React from "react";
 import Link from "next/link";
 
+import Icon from "@/components/ui/Icon";
 import {
   Sheet,
   SheetContent,
@@ -11,8 +12,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-import React from "react";
 import CoursesSearch from "@/components/Courses/CoursesSearch";
 import CoursesSelect from "@/components/Courses/CoursesSelect";
 import CourseFilter from "@/components/Courses/CourseFilter";

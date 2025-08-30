@@ -19,6 +19,7 @@ import {
   SocialProfileFormData,
   socialProfileSchema,
 } from "@/lib/validation/schemas/instructor/settings/socialProfile";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const initialState = {
   message: "",
@@ -65,7 +66,10 @@ const SocialProfile = () => {
     },
   ];
 
-  const [state, formAction] = useActionState(saveSocialProfile, initialState);
+  const [state, formAction, pending] = useActionState(
+    saveSocialProfile,
+    initialState
+  );
 
   const form = useForm<SocialProfileFormData>({
     resolver: zodResolver(socialProfileSchema),
@@ -122,7 +126,7 @@ const SocialProfile = () => {
                 </FormItem>
               )}
             />
-            <div className="mt-4 grid grid-cols-3 gap-4">
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
               {formFields.map((item, index) => (
                 <FormField
                   key={index}
@@ -152,16 +156,27 @@ const SocialProfile = () => {
                 />
               ))}
             </div>
-            <div className="mt-6 flex flex-row items-center gap-6">
-              <button className="btn btn-primary" type="submit">
+            <div className="mt-6 flex flex-col gap-6 md:flex-row md:items-center">
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn btn-primary"
+              >
+                {pending && <div className="loading loading-spinner" />}
                 Save Changes
               </button>
               {state.message === "SUCCESS" && (
                 <div className="bg-success/10 text-success rounded-md p-4">
-                  Account settings changes saved
+                  Social Profile changes saved
                 </div>
               )}
             </div>
+            {state.message === "ERROR" && (
+              <ErrorMessage
+                title="Error saving Social Profile:"
+                errors={state.errors}
+              />
+            )}
           </form>
         </Form>
       </div>

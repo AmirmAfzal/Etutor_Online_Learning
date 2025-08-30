@@ -69,7 +69,7 @@ const CourseInformation = () => {
   ];
 
   return (
-    <section className="grid grid-cols-2 gap-6">
+    <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {information.map((item) => (
         <div key={item.id} className="bg-base-100 flex flex-row gap-4 p-4">
           <div

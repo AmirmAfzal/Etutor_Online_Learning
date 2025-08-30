@@ -50,15 +50,15 @@ const Navbar = ({ children }: Props) => {
 
   return (
     <nav className="w-full p-6">
-      <div className="container mx-auto flex items-center justify-between">
-        <div className="flex flex-row items-start gap-4">
+      <div className="container mx-auto flex flex-col justify-between gap-4 md:flex-row">
+        <div className="flex flex-row items-center gap-4">
           {children}
           <div>
             <p className="text-base-content/70 text-xs">Good Morning</p>
             <h2 className="text-lg font-bold">{pageNameHandler()}</h2>
           </div>
         </div>
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center justify-between gap-4">
           <div className="relative">
             <Icon
               icon="ph:magnifying-glass"
@@ -68,7 +68,7 @@ const Navbar = ({ children }: Props) => {
             />
             <Input
               type="text"
-              className="bg-base-300 w-96 rounded-none pl-8"
+              className="bg-base-300 w-48 rounded-none pl-8 md:w-96"
               placeholder="Search"
             />
           </div>

@@ -1,14 +1,14 @@
 import React from "react";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 import TeacherCard from "@/components/Student/TeacherCard";
 import Search from "@/components/Student/Search";
 import TeacherSelect from "@/components/TeacherSelect";
 import { connectDB } from "@/lib/db/db";
 import { CourseInterface } from "@/lib/db/models/courseModel";
-import { getServerSession } from "next-auth";
 import studentModel from "@/lib/db/models/studentModel";
 import { authOptions } from "@/lib/auth/authOptions";
-import { redirect } from "next/navigation";
 
 interface InstructorData {
   name: string;

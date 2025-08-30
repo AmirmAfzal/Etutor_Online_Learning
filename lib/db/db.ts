@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 import courseModel from "./models/courseModel";
 import userModel from "./models/userModel";
 import lectureModel from "./models/lectureModel";
