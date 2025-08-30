@@ -25,29 +25,22 @@ export async function saveAccountSettings(
   }
 
   const session = await getServerSession(authOptions);
-  if (session) console.log(session.user.id);
 
-  const foundInstructor = await instructorModel.findOne();
+  const foundInstructor = await instructorModel.findOne({
+    user: session?.user.id,
+  });
+
+  if (!foundInstructor) {
+    return {
+      message: "ERROR",
+      errors: ["Instructor not found"],
+    };
+  }
 
   try {
-    if (foundInstructor) {
-      await instructorModel.findByIdAndUpdate(
-        foundInstructor._id,
-        {
-          firstname: result.data.firstName,
-          lastname: result.data.lastName,
-          avatar: result.data.profile,
-          username: result.data.userName,
-          phoneCode: result.data.phoneCode,
-          phoneNumber: result.data.phoneNumber,
-          title: result.data.title,
-          bio: result.data.biography,
-        },
-        { new: true }
-      );
-    } else {
-      const accountSettings = await instructorModel.create({
-        user: session?.user.id,
+    await instructorModel.findByIdAndUpdate(
+      foundInstructor._id,
+      {
         firstname: result.data.firstName,
         lastname: result.data.lastName,
         avatar: result.data.profile,
@@ -56,9 +49,9 @@ export async function saveAccountSettings(
         phoneNumber: result.data.phoneNumber,
         title: result.data.title,
         bio: result.data.biography,
-      });
-      console.log(accountSettings);
-    }
+      },
+      { new: true }
+    );
     return {
       message: "SUCCESS",
       errors: [],

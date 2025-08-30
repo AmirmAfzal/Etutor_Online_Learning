@@ -53,7 +53,7 @@ interface Props {
 }
 
 const AccountSettings = ({ instructor }: Props) => {
-  const [title, setTitle] = useState<string>(instructor.title || "");
+  const [title, setTitle] = useState<string>(instructor?.title || "");
 
   const [state, formAction, pending] = useActionState(
     saveAccountSettings,
@@ -63,18 +63,18 @@ const AccountSettings = ({ instructor }: Props) => {
   const form = useForm<AccountSettingFormData>({
     resolver: zodResolver(accountSettingSchema),
     defaultValues: {
-      firstName: instructor.firstname || "",
-      lastName: instructor.lastname || "",
-      userName: instructor.username || "",
+      firstName: instructor?.firstname || "",
+      lastName: instructor?.lastname || "",
+      userName: instructor?.username || "",
       phoneCode:
         instructor.phoneCode &&
         ["+87", "+880", "+98", "+95"].includes(instructor.phoneCode)
           ? (instructor.phoneCode as "+87" | "+880" | "+98" | "+95")
           : undefined,
-      phoneNumber: instructor.phoneNumber || "",
+      phoneNumber: instructor?.phoneNumber || "",
       title: title || "",
-      biography: instructor.bio || "",
-      profile: instructor.avatar || "",
+      biography: instructor?.bio || "",
+      profile: instructor?.avatar || "",
     },
   });
 

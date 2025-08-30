@@ -1,5 +1,8 @@
 "use server";
 
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import instructorModel from "@/lib/db/models/instructorModel";
 import { ActionData } from "@/lib/formTypes";
@@ -21,30 +24,39 @@ export async function saveSocialProfile(
     };
   }
 
-  const foundInstructor = await instructorModel.findOne();
+  const session = await getServerSession(authOptions);
+
+  const foundInstructor = await instructorModel.findOne({
+    user: session?.user.id,
+  });
+
+  if (!foundInstructor) {
+    return {
+      message: "ERROR",
+      errors: ["Instructor not found"],
+    };
+  }
 
   try {
-    if (foundInstructor) {
-      await instructorModel.findByIdAndUpdate(
-        foundInstructor._id,
-        {
-          social: {
-            website: result.data.website,
-            facebook: result.data.facebook,
-            instagram: result.data.instagram,
-            linkedin: result.data.linkedin,
-            youtube: result.data.youtube,
-            whatsapp: result.data.whatsapp,
-            twitter: result.data.twitter,
-          },
+    await instructorModel.findByIdAndUpdate(
+      foundInstructor._id,
+      {
+        social: {
+          website: result.data.website,
+          facebook: result.data.facebook,
+          instagram: result.data.instagram,
+          linkedin: result.data.linkedin,
+          youtube: result.data.youtube,
+          whatsapp: result.data.whatsapp,
+          twitter: result.data.twitter,
         },
-        { new: true }
-      );
-      return {
-        message: "SUCCESS",
-        errors: [],
-      };
-    }
+      },
+      { new: true }
+    );
+    return {
+      message: "SUCCESS",
+      errors: [],
+    };
   } catch (error) {
     console.log(error);
     return {
