@@ -3,6 +3,9 @@ import WatchHeader from "@/components/Courses/watchCourses/WatchHeader";
 import WatchPlayer from "@/components/Courses/watchCourses/WatchPlayer";
 import WatchDetails from "@/components/Courses/watchCourses/WatchDetails";
 import WatchTabs from "@/components/Courses/watchCourses/WatchTabs";
+import { connectDB } from "@/lib/db/db";
+import courseModel from "@/lib/db/models/courseModel";
+import { Types } from "mongoose";
 
 type CurriculumItem = {
   title: string;
@@ -93,6 +96,12 @@ If that all sounds a little too fancy - don't worry, this course is aimed at peo
   file: "",
 };
 
+interface Course {
+  title?: string;
+  section?: string;
+  duration: number;
+}
+
 const comments: Comment[] = [
   {
     name: "Theresa Webb",
@@ -131,14 +140,59 @@ const comments: Comment[] = [
   },
 ];
 
-const WatchCourse = () => {
+const convertMinutesToHoursAndMinutes = (totalMinutes: number) => {
+  // Validate that the input is a non-negative number.
+  if (typeof totalMinutes !== "number" || totalMinutes < 0) {
+    return "Invalid input";
+  }
+
+  // Calculate the hours and remaining minutes.
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  // Build the output string based on the calculated values.
+  let output = "";
+
+  if (hours > 0) {
+    output += `${hours}h`;
+  }
+
+  if (minutes > 0) {
+    // Add a comma and space if there are already hours in the string.
+    if (output !== "") {
+      output += ", ";
+    }
+    output += `${minutes}min`;
+  }
+
+  // If the total time is zero, return "0min".
+  if (output === "") {
+    return "0min";
+  }
+
+  return output;
+};
+
+const WatchCourse = async ({ params }: { params: { id: string } }) => {
+  await connectDB();
+  const { id } = params;
+
+  if (!Types.ObjectId.isValid(id)) {
+    return <div>Invalid Course ID</div>;
+  }
+
+  const foundCourses = await courseModel.findById(id).lean<Course>();
+  console.log(foundCourses);
+
   return (
     <section className="container mx-auto w-full px-4 py-6">
       <WatchHeader
-        title="Complete Website Responsive Design: from Figma to Webflow to Website Design"
-        sectionsCount={6}
+        title={foundCourses?.title ?? "The course does not have a title"}
+        sectionsCount={foundCourses?.section?.length ?? 0}
         lecturesCount={203}
-        totalDuration="19h 37m"
+        totalDuration={convertMinutesToHoursAndMinutes(
+          foundCourses?.duration ?? 0
+        )}
       />
 
       <div className="mt-6 flex w-full flex-col items-start gap-4 lg:flex-row lg:gap-6">
