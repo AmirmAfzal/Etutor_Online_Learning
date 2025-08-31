@@ -1,51 +1,14 @@
 import Image from "next/image";
 
+import { CourseTypes } from "@/app/page";
+
 import Icon from "../ui/Icon";
 
-const FeaturedCourses = () => {
-  const courses = [
-    {
-      id: 1,
-      thumbnail: "/images/course-img-1.png",
-      name: "Investing In Stocks The Complete Course...",
-      category: "Health & Fitness",
-      price: 14,
-      rating: 5,
-      students: 357.914,
-      instructor: "Kevin Gilbert",
-    },
-    {
-      id: 2,
-      thumbnail: "/images/course-img-2.png",
-      name: "Investing In Stocks The Complete Course...",
-      category: "Personal Development",
-      price: 14,
-      rating: 5,
-      students: 357.914,
-      instructor: "Kevin Gilbert",
-    },
-    {
-      id: 3,
-      thumbnail: "/images/course-img-3.png",
-      name: "Investing In Stocks The Complete Course...",
-      category: "Productivity",
-      price: 14,
-      rating: 5,
-      students: 357.914,
-      instructor: "Kevin Gilbert",
-    },
-    {
-      id: 4,
-      thumbnail: "/images/course-img-4.png",
-      name: "Investing In Stocks The Complete Course...",
-      category: "Music",
-      price: 14,
-      rating: 5,
-      students: 357.914,
-      instructor: "Kevin Gilbert",
-    },
-  ];
+interface Props {
+  courses: CourseTypes[];
+}
 
+const FeaturedCourses = ({ courses }: Props) => {
   return (
     <section className="bg-base-100 border-base-300 container mx-auto -mt-32 border">
       <div className="p-8 md:p-16">
@@ -59,9 +22,9 @@ const FeaturedCourses = () => {
           </p>
         </div>
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {courses.map((course) => (
+          {courses.map((course: CourseTypes) => (
             <div
-              key={course.id}
+              key={course.title}
               className="border-base-300 flex flex-col border text-sm transition-all duration-300 hover:shadow-lg md:flex-row"
             >
               <Image
@@ -74,7 +37,9 @@ const FeaturedCourses = () => {
               <div className="flex w-full flex-col">
                 <div className="space-y-2 p-4">
                   <div className="flex flex-row items-center justify-between">
-                    <p className="bg-base-300 p-1 text-xs">{course.category}</p>
+                    <p className="bg-base-300 p-1 text-xs">
+                      {course.category.name}
+                    </p>
                     <div className="flex flex-row items-center gap-2">
                       <p>${course.price}</p>
                       <p className="text-base-content/50 line-through">
@@ -82,7 +47,7 @@ const FeaturedCourses = () => {
                       </p>
                     </div>
                   </div>
-                  <p className="font-bold"> {course.name} </p>
+                  <p className="font-bold"> {course.title} </p>
                   <div className="flex flex-row items-center justify-between">
                     <div className="flex flex-row items-center gap-2">
                       <Image
@@ -92,8 +57,9 @@ const FeaturedCourses = () => {
                         height={30}
                       />
                       <p className="text-base-content/70">
-                        {" "}
-                        {course.instructor}{" "}
+                        {course.instructors.map(
+                          (instructor) => instructor.name
+                        )}
                       </p>
                     </div>
                     <div className="flex flex-row items-center gap-1 text-xs">
@@ -103,7 +69,7 @@ const FeaturedCourses = () => {
                         className="text-primary"
                         icon="ph:star-fill"
                       />
-                      {course.rating}
+                      {course.rating}5
                       <span className="text-base-content/70 ml-1">
                         (357,914)
                       </span>
@@ -118,7 +84,7 @@ const FeaturedCourses = () => {
                       height="20"
                       className="text-secondary"
                     />
-                    {course.students}K
+                    {course.studentsCount}K
                     <span className="text-base-content/70 ml-1">student</span>
                   </div>
                   <div className="flex flex-row items-center gap-1">
@@ -128,7 +94,7 @@ const FeaturedCourses = () => {
                       height="20"
                       className="text-error"
                     />
-                    Beginner
+                    {course.level}
                   </div>
                   <div className="flex flex-row items-center gap-1">
                     <Icon
@@ -137,7 +103,7 @@ const FeaturedCourses = () => {
                       height="20"
                       className="text-success"
                     />
-                    6 hour
+                    {course.duration} {course.durationUnit}
                   </div>
                 </div>
               </div>

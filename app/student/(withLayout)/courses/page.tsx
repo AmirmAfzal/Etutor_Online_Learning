@@ -9,8 +9,6 @@ import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 
-// Temporary logging for debugging
-
 interface CourseData {
   _id: string;
   title: string;
@@ -55,6 +53,7 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
         : {},
     })
     .lean<Student | null>();
+
   if (!student) {
     return redirect("/auth/signin");
   }
@@ -72,20 +71,27 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
 
   return (
     <>
-      <div className="mb-6 flex flex-col gap-4">
-        <div className="text-base-content/80 mb-4 text-xl font-semibold">
-          Courses
-          <span className="text-base-content/80">{`(${mappedCourses.length})`}</span>
+      <div className="mb-6 space-y-4">
+        <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <h2 className="text-base-content text-lg font-semibold sm:text-xl">
+              Courses
+            </h2>
+            <span className="text-base-content/60 text-sm sm:text-base">
+              ({mappedCourses.length})
+            </span>
+          </div>
         </div>
-        <div className="flex flex-row gap-2">
-          <div className="flex flex-1 items-center gap-2">
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-1">
             <Search action="/student/courses" />
           </div>
           <CoursesSelect />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {mappedCourses.map((course) => (
           <CourseCard
             key={course.id}

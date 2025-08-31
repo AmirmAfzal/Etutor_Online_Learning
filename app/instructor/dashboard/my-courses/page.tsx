@@ -16,16 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-type Course = {
-  id: number;
-  thumbnail: string;
-  name: string;
-  category: string;
-  price: number;
-  rating: number;
-  students: number;
-};
+import { connectDB } from "@/lib/db/db";
+import courseModel from "@/lib/db/models/courseModel";
+import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
+import MyCoursesPagination from "@/components/instructor-dashboard/my-courses/MyCoursesPagination";
 
 interface Props {
   searchParams: Promise<{
@@ -37,98 +31,11 @@ interface Props {
 }
 
 const MyCoursesPage = async (props: Props) => {
-  const courses: Course[] = [
-    {
-      id: 1,
-      thumbnail: "/images/course-images-1.png",
-      name: "Machine Learning A-Z™: Hands-On Python & R In Data...",
-      category: "Design",
-      price: 57,
-      rating: 4.8,
-      students: 265.7,
-    },
-    {
-      id: 2,
-      thumbnail: "/images/course-images-2.png",
-      name: "The Complete 2021 Web Development Bootcamp",
-      category: "Developments",
-      price: 24,
-      rating: 4.7,
-      students: 265.7,
-    },
-    {
-      id: 3,
-      thumbnail: "/images/course-images-3.png",
-      name: "Learn Python Programming Masterclass",
-      category: "Business",
-      price: 12,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      id: 4,
-      thumbnail: "/images/course-images-4.png",
-      name: "The Complete Digital Marketing Course - 12 Courses in 1",
-      category: "Marketing",
-      price: 32,
-      rating: 4.5,
-      students: 265.7,
-    },
-    {
-      id: 5,
-      thumbnail: "/images/course-images-5.png",
-      name: "Reiki Level I, II and Master/Teacher Program",
-      category: "IT & Software",
-      price: 16,
-      rating: 4.4,
-      students: 265.7,
-    },
-    {
-      id: 6,
-      thumbnail: "/images/course-images-6.png",
-      name: "The Complete Foundation Stock Trading Course",
-      category: "Music",
-      price: 28,
-      rating: 4.3,
-      students: 265.7,
-    },
-    {
-      id: 7,
-      thumbnail: "/images/course-images-7.png",
-      name: "Beginner to Pro in Excel: Financial Modeling and Valuati...",
-      category: "Marketing",
-      price: 38,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      id: 8,
-      thumbnail: "/images/course-images-8.png",
-      name: "The Python Mega Course: Build 10 Real World Applications",
-      category: "Health & Fitness",
-      price: 89,
-      rating: 4.1,
-      students: 265.7,
-    },
-    {
-      id: 9,
-      thumbnail: "/images/course-images-9.png",
-      name: "Copywriting - Become a Freelance Copywriter, your ow...",
-      category: "Design",
-      price: 56,
-      rating: 4.0,
-      students: 265.7,
-    },
-    {
-      id: 10,
-      thumbnail: "/images/course-images-10.png",
-      name: "Google Analytics Certification - Learn How To Pass The Exam",
-      category: "Lifestyle",
-      price: 45,
-      rating: 5,
-      students: 265.7,
-    },
-  ];
+  await connectDB();
+  const courses = await courseModel
+    .find()
+    .populate("category", "name")
+    .sort({ createdAt: -1 });
 
   const searchParams = await props.searchParams;
   const search = searchParams.search?.toLowerCase() || "";
@@ -138,12 +45,12 @@ const MyCoursesPage = async (props: Props) => {
 
   const filteredCourses = courses
     .filter((course) => {
-      const matchSearch = course.name.toLowerCase().includes(search);
+      const matchSearch = course.title?.toLowerCase().includes(search);
       const matchCategory =
         category === "all" ||
-        course.category.toLowerCase() === category.toLowerCase();
-      const matchRating = course.rating >= +rating;
-      return matchSearch && matchCategory && matchRating;
+        course.category.name?.toLowerCase() === category.toLowerCase();
+      // const matchRating = course.rating >= +rating;
+      return matchSearch && matchCategory;
     })
     .sort((a, b) => {
       if (sort === "latest") return b.id - a.id;
@@ -155,10 +62,10 @@ const MyCoursesPage = async (props: Props) => {
     <section className="bg-base-200 p-6">
       <div className="container mx-auto">
         <form
-          action={"/instructor/dashboard/my-courses"}
-          className="flex flex-row items-center justify-between gap-6"
+          action={"/instructor/dashboard/my-courses?page=1"}
+          className="grid grid-cols-1 gap-6 md:grid-cols-5"
         >
-          <div className="relative">
+          <div className="relative md:col-span-2">
             <label
               htmlFor="search"
               className="text-base-content/80 mb-2 text-xs"
@@ -174,7 +81,7 @@ const MyCoursesPage = async (props: Props) => {
             <Input
               type="text"
               name="search"
-              className="bg-base-100 min-w-lg pl-12"
+              className="bg-base-100 pl-12"
               placeholder="Search in your courses..."
               defaultValue={search}
             />
@@ -241,26 +148,26 @@ const MyCoursesPage = async (props: Props) => {
           <button type="submit" hidden />
         </form>
 
-        <div className="mt-6 grid grid-cols-4 gap-6">
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4">
           {filteredCourses.map((course) => (
             <div
-              key={course.name}
+              key={course._id}
               className="bg-base-100 transition-all duration-300 hover:shadow-lg"
             >
               <Image
                 src={course.thumbnail}
-                alt="course image"
+                alt={course.title}
                 width={400}
                 height={200}
               />
               <div className="space-y-4 p-4">
                 <div>
-                  <span className="bg-base-200 p-1 text-xs">
-                    {course.category}
+                  <span className="bg-secondary/20 text-secondary p-1 text-xs">
+                    {course.category.name.toUpperCase()}
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold">{course.name}</p>
+                  <p className="text-sm font-bold">{course.title}</p>
                 </div>
               </div>
               <div className="border-base-300 flex flex-row items-center justify-between border-t p-4 text-xs">
@@ -271,7 +178,8 @@ const MyCoursesPage = async (props: Props) => {
                     width="20"
                     height="20"
                   />
-                  {course.rating}
+                  {/* {course.rating} */}
+                  4.8
                 </div>
                 <div className="flex flex-row items-center gap-1 font-semibold">
                   <Icon
@@ -280,7 +188,7 @@ const MyCoursesPage = async (props: Props) => {
                     width="20"
                     height="20"
                   />
-                  <p>{course.students}</p>
+                  <p>{course.studentsCount}</p>
                   <span className="text-base-content/80 font-normal">
                     student
                   </span>
@@ -288,7 +196,8 @@ const MyCoursesPage = async (props: Props) => {
               </div>
               <div className="border-base-300 flex flex-row items-center justify-between border-t p-4">
                 <p className="text-primary text-lg font-bold">
-                  ${course.price}.00
+                  {/* ${course.price}.00 */}
+                  $57.00
                 </p>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -303,22 +212,30 @@ const MyCoursesPage = async (props: Props) => {
                   <DropdownMenuContent>
                     <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
                       <Link
-                        href={`/instructor/dashboard/my-courses/${course.id}`}
+                        href={`/instructor/dashboard/my-courses/${course._id}`}
                       >
                         View Details
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
-                      <button>Edit Course</button>
+                      <Link
+                        href={`/instructor/dashboard/create-course?_id=${course._id}`}
+                      >
+                        Edit Course
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
-                      <button>Delete Course</button>
+                      <DeleteButton courseId={course._id.toString()} />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             </div>
           ))}
+        </div>
+        {/* pagination */}
+        <div className="mt-4">
+          <MyCoursesPagination />
         </div>
       </div>
     </section>

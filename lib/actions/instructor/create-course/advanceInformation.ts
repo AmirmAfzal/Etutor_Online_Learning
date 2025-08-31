@@ -3,25 +3,18 @@
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import { ActionData } from "@/lib/formTypes";
-import { advanceInformationSchema } from "@/lib/validation/schemas/instructor/create-course";
+import {
+  AdvanceInformationFormData,
+  advanceInformationSchema,
+} from "@/lib/validation/schemas/instructor/create-course";
 
 export async function saveAdvanceInformation(
   prevState: ActionData,
-  formData: FormData
+  formData: AdvanceInformationFormData
 ): Promise<ActionData> {
   await connectDB();
-  const data = {
-    _id: formData.get("_id") as string,
-    description: formData.get("description") as string,
-    requirementsTopics: formData.getAll("requirementsTopics") as string[],
-    targetTopics: formData.getAll("targetTopics") as string[],
-    thumbnail: formData.get("thumbnail") as string,
-    topics: formData.getAll("topics") as string[],
-    video: formData.get("video") as string,
-  };
-  console.log(data);
 
-  const result = advanceInformationSchema.safeParse(data);
+  const result = advanceInformationSchema.safeParse(formData);
 
   if (!result.success) {
     return {
@@ -31,7 +24,7 @@ export async function saveAdvanceInformation(
   }
 
   try {
-    const foundCourse = await courseModel.findOne({ _id: data._id });
+    const foundCourse = await courseModel.findOne({ _id: formData._id });
     console.log(foundCourse);
     if (!foundCourse)
       return {
@@ -39,15 +32,15 @@ export async function saveAdvanceInformation(
         errors: ["Course not found"],
       };
     const updatedCourse = await courseModel.findOneAndUpdate(
-      { _id: data._id },
+      { _id: formData._id },
       {
         $set: {
-          description: data.description,
-          requirements: data.requirementsTopics,
-          targetAudience: data.targetTopics,
-          trailer: data.video,
-          thumbnail: data.thumbnail,
-          learningOutcomes: data.topics,
+          description: formData.description,
+          requirements: formData.requirements,
+          targetAudience: formData.targetAudience,
+          trailer: formData.video,
+          thumbnail: formData.thumbnail,
+          learningOutcomes: formData.learningOutcomes,
         },
       }
     );

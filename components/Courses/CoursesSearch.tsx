@@ -1,6 +1,8 @@
 import Form from "next/form";
-import Icon from "../ui/Icon";
+
 import { Input } from "@/components/ui/input";
+
+import Icon from "../ui/Icon";
 
 const CoursesSearch = () => {
   return (

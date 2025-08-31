@@ -13,6 +13,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import ErrorMessage from "@/components/ErrorMessage";
 
 import VideoUploaderModal, {
   formatDuration,
@@ -53,7 +54,10 @@ const initialState = {
 export type ModalType = "video" | "file" | "caption" | "description" | "note";
 
 const Curriculum = ({ onNext, onBack, course }: Props) => {
-  const [state, formAction] = useActionState(saveCurriculum, initialState);
+  const [state, formAction, pending] = useActionState(
+    saveCurriculum,
+    initialState
+  );
   const [sections, setSections] = useState<Section[]>([
     {
       id: 1,
@@ -256,7 +260,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
 
   return (
     <div>
-      <div className="border-base-300 flex flex-row items-center justify-between border-t border-b p-4">
+      <div className="border-base-300 flex flex-col items-center justify-between gap-2 border-y p-4 md:flex-row">
         <h2 className="text-xl font-bold">Curriculum</h2>
         <div>
           <button className="btn btn-primary btn-soft mr-4">Save</button>
@@ -274,10 +278,12 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
               <div className="mb-2 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Icon icon="ph:list" width="20" height="20" />
-                  <span className="font-semibold">
-                    Sections {String(index + 1).padStart(2, "0")}:
-                  </span>
-                  <span>{section.name}</span>
+                  <div className="flex flex-col gap-1 md:flex-row">
+                    <span className="font-semibold">
+                      Sections {String(index + 1).padStart(2, "0")}:
+                    </span>
+                    <span>{section.name}</span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <button onClick={() => addLecture(section.id)}>
@@ -321,7 +327,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                           {editingLecture &&
                           editingLecture.sectionId === section.id &&
                           editingLecture.lectureId === lecture.id ? (
-                            <>
+                            <div className="flex flex-col gap-2 md:flex-row">
                               <Input
                                 type="text"
                                 value={editingLecture.draft}
@@ -331,25 +337,27 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                                     draft: e.target.value,
                                   })
                                 }
-                                className="w-48"
+                                className="md:48 w-34"
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") saveLectureName();
                                   if (e.key === "Escape") cancelLectureEdit();
                                 }}
                               />
-                              <button
-                                className="btn btn-primary btn-xs ml-2"
-                                onClick={saveLectureName}
-                              >
-                                Save
-                              </button>
-                              <button
-                                className="btn btn-ghost btn-xs ml-1"
-                                onClick={cancelLectureEdit}
-                              >
-                                Cancel
-                              </button>
-                            </>
+                              <div className="">
+                                <button
+                                  className="btn btn-primary btn-xs ml-2"
+                                  onClick={saveLectureName}
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  className="btn btn-ghost btn-xs ml-1"
+                                  onClick={cancelLectureEdit}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
                           ) : (
                             <span className="text-base-content/70 text-sm">
                               {lecture.name} {index + 1}
@@ -393,7 +401,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                       <div className="bg-base-100 border-base-200 flex flex-col gap-6 border-t-2 p-4">
                         <div>
                           {lecture.videoUrl ? (
-                            <div className="flex flex-row gap-4">
+                            <div className="flex flex-col gap-4 md:flex-row">
                               <video controls className="w-55 rounded-lg">
                                 <source src={video?.secure_url} />
                                 <track kind="captions" />
@@ -560,10 +568,25 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
         <button className="btn btn-outline" type="button" onClick={onBack}>
           Previous
         </button>
-        <button type="submit" onClick={sendData} className="btn btn-primary">
+
+        <button
+          type="submit"
+          disabled={pending}
+          onClick={sendData}
+          className="btn btn-primary"
+        >
+          {pending && <div className="loading loading-spinner" />}
           Save & Next
         </button>
       </div>
+      {state.message === "ERROR" && (
+        <div className="p-4">
+          <ErrorMessage
+            title="Error saving curriculum:"
+            errors={state.errors}
+          />
+        </div>
+      )}
 
       {videoOpenModal && activeLecture && (
         <VideoUploaderModal

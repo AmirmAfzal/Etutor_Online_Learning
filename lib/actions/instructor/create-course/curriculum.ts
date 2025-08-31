@@ -26,24 +26,22 @@ export async function saveCurriculum(
   const foundCourse = await courseModel.findOne({ _id: formData.courseId });
 
   try {
-    for (const section of result.data) {
-      console.log(section);
+    const sectionIds: string[] = [];
 
-      // Create section first
+    for (const section of result.data) {
       const createdSection = await sectionModel.create({
         title: section.name,
-        description: section.name, // You might want to add a description field to your Section interface
-        lectures: [], // Will be populated after creating lectures
+        description: section.name,
+        lectures: [],
         course: foundCourse?._id,
         duration: 0,
       });
 
+      sectionIds.push(createdSection._id);
+
       const lectureIds: string[] = [];
 
-      // Create lectures with section ID
-      console.log("section.lectures", section.lectures);
       for (const lecture of section.lectures) {
-        console.log("lecture", lecture);
         const createdLecture = await lectureModel.create({
           title: lecture.name,
           description: lecture.description || "",
@@ -54,14 +52,18 @@ export async function saveCurriculum(
           caption: lecture.captions || "",
           section: createdSection._id,
         });
-        console.log("createdLecture", createdLecture);
 
         lectureIds.push(createdLecture._id);
       }
 
-      // Update section with lecture IDs
       await sectionModel.findByIdAndUpdate(createdSection._id, {
         lectures: lectureIds,
+      });
+    }
+
+    if (foundCourse) {
+      await courseModel.findByIdAndUpdate(foundCourse._id, {
+        sections: sectionIds,
       });
     }
 

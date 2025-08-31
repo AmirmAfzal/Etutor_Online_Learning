@@ -1,11 +1,13 @@
 "use client";
 import React, { useActionState, useEffect, useState } from "react";
-import Icon from "../ui/Icon";
-import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
-import Form from "next/form";
-import { actionBuyNow } from "@/lib/actions/courses/buyNow";
 import Link from "next/link";
+import Form from "next/form";
+
+import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
+import { actionBuyNow } from "@/lib/actions/courses/buyNow";
 import CoursesLoading from "@/app/courses/loading";
+
+import Icon from "../ui/Icon";
 
 type SidebarCartProps = {
   fakeSidebarCart: {

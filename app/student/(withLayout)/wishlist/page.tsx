@@ -39,6 +39,7 @@ const WishlistPage = async () => {
     .findOne({ user: session.user.id })
     .populate<{ courses: CourseData[] }>("wishlist")
     .lean<Student | null>();
+
   if (!student) {
     return redirect("/auth/signin");
   }
@@ -46,7 +47,7 @@ const WishlistPage = async () => {
   const wishlistCourses: CourseData[] = student.wishlist || [];
 
   const courses = wishlistCourses.map((course) => ({
-    id: course._id.toString(), // Ensure id is a string
+    id: course._id.toString(),
     title: course.title,
     image: course.thumbnail,
     instructors: Array.isArray(course.author)
@@ -60,31 +61,42 @@ const WishlistPage = async () => {
 
   return (
     <>
-      <div className="mb-8">
-        <div className="text-base-content/80 mb-8 text-3xl font-bold">
+      <div className="mb-6 sm:mb-8">
+        <div className="text-base-content/80 mb-3 flex flex-wrap gap-2 text-xl font-bold sm:mb-4 sm:text-3xl">
           Wishlist
-          <span className="text-base-content/60">({courses.length})</span>
+          <span className="text-base-content/60 text-base sm:text-xl">
+            ({courses.length})
+          </span>
         </div>
       </div>
 
       {courses.length === 0 ? (
-        <div className="text-base-content/60 flex h-64 w-full flex-col items-center justify-center gap-4 text-center">
-          <Icon icon="ph:heart" className="text-6xl" />
-          <div className="text-xl font-semibold">Your wishlist is empty</div>
-          <div className="text-base-content/50 text-sm">
+        <div className="text-base-content/60 flex h-64 w-full flex-col items-center justify-center gap-4 p-4 text-center">
+          <Icon icon="ph:heart" className="text-5xl sm:text-6xl" />
+          <div className="text-lg font-semibold sm:text-xl">
+            Your wishlist is empty
+          </div>
+          <div className="text-base-content/50 max-w-sm text-sm leading-relaxed sm:text-base">
             Start adding courses to your wishlist to save them for later
           </div>
-          <Link href="/student/courses" className="btn btn-primary btn-sm">
+          <Link
+            href="/student/courses"
+            className="btn btn-primary btn-sm sm:btn-md"
+          >
             Browse Courses
           </Link>
         </div>
       ) : (
-        <div className="bg-base-100 border-base-content/10 border">
-          <div className="border-base-content/10 bg-base-100 border-b px-8 py-5">
-            <div className="text-base-content/70 grid grid-cols-12 gap-4 text-base font-medium">
-              <div className="col-span-6">COURSE</div>
-              <div className="col-span-1 text-center">PRICES</div>
-              <div className="col-span-4 text-center">ACTION</div>
+        <div className="bg-base-100 border-base-content/10 overflow-hidden border">
+          <div className="border-base-content/10 bg-base-100 hidden border-b px-4 py-3 sm:block sm:px-8 sm:py-4">
+            <div className="text-base-content/70 grid grid-cols-12 gap-2 text-sm font-medium sm:gap-4 sm:text-base">
+              <div className="col-span-12 sm:col-span-6">COURSE</div>
+              <div className="hidden text-center sm:col-span-1 sm:block">
+                PRICE
+              </div>
+              <div className="hidden text-center sm:col-span-4 sm:block">
+                ACTION
+              </div>
             </div>
           </div>
 

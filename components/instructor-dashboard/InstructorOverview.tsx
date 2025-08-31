@@ -62,7 +62,7 @@ const InstructorOverview = () => {
     },
   ];
   return (
-    <div className="container mx-auto grid grid-cols-4 gap-6">
+    <div className="container mx-auto grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
       {overviewData.map((data) => (
         <div
           key={data.name}
@@ -80,7 +80,7 @@ const InstructorOverview = () => {
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-semibold">{data.value}</p>
-            <p className="text-base-content/80 text-xs">{data.name} Courses</p>
+            <p className="text-base-content/80 text-xs">{data.name}</p>
           </div>
         </div>
       ))}

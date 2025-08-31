@@ -1,7 +1,6 @@
-import Icon from "@/components/ui/Icon";
+import React from "react";
 import Link from "next/link";
 
-import React from "react";
 import CoursesSearch from "@/components/Courses/CoursesSearch";
 import CoursesSelect from "@/components/Courses/CoursesSelect";
 import CourseFilter from "@/components/Courses/CourseFilter";
@@ -9,6 +8,7 @@ import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import CourseCard from "@/components/Student/CourseCard";
 import FilterMobile from "@/components/Courses/courseFilter/FilterMobile";
+import Icon from "@/components/ui/Icon";
 
 interface Course {
   id?: string;

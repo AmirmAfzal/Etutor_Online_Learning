@@ -1,7 +1,11 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useState } from "react";
-import { CldImage, CldUploadButton, CloudinaryUploadWidgetResults } from "next-cloudinary";
+import {
+  CldImage,
+  CldUploadButton,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -28,6 +32,7 @@ import {
   accountSettingSchema,
 } from "@/lib/validation/schemas/instructor/settings/accountSettings";
 import { saveAccountSettings } from "@/lib/actions/instructor/settings/accountSettings";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const initialState = {
   message: "",
@@ -37,7 +42,10 @@ const initialState = {
 const AccountSettings = () => {
   const [title, setTitle] = useState<string>("");
 
-  const [state, formAction] = useActionState(saveAccountSettings, initialState);
+  const [state, formAction, pending] = useActionState(
+    saveAccountSettings,
+    initialState
+  );
 
   const form = useForm<AccountSettingFormData>({
     resolver: zodResolver(accountSettingSchema),
@@ -73,12 +81,15 @@ const AccountSettings = () => {
 
   return (
     <section className="bg-base-100 container mx-auto p-6">
+      <h3 className="text-2xl font-bold">Account Settings</h3>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(submitHandler)} className="space-y-6">
-          <div className="flex flex-row gap-4">
+        <form
+          onSubmit={form.handleSubmit(submitHandler)}
+          className="mt-6 space-y-6"
+        >
+          <div className="flex flex-col-reverse items-center gap-4 md:flex-row">
             <div className="w-full space-y-6">
-              <h3 className="text-2xl font-bold">Account Settings</h3>
-              <div className="flex flex-row items-end gap-4">
+              <div className="flex flex-col items-end gap-4 md:flex-row">
                 <FormField
                   control={form.control}
                   name="firstName"
@@ -171,8 +182,8 @@ const AccountSettings = () => {
                       src={form.watch("profile") || ""}
                       width="500"
                       height="500"
-                      className="h-48"
-                      alt="uploade image"
+                      className="h-48 w-full object-cover"
+                      alt="uploaded image"
                       crop={{
                         type: "auto",
                         source: true,
@@ -187,6 +198,10 @@ const AccountSettings = () => {
                     sources: ["local"],
                     multiple: false,
                     resourceType: "image",
+                    maxFileSize: 1048576, // 1MB
+                    clientAllowedFormats: ["jpg", "jpeg", "png"],
+                    maxImageWidth: 500,
+                    maxImageHeight: 500,
                   }}
                   onSuccess={(result: CloudinaryUploadWidgetResults) => {
                     if (
@@ -194,18 +209,24 @@ const AccountSettings = () => {
                       typeof result.info === "object" &&
                       "secure_url" in result.info
                     ) {
-                      form.setValue("profile", result.info.secure_url);
+                      form.setValue(
+                        "profile",
+                        (result.info as { secure_url: string }).secure_url
+                      );
                     }
+                  }}
+                  onError={(error) => {
+                    console.error("Upload error:", error);
                   }}
                 >
                   <span className="flex flex-row items-center gap-4">
                     <Icon icon="ph:upload-simple" width="24" height="24" />
-                    Upload Photo
+                    Upload Profile
                   </span>
                 </CldUploadButton>
               </div>
               <p className="text-base-content/60 text-xs">
-                Image size should be under 1MB and image ration needs to be 1:1
+                Image size should be under 1MB and image ratio needs to be 1:1
               </p>
             </div>
           </div>
@@ -219,12 +240,12 @@ const AccountSettings = () => {
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Your tittle, proffesion or small biography"
+                      placeholder="Your title, profession or small biography"
                       maxLength={50}
                       value={title}
                       onChange={(e) => {
                         setTitle(e.target.value);
-                        form.setValue("title", title);
+                        form.setValue("title", e.target.value);
                       }}
                     />
                     <span className="text-base-content/60 absolute top-2 right-2">
@@ -246,15 +267,20 @@ const AccountSettings = () => {
                   <Textarea
                     {...field}
                     className="min-h-32"
-                    placeholder="Your tittle, proffesion or small biography"
+                    placeholder="Your title, profession or small biography"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="flex flex-row items-center gap-6">
-            <button className="btn btn-primary" type="submit">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center">
+            <button
+              type="submit"
+              disabled={pending}
+              className="btn btn-primary"
+            >
+              {pending && <div className="loading loading-spinner" />}
               Save Changes
             </button>
             {state.message === "SUCCESS" && (
@@ -263,6 +289,12 @@ const AccountSettings = () => {
               </div>
             )}
           </div>
+          {state.message === "ERROR" && (
+            <ErrorMessage
+              title="Error saving Account settings:"
+              errors={state.errors}
+            />
+          )}
         </form>
       </Form>
     </section>

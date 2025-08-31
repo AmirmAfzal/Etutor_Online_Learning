@@ -1,8 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import Icon from "@/components/ui/Icon";
 import { FC, useState } from "react";
+import Image from "next/image";
+
+import Icon from "@/components/ui/Icon";
+
 import TruncatedText from "../TruncatedText";
 
 type Comment = {
