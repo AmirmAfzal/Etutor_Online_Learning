@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 import { CourseTypes } from "@/app/page";
+
 import Icon from "./ui/Icon";
 
 interface Props {
