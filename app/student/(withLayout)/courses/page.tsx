@@ -10,6 +10,7 @@ import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 
 interface CourseData {
+  id?: string;
   _id: string;
   title: string;
   subtitle: string;
@@ -94,6 +95,7 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {mappedCourses.map((course) => (
           <CourseCard
+            id={course.id}
             key={course.id}
             title={course.name}
             subtitle={course.subtitle}

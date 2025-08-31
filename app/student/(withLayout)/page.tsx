@@ -9,6 +9,8 @@ import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 
 interface CourseData {
+  id?: string;
+  _id: string;
   title: string;
   subtitle: string;
   image: string;
@@ -41,6 +43,7 @@ const StudentDashboard = async () => {
   }
 
   const courses = (student.courses || []).map((course) => ({
+    id: course._id,
     title: course.title,
     subtitle: course.subtitle,
     image: course.thumbnail || "/images/course-images-01.png",

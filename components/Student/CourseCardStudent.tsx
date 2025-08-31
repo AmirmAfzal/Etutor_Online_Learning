@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface CourseCardProps {
+  id: string;
   title: string;
   subtitle: string;
   image: string;
@@ -13,9 +15,13 @@ const CourseCard: React.FC<CourseCardProps> = ({
   subtitle,
   image,
   progress,
+  id,
 }) => {
   return (
-    <div className="bg-base-100 border-base-content/10 flex h-full min-w-[220px] flex-col border-1 transition-all duration-300 hover:translate-y-[-2px] sm:min-w-0">
+    <Link
+      href={`/courses/${id}/watch`}
+      className="bg-base-100 border-base-content/10 flex h-full min-w-[220px] flex-col border-1 transition-all duration-300 hover:translate-y-[-2px] sm:min-w-0"
+    >
       {image ? (
         <Image
           src={image}
@@ -55,7 +61,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
           </button>
         )}
       </div>
-    </div>
+    </Link>
   );
 };
 
