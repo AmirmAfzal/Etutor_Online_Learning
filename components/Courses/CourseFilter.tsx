@@ -1,5 +1,5 @@
 import Categories from "./courseFilter/Categories";
-import Tools from "./courseFilter/Tools";
+// import Tools from "./courseFilter/Tools";
 import Rating from "./courseFilter/Rating";
 import CourseLevel from "./courseFilter/CourseLevel";
 import PriceSelect from "./courseFilter/PriceSelect";
@@ -36,12 +36,12 @@ interface Props {
 }
 
 // Static data for other filters
-const tools = {
-  "HTML 5": 1234,
-  "GOLANG ": 1234,
-  "CSS 3": 1234,
-  "Node.js": 8454,
-};
+// const tools = {
+//   "HTML 5": 1234,
+//   "GOLANG ": 1234,
+//   "CSS 3": 1234,
+//   "Node.js": 8454,
+// };
 
 const CourseFilter = async (props: Props) => {
   await connectDB();
@@ -122,7 +122,7 @@ const CourseFilter = async (props: Props) => {
   return (
     <aside className="border-base-300 bg-base-100 mt-8 w-full !space-y-1.5 md:mt-0 md:w-5/12 md:border-r md:p-4">
       <Categories categories={categories} />
-      <Tools tools={tools} />
+      {/* <Tools tools={tools} /> */}
       <Rating
         searchParams={Promise.resolve(searchParams)}
         courseRating={rating}

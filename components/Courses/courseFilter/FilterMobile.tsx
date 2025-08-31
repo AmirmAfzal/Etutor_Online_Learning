@@ -4,12 +4,10 @@ import Icon from "@/components/ui/Icon";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import CourseFilter from "../CourseFilter";
 import { useState } from "react";
 
 interface Props {
@@ -32,7 +30,6 @@ interface Props {
 const FilterMobile = ({ searchParams, children }: Props) => {
   const [open, setIsOpen] = useState(false);
 
-  // The searchParams is now a regular object, not a promise
   const isFilterPanelVisible = searchParams.filter === "true";
 
   const filterUrl = new URLSearchParams(searchParams);
@@ -48,26 +45,28 @@ const FilterMobile = ({ searchParams, children }: Props) => {
 
   return (
     <Sheet open={open} onOpenChange={setIsOpen}>
-      <SheetTrigger className="bg-base-100 border-primary text-primary flex flex-row items-center gap-2 rounded-none border p-2 md:hidden">
+      <SheetTrigger className="bg-base-100 border-primary text-primary flex w-2/5 flex-row items-center justify-between gap-2 rounded-none border p-2 md:hidden">
         <Icon icon="ph:faders-fill" className="text-xl" />
         <span className="text-sm">Filter</span>
         <span className="text-primary bg-primary/10 px-2">
+          {/* FIXME : fix number of filtering */}
           {isFilterPanelVisible ? "1" : "0"}
         </span>
       </SheetTrigger>
-      <SheetContent className="overflow-y-scroll">
+      <SheetContent className="overflow-y-scroll pl-4">
         <SheetHeader>
           <SheetTitle>Courses Filter</SheetTitle>
-          <SheetDescription className="flex flex-col items-center justify-between">
-            {children}
-            <button
-              onClick={handleClick}
-              className="btn btn-primary z-50 mt-8 w-full font-bold shadow-lg"
-            >
-              Done
-            </button>
-          </SheetDescription>
         </SheetHeader>
+
+        <div className="flex flex-col items-center justify-between">
+          {children}
+          <button
+            onClick={handleClick}
+            className="btn btn-primary z-50 mt-8 w-full font-bold shadow-lg"
+          >
+            Done
+          </button>
+        </div>
       </SheetContent>
     </Sheet>
   );

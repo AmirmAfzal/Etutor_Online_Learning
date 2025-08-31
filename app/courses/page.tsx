@@ -179,7 +179,7 @@ const CoursesPage = async (props: Props) => {
           <CourseFilter searchParams={Promise.resolve(searchParams)} />
         )}
         <div
-          className={`grid w-full grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:${
+          className={`grid w-full grid-cols-1 gap-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:${
             isFilterPanelVisible ? "grid-cols-3" : "grid-cols-4"
           }`}
         >

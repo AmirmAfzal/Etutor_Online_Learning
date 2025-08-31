@@ -103,7 +103,7 @@ const Rating = async (props: Props) => {
   return (
     <Accordion
       type="single"
-      defaultValue="rating"
+      // defaultValue="rating"
       collapsible
       className="border-base-300 mt-4 border"
     >
