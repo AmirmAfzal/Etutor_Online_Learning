@@ -14,6 +14,8 @@ export const basicInformationSchema = z.object({
   category: z.string().min(1, "Category is required"),
   subCategory: z.string().min(1, "SubCategory is required"),
   topic: z.string().min(1, "Topic is required"),
+  tools: z.array(z.string()).min(1, "Tools are required"),
+  price: z.number().min(0, "Price is required"),
   language: z.string().min(1, "Language is required"),
   subtitleLang: z.string().optional(),
   level: z.string().min(1, "Level is required"),

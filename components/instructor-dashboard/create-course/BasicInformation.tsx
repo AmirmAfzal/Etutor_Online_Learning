@@ -40,9 +40,19 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { MultiSelect } from "@/components/ui/multi-select";
 
-// Use the imported schema type
-type FormField = BasicInformationFormData;
+const toolOptions = [
+  { value: "html", label: "HTML" },
+  { value: "css", label: "CSS" },
+  { value: "javascript", label: "JAVASCRIPT" },
+  { value: "react", label: "REACT" },
+  { value: "nodejs", label: "NODE.JS" },
+  { value: "mongodb", label: "MONGODB" },
+  { value: "sql", label: "SQL" },
+  { value: "python", label: "PYTHON" },
+  { value: "java", label: "JAVA" },
+];
 
 interface Props {
   onNext: () => void;
@@ -60,12 +70,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
   const categoryName = (() => {
     if (!course) return "";
     const value = course.category;
-    if (
-      value &&
-      typeof value === "object" &&
-      "name" in value &&
-      value.name
-    ) {
+    if (value && typeof value === "object" && "name" in value && value.name) {
       return value.name as string;
     }
     return "";
@@ -74,18 +79,13 @@ const BasicInformation = ({ onNext, course }: Props) => {
   const subCategoryName = (() => {
     if (!course) return "";
     const value = course.subCategory;
-    if (
-      value &&
-      typeof value === "object" &&
-      "name" in value &&
-      value.name
-    ) {
+    if (value && typeof value === "object" && "name" in value && value.name) {
       return value.name as string;
     }
     return "";
   })();
 
-  const form = useForm<FormField>({
+  const form = useForm<BasicInformationFormData>({
     resolver: zodResolver(basicInformationSchema),
     defaultValues: {
       _id: typeof course?._id === "string" ? course._id : "",
@@ -94,6 +94,8 @@ const BasicInformation = ({ onNext, course }: Props) => {
       category: categoryName,
       subCategory: subCategoryName,
       topic: course?.topic || "",
+      tools: course?.tools || [],
+      price: course?.price || 0,
       language: course?.language || "",
       subtitleLang: course?.subtitleLanguage || "",
       level: course?.level || "",
@@ -124,7 +126,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
   //   saveAndPreviewBasicInformation,
   //   initialState
   // );
-  const handleSubmit = async (data: BasicInformationFormData) => {
+  const handleSubmit = (data: BasicInformationFormData) => {
     startTransition(() => {
       formAction(data);
     });
@@ -366,6 +368,49 @@ const BasicInformation = ({ onNext, course }: Props) => {
                 </FormItem>
               )}
             />
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="tools"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Course Tools</FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        options={toolOptions}
+                        selected={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Select..."
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Course Price</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Price"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : undefined
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {/* Language, Subtitle Language, Level, Duration */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
