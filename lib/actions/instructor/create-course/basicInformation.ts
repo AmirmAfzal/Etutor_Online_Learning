@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { getServerSession } from "next-auth";
 
 import { connectDB } from "@/lib/db/db";
 import categoryModel from "@/lib/db/models/categoryModel";
@@ -13,7 +14,6 @@ import {
   basicInformationSchema,
 } from "@/lib/validation/schemas/instructor/create-course";
 import { authOptions } from "@/lib/auth/authOptions";
-import { getServerSession } from "next-auth";
 import instructorModel from "@/lib/db/models/instructorModel";
 
 export async function saveBasicInformation(

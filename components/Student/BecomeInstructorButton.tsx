@@ -1,12 +1,12 @@
 "use client";
 
 import React, { startTransition, useActionState, useEffect } from "react";
+import { redirect } from "next/navigation";
 
 import { becomeInstructor } from "@/lib/actions/becomeInstructor";
 
 import Icon from "../ui/Icon";
 import { Student } from "./StudentProfile";
-import { redirect } from "next/navigation";
 
 type Props = {
   userId: string;
