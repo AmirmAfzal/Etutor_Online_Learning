@@ -20,7 +20,7 @@ const FeaturedCourses = ({ title, courses }: FeaturedCoursesProps) => {
       <h2 className="mb-6 text-center text-2xl font-semibold sm:text-3xl lg:text-4xl">
         {title}
       </h2>
-      <div className="grid w-full grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-5">
         {courses.slice(0, 5).map((course, index) => (
           <CourseCard key={index} {...course} />
         ))}

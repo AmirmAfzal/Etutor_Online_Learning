@@ -61,7 +61,7 @@ const CourseTabs = ({
 
   return (
     <Tabs defaultValue="overview" className="mt-8 w-full">
-      <TabsList className="!bg-base-100 flex gap-6">
+      <TabsList className="!bg-base-100 mt-4 flex w-full flex-row items-start justify-start gap-6 overflow-x-scroll">
         <TabsTrigger value="overview" className={tabTriggerClass}>
           Overview
         </TabsTrigger>
