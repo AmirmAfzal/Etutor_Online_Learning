@@ -4,8 +4,8 @@ import WatchPlayer from "@/components/Courses/watchCourses/WatchPlayer";
 import WatchDetails from "@/components/Courses/watchCourses/WatchDetails";
 import WatchTabs from "@/components/Courses/watchCourses/WatchTabs";
 import { connectDB } from "@/lib/db/db";
-import courseModel from "@/lib/db/models/courseModel";
 import { Types } from "mongoose";
+import sectionModel from "@/lib/db/models/sectionModel";
 
 type CurriculumItem = {
   title: string;
@@ -85,23 +85,6 @@ const courseData = {
   students: 122,
 };
 
-// students avatars rendered inside WatchDetails for simplicity
-
-const lactureData = {
-  description: `We cover everything you need to build your first website. From creating your first page through to uploading your website to the internet. We'll use the world's most popular (and free) web design tool called Visual Studio Code. There are exercise files you can download and then work along with me. At the end of each video I have a downloadable version of where we are in the process so that you can compare your project with mine. This will enable you to see easily where you might have a problem. We will delve into all the good stuff such as how to create your very own mobile burger menu from scratch learning some basic JavaScript and jQuery.
-
-If that all sounds a little too fancy - don't worry, this course is aimed at people new to web design and who have never coded before. We'll start right at the beginning and work our way through step by step. `,
-
-  note: `In ut aliquet ante. Curabitur mollis tincidunt turpis, sed aliquam mauris finibus vel. Praesent eget mi in mi maximus egestas. Mauris eget ipsum in justo bibendum pellentesque. Sed id arcu in arcu ullamcorper eleifend condimentum quis diam. Phasellus tempus, urna ut auctor mattis, nisi nunc tincidunt lorem, eu egestas augue lectus sit amet sapien. Maecenas tristique aliquet massa, a venenatis augue tempor in. Aliquam turpis urna, imperdiet in lacus a, posuere suscipit augue. , Donec congue aliquam lorem nec congue. Suspendisse eu risus mattis, interdum ante sed, fringilla urna. Praesent mattis dictum sapien a lacinia. Ut scelerisque magna aliquet, blandit arcu quis, consequat purus. Suspendisse eget scelerisque felis. Integer vulputate urna laoreet purus vehicula condimentum. Donec quis luctus quam. Curabitur quis molestie ante. Nam pharetra sagittis varius. Sed ullamcorper facilisis bibendum.`,
-  file: "",
-};
-
-interface Course {
-  title?: string;
-  section?: string;
-  duration: number;
-}
-
 const comments: Comment[] = [
   {
     name: "Theresa Webb",
@@ -141,39 +124,54 @@ const comments: Comment[] = [
 ];
 
 const convertMinutesToHoursAndMinutes = (totalMinutes: number) => {
-  // Validate that the input is a non-negative number.
   if (typeof totalMinutes !== "number" || totalMinutes < 0) {
     return "Invalid input";
   }
 
-  // Calculate the hours and remaining minutes.
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
-
-  // Build the output string based on the calculated values.
   let output = "";
 
   if (hours > 0) {
     output += `${hours}h`;
   }
-
   if (minutes > 0) {
-    // Add a comma and space if there are already hours in the string.
     if (output !== "") {
       output += ", ";
     }
     output += `${minutes}min`;
   }
-
-  // If the total time is zero, return "0min".
   if (output === "") {
     return "0min";
   }
-
   return output;
 };
 
-const WatchCourse = async ({ params }: { params: { id: string } }) => {
+interface LectureType {
+  _id: Types.ObjectId;
+  title: string;
+  description: string;
+  videoUrl: string;
+  duration: number;
+}
+interface SectionType {
+  _id: Types.ObjectId;
+  title: string;
+  lectures: LectureType[];
+}
+interface CourseType {
+  title: string;
+  duration: number;
+  sections: Types.ObjectId[];
+}
+
+const WatchCourse = async ({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: Promise<{ lectureId?: string }>;
+}) => {
   await connectDB();
   const { id } = params;
 
@@ -181,18 +179,43 @@ const WatchCourse = async ({ params }: { params: { id: string } }) => {
     return <div>Invalid Course ID</div>;
   }
 
-  const foundCourses = await courseModel.findById(id).lean<Course>();
-  console.log(foundCourses);
+  const foundSections = await sectionModel
+    .find({ course: id })
+    .populate("lectures")
+    .populate("course")
+    .lean<SectionType[]>();
+
+  if (!foundSections || foundSections.length === 0) {
+    return <div>Course not found or has no sections.</div>;
+  }
+
+  const course: CourseType = foundSections[0]?.course as CourseType;
+  const lectures: LectureType[] = foundSections.flatMap(
+    (section) => section.lectures
+  );
+
+  const { lectureId } = await searchParams;
+  const currentLecture = lectureId
+    ? lectures.find((lecture) => lecture._id.toString() === lectureId)
+    : lectures[0];
+
+  if (!currentLecture) {
+    return <div>Lecture not found. Please select a valid lecture.</div>;
+  }
+
+  const currentSection = foundSections.find((section) =>
+    section.lectures.some(
+      (l) => l._id.toString() === currentLecture._id.toString()
+    )
+  );
 
   return (
     <section className="container mx-auto w-full px-4 py-6">
       <WatchHeader
-        title={foundCourses?.title ?? "The course does not have a title"}
-        sectionsCount={foundCourses?.section?.length ?? 0}
-        lecturesCount={203}
-        totalDuration={convertMinutesToHoursAndMinutes(
-          foundCourses?.duration ?? 0
-        )}
+        title={course?.title ?? "The course does not have a title"}
+        sectionsCount={foundSections.length}
+        lecturesCount={lectures.length}
+        totalDuration={convertMinutesToHoursAndMinutes(course?.duration ?? 0)}
       />
 
       <div className="mt-6 flex w-full flex-col items-start gap-4 lg:flex-row lg:gap-6">
@@ -203,14 +226,23 @@ const WatchCourse = async ({ params }: { params: { id: string } }) => {
       </div>
 
       <WatchDetails
-        sectionNumber={courseData.section}
-        sectionTitle={courseData.sectionTitle}
+        sectionNumber={
+          currentSection
+            ? foundSections.findIndex((s) => s._id === currentSection._id) + 1
+            : 0
+        }
+        sectionTitle={currentLecture.title}
+        currentLecture={currentLecture}
         watchingStudents={courseData.students}
         commentsCount={comments.length}
       />
 
       <div className="lg:w-2/3">
-        <WatchTabs lecture={lactureData} comments={comments} />
+        <WatchTabs
+          lecture={currentLecture}
+          currentLecture={currentLecture}
+          comments={comments}
+        />
       </div>
     </section>
   );

@@ -1,27 +1,39 @@
 import Image from "next/image";
+import { Types } from "mongoose";
+
+interface Lecture {
+  _id: Types.ObjectId;
+  title: string;
+  description: string;
+  video: string;
+  duration: number;
+  file: string;
+  notes: string;
+  caption: string;
+}
 
 interface WatchDetailsProps {
-  sectionNumber: number;
-  sectionTitle: string;
-  watchingStudents: number;
+  currentLecture: Lecture;
   commentsCount: number;
 }
 
-const WatchDetails = ({
-  sectionNumber,
-  sectionTitle,
-  watchingStudents,
-  commentsCount,
-}: WatchDetailsProps) => {
+const WatchDetails = ({ currentLecture, commentsCount }: WatchDetailsProps) => {
   const courseStudents = [
     { avatar: "/images/profile-img.png" },
     { avatar: "/images/profile-img.png" },
   ];
 
+  if (!currentLecture) {
+    return <div>No lecture details available.</div>;
+  }
+
+  // NOTE: You'll need to pass the section number from the parent as well
+  const sectionNumber = 1;
+
   return (
     <div className="mt-12 w-full md:mt-8 lg:w-2/3">
       <h2 className="text-base-content/80 text-lg font-semibold md:text-xl">
-        {sectionNumber} . {sectionTitle}
+        {sectionNumber}. {currentLecture.title}
       </h2>
 
       <div className="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -40,15 +52,16 @@ const WatchDetails = ({
           </div>
           <div className="flex flex-col items-start">
             <span className="text-md font-medium md:text-lg">
-              {watchingStudents}
+              {/* FIXME ; add student count */}
+              122
             </span>
             <span className="text-base-content/60 text-sm md:text-base">
               student Watching
             </span>
           </div>
         </div>
-
         <div className="text-base-content/70 flex flex-wrap items-center gap-4 text-sm md:text-base">
+          {/* FIXME */}
           <span>Last updated: 3 days ago</span>
           <span>Comments: {commentsCount}</span>
         </div>
