@@ -26,7 +26,7 @@ export async function becomeInstructor(
   if (foundInstructor) {
     return {
       message: "ERROR",
-      errors: ["You are already a teacher. You are moving to the dashboard..."],
+      errors: ["You are moving to the dashboard..."],
     };
   }
 

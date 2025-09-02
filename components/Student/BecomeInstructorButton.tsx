@@ -11,9 +11,10 @@ import { Student } from "./StudentProfile";
 type Props = {
   userId: string;
   student: Student;
+  isInstructor: boolean;
 };
 
-const BecomeInstructorButton = ({ userId, student }: Props) => {
+const BecomeInstructorButton = ({ userId, student, isInstructor }: Props) => {
   const [state, formAction, pending] = useActionState(becomeInstructor, {
     message: "",
     errors: [],
@@ -34,7 +35,7 @@ const BecomeInstructorButton = ({ userId, student }: Props) => {
     if (state.message === "ERROR") {
       setTimeout(() => {
         redirect("/instructor/dashboard");
-      }, 1000);
+      }, 500);
     }
   }, [state.message]);
 
@@ -45,7 +46,8 @@ const BecomeInstructorButton = ({ userId, student }: Props) => {
         className="btn btn-primary btn-soft mt-2 w-full gap-2 font-bold md:mt-0 md:ml-auto md:w-auto"
         disabled={pending}
       >
-        Become Instructor
+        {isInstructor ? "View Instructor Dashboard" : "Become Instructor"}
+
         {pending ? (
           <div className="loading loading-spinner" />
         ) : (
@@ -53,7 +55,7 @@ const BecomeInstructorButton = ({ userId, student }: Props) => {
         )}
       </button>
       {state.message === "ERROR" && (
-        <div className="text-error flex max-w-xs flex-row items-center gap-2 text-sm">
+        <div className="text-base-content/60 flex max-w-xs flex-row items-center gap-2 text-xs">
           <div className="loading loading-spinner" />
           {state.errors[0]}
         </div>

@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
+import instructorModel from "@/lib/db/models/instructorModel";
 
 import BecomeInstructorButton from "./BecomeInstructorButton";
 
@@ -34,6 +35,8 @@ const StudentProfile = async () => {
   if (!session?.user?.id) {
     return redirect("/auth/signin");
   }
+
+  const instructor = await instructorModel.findOne({ user: session.user.id });
 
   const student = await studentModel
     .findOne({ user: session.user.id })
@@ -73,6 +76,7 @@ const StudentProfile = async () => {
       <BecomeInstructorButton
         userId={session.user.id}
         student={JSON.parse(JSON.stringify(student))}
+        isInstructor={instructor ? true : false}
       />
     </div>
   );
