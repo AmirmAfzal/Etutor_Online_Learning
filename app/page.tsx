@@ -61,8 +61,8 @@ const HomePage = async () => {
       <HeroSection />
       <Category />
       <TopCourse courses={plainCourse.slice(0, 10)} />
-      <FeaturedCourses courses={plainCourse.slice(5, 9)} />
-      <RecentCourse courses={plainCourse.slice(6, 10)} />
+      <FeaturedCourses courses={plainCourse.slice(0, 4)} />
+      <RecentCourse courses={plainCourse.slice(0, 4)} />
       <BecomeInstructor />
       <TopInstructor />
       <CompaniesLogo />
