@@ -5,7 +5,7 @@ import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import CourseCard from "@/components/Student/CourseCard";
 
-const InstractorPage = () => {
+const InstructorPage = () => {
   return (
     <div className="w-full">
       <div className="bg-primary/10 h-64"></div>
@@ -176,4 +176,4 @@ const InstractorPage = () => {
   );
 };
 
-export default InstractorPage;
+export default InstructorPage;

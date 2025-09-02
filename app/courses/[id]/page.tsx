@@ -8,20 +8,20 @@ import CourseTrailer from "@/components/Courses/CourseHero";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 
-type CurriculumContentItem = {
+interface CurriculumContentItem {
   title: string;
   info: string;
   type: "video" | "file";
-};
+}
 
-type CurriculumSection = {
+interface CurriculumSection {
   title: string;
   lectures: number;
   duration: string;
   content: CurriculumContentItem[];
-};
+}
 
-type Course = {
+interface Course {
   _id?: string;
   id?: string;
   thumbnail: string;
@@ -45,9 +45,9 @@ type Course = {
   courseRequirements?: string[];
   createdBy?: string;
   curriculum?: CurriculumSection[];
-};
+}
 
-type Instructor = {
+interface Instructor {
   name: string;
   bio: string;
   avatar: string;
@@ -55,9 +55,9 @@ type Instructor = {
   students: number;
   courses: number;
   description: string;
-};
+}
 
-type InstructorDocument = {
+interface InstructorDocument {
   firstname?: string;
   lastname?: string;
   bio?: string;
@@ -65,25 +65,26 @@ type InstructorDocument = {
   rating?: number;
   students?: number;
   name?: string;
-};
+}
 
-type CourseAuthor = {
+interface CourseAuthor {
   name?: string;
-};
+}
 
-type FoundCourseDocument = {
+interface FoundCourseDocument {
   _id?: { toString: () => string } | string;
   thumbnail?: string;
   title?: string;
   description?: string;
   category?: { name?: string } | null;
   price?: number;
+  duration?: string;
   studentsCount?: number;
   authors?: (CourseAuthor & InstructorDocument)[];
   originalPrice?: number;
   discount?: string;
   timeLeft?: string;
-};
+}
 
 const buildInstructorData = (
   authors: InstructorDocument[] | undefined
@@ -123,7 +124,10 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
     timeLeft: course.timeLeft || "0 days left at this price!",
     reviews: 244455,
     courseDetails: [
-      { label: "Course Duration", value: "6 Month" },
+      {
+        label: "Course Duration",
+        value: ` ${course?.duration} hours` || "Unknown",
+      },
       { label: "Course Level", value: "Beginner" },
       { label: "Students Enrolled", value: "69,419,618" },
       { label: "Language", value: "Mandarin" },

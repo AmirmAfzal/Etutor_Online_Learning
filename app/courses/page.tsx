@@ -1,35 +1,14 @@
-// TODO: single course updated => merge to this branch
-
 import React from "react";
 import Link from "next/link";
 
-import Icon from "@/components/ui/Icon";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import CoursesSearch from "@/components/Courses/CoursesSearch";
 import CoursesSelect from "@/components/Courses/CoursesSelect";
 import CourseFilter from "@/components/Courses/CourseFilter";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import CourseCard from "@/components/Student/CourseCard";
-
-// fake data for filtered courses
-interface Category {
-  name: string;
-  icon: string;
-  subcategories: { [key: string]: number };
-}
-
-interface Rating {
-  label: string;
-  count: number;
-}
+import FilterMobile from "@/components/Courses/courseFilter/FilterMobile";
+import Icon from "@/components/ui/Icon";
 
 interface Course {
   id?: string;
@@ -41,188 +20,141 @@ interface Course {
   students: number;
 }
 
-const categories: Category[] = [
-  {
-    name: "Development",
-    icon: "ph:cpu",
-    subcategories: {
-      "Web Development": 574,
-      "Mobile Development": 1345,
-      "Software Testing": 317,
-      "Software Engineering": 31,
-      "Software Development Tools": 58,
-      "No-Code Development": 37,
-    },
-  },
-  {
-    name: "Business",
-    icon: "ph:handshake",
-    subcategories: { "Finance & Accounting": 0 },
-  },
-  {
-    name: "IT & Software",
-    icon: "ph:chart-bar-horizontal",
-    subcategories: { "": 0 },
-  },
-  {
-    name: "Office Productivity",
-    icon: "ph:bug-droid",
-    subcategories: { "": 0 },
-  },
-  {
-    name: "Personal Development",
-    icon: "ph:receipt",
-    subcategories: { "": 0 },
-  },
-  { name: "Design", icon: "ph:pen-nib", subcategories: { "": 0 } },
-  { name: "Marketing", icon: "ph:megaphone", subcategories: { "": 0 } },
-  { name: "Lifestyle", icon: "ph:package", subcategories: { "": 0 } },
-  { name: "Photography & Video", icon: "ph:camera", subcategories: { "": 0 } },
-  { name: "Music", icon: "ph:headset", subcategories: { "": 0 } },
-  {
-    name: "Health & Fitness",
-    icon: "ph:first-aid-kit",
-    subcategories: { "": 0 },
-  },
-];
+interface Props {
+  searchParams: Promise<{
+    query?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    level?: string;
+    rating?: string;
+    duration?: string;
+    tool?: string;
+    category?: string;
+    subCategories?: string;
+    filter?: string;
+    priceFree?: string;
+    pricePaid?: string;
+  }>;
+}
 
-const tools = {
-  "HTML 5": 1234,
-  "GOLANG ": 1234,
-  "CSS 3": 1234,
-  "Node.js": 8454,
-};
+const CoursesPage = async (props: Props) => {
+  const searchParams = await props.searchParams;
+  const query = searchParams.query?.toLowerCase();
+  const minPrice = searchParams.minPrice
+    ? parseFloat(searchParams.minPrice)
+    : undefined;
+  const maxPrice = searchParams.maxPrice
+    ? parseFloat(searchParams.maxPrice)
+    : undefined;
 
-const price = {
-  Paid: 12863,
-  Free: 832,
-};
+  const isFilterPanelVisible = searchParams.filter === "true";
 
-const duration = {
-  "6-12 Months": 1312,
-  "3-6 Months": 42376,
-  "1-3 Months": 12,
-  "1-4 Weeks": 87423,
-  "1-7 Days": 23746,
-};
-const courseLevel = {
-  "All Level": 234234,
-  Beginner: 2345,
-  Intermediate: 124,
-  Expert: 826,
-};
+  const filterUrl = new URLSearchParams(searchParams);
+  if (isFilterPanelVisible) {
+    filterUrl.delete("filter");
+  } else {
+    filterUrl.set("filter", "true");
+  }
 
-const rating: Rating[] = [
-  {
-    label: "5 Star",
-    count: 12345,
-  },
-  {
-    label: "4 Star & up",
-    count: 12345,
-  },
-  {
-    label: "3 Star & up",
-    count: 12345,
-  },
-  {
-    label: "2 Star & up",
-    count: 12345,
-  },
-  {
-    label: "1 Star & up",
-    count: 12345,
-  },
-];
-
-const CoursesPage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ query?: string; filter?: string }>;
-}) => {
   await connectDB();
-  const foundCourse = await courseModel.find().populate("category").lean();
+  const mongoQuery: Record<string, unknown> = {};
 
-  const courses: Course[] = foundCourse.map((course) => ({
+  if (query) {
+    mongoQuery.title = { $regex: new RegExp(query, "i") };
+  }
+
+  if (minPrice !== undefined && maxPrice !== undefined) {
+    mongoQuery.price = { $gte: minPrice, $lte: maxPrice };
+  } else if (minPrice !== undefined) {
+    mongoQuery.price = { $gte: minPrice };
+  } else if (maxPrice !== undefined) {
+    mongoQuery.price = { $lte: maxPrice };
+  }
+
+  const durationMappings = {
+    "Less than 6 hours": { $lte: 6 },
+    "6-12 Hours": { $gte: 6, $lte: 12 },
+    "12-24 Hours": { $gte: 12, $lte: 24 },
+    "24-48 Hours": { $gte: 24, $lte: 48 },
+    "More than 48 Hours": { $gte: 48 },
+  };
+
+  const duration = searchParams?.duration;
+  const durationQuery =
+    durationMappings[duration as keyof typeof durationMappings];
+
+  if (durationQuery) {
+    mongoQuery.duration = durationQuery;
+  }
+
+  const level = searchParams?.level;
+  if (level && level !== "All Levels") {
+    mongoQuery.level = level;
+  }
+
+  const rating = searchParams?.rating;
+  if (rating) {
+    mongoQuery.rating = { $gte: Number(rating) };
+  }
+
+  const foundCourses = await courseModel
+    .find(mongoQuery)
+    .populate("category")
+    .populate("subCategory")
+    .lean();
+
+  const courses: Course[] = foundCourses.map((course) => ({
     id: course._id?.toString(),
     thumbnail: course.thumbnail,
     name: course.title,
     category: course.category?.name || "Unknown",
     price: course.price,
-    rating: 5, // TODO
+    rating: course.rating,
     students: course.studentsCount,
   }));
-
-  const searchParam = await searchParams;
-  const isFiltered = searchParam.filter === "true";
-  const query = searchParam.query?.toLowerCase();
-  let filteredCourses = courses;
-  if (query) {
-    filteredCourses = filteredCourses.filter(
-      (course) =>
-        course.name.toLowerCase().includes(query) ||
-        course.category.toLowerCase().includes(query)
-    );
-  }
 
   return (
     <section className="container mx-auto mt-8 flex max-w-6xl flex-col items-center justify-center">
       <div className="border-base-300 flex w-full flex-col gap-4 border-b px-4 pb-2">
-        <div className="flex w-full flex-row items-center justify-between">
+        <div className="flex w-full flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
           <div className="flex flex-row items-center gap-2">
             <Link
-              href={isFiltered ? "/courses" : "/courses?filter=true"}
-              className={`bg-base-100 flex-row items-center gap-3 rounded-none border px-2 py-3 md:flex ${isFiltered ? "border-primary text-primary" : "border-primary/20 text-base-content/80"} hidden`}
+              href={`/courses?${filterUrl.toString()}`}
+              className={`bg-base-100 flex-row items-center gap-3 rounded-none border p-2 md:flex ${
+                isFilterPanelVisible
+                  ? "border-primary text-primary"
+                  : "border-primary/20 text-base-content/80"
+              } hidden`}
             >
               <Icon icon="ph:faders-fill" className="text-xl" />
               <span className="text-sm">Filter</span>
               <span
-                className={`${isFiltered ? "text-base-100 bg-primary px-2" : "text-primary bg-primary/10 px-2"}`}
+                className={`${
+                  isFilterPanelVisible
+                    ? "text-base-100 bg-primary px-2"
+                    : "text-primary bg-primary/10 px-2"
+                }`}
               >
-                {isFiltered ? "3" : "0"}
+                {isFilterPanelVisible ? "1" : "0"}
               </span>
             </Link>
 
-            <Sheet>
-              <SheetTrigger className="bg-base-100 border-primary text-primary flex flex-row items-center gap-2 rounded-none border p-2 md:hidden">
-                <Icon icon="ph:faders-fill" className="text-xl" />
-                <span className="text-sm">Filter</span>
-                <span className="text-primary bg-primary/10 px-2">
-                  {isFiltered ? "3" : "0"}
-                </span>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Courses Filter</SheetTitle>
-                  <SheetDescription className="flex flex-col items-center justify-between">
-                    <CourseFilter
-                      categories={categories}
-                      tools={tools}
-                      rating={rating}
-                      courseLevel={courseLevel}
-                      duration={duration}
-                      price={price}
-                    />
-                    <button className="btn btn-primary z-50 mt-8 w-full font-bold shadow-lg">
-                      Done
-                    </button>
-                  </SheetDescription>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
+            <FilterMobile searchParams={searchParams}>
+              <CourseFilter searchParams={Promise.resolve(searchParams)} />
+            </FilterMobile>
 
             <CoursesSearch />
           </div>
-
           <CoursesSelect />
         </div>
+
         <div className="flex flex-row items-center justify-between gap-4">
           <div className="flex flex-row flex-wrap items-center gap-2 text-xs">
             <span className="text-base-content/70 whitespace-nowrap">
               Suggestions :
             </span>
             <Link href="" className="text-primary/80 whitespace-nowrap">
-              user interface
+              user type
             </Link>
             <Link href="" className="text-primary/80 whitespace-nowrap">
               user experience
@@ -231,38 +163,37 @@ const CoursesPage = async ({
               web design
             </Link>
             <Link href="" className="text-primary/80 whitespace-nowrap">
-              interface app
+              type app
             </Link>
           </div>
-
-          {/* TODO: number of results for search */}
           <div className="text-base-content/70 text-sm whitespace-nowrap">
             {query
-              ? `${filteredCourses.length} results find for"${query}"`
-              : `${filteredCourses.length} Course`}
+              ? `${foundCourses.length} results find for "${query}"`
+              : `${foundCourses.length} Course`}
           </div>
         </div>
       </div>
+
       <div className="flex w-full items-start gap-4 pt-6">
-        {isFiltered && (
-          <CourseFilter
-            categories={categories}
-            tools={tools}
-            rating={rating}
-            courseLevel={courseLevel}
-            duration={duration}
-            price={price}
-          />
+        {isFilterPanelVisible && (
+          <CourseFilter searchParams={Promise.resolve(searchParams)} />
         )}
         <div
-          className={`grid grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:${isFiltered ? "grid-cols-3" : "grid-cols-4"}`}
+          className={`grid w-full grid-cols-1 gap-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:${
+            isFilterPanelVisible ? "grid-cols-3" : "grid-cols-4"
+          }`}
         >
-          {filteredCourses.map((course, index) => (
-            <CourseCard key={index} {...course} />
-          ))}
+          {foundCourses.length > 0 ? (
+            courses.map((course, index) => (
+              <CourseCard key={index} {...course} />
+            ))
+          ) : (
+            <div className="text-base-content/70 col-span-full text-center">
+              No courses found.
+            </div>
+          )}
         </div>
       </div>
-      {/*TODO: Implement pagination */}
     </section>
   );
 };

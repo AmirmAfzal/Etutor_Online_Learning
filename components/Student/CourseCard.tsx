@@ -23,7 +23,7 @@ const CourseCard = (props: Props) => {
           alt={props.name}
           width={400}
           height={200}
-          className="object-cover"
+          className="w-full object-cover"
         />
         <div className="space-y-2 p-2 md:p-4">
           <div className="flex flex-row items-center justify-between">
