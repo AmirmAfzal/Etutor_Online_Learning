@@ -13,7 +13,6 @@ import {
   basicInformationSchema,
 } from "@/lib/validation/schemas/instructor/create-course";
 
-
 export async function saveBasicInformation(
   prevState: ActionData,
   formData: BasicInformationFormData
@@ -49,17 +48,17 @@ export async function saveBasicInformation(
   }
 
   const durationValue = parseFloat(result.data.durationValue);
-  
+
   // Convert duration to hours
   let durationInHours: number;
   switch (result.data.durationUnit.toLowerCase()) {
-    case 'hour':
+    case "hour":
       durationInHours = durationValue;
       break;
-    case 'day':
+    case "day":
       durationInHours = durationValue * 24; // 1 day = 24 hours
       break;
-    case 'week':
+    case "week":
       durationInHours = durationValue * 24 * 7; // 1 week = 24 * 7 hours
       break;
     default:
@@ -77,6 +76,8 @@ export async function saveBasicInformation(
         category: foundCategory._id,
         subCategory: foundSubCategory._id,
         topic: result.data.topic,
+        tools: result.data.tools,
+        price: result.data.price,
         language: result.data.language,
         subtitleLanguage: result.data.subtitleLang,
         level: result.data.level,
@@ -93,6 +94,8 @@ export async function saveBasicInformation(
       category: foundCategory._id,
       subCategory: foundSubCategory._id,
       topic: result.data.topic,
+      tools: result.data.tools,
+      price: result.data.price,
       language: result.data.language,
       subtitleLanguage: result.data.subtitleLang,
       level: result.data.level,
