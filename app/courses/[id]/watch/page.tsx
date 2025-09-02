@@ -12,6 +12,7 @@ type CurriculumItem = {
   lectures: number;
   duration: string;
   content: {
+    _id: string;
     title: string;
     info: string;
     type: string;
@@ -26,63 +27,6 @@ type Comment = {
   comment: string;
   ADMIN: boolean;
   replies?: Comment[];
-};
-
-const curriculum: CurriculumItem[] = [
-  {
-    title: "Getting Started",
-    lectures: 4,
-    duration: "51m",
-    content: [
-      {
-        title: "What's is Webflow?",
-        info: "07:31",
-        type: "video",
-      },
-      {
-        title: "Sign up in Webflow",
-        info: "07:31",
-        type: "video",
-      },
-      { title: "Teaser of Webflow", info: "07:31", type: "video" },
-    ],
-  },
-  {
-    title: "Secret of Good Design",
-    lectures: 52,
-    duration: "5h 49m",
-    content: [],
-  },
-  {
-    title: "Practice Design Like an Artist",
-    lectures: 43,
-    duration: "53m",
-    content: [],
-  },
-  {
-    title: "Web Development (webflow)",
-    lectures: 137,
-    duration: "10h 6m",
-    content: [],
-  },
-  {
-    title: "Secrets of Making Money Freelancing",
-    lectures: 21,
-    duration: "38m",
-    content: [],
-  },
-  {
-    title: "Advanced",
-    lectures: 39,
-    duration: "91m",
-    content: [],
-  },
-];
-
-const courseData = {
-  section: 2,
-  sectionTitle: "Sign up in WebFlow",
-  students: 122,
 };
 
 const comments: Comment[] = [
@@ -151,18 +95,22 @@ interface LectureType {
   _id: Types.ObjectId;
   title: string;
   description: string;
-  videoUrl: string;
+  video: string;
   duration: number;
-}
-interface SectionType {
-  _id: Types.ObjectId;
-  title: string;
-  lectures: LectureType[];
+  file: string;
+  notes: string;
+  caption: string;
 }
 interface CourseType {
   title: string;
   duration: number;
   sections: Types.ObjectId[];
+}
+interface SectionType {
+  _id: Types.ObjectId;
+  title: string;
+  lectures: LectureType[];
+  course: CourseType;
 }
 
 const WatchCourse = async ({
@@ -170,7 +118,7 @@ const WatchCourse = async ({
   searchParams,
 }: {
   params: { id: string };
-  searchParams: Promise<{ lectureId?: string }>;
+  searchParams: Promise<{ lectureId?: string; section?: string }>;
 }) => {
   await connectDB();
   const { id } = params;
@@ -194,20 +142,72 @@ const WatchCourse = async ({
     (section) => section.lectures
   );
 
-  const { lectureId } = await searchParams;
-  const currentLecture = lectureId
-    ? lectures.find((lecture) => lecture._id.toString() === lectureId)
-    : lectures[0];
+  const { lectureId, section: sectionParam } = await searchParams;
+
+  let currentLecture: LectureType | undefined;
+  let currentSection: SectionType | undefined;
+
+  if (sectionParam) {
+    const sectionIndex = parseInt(sectionParam, 10) - 1; // Convert to 0-based index
+    const targetSection = foundSections[sectionIndex];
+
+    if (targetSection) {
+      currentSection = targetSection;
+      if (lectureId) {
+        currentLecture = targetSection.lectures.find(
+          (lecture) => lecture._id.toString() === lectureId
+        );
+      }
+      if (!currentLecture) {
+        currentLecture = targetSection.lectures[0]; // Default to first lecture of the section
+      }
+    }
+  }
+
+  if (!currentLecture) {
+    currentLecture = lectureId
+      ? lectures.find((lecture) => lecture._id.toString() === lectureId)
+      : lectures[0];
+  }
 
   if (!currentLecture) {
     return <div>Lecture not found. Please select a valid lecture.</div>;
   }
 
-  const currentSection = foundSections.find((section) =>
-    section.lectures.some(
-      (l) => l._id.toString() === currentLecture._id.toString()
-    )
-  );
+  if (!currentSection) {
+    currentSection = foundSections.find((section) =>
+      section.lectures.some(
+        (l) => l._id.toString() === currentLecture?._id.toString()
+      )
+    );
+  }
+
+  const curriculum: CurriculumItem[] = foundSections.map((section) => {
+    const totalSectionDuration = section.lectures.reduce(
+      (sum, lecture) => sum + lecture.duration,
+      0
+    );
+    return {
+      title: section.title,
+      lectures: section.lectures.length,
+      duration: convertMinutesToHoursAndMinutes(totalSectionDuration),
+      content: section.lectures.map((lecture) => ({
+        _id: lecture._id.toString(), // Added _id
+        title: lecture.title,
+        info: convertMinutesToHoursAndMinutes(lecture.duration),
+        type: "video",
+      })),
+    };
+  });
+
+  const courseData = {
+    section: currentSection
+      ? foundSections.findIndex((s) => s._id === currentSection._id) + 1
+      : 0,
+    sectionTitle: currentLecture.title,
+    // FIXME : student number
+    students: 122,
+  };
 
   return (
     <section className="container mx-auto w-full px-4 py-6">
@@ -221,28 +221,31 @@ const WatchCourse = async ({
       <div className="mt-6 flex w-full flex-col items-start gap-4 lg:flex-row lg:gap-6">
         <WatchPlayer />
         <div className="w-full lg:w-5/12">
-          <WatchCurriculum curriculum={curriculum} />
+          <WatchCurriculum
+            curriculum={curriculum}
+            courseId={id}
+            currentLectureId={currentLecture._id.toString()}
+            currentSectionIndex={
+              currentSection
+                ? foundSections.findIndex((s) => s._id === currentSection._id) +
+                  1
+                : 0
+            }
+          />
         </div>
       </div>
 
+      {/* FIXME: replace section number with lecture number */}
       <WatchDetails
-        sectionNumber={
-          currentSection
-            ? foundSections.findIndex((s) => s._id === currentSection._id) + 1
-            : 0
-        }
-        sectionTitle={currentLecture.title}
+        sectionNumber={courseData.section}
+        sectionTitle={courseData.sectionTitle}
         currentLecture={currentLecture}
         watchingStudents={courseData.students}
         commentsCount={comments.length}
       />
 
       <div className="lg:w-2/3">
-        <WatchTabs
-          lecture={currentLecture}
-          currentLecture={currentLecture}
-          comments={comments}
-        />
+        <WatchTabs currentLecture={currentLecture} comments={comments} />
       </div>
     </section>
   );

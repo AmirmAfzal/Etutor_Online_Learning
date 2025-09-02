@@ -15,9 +15,18 @@ interface Lecture {
 interface WatchDetailsProps {
   currentLecture: Lecture;
   commentsCount: number;
+  sectionNumber: number;
+  sectionTitle: string;
+  watchingStudents: number;
 }
 
-const WatchDetails = ({ currentLecture, commentsCount }: WatchDetailsProps) => {
+const WatchDetails = ({
+  currentLecture,
+  commentsCount,
+  sectionNumber,
+  sectionTitle,
+  watchingStudents,
+}: WatchDetailsProps) => {
   const courseStudents = [
     { avatar: "/images/profile-img.png" },
     { avatar: "/images/profile-img.png" },
@@ -27,13 +36,11 @@ const WatchDetails = ({ currentLecture, commentsCount }: WatchDetailsProps) => {
     return <div>No lecture details available.</div>;
   }
 
-  // NOTE: You'll need to pass the section number from the parent as well
-  const sectionNumber = 1;
-
   return (
     <div className="mt-12 w-full md:mt-8 lg:w-2/3">
       <h2 className="text-base-content/80 text-lg font-semibold md:text-xl">
-        {sectionNumber}. {currentLecture.title}
+        {/* FIXME : fix the section || lecture number */}
+        {sectionNumber} . {sectionTitle}
       </h2>
 
       <div className="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -52,11 +59,10 @@ const WatchDetails = ({ currentLecture, commentsCount }: WatchDetailsProps) => {
           </div>
           <div className="flex flex-col items-start">
             <span className="text-md font-medium md:text-lg">
-              {/* FIXME ; add student count */}
-              122
+              {watchingStudents}
             </span>
             <span className="text-base-content/60 text-sm md:text-base">
-              student Watching
+              students Watching
             </span>
           </div>
         </div>
