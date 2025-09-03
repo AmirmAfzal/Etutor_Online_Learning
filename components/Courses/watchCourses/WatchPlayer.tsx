@@ -1,5 +1,4 @@
 "use client"
-// import Image from "next/image";
 import { CldVideoPlayer } from 'next-cloudinary';
 import 'next-cloudinary/dist/cld-video-player.css';
 

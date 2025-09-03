@@ -44,12 +44,12 @@ const WatchTabs = ({ currentLecture, comments  }: WatchTabsProps) => {
     : [];
 
   return (
-    <Tabs defaultValue="description" className="mt-12 w-full md:mt-8">
+    <Tabs defaultValue="description" className="mt-12 w-full md:mt-8 ">
       <TabsList className="bg-base-100 flex h-auto w-full gap-2 overflow-auto overflow-y-hidden">
         {[
           { value: "description", label: "Description" },
           { value: "lecture notes", label: "Lecture Notes" },
-          { value: "attach file", label: "Attach File" },
+          { value: "attach file", label: `Attach Files (${String(files.length).padStart(2, '0')})`},
           { value: "comments", label: "Comments" },
         ].map((tab) => (
           <TabsTrigger
