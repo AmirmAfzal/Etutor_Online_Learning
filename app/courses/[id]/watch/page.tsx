@@ -219,7 +219,7 @@ const WatchCourse = async ({
       />
 
       <div className="mt-6 flex w-full flex-col items-start gap-4 lg:flex-row lg:gap-6">
-        <WatchPlayer />
+        <WatchPlayer  videoSrc={currentLecture.video}/>
         <div className="w-full lg:w-5/12">
           <WatchCurriculum
             curriculum={curriculum}
@@ -245,7 +245,7 @@ const WatchCourse = async ({
       />
 
       <div className="lg:w-2/3">
-        <WatchTabs currentLecture={currentLecture} comments={comments} />
+        <WatchTabs currentLecture={currentLecture} comments={comments}  />
       </div>
     </section>
   );
