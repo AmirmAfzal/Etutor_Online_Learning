@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { getServerSession } from "next-auth";
 
 import { connectDB } from "@/lib/db/db";
 import categoryModel from "@/lib/db/models/categoryModel";
@@ -12,6 +13,8 @@ import {
   BasicInformationFormData,
   basicInformationSchema,
 } from "@/lib/validation/schemas/instructor/create-course";
+import { authOptions } from "@/lib/auth/authOptions";
+import instructorModel from "@/lib/db/models/instructorModel";
 
 export async function saveBasicInformation(
   prevState: ActionData,
@@ -26,6 +29,11 @@ export async function saveBasicInformation(
       message: "ERROR",
       errors: result.error.errors.map((error) => error.message),
     };
+  }
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    redirect("/auth/signin");
   }
 
   // try {
@@ -81,16 +89,21 @@ export async function saveBasicInformation(
         language: result.data.language,
         subtitleLanguage: result.data.subtitleLang,
         level: result.data.level,
-        duration: durationInHours, // Save duration in hours
-        durationUnit: result.data.durationUnit, // Keep the original unit for reference
+        duration: durationInHours,
+        durationUnit: result.data.durationUnit,
       },
       { new: true }
     );
     return { message: "SUCCESS", errors: [] };
   } else {
+    const instructor = await instructorModel.findOne({
+      user: session?.user?.id,
+    });
+
     const createdCourse = await courseModel.create({
       title: result.data.title,
       subtitle: result.data.subtitle,
+      authors: [instructor._id],
       category: foundCategory._id,
       subCategory: foundSubCategory._id,
       topic: result.data.topic,
@@ -99,9 +112,16 @@ export async function saveBasicInformation(
       language: result.data.language,
       subtitleLanguage: result.data.subtitleLang,
       level: result.data.level,
-      duration: durationInHours, // Save duration in hours
-      durationUnit: result.data.durationUnit, // Keep the original unit for reference
+      duration: durationInHours,
+      durationUnit: result.data.durationUnit,
     });
+
+    if (instructor) {
+      await instructorModel.findByIdAndUpdate(instructor._id, {
+        $push: { courses: createdCourse._id },
+      });
+    }
+
     redirect(
       `/instructor/dashboard/create-course?tab=AdvanceInformation&_id=${createdCourse._id}`
     );
