@@ -35,6 +35,7 @@ export async function saveCurriculum(
         lectures: [],
         course: foundCourse?._id,
         duration: 0,
+        index: section.id,
       });
 
       sectionIds.push(createdSection._id);
@@ -51,6 +52,7 @@ export async function saveCurriculum(
           notes: lecture.note || "",
           caption: lecture.captions || "",
           section: createdSection._id,
+          index: lecture.id,
         });
 
         lectureIds.push(createdLecture._id);

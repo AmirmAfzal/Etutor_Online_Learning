@@ -6,6 +6,7 @@ export interface SectionInterface extends Document {
   lectures: ObjectId[];
   course: ObjectId;
   duration: number;
+  index: number;
 }
 
 const sectionSchema = new Schema<SectionInterface & Document>({
@@ -14,6 +15,7 @@ const sectionSchema = new Schema<SectionInterface & Document>({
   lectures: [{ type: Schema.Types.ObjectId, ref: "lecture", required: true }],
   course: { type: Schema.Types.ObjectId, ref: "course", required: true },
   duration: { type: Number, required: true, default: 0 },
+  index: { type: Number, required: true },
 }, {
   timestamps: true,
 });
