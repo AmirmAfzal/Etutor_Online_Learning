@@ -97,7 +97,7 @@ interface LectureType {
   description: string;
   video: string;
   duration: number;
-  file: string;
+  files: string | string[];
   notes: string;
   caption: string;
 }
@@ -182,6 +182,9 @@ const WatchCourse = async ({
     );
   }
 
+
+
+
   const curriculum: CurriculumItem[] = foundSections.map((section) => {
     const totalSectionDuration = section.lectures.reduce(
       (sum, lecture) => sum + lecture.duration,
@@ -209,12 +212,14 @@ const WatchCourse = async ({
     students: 122,
   };
 
-  return (
+
+    return (
     <section className="container mx-auto w-full px-4 py-6">
       <WatchHeader
         title={course?.title ?? "The course does not have a title"}
         sectionsCount={foundSections.length}
         lecturesCount={lectures.length}
+
         totalDuration={convertMinutesToHoursAndMinutes(course?.duration ?? 0)}
       />
 

@@ -7,7 +7,7 @@ interface Lecture {
   description: string;
   video: string;
   duration: number;
-  file: string;
+  files: string | String[];
   notes: string;
   caption: string;
 }
