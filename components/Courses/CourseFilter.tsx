@@ -1,13 +1,14 @@
+import { connectDB } from "@/lib/db/db";
+import courseModel from "@/lib/db/models/courseModel";
+import categoryModel from "@/lib/db/models/categoryModel";
+import subCategoryModel from "@/lib/db/models/subCategoryModel";
+
 import Categories from "./courseFilter/Categories";
 // import Tools from "./courseFilter/Tools";
 import Rating from "./courseFilter/Rating";
 import CourseLevel from "./courseFilter/CourseLevel";
 import PriceSelect from "./courseFilter/PriceSelect";
 import Duration from "./courseFilter/Duration";
-import { connectDB } from "@/lib/db/db";
-import courseModel from "@/lib/db/models/courseModel";
-import categoryModel from "@/lib/db/models/categoryModel";
-import subCategoryModel from "@/lib/db/models/subCategoryModel";
 
 interface Category {
   name: string;
