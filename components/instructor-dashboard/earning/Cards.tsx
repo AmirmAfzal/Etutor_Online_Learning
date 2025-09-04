@@ -22,10 +22,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteCard } from "@/lib/actions/instructor/earning/deleteCard";
 
 import NewPaymentCardModal from "./NewPaymentCardModal";
-import Link from "next/link";
-import { deleteCard } from "@/lib/actions/instructor/earning/deleteCard";
 
 interface Card {
   _id: string;
@@ -120,70 +119,74 @@ const Cards = ({ cards }: Props) => {
           }}
           allowTouchMove={false}
         >
-          {cards.map((card) => (
-            <SwiperSlide key={card._id}>
-              <div className="bg-secondary shadow-secondary/70 relative flex h-48 w-full flex-col justify-between p-4 shadow-lg">
-                <div className="flex flex-row items-center justify-between">
-                  <p className="text-base-100 text-2xl font-bold">
-                    {card.bank}
-                  </p>
-                  <div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button>
-                          <Icon
-                            icon="ph:dots-three"
-                            className="btn btn-ghost btn-xs"
-                            width="24"
-                            height="24"
-                          />
-                        </button>
-                      </DropdownMenuTrigger>
+          {cards.length === 0 ? (
+            <div className="flex h-48 w-full items-center justify-center">
+              <p>No Card</p>
+            </div>
+          ) : (
+            cards.map((card) => (
+              <SwiperSlide key={card._id}>
+                <div className="bg-secondary shadow-secondary/70 relative flex h-48 w-full flex-col justify-between p-4 shadow-lg">
+                  <div className="flex flex-row items-center justify-between">
+                    <p className="text-base-100 text-2xl font-bold">
+                      {card.bank}
+                    </p>
+                    <div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Icon
+                              icon="ph:dots-three"
+                              className="btn btn-ghost btn-xs"
+                              width="24"
+                              height="24"
+                            />
+                        </DropdownMenuTrigger>
 
-                      <DropdownMenuContent>
-                        <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
-                          <button onClick={() => deleteCard(card._id)}>
-                            Delete
-                          </button>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
+                            <button onClick={() => deleteCard(card._id)}>
+                              Delete
+                            </button>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                  <div className="flex flex-row items-center gap-6">
+                    <p className="text-base-100 text-xl">
+                      {card.cardNumber.slice(0, 4) + " **** **** ****"}
+                    </p>
+                    <button
+                      className="relative"
+                      onClick={() => handleCopyCardNumber(card.cardNumber)}
+                    >
+                      {copiedCardId && (
+                        <p className="text-success bg-base-300 absolute bottom-8 -left-6 rounded-lg px-2 py-1 text-sm">
+                          {copiedCardId && "copied!"}
+                        </p>
+                      )}
+                      <Icon
+                        icon="ph:copy"
+                        className="text-base-300 cursor-pointer"
+                        width="24"
+                        height="24"
+                      />
+                    </button>
+                  </div>
+                  <div className="text-base-100 flex flex-row items-center gap-16">
+                    <span>
+                      <p className="text-base-300/70 text-xs">Expires</p>
+                      <p>{card.expiration}</p>
+                    </span>
+                    <span>
+                      <p className="text-base-300/70 text-xs">Card name</p>
+                      <p>{card.name}</p>
+                    </span>
                   </div>
                 </div>
-                <div className="flex flex-row items-center gap-6">
-                  <p className="text-base-100 text-xl">
-                    {card.cardNumber.slice(0, 4) + " **** **** ****"}
-                  </p>
-                  <button
-                    className="relative"
-                    onClick={() => handleCopyCardNumber(card.cardNumber)}
-                  >
-                    {copiedCardId && (
-                      <p className="text-success bg-base-300 absolute bottom-8 -left-6 rounded-lg px-2 py-1 text-sm">
-                        {copiedCardId && "copied!"}
-                      </p>
-                    )}
-                    <Icon
-                      icon="ph:copy"
-                      className="text-base-300 cursor-pointer"
-                      width="24"
-                      height="24"
-                    />
-                  </button>
-                </div>
-                <div className="text-base-100 flex flex-row items-center gap-16">
-                  <span>
-                    <p className="text-base-300/70 text-xs">Expires</p>
-                    <p>{card.expiration}</p>
-                  </span>
-                  <span>
-                    <p className="text-base-300/70 text-xs">Card name</p>
-                    <p>{card.name}</p>
-                  </span>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            ))
+          )}
         </Swiper>
         <div className="mt-6 flex flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-1">

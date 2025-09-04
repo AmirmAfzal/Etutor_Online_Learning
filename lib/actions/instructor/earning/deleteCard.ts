@@ -1,12 +1,13 @@
-"use server"
+"use server";
 
-import { connectDB } from "@/lib/db/db"
-import paymentCardModel from "@/lib/db/models/paymentCardModel";
 import { revalidatePath } from "next/cache";
 
-export async function deleteCard (id: string) {
-    await connectDB();
-    await paymentCardModel.findByIdAndDelete(id);
+import { connectDB } from "@/lib/db/db";
+import paymentCardModel from "@/lib/db/models/paymentCardModel";
 
-    revalidatePath("/instructor/dashboard/earning");
+export async function deleteCard(id: string) {
+  await connectDB();
+  await paymentCardModel.findByIdAndDelete(id);
+
+  revalidatePath("/instructor/dashboard/earning");
 }

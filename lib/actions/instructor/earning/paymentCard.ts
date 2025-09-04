@@ -2,6 +2,7 @@
 
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
@@ -12,7 +13,6 @@ import {
   paymentCardSchema,
 } from "@/lib/validation/schemas/instructor/newPaymentCard";
 import instructorModel from "@/lib/db/models/instructorModel";
-import { revalidatePath } from "next/cache";
 
 export async function savePaymentCard(
   prevState: ActionData,
