@@ -2,10 +2,10 @@
 
 import { FC, useState } from "react";
 import Image from "next/image";
-
 import Icon from "@/components/ui/Icon";
 
 import TruncatedText from "../TruncatedText";
+import Form from "next/form";
 
 type Comment = {
   name: string;
@@ -101,9 +101,29 @@ const WatchComments: FC<CommentsProps> = ({ comments }) => {
 
   return (
     <div className="mt-12 w-full space-y-4">
+
+
       <span className="text-base-content/80 text-2xl font-semibold">
         Comments ({comments.length})
       </span>
+
+        <Form action="" className="flex gap-2 mt-4">
+            <div className="relative flex-1">
+                <Icon
+                    icon="ph:chats-circle"
+                    className="absolute inset-y-0 left-0 pl-3 text-xl"
+                />
+                <input
+                    type="text"
+                    placeholder="Write a new comment"
+                    className="input input-bordered w-full pl-10"
+                />
+            </div>
+
+            <button type="submit" className="btn btn-primary">
+                Post Comment
+            </button>
+        </Form>
 
       {comments.map((comment) => (
         <CommentItem
