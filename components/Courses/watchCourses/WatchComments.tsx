@@ -4,6 +4,8 @@ import Icon from "@/components/ui/Icon";
 import TruncatedText from "../TruncatedText";
 import CommentReplyForm from "@/components/Courses/watchCourses/CommentReplyForm";
 import Form from "next/form";
+import { connectDB } from "@/lib/db/db";
+import commentModel from "@/lib/db/models/commentModel";
 
 type Comment = {
   name: string;
@@ -65,27 +67,46 @@ const CommentItem = ({
 };
 
 export default async function WatchComments({ comments }: CommentsProps) {
+  await connectDB();
+
+  const foundComments = await commentModel.find().lean();
+
+  const commentsData: Comment[] = foundComments.map((comment) => ({
+    // name: comment.title,
+    name: "amir hossein",
+    // FIXME : fix avatar
+    avatar: "/images/instructors/instructor-1.png",
+    time: comment?.createdAt?.toString() || "2 hours ago",
+    star: 0,
+    comment: comment.comment,
+    ADMIN: comment.refPath === "Admin",
+    replies: [],
+  }));
+
   return (
     <div className="mt-12 w-full space-y-4">
       <span className="text-base-content/80 text-2xl font-semibold">
-        Comments ({comments.length})
+        Comments ({commentsData.length})
       </span>
 
-      <Form action="" className="flex gap-2 mt-6">
-          <div className="relative flex-1">
-              <Icon icon="ph:chats-circle" className="absolute inset-y-0 left-0 pl-3 text-xl" />
-              <input
-                  type="text"
-                  placeholder="Write a comment..."
-                  className="input input-bordered w-full pl-10"
-              />
-          </div>
-          <button type="submit" className="btn btn-primary">
-              Post Comment
-          </button>
+      <Form action="" className="mt-6 flex gap-2">
+        <div className="relative flex-1">
+          <Icon
+            icon="ph:chats-circle"
+            className="absolute inset-y-0 left-0 pl-3 text-xl"
+          />
+          <input
+            type="text"
+            placeholder="Write a comment..."
+            className="input input-bordered w-full pl-10"
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Post Comment
+        </button>
       </Form>
 
-      {comments.map((comment) => (
+      {commentsData.map((comment) => (
         <CommentItem key={comment.name + comment.comment} comment={comment} />
       ))}
 
