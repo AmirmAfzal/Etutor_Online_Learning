@@ -6,6 +6,10 @@ import CommentReplyForm from "@/components/Courses/watchCourses/CommentReplyForm
 import Form from "next/form";
 import { connectDB } from "@/lib/db/db";
 import commentModel from "@/lib/db/models/commentModel";
+import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
+import instructorModel, {
+  InstructorInterface,
+} from "@/lib/db/models/instructorModel";
 
 type Comment = {
   name: string;
@@ -69,19 +73,39 @@ const CommentItem = ({
 export default async function WatchComments({ comments }: CommentsProps) {
   await connectDB();
 
-  const foundComments = await commentModel.find().lean();
+  const studentComments = await commentModel
+    .find({ refPath: "Student" })
+    .populate({
+      path: "userId",
+      select: "firstname lastname avatar",
+      model: "student",
+    })
+    .lean();
 
-  const commentsData: Comment[] = foundComments.map((comment) => ({
-    // name: comment.title,
-    name: "amir hossein",
-    // FIXME : fix avatar
-    avatar: "/images/instructors/instructor-1.png",
-    time: comment?.createdAt?.toString() || "2 hours ago",
-    star: 0,
-    comment: comment.comment,
-    ADMIN: comment.refPath === "Admin",
-    replies: [],
-  }));
+  const instructorComments = await commentModel
+    .find({ refPath: "Instructor" })
+    .populate({
+      path: "userId",
+      select: "firstname lastname avatar",
+      model: "instructor",
+    })
+    .lean();
+
+  const allComments = [...studentComments, ...instructorComments];
+
+  const commentsData: Comment[] = allComments.map((comment) => {
+    const user = comment.userId;
+
+    return {
+      name: user ? `${user.firstname} ${user.lastname}` : "Unknown User",
+      avatar: user?.avatar || "/default-avatar.png",
+      time: comment?.createdAt?.toString() || "2 hours ago",
+      star: 0,
+      comment: comment.comment,
+      ADMIN: comment.refPath === "Admin",
+      replies: [],
+    };
+  });
 
   return (
     <div className="mt-12 w-full space-y-4">

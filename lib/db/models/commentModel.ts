@@ -7,6 +7,7 @@ export interface CommentInterface extends Document {
   title: string;
   avatar: string;
   replies: ObjectId[];
+  userId: ObjectId;
 }
 
 const commentSchema = new Schema<CommentInterface, Document>(
@@ -21,6 +22,7 @@ const commentSchema = new Schema<CommentInterface, Document>(
     avatar: { type: String, required: true },
     lecture: { type: Schema.Types.ObjectId, ref: "lecture", required: true },
     replies: [{ type: Schema.Types.ObjectId, ref: "replies" }],
+    userId: { type: Schema.Types.ObjectId, required: true, refPath: "refPath" },
   },
   {
     timestamps: true,
