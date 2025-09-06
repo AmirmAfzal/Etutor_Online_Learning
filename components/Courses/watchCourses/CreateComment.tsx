@@ -15,8 +15,14 @@ import { createCommentAction } from "@/lib/actions/comment/createCommentAction";
 import { useSession } from "next-auth/react";
 import { useActionState, useRef, useState, useEffect } from "react";
 
+interface ToastState {
+  message: string;
+  errors?: string[];
+}
+
 const CreateComment = () => {
   const { data: session } = useSession();
+  const [showToast, setShowToast] = useState(false);
   const [state, action, pending] = useActionState(createCommentAction, {
     message: "",
     errors: [],
@@ -34,11 +40,39 @@ const CreateComment = () => {
     }
   }, [pending, state.message]);
 
+  useEffect(() => {
+    if (state.message) {
+      setShowToast(true);
+      const timer = setTimeout(() => setShowToast(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [state.message]);
+
   const handlePostComment = () => {
     if (formRef.current) {
       formRef.current.requestSubmit();
     }
   };
+
+  // FIXME : replace with render toast component
+  const renderToast = (show: boolean, state: ToastState) => (
+    <div className="toast toast-top toast-end">
+      {show && state.message && (
+        <div
+          role="alert"
+          className={`alert ${
+            state.errors?.length ? "alert-error" : "alert-success"
+          }`}
+        >
+          <Icon
+            icon={state.errors?.length ? "ph:x-circle" : "ph:check-circle"}
+            className="text-lg"
+          />
+          <span className="text-xs">{state.message}</span>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <form ref={formRef} action={action} className="mt-6 flex gap-2">
@@ -94,13 +128,14 @@ const CreateComment = () => {
         </DialogContent>
       </Dialog>
 
-      {state.errors && state.errors.length > 0 && (
+      {renderToast(showToast, state)}
+      {/* {state.errors && state.errors.length > 0 && (
         <div className="mt-2 text-red-500">
           {state.errors.map((error, index) => (
             <p key={index}>{error}</p>
           ))}
         </div>
-      )}
+      )} */}
     </form>
   );
 };
