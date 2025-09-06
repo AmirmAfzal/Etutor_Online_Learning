@@ -13,8 +13,7 @@ import {
 import Icon from "@/components/ui/Icon";
 import { createCommentAction } from "@/lib/actions/comment/createCommentAction";
 import { useSession } from "next-auth/react";
-import Form from "next/form";
-import { useActionState } from "react";
+import { useActionState, useRef, useState, useEffect } from "react";
 
 const CreateComment = () => {
   const { data: session } = useSession();
@@ -23,11 +22,26 @@ const CreateComment = () => {
     errors: [],
   });
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
   const userRole = session?.user?.role ?? "";
   const userName = session?.user?.name ?? "";
 
+  useEffect(() => {
+    if (!pending && state.message) {
+      setIsDialogOpen(false);
+    }
+  }, [pending, state.message]);
+
+  const handlePostComment = () => {
+    if (formRef.current) {
+      formRef.current.requestSubmit();
+    }
+  };
+
   return (
-    <Form action={action} className="mt-6 flex gap-2">
+    <form ref={formRef} action={action} className="mt-6 flex gap-2">
       <div className="relative flex-1">
         <Icon
           icon="ph:chats-circle"
@@ -49,7 +63,7 @@ const CreateComment = () => {
         <input name="name" type="hidden" value={userName} />
       </div>
 
-      <Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <button type="button" className="btn btn-primary">
             Post Comment
@@ -68,16 +82,14 @@ const CreateComment = () => {
                 Cancel
               </button>
             </DialogClose>
-
-            <DialogClose asChild>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={!!pending}
-              >
-                {pending ? "Posting..." : "Post Comment"}
-              </button>
-            </DialogClose>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handlePostComment}
+              disabled={!!pending}
+            >
+              {pending ? "Posting..." : "Post Comment"}
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -89,7 +101,7 @@ const CreateComment = () => {
           ))}
         </div>
       )}
-    </Form>
+    </form>
   );
 };
 
