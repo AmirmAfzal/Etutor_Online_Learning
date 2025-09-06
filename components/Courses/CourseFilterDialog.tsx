@@ -13,7 +13,6 @@ import {
 
 import Categories from "./courseFilter/Categories";
 import Tools from "./courseFilter/Tools";
-import Rating from "./courseFilter/Rating";
 import CourseLevel from "./courseFilter/CourseLevel";
 import PriceSelect from "./courseFilter/PriceSelect";
 import Duration from "./courseFilter/Duration";
@@ -25,20 +24,15 @@ type Props = {
     subcategories: { [key: string]: number };
   }[];
   tools: { [key: string]: number };
-  duration: { [key: string]: number };
-  courseLevel: { [key: string]: number };
+  duration: number[];
+  courseLevel: string[];
   price: { [key: string]: number };
-  rating: {
-    label: string;
-    count: number;
-  }[];
   children?: React.ReactNode;
 };
 
 const CourseFilterDialog = ({
   categories,
   tools,
-  rating,
   courseLevel,
   duration,
   price,
@@ -76,32 +70,34 @@ const CourseFilterDialog = ({
               <Tools tools={tools} />
             </div>
 
-            <div className="border-b border-neutral-200 pb-4 dark:border-neutral-800">
-              <h3 className="mb-3 text-sm font-semibold tracking-wide text-neutral-700 uppercase dark:text-neutral-300">
-                Rating
-              </h3>
-              <Rating rating={rating} />
-            </div>
+            {/* Rating filter temporarily disabled in dialog to align with server/client components */}
 
             <div className="border-b border-neutral-200 pb-4 dark:border-neutral-800">
               <h3 className="mb-3 text-sm font-semibold tracking-wide text-neutral-700 uppercase dark:text-neutral-300">
                 Course Level
               </h3>
-              <CourseLevel courseLevel={courseLevel} />
+              <CourseLevel
+                courseLevel={courseLevel}
+                searchParams={Promise.resolve({})}
+              />
             </div>
 
             <div className="border-b border-neutral-200 pb-4 dark:border-neutral-800">
               <h3 className="mb-3 text-sm font-semibold tracking-wide text-neutral-700 uppercase dark:text-neutral-300">
                 Price
               </h3>
-              <PriceSelect price={price} />
+              <PriceSelect
+                price={price}
+                currentPriceFilters={{ Free: false, Paid: false }}
+                searchParams={Promise.resolve({})}
+              />
             </div>
 
             <div>
               <h3 className="mb-3 text-sm font-semibold tracking-wide text-neutral-700 uppercase dark:text-neutral-300">
                 Duration
               </h3>
-              <Duration duration={duration} />
+              <Duration duration={duration} searchParams={{}} />
             </div>
           </div>
         </div>
