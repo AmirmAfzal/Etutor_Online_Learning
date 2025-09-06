@@ -25,18 +25,18 @@ import LectureNotesModal from "./modals/LectureNotesModal";
 
 export interface Lecture {
   id: number;
-  name: string;
+  title: string;
   videoUrl?: string;
   fileUrl?: string;
-  captions?: string;
+  caption?: string;
   description?: string;
-  note?: string;
+  notes?: string;
   noteFile?: string;
 }
 
 export interface Section {
   id: number;
-  name: string;
+  title: string;
   lectures: Lecture[];
 }
 
@@ -61,13 +61,62 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
   const [sections, setSections] = useState<Section[]>([
     {
       id: 1,
-      name: "Section name",
+      title: "Section name",
       lectures: [
-        { id: 1, name: "Lecture name" },
-        { id: 2, name: "Lecture name" },
+        { id: 1, title: "Lecture name" },
+        { id: 2, title: "Lecture name" },
       ],
     },
   ]);
+
+  // useEffect(() => {
+  //   if (course?.sections && course.sections.length > 0) {
+  //     const mappedSections: Section[] = course.sections.map(
+  //       (section, index) => ({
+  //         id: index + 1,
+  //         title:
+  //           (section as unknown as { title: string })?.title || "Section name",
+  //         lectures:
+  //           section?.lectures?.map((lecture: Lecture, lectureIndex: number) => ({
+  //             id: lectureIndex + 1,
+  //             title: lecture.title || "Lecture name",
+  //             videoUrl: lecture.videoUrl || undefined,
+  //             fileUrl: lecture.fileUrl || undefined,
+  //             caption: lecture.caption || undefined,
+  //             description: lecture.description || undefined,
+  //             notes: lecture.notes || undefined,
+  //             noteFile: lecture.noteFile || undefined,
+  //           })) || [],
+  //       })
+  //     );
+  //     setSections(mappedSections);
+  //   }
+  // }, [course, sections.length]);
+
+  useEffect(() => {
+    if (course?.sections && course.sections.length > 0) {
+      const mappedSections: Section[] = course.sections.map(
+        (section: any, index: number) => ({
+          id: index + 1,
+          title: section.title || "Section name",
+          lectures: (section.lectures || []).map(
+            (lecture: any, lectureIndex: number) => ({
+              id: lectureIndex + 1,
+              title: lecture.title || "Lecture name",
+              videoUrl: lecture.video || "",
+              fileUrl: lecture.files?.[0] || "",
+              caption: lecture.caption || "",
+              description: lecture.description || "",
+              notes: lecture.notes || "",
+              noteFile: lecture.files?.[0] || "",
+            })
+          ),
+        })
+      );
+      console.log(mappedSections);
+      setSections(mappedSections);
+    }
+  }, [course]);
 
   // Lecture edit state
   const [editingLecture, setEditingLecture] = useState<{
@@ -140,10 +189,10 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
       ...sections,
       {
         id: newId,
-        name: "Section name",
+        title: "Section name",
         lectures: [
-          { id: 1, name: "Lecture name" },
-          { id: 2, name: "Lecture name" },
+          { id: 1, title: "Lecture name" },
+          { id: 2, title: "Lecture name" },
         ],
       },
     ]);
@@ -159,7 +208,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                 ...section.lectures,
                 {
                   id: section.lectures.length + 1,
-                  name: `Lecture name`,
+                  title: `Lecture name`,
                 },
               ],
             }
@@ -170,7 +219,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
 
   const openEditModal = (section: Section) => {
     setEditingSectionId(section.id);
-    setSectionNameDraft(section.name);
+    setSectionNameDraft(section.title);
     setModalOpen(true);
   };
 
@@ -178,7 +227,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
     setSections((prev) =>
       prev.map((section) =>
         section.id === sectionId
-          ? { ...section, name: sectionNameDraft }
+          ? { ...section, title: sectionNameDraft }
           : section
       )
     );
@@ -198,7 +247,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
           .map((lecture, index) => ({
             ...lecture,
             id: index + 1,
-            name: `Lecture name ${index + 1}`,
+            title: `Lecture name ${index + 1}`,
           }));
         const editedSection = {
           ...section,
@@ -228,7 +277,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
               ...section,
               lectures: section.lectures.map((lecture) =>
                 lecture.id === editingLecture.lectureId
-                  ? { ...lecture, name: editingLecture.draft }
+                  ? { ...lecture, title: editingLecture.draft }
                   : lecture
               ),
             }
@@ -282,7 +331,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                     <span className="font-semibold">
                       Sections {String(index + 1).padStart(2, "0")}:
                     </span>
-                    <span>{section.name}</span>
+                    <span>{section.title}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -360,7 +409,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                             </div>
                           ) : (
                             <span className="text-base-content/70 text-sm">
-                              {lecture.name} {index + 1}
+                              {lecture.title} {index + 1}
                             </span>
                           )}
                         </div>
@@ -370,7 +419,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                               startEditLecture(
                                 section.id,
                                 lecture.id,
-                                lecture.name
+                                lecture.title
                               )
                             }
                           >
@@ -475,11 +524,11 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                           )}
                         </div>
                         <div>
-                          {lecture.captions ? (
+                          {lecture.caption ? (
                             <div className="space-y-2">
                               <h3 className="text-2xl">Captions</h3>
                               <p className="text-base-content/70">
-                                {lecture.captions}
+                                {lecture.caption}
                               </p>
                             </div>
                           ) : (
@@ -523,11 +572,11 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                           )}
                         </div>
                         <div>
-                          {lecture.note || lecture.noteFile ? (
+                          {lecture.notes || lecture.noteFile ? (
                             <div className="space-y-2">
                               <h3 className="text-2xl">Note</h3>
                               <p className="text-base-content/70">
-                                {lecture.note}
+                                {lecture.notes}
                               </p>
                             </div>
                           ) : (
@@ -630,7 +679,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
               activeLecture.sectionId,
               activeLecture.lectureId,
               {
-                captions: caption,
+                caption,
               }
             );
             setActiveLecture(null);
@@ -666,7 +715,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
               activeLecture.sectionId,
               activeLecture.lectureId,
               {
-                note,
+                notes: note,
                 noteFile,
               }
             );

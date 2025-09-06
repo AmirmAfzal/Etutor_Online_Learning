@@ -44,19 +44,19 @@ export type AdvanceInformationFormData = z.infer<
 // Lecture Schema
 export const LectureSchema = z.object({
   id: z.number(),
-  name: z.string().min(1, "Lecture name is required"),
+  title: z.string().min(1, "Lecture name is required"),
   videoUrl: z.string().url().optional(),
   fileUrl: z.string().url().optional(),
-  captions: z.string().optional(),
+  caption: z.string().optional(),
   description: z.string().optional(),
-  note: z.string().optional(),
+  notes: z.string().optional(),
   noteFile: z.string().optional(),
 });
 
 // Section Schema
 const SectionSchema = z.object({
   id: z.union([z.string(), z.number()]),
-  name: z.string().min(1, "Section name is required"),
+  title: z.string().min(1, "Section name is required"),
   lectures: z.array(LectureSchema).min(1, "At least one lecture is required"),
 });
 

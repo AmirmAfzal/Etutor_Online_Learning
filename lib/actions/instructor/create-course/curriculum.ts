@@ -30,8 +30,8 @@ export async function saveCurriculum(
 
     for (const section of result.data) {
       const createdSection = await sectionModel.create({
-        title: section.name,
-        description: section.name,
+        title: section.title,
+        description: section.title,
         lectures: [],
         course: foundCourse?._id,
         duration: 0,
@@ -43,13 +43,13 @@ export async function saveCurriculum(
 
       for (const lecture of section.lectures) {
         const createdLecture = await lectureModel.create({
-          title: lecture.name,
+          title: lecture.title,
           description: lecture.description || "",
           video: lecture.videoUrl || null,
           duration: 0,
           files: lecture.fileUrl ? [lecture.fileUrl] : [],
-          notes: lecture.note || "",
-          caption: lecture.captions || "",
+          notes: lecture.notes || "",
+          caption: lecture.caption || "",
           section: createdSection._id,
         });
 
