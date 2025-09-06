@@ -6,10 +6,7 @@ import CommentReplyForm from "@/components/Courses/watchCourses/CommentReplyForm
 import Form from "next/form";
 import { connectDB } from "@/lib/db/db";
 import commentModel from "@/lib/db/models/commentModel";
-import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
-import instructorModel, {
-  InstructorInterface,
-} from "@/lib/db/models/instructorModel";
+import CreateComment from "./CreateComment";
 
 type Comment = {
   name: string;
@@ -23,6 +20,7 @@ type Comment = {
 
 type CommentsProps = {
   comments: Comment[];
+  lectureId: string;
 };
 
 const CommentItem = ({
@@ -70,7 +68,10 @@ const CommentItem = ({
   );
 };
 
-export default async function WatchComments({ comments }: CommentsProps) {
+export default async function WatchComments({
+  comments,
+  lectureId,
+}: CommentsProps) {
   await connectDB();
 
   const studentComments = await commentModel
@@ -113,22 +114,7 @@ export default async function WatchComments({ comments }: CommentsProps) {
         Comments ({commentsData.length})
       </span>
 
-      <Form action="" className="mt-6 flex gap-2">
-        <div className="relative flex-1">
-          <Icon
-            icon="ph:chats-circle"
-            className="absolute inset-y-0 left-0 pl-3 text-xl"
-          />
-          <input
-            type="text"
-            placeholder="Write a comment..."
-            className="input input-bordered w-full pl-10"
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Post Comment
-        </button>
-      </Form>
+      <CreateComment />
 
       {commentsData.map((comment) => (
         <CommentItem key={comment.name + comment.comment} comment={comment} />
