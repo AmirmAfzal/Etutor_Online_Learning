@@ -101,8 +101,7 @@ export const createCommentAction = async (
       comment: comment,
       refPath: refPath,
       title: userFullName,
-      lecture: lecture, // Now a valid ObjectId
-      // name: userFullName,
+      lecture: lecture,
       avatar: userAvatar,
     });
 

@@ -96,7 +96,6 @@ const CreateComment = () => {
         />
         <input name="name" type="hidden" value={userName} />
       </div>
-
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <button type="button" className="btn btn-primary">
@@ -127,15 +126,7 @@ const CreateComment = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
       {renderToast(showToast, state)}
-      {/* {state.errors && state.errors.length > 0 && (
-        <div className="mt-2 text-red-500">
-          {state.errors.map((error, index) => (
-            <p key={index}>{error}</p>
-          ))}
-        </div>
-      )} */}
     </form>
   );
 };
