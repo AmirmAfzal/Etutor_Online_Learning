@@ -8,6 +8,7 @@ import studentModel from "@/lib/db/models/studentModel";
 import { ActionData } from "@/lib/formTypes";
 import { getServerSession } from "next-auth";
 import { Types } from "mongoose";
+import { revalidatePath } from "next/cache";
 
 export const createCommentAction = async (
   prevState: ActionData,
@@ -42,10 +43,7 @@ export const createCommentAction = async (
     const refPathMap: Record<string, "Student" | "Instructor" | "Admin"> = {
       student: "Student",
       instructor: "Instructor",
-      teacher: "Instructor",
-      tutor: "Instructor",
       admin: "Admin",
-      administrator: "Admin",
     };
     const refPath = refPathMap[userRole.toString().toLowerCase()] || "Student";
 
@@ -84,7 +82,6 @@ export const createCommentAction = async (
     const userFullName =
       `${userProfile.firstname || ""} ${userProfile.lastname || ""}`.trim();
 
-    const userTitle = userProfile.title || "User";
     const userAvatar =
       userProfile.avatar ||
       (session.user as any)?.image ||
@@ -103,9 +100,9 @@ export const createCommentAction = async (
       userId: userId,
       comment: comment,
       refPath: refPath,
-      title: userTitle,
+      title: userFullName,
       lecture: lecture, // Now a valid ObjectId
-      name: userFullName,
+      // name: userFullName,
       avatar: userAvatar,
     });
 
@@ -115,6 +112,10 @@ export const createCommentAction = async (
         errors: ["Failed to create comment."],
       };
     }
+    // FIXME : fix this path
+    revalidatePath(
+      "http://localhost:3000/courses/688a44038e96d020b5889ea2/watch"
+    );
 
     return {
       message: "SUCCESS",
