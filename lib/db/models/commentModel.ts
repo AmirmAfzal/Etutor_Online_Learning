@@ -22,7 +22,7 @@ const commentSchema = new Schema<CommentInterface, Document>(
     title: { type: String, required: true },
     avatar: { type: String, required: true },
     lecture: { type: Schema.Types.ObjectId, ref: "lecture", required: true },
-    replies: [{ type: Schema.Types.ObjectId, ref: "replies" }],
+    replies: [{ type: Schema.Types.ObjectId, ref: "Reply" }],
   },
   {
     timestamps: true,

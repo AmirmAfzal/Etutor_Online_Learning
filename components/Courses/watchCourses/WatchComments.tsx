@@ -80,11 +80,22 @@ export default async function WatchComments({
       select: "firstname lastname avatar",
       model: "student",
     })
+    .populate({
+      path: "replies",
+      populate: [
+        {
+          path: "userId",
+          select: "firstname lastname avatar",
+          model: "student",
+        },
+        {
+          path: "userId",
+          select: "firstname lastname avatar",
+          model: "instructor",
+        },
+      ],
+    })
     .lean();
-
-  // FIXME:fix replies
-  const replies = await replyModel.find().lean();
-  console.log("Replies:", replies);
 
   const instructorComments = await commentModel
     .find({ refPath: "Instructor" })
@@ -93,13 +104,27 @@ export default async function WatchComments({
       select: "firstname lastname avatar",
       model: "instructor",
     })
+    .populate({
+      path: "replies",
+      populate: [
+        {
+          path: "userId",
+          select: "firstname lastname avatar",
+          model: "student",
+        },
+        {
+          path: "userId",
+          select: "firstname lastname avatar",
+          model: "instructor",
+        },
+      ],
+    })
     .lean();
 
   const allComments = [...studentComments, ...instructorComments];
 
   const commentsData: Comment[] = allComments.map((comment) => {
     const user = comment.userId;
-
     return {
       name: user ? `${user.firstname} ${user.lastname}` : "Unknown User",
       avatar: user?.avatar || "/default-avatar.png",
@@ -107,7 +132,20 @@ export default async function WatchComments({
       star: 0,
       comment: comment.comment,
       ADMIN: comment.refPath === "Admin",
-      replies: [],
+      replies:
+        comment.replies?.map((reply: any) => {
+          const replyUser = reply.userId;
+          return {
+            name: replyUser
+              ? `${replyUser.firstname} ${replyUser.lastname}`
+              : "Unknown User",
+            avatar: replyUser?.avatar || "/default-avatar.png",
+            time: reply?.createdAt?.toString() || "a moment ago",
+            star: 0,
+            comment: reply.reply,
+            ADMIN: reply.refPath === "Admin",
+          };
+        }) || [],
     };
   });
 
