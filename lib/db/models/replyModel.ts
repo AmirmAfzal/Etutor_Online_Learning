@@ -3,10 +3,10 @@ import mongoose, { ObjectId, Schema, Document } from "mongoose";
 export interface ReplyInterface extends Document {
   reply: string;
   refPath: "Student" | "Instructor" | "Admin";
-  user: ObjectId;
   comment: ObjectId;
   title: string;
   avatar: string;
+  userId: ObjectId;
 }
 
 const replySchema = new Schema<ReplyInterface, Document>(
@@ -17,7 +17,7 @@ const replySchema = new Schema<ReplyInterface, Document>(
       required: true,
       enum: ["Student", "Instructor", "Admin"],
     },
-    user: { type: Schema.Types.ObjectId, refPath: "refPath", required: true },
+    userId: { type: Schema.Types.ObjectId, refPath: "refPath", required: true },
     comment: { type: Schema.Types.ObjectId, ref: "Comment", required: true },
     title: { type: String, required: true },
     avatar: { type: String, required: true },
@@ -28,6 +28,6 @@ const replySchema = new Schema<ReplyInterface, Document>(
 );
 
 const replyModel =
-  mongoose.models.reply || mongoose.model<ReplyInterface>("Reply", replySchema);
+  mongoose.models.Reply || mongoose.model<ReplyInterface>("Reply", replySchema);
 
 export default replyModel;

@@ -1,12 +1,11 @@
 import Image from "next/image";
 
-import Icon from "@/components/ui/Icon";
 import TruncatedText from "../TruncatedText";
 import CommentReplyForm from "@/components/Courses/watchCourses/CommentReplyForm";
-import Form from "next/form";
 import { connectDB } from "@/lib/db/db";
 import commentModel from "@/lib/db/models/commentModel";
 import CreateComment from "./CreateComment";
+import replyModel from "@/lib/db/models/replyModel";
 
 type Comment = {
   name: string;
@@ -82,6 +81,10 @@ export default async function WatchComments({
       model: "student",
     })
     .lean();
+
+  // FIXME:fix replies
+  const replies = await replyModel.find().lean();
+  console.log("Replies:", replies);
 
   const instructorComments = await commentModel
     .find({ refPath: "Instructor" })

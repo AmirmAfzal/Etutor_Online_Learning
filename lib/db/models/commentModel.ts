@@ -18,11 +18,11 @@ const commentSchema = new Schema<CommentInterface, Document>(
       required: true,
       enum: ["Student", "Instructor", "Admin"],
     },
+    userId: { type: Schema.Types.ObjectId, required: true, refPath: "refPath" },
     title: { type: String, required: true },
     avatar: { type: String, required: true },
     lecture: { type: Schema.Types.ObjectId, ref: "lecture", required: true },
     replies: [{ type: Schema.Types.ObjectId, ref: "replies" }],
-    userId: { type: Schema.Types.ObjectId, required: true, refPath: "refPath" },
   },
   {
     timestamps: true,
