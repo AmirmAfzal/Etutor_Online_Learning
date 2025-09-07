@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { Suspense } from "react";
+
 import {
   Accordion,
   AccordionContent,
@@ -5,8 +8,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Icon from "@/components/ui/Icon";
-import Link from "next/link";
-import { Suspense } from "react";
 
 interface RatingItem {
   label: string;

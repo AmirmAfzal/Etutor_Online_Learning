@@ -1,14 +1,16 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
 import PriceRange from "./PriceRange";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 type Props = {
   price: { [key: string]: number };
