@@ -82,8 +82,8 @@ const WatchTabs = ({ lecture, comments }: WatchTabsProps) => {
               Download File
             </button>
           </div>
-
-          <WatchComments comments={comments} />
+          {/* FIXME : fix lectureId props  */}
+          <WatchComments lectureId="" />
         </div>
       </TabsContent>
 
@@ -122,7 +122,8 @@ const WatchTabs = ({ lecture, comments }: WatchTabsProps) => {
       </TabsContent>
 
       <TabsContent value="comments" className="mt-6">
-        <WatchComments comments={comments} />
+        {/*FIXME : fix lectureId props  */}
+        <WatchComments lectureId="" />
       </TabsContent>
     </Tabs>
   );

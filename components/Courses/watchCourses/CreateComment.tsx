@@ -11,6 +11,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import Icon from "@/components/ui/Icon";
+import Form from "next/form";
 import { createCommentAction } from "@/lib/actions/comment/createCommentAction";
 import { useSession } from "next-auth/react";
 import { useActionState, useRef, useState, useEffect } from "react";
@@ -75,7 +76,7 @@ const CreateComment = () => {
   );
 
   return (
-    <form ref={formRef} action={action} className="mt-6 flex gap-2">
+    <Form ref={formRef} action={action} className="mt-6 flex gap-2">
       <div className="relative flex-1">
         <Icon
           icon="ph:chats-circle"
@@ -127,7 +128,7 @@ const CreateComment = () => {
         </DialogContent>
       </Dialog>
       {renderToast(showToast, state)}
-    </form>
+    </Form>
   );
 };
 

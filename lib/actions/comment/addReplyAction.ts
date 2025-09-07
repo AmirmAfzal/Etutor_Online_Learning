@@ -1,11 +1,11 @@
-"use server"
+"use server";
 import { ActionData } from "@/lib/formTypes";
 import { connectDB } from "@/lib/db/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import studentModel from "@/lib/db/models/studentModel";
 import instructorModel from "@/lib/db/models/instructorModel";
-// import { revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 import replyModel from "@/lib/db/models/replyModel";
 import mongoose, { Types } from "mongoose";
 import commentModel from "@/lib/db/models/commentModel";
@@ -103,7 +103,6 @@ export const addReplyAction = async (
       comment: commentId,
     });
 
-
     if (!createReply) {
       return {
         message: "ERROR",
@@ -112,14 +111,13 @@ export const addReplyAction = async (
     }
 
     await commentModel.findByIdAndUpdate(commentId, {
-      $push: { replies: createReply._id}
+      $push: { replies: createReply._id },
     });
 
     // FIXME : fix this path
-    // revalidatePath(
-    //   "http://localhost:3000/courses/688a44038e96d020b5889ea2/watch"
-    // );
-
+    revalidatePath(
+      "http://localhost:3000/courses/688a44038e96d020b5889ea2/watch"
+    );
     return {
       message: "SUCCESS",
       data: JSON.parse(JSON.stringify(createReply)),
@@ -132,4 +130,4 @@ export const addReplyAction = async (
       errors: ["An unexpected error occurred. Please try again later."],
     };
   }
-}
+};

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Types } from "mongoose";
 
 import TruncatedText from "../TruncatedText";
 import CommentReplyForm from "@/components/Courses/watchCourses/CommentReplyForm";
@@ -6,34 +7,55 @@ import { connectDB } from "@/lib/db/db";
 import commentModel from "@/lib/db/models/commentModel";
 import CreateComment from "./CreateComment";
 
-// Define the Comment type to include a string 'id'
-type Comment = {
-  id: string;
+// Type definitions for the data from the database
+type UserFromDB = {
+  firstname: string;
+  lastname: string;
+  avatar: string;
+};
+
+type ReplyFromDB = {
+  _id: Types.ObjectId;
+  userId: UserFromDB;
+  reply: string;
+  createdAt: Date;
+  refPath: string;
+};
+
+type CommentFromDB = {
+  _id: Types.ObjectId;
+  userId: UserFromDB;
+  comment: string;
+  refPath: string;
+  createdAt: Date;
+  replies: ReplyFromDB[];
+};
+
+// Component-safe type after processing DB data
+interface CommentUI {
+  id?: string;
   name: string;
   avatar: string;
   time: string;
   star: number;
   comment: string;
   ADMIN: boolean;
-  replies?: Comment[];
-};
+  replies?: CommentUI[];
+}
 
-type CommentsProps = {
-  comments: Comment[];
-  lectureId: string;
-};
-
-const CommentItem = ({
-                       comment,
-                       commentId, // This will now be a string
-                       lectureId,
-                       isReply = false,
-                     }: {
-  comment: Comment;
-  commentId: string;
+interface CommentItemProps {
+  comment: CommentUI;
+  commentId?: string;
   lectureId: string;
   isReply?: boolean;
-}) => {
+}
+
+const CommentItem = ({
+  comment,
+  commentId,
+  lectureId,
+  isReply = false,
+}: CommentItemProps) => {
   return (
     <div className={`${isReply ? "ml-10 border-l pl-4" : ""}`}>
       <div className="flex flex-col items-start gap-4 py-4">
@@ -61,101 +83,94 @@ const CommentItem = ({
         <div className="ml-6 flex w-full flex-col">
           <TruncatedText text={comment.comment} maxLength={60} />
 
-          {/* Pass the string commentId */}
-          {!isReply && <CommentReplyForm parentName={comment.name} commentId={commentId} />}
+          {!isReply && (
+            <CommentReplyForm parentName={comment.name} commentId={commentId} />
+          )}
         </div>
       </div>
 
       {comment.replies?.map((reply) => (
-        // Ensure reply.id is unique and a string. If reply objects don't have a unique ID,
-        // you might need to generate one or use a combination that's highly likely to be unique.
-        // Assuming reply objects now have a unique 'id' property (which is a string).
-        <CommentItem key={reply.id} comment={reply} lectureId={lectureId} commentId={commentId} isReply />
+        <CommentItem
+          key={reply.id}
+          comment={reply}
+          lectureId={lectureId}
+          commentId={commentId}
+          isReply
+        />
       ))}
     </div>
   );
 };
 
 export default async function WatchComments({
-                                              // 'comments' prop is unused here as data is fetched within the component
-                                              lectureId,
-                                            }: { lectureId: string }) {
+  lectureId,
+}: {
+  lectureId: string;
+}) {
   await connectDB();
 
+  const populateOptions = {
+    path: "userId",
+    select: "firstname lastname avatar",
+  };
+
+  const populateReplies = {
+    path: "replies",
+    populate: [
+      {
+        path: "userId",
+        select: "firstname lastname avatar",
+        model: "student",
+      },
+      {
+        path: "userId",
+        select: "firstname lastname avatar",
+        model: "instructor",
+      },
+    ],
+  };
+
   const studentComments = await commentModel
-    .find({ refPath: "Student" })
-    .populate({
-      path: "userId",
-      select: "firstname lastname avatar",
-      model: "student",
-    })
-    .populate({
-      path: "replies",
-      populate: [
-        {
-          path: "userId",
-          select: "firstname lastname avatar",
-          model: "student",
-        },
-        {
-          path: "userId",
-          select: "firstname lastname avatar",
-          model: "instructor",
-        },
-      ],
-    })
+    .find<CommentFromDB>({ lecture: lectureId, refPath: "Student" })
+    .populate({ ...populateOptions, model: "student" })
+    .populate(populateReplies)
     .lean();
 
   const instructorComments = await commentModel
-    .find({ refPath: "Instructor" })
-    .populate({
-      path: "userId",
-      select: "firstname lastname avatar",
-      model: "instructor",
-    })
-    .populate({
-      path: "replies",
-      populate: [
-        {
-          path: "userId",
-          select: "firstname lastname avatar",
-          model: "student",
-        },
-        {
-          path: "userId",
-          select: "firstname lastname avatar",
-          model: "instructor",
-        },
-      ],
-    })
+    .find<CommentFromDB>({ lecture: lectureId, refPath: "Instructor" })
+    .populate({ ...populateOptions, model: "instructor" })
+    .populate(populateReplies)
     .lean();
 
   const allComments = [...studentComments, ...instructorComments];
 
-  const commentsData: Comment[] = allComments.map((comment) => {
+  const commentsData: CommentUI[] = allComments.map((comment) => {
     const user = comment.userId;
-    const processedReplies = comment.replies?.map((reply) => {
-      const replyUser = reply.userId;
-      return {
-        id: reply._id.toString(),
-        name: reply.title,
-        avatar: replyUser?.avatar || "/default-avatar.png",
-        time: reply?.createdAt?.toString() || "a moment ago",
-        star: 0,
-        comment: reply.reply,
-        ADMIN: reply.refPath === "Admin",
-      };
-    });
+
+    const processedReplies: CommentUI[] =
+      comment.replies?.map((reply: ReplyFromDB) => {
+        const replyUser = reply.userId;
+        return {
+          id: reply._id?.toString(),
+          name: `${replyUser.firstname} ${replyUser.lastname}`,
+          avatar: replyUser.avatar || "/default-avatar.png",
+          time: reply.createdAt.toISOString(),
+          star: 0,
+          comment: reply.reply,
+          ADMIN: reply.refPath === "Admin",
+          replies: [],
+        };
+      }) || [];
 
     return {
-      id: comment._id.toString(),
-      name: user ? `${user.firstname} ${user.lastname}` : "Unknown User",
-      avatar: user?.avatar || "/default-avatar.png",
-      time: comment?.createdAt?.toString() || "2 hours ago",
+      id: comment._id?.toString(),
+      name: `${user.firstname} ${user.lastname}`,
+      avatar: user.avatar || "/default-avatar.png",
+      time: comment.createdAt.toISOString(),
       star: 0,
       comment: comment.comment,
       ADMIN: comment.refPath === "Admin",
-      replies: processedReplies || [],
+      replies: processedReplies,
     };
   });
 
