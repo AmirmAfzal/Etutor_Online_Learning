@@ -112,37 +112,34 @@ const WatchCurriculum = ({
                     {section.content.map((item, itemIndex) => {
                       const isActive = item._id === currentLectureId;
                       return (
-                        <li
-                          key={`item-${index}-${itemIndex}`}
-                          className={`flex cursor-pointer items-center justify-between gap-3 py-1 ${
-                            isActive ? "text-primary font-semibold" : ""
-                          }`}
-                          onClick={() => handleLectureClick(index, item._id)}
-                        >
-                          <div className="flex items-center gap-3">
-                            <input
-                              type="checkbox"
-                              className="checkbox checkbox-primary checkbox-sm"
-                              checked={isActive} // Assuming active lecture is "completed" for now
-                              readOnly
-                            />
-                            <span className="text-sm md:text-base">
-                              {item.title}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Icon
-                              icon={
-                                item.type === "video"
-                                  ? "ph:play-fill"
-                                  : "ph:file-text"
-                              }
-                              className="text-base-content/70 text-base"
-                            />
-                            <span className="text-xs md:text-sm">
-                              {item.info}
-                            </span>
-                          </div>
+                        <li key={`item-${index}-${itemIndex}`}>
+                          <button
+                            onClick={() => handleLectureClick(index, item._id)}
+                            className={`flex w-full cursor-pointer items-center justify-between gap-3 py-1 text-left ${
+                              isActive ? "text-primary font-semibold" : ""
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <input
+                                type="checkbox"
+                                className="checkbox checkbox-primary checkbox-sm"
+                                checked={isActive}
+                                readOnly
+                              />
+                              <span className="text-sm md:text-base">{item.title}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Icon
+                                icon={
+                                  item.type === "video"
+                                    ? "ph:play-fill"
+                                    : "ph:file-text"
+                                }
+                                className="text-base-content/70 text-base"
+                              />
+                              <span className="text-xs md:text-sm">{item.info}</span>
+                            </div>
+                          </button>
                         </li>
                       );
                     })}

@@ -7,7 +7,7 @@ import { connectDB } from "@/lib/db/db";
 import { Types } from "mongoose";
 import sectionModel from "@/lib/db/models/sectionModel";
 
-type CurriculumItem = {
+interface CurriculumItem  {
   title: string;
   lectures: number;
   duration: string;
@@ -17,9 +17,9 @@ type CurriculumItem = {
     info: string;
     type: string;
   }[];
-};
+}
 
-type Comment = {
+interface Comment {
   name: string;
   avatar: string;
   time: string;
@@ -27,7 +27,12 @@ type Comment = {
   comment: string;
   ADMIN: boolean;
   replies?: Comment[];
-};
+}
+
+interface Props {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ lectureId?: string; section?: string }>;
+}
 
 const comments: Comment[] = [
   {
@@ -113,15 +118,12 @@ interface SectionType {
   course: CourseType;
 }
 
-const WatchCourse = async ({
-  params,
-  searchParams,
-}: {
-  params: { id: string };
-  searchParams: Promise<{ lectureId?: string; section?: string }>;
-}) => {
+const WatchCourse = async (
+  props: Props
+) => {
   await connectDB();
-  const { id } = params;
+  const { id } = await props.params;
+
 
   if (!Types.ObjectId.isValid(id)) {
     return <div>Invalid Course ID</div>;
@@ -142,7 +144,7 @@ const WatchCourse = async ({
     (section) => section.lectures
   );
 
-  const { lectureId, section: sectionParam } = await searchParams;
+  const { lectureId, section: sectionParam } = await props.searchParams;
 
   let currentLecture: LectureType | undefined;
   let currentSection: SectionType | undefined;
