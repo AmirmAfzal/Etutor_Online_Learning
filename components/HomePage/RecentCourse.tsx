@@ -24,7 +24,7 @@ const RecentCourse = ({ courses }: Props) => {
       </h3>
       <div>
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-4">
-          {courses.map((course: CourseTypes) => (
+          {courses && courses.map((course: CourseTypes) => (
             <HoverCard key={course.title}>
               <HoverCardTrigger asChild>
                 <CourseCard course={course} />
@@ -44,7 +44,7 @@ const RecentCourse = ({ courses }: Props) => {
                       <div className="flex flex-row items-center gap-2">
                         <div>
                           <div className="flex flex-row items-center -space-x-4">
-                            {course.instructors.map((instructor) => (
+                            {course.instructors?.map((instructor) => (
                               <Image
                                 key={instructor.id}
                                 src={instructor.profile}
@@ -61,7 +61,7 @@ const RecentCourse = ({ courses }: Props) => {
                             Course by
                           </p>
                           <div className="flex flex-col">
-                            {course.instructors.map((instructor) => (
+                            {course.instructors?.map((instructor) => (
                               <p key={instructor.id} className="text-sm">
                                 {instructor.name}
                               </p>

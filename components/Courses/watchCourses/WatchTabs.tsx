@@ -23,7 +23,7 @@ interface WatchTabsProps {
   comments: Comment[];
 }
 
-const WatchTabs = ({ lecture, comments }: WatchTabsProps) => {
+const WatchTabs = ({ lecture }: WatchTabsProps) => {
   return (
     <Tabs defaultValue="description" className="mt-12 w-full md:mt-8">
       <TabsList className="bg-base-100 flex h-auto w-full gap-2 overflow-auto overflow-y-hidden">
@@ -82,8 +82,8 @@ const WatchTabs = ({ lecture, comments }: WatchTabsProps) => {
               Download File
             </button>
           </div>
-
-          <WatchComments comments={comments} />
+          {/* FIXME : fix lectureId props  */}
+          <WatchComments lectureId="" />
         </div>
       </TabsContent>
 
@@ -122,7 +122,8 @@ const WatchTabs = ({ lecture, comments }: WatchTabsProps) => {
       </TabsContent>
 
       <TabsContent value="comments" className="mt-6">
-        <WatchComments comments={comments} />
+        {/*FIXME : fix lectureId props  */}
+        <WatchComments lectureId="" />
       </TabsContent>
     </Tabs>
   );
