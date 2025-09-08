@@ -8,28 +8,29 @@ import commentModel from "@/lib/db/models/commentModel";
 import CreateComment from "./CreateComment";
 
 // Type definitions for the data from the database
-type UserFromDB = {
+interface UserFromDB {
   firstname: string;
   lastname: string;
   avatar: string;
-};
+}
 
-type ReplyFromDB = {
+interface ReplyFromDB {
   _id: Types.ObjectId;
   userId: UserFromDB;
+  z;
   reply: string;
   createdAt: Date;
   refPath: string;
-};
+}
 
-type CommentFromDB = {
+interface CommentFromDB {
   _id: Types.ObjectId;
   userId: UserFromDB;
   comment: string;
   refPath: string;
   createdAt: Date;
   replies: ReplyFromDB[];
-};
+}
 
 // Component-safe type after processing DB data
 interface CommentUI {

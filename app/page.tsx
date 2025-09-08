@@ -55,7 +55,9 @@ const HomePage = async () => {
     .populate("subCategory", "name")
     .lean()
     .exec();
-  const plainCourse = JSON.parse(JSON.stringify(foundCourse));
+
+
+  const plainCourse = JSON.parse(JSON.stringify(foundCourse ?? []));
   return (
     <>
       <HeroSection />
