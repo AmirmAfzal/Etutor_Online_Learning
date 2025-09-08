@@ -9,6 +9,7 @@ export interface LectureInterface extends Document {
   notes?: string
   caption?: string
   section?: ObjectId;
+  index: number;
 }
 
 const lectureSchema = new Schema<LectureInterface & Document>({
@@ -20,6 +21,7 @@ const lectureSchema = new Schema<LectureInterface & Document>({
   files: { type: [String], required: false },
   notes: { type: String, required: false },
   caption: { type: String, required: false },
+  index: { type: Number, required: true },
 }, {
   timestamps: true,
 });
