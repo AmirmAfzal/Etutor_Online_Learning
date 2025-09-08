@@ -22,7 +22,7 @@ const FeaturedCourses = ({ courses }: Props) => {
           </p>
         </div>
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {courses.map((course: CourseTypes) => (
+          {courses && courses?.map((course: CourseTypes) => (
             <div
               key={course.title}
               className="border-base-300 flex flex-col border text-sm transition-all duration-300 hover:shadow-lg md:flex-row"
@@ -57,7 +57,7 @@ const FeaturedCourses = ({ courses }: Props) => {
                         height={30}
                       />
                       <p className="text-base-content/70">
-                        {course.instructors.map(
+                        {course.instructors?.map(
                           (instructor) => instructor.name
                         )}
                       </p>
