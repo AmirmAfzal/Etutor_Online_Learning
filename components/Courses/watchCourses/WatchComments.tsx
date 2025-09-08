@@ -17,7 +17,6 @@ interface UserFromDB {
 interface ReplyFromDB {
   _id: Types.ObjectId;
   userId: UserFromDB;
-  z;
   reply: string;
   createdAt: Date;
   refPath: string;
