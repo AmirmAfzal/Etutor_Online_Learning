@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import Icon from "@/components/ui/Icon";
 import {
   Sheet,
@@ -8,7 +10,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useState } from "react";
 
 interface Props {
   searchParams: {

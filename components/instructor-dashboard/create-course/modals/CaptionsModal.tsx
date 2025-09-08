@@ -26,10 +26,10 @@ const CaptionsModal = ({
     .find((s) => s.id === sectionId)
     ?.lectures.find((l) => l.id === lectureId);
 
-  const [caption, setCaption] = useState(lecture?.captions || "");
+  const [caption, setCaption] = useState(lecture?.caption || "");
 
   useEffect(() => {
-    setCaption(lecture?.captions || "");
+    setCaption(lecture?.caption || "");
   }, [lecture]);
 
   return (

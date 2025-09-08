@@ -2,6 +2,7 @@
 
 import { startTransition, useActionState, useEffect, useState } from "react";
 import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import { Types } from "mongoose";
 
 import { saveCurriculum } from "@/lib/actions/instructor/create-course/curriculum";
 import { CourseInterface } from "@/lib/db/models/courseModel";
@@ -25,25 +26,45 @@ import LectureNotesModal from "./modals/LectureNotesModal";
 
 export interface Lecture {
   id: number;
+  _id?: string;
   title: string;
   videoUrl?: string;
   fileUrl?: string;
   caption?: string;
   description?: string;
   notes?: string;
-  noteFile?: string;
 }
 
 export interface Section {
   id: number;
+  _id?: string;
   title: string;
   lectures: Lecture[];
+  section?: Sections[];
 }
 
 interface Props {
   onNext: () => void;
   onBack: () => void;
   course: CourseInterface | null;
+}
+
+interface Lectures {
+  _id?: string;
+  id?: string;
+  title?: string;
+  video?: string;
+  files?: string;
+  caption?: string;
+  description?: string;
+  notes?: string;
+}
+
+interface Sections {
+  _id?: Types.ObjectId;
+  id?: string;
+  title?: string;
+  lectures?: Lectures[];
 }
 
 const initialState = {
@@ -69,46 +90,26 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
     },
   ]);
 
-  // useEffect(() => {
-  //   if (course?.sections && course.sections.length > 0) {
-  //     const mappedSections: Section[] = course.sections.map(
-  //       (section, index) => ({
-  //         id: index + 1,
-  //         title:
-  //           (section as unknown as { title: string })?.title || "Section name",
-  //         lectures:
-  //           section?.lectures?.map((lecture: Lecture, lectureIndex: number) => ({
-  //             id: lectureIndex + 1,
-  //             title: lecture.title || "Lecture name",
-  //             videoUrl: lecture.videoUrl || undefined,
-  //             fileUrl: lecture.fileUrl || undefined,
-  //             caption: lecture.caption || undefined,
-  //             description: lecture.description || undefined,
-  //             notes: lecture.notes || undefined,
-  //             noteFile: lecture.noteFile || undefined,
-  //           })) || [],
-  //       })
-  //     );
-  //     setSections(mappedSections);
-  //   }
-  // }, [course, sections.length]);
-
   useEffect(() => {
     if (course?.sections && course.sections.length > 0) {
-      const mappedSections: Section[] = course.sections.map(
-        (section: any, index: number) => ({
-          id: index + 1,
+      const mappedSections: Section[] = (course.sections as Sections[]).map(
+        (section: Sections, sectionIndex: number) => ({
+          id: sectionIndex + 1,
+          _id: section?._id ? String(section._id) : undefined,
           title: section.title || "Section name",
           lectures: (section.lectures || []).map(
-            (lecture: any, lectureIndex: number) => ({
+            (lecture: Lectures, lectureIndex: number) => ({
               id: lectureIndex + 1,
+              _id: lecture?._id ? String(lecture._id) : undefined,
               title: lecture.title || "Lecture name",
               videoUrl: lecture.video || "",
-              fileUrl: lecture.files?.[0] || "",
+              fileUrl:
+                (Array.isArray(lecture.files)
+                  ? lecture.files[0]
+                  : lecture.files) || "",
               caption: lecture.caption || "",
               description: lecture.description || "",
               notes: lecture.notes || "",
-              noteFile: lecture.files?.[0] || "",
             })
           ),
         })
@@ -572,7 +573,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
                           )}
                         </div>
                         <div>
-                          {lecture.notes || lecture.noteFile ? (
+                          {lecture.notes ? (
                             <div className="space-y-2">
                               <h3 className="text-2xl">Note</h3>
                               <p className="text-base-content/70">
@@ -710,13 +711,12 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
           sections={sections}
           sectionId={activeLecture.sectionId}
           lectureId={activeLecture.lectureId}
-          onSave={(note, noteFile) => {
+          onSave={(note) => {
             updateLectureContent(
               activeLecture.sectionId,
               activeLecture.lectureId,
               {
                 notes: note,
-                noteFile,
               }
             );
             setActiveLecture(null);

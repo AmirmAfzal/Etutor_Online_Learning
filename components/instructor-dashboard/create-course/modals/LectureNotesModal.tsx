@@ -1,11 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import {
-  CldUploadButton,
-  CloudinaryUploadWidgetInfo,
-  CloudinaryUploadWidgetResults,
-} from "next-cloudinary";
 
 import Icon from "@/components/ui/Icon";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,7 +12,7 @@ interface Props {
   sections: Section[];
   sectionId: number;
   lectureId: number;
-  onSave: (note: string, noteFile: string) => void;
+  onSave: (note: string) => void;
 }
 
 const LectureNotesModal = ({
@@ -31,12 +26,11 @@ const LectureNotesModal = ({
     .find((s) => s.id === sectionId)
     ?.lectures.find((l) => l.id === lectureId);
 
-  const [note, setNote] = useState<string>(lecture?.note || "");
-  const [noteFile, setNoteFile] = useState<CloudinaryUploadWidgetInfo>();
+  const [note, setNote] = useState<string>(lecture?.notes || "");
 
   const uploadHandler = () => {
-    if (note || noteFile) {
-      onSave(note, noteFile?.secure_url || "");
+    if (note) {
+      onSave(note);
       openModal("note");
     }
   };
@@ -63,39 +57,6 @@ const LectureNotesModal = ({
             value={note}
             onChange={(e) => setNote(e.target.value)}
           />
-          <div className="border-base-300 flex flex-col items-center justify-center gap-4 border p-4">
-            <p className="font-semibold">Uploads Notes</p>
-
-            {noteFile?.original_filename && (
-              <p className="text-success">
-                File Uploaded:{" "}
-                <span className="text-base-content">
-                  {noteFile.original_filename}
-                </span>
-              </p>
-            )}
-
-            <CldUploadButton
-              uploadPreset="course"
-              className="btn btn-soft btn-sm"
-              options={{
-                sources: ["local"],
-                multiple: false,
-                resourceType: "raw",
-              }}
-              onSuccess={(result: CloudinaryUploadWidgetResults) => {
-                if (
-                  result.event === "success" &&
-                  typeof result.info === "object" &&
-                  "secure_url" in result.info
-                ) {
-                  setNoteFile(result.info);
-                }
-              }}
-            >
-              browse file
-            </CldUploadButton>
-          </div>
           <div className="mt-6 flex flex-row items-center justify-between">
             <button
               className="btn btn-outline"

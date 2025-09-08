@@ -1,12 +1,13 @@
 "use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 interface Props {
   courseLevel: string[];
