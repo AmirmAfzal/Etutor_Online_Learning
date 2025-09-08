@@ -1,4 +1,5 @@
 import Form from "next/form";
+import Link from "next/link";
 
 import Icon from "@/components/ui/Icon";
 import {
@@ -9,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import CourseFilter from "@/components/Courses/CourseFilter";
-import Link from "next/link";
+
 import FilterMobile from "../Courses/courseFilter/FilterMobile";
 
 interface Props {
