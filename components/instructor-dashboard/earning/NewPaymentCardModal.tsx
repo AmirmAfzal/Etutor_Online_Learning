@@ -22,6 +22,13 @@ import {
   paymentCardSchema,
 } from "@/lib/validation/schemas/instructor/newPaymentCard";
 import ErrorMessage from "@/components/ErrorMessage";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const initialState = {
   message: "",
@@ -41,6 +48,7 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
   const form = useForm<PaymentCardFormData>({
     resolver: zodResolver(paymentCardSchema),
     defaultValues: {
+      bank: "",
       name: "",
       cardNumber: "",
       expiration: "",
@@ -59,7 +67,7 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
       form.reset();
       setTimeout(() => {
         closeModal();
-      }, 2000);
+      }, 1000);
     }
   }, [state.message, closeModal, form]);
 
@@ -82,6 +90,31 @@ const NewPaymentCardModal = ({ closeModal }: Props) => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 p-4"
           >
+            <FormField
+              control={form.control}
+              name="bank"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bank</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="visa">Visa</SelectItem>
+                        <SelectItem value="mastercard">MasterCard</SelectItem>
+                        <SelectItem value="paypal">Paypal</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="name"
