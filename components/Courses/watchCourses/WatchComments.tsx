@@ -107,6 +107,19 @@ export default async function WatchComments({
 }: {
   lectureId: string;
 }) {
+  if (!lectureId) {
+    return (
+      <div className="mt-12 w-full">
+        <span className="text-base-content/80 text-2xl font-semibold">
+          Comments (0)
+        </span>
+        <p className="text-base-content/60 mt-4 text-sm">
+          No comments available for this lecture.
+        </p>
+      </div>
+    );
+  }
+
   await connectDB();
 
   const populateOptions = {
