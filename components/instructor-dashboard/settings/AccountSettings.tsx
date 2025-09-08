@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import {
   CldImage,
   CldUploadButton,
@@ -39,8 +39,21 @@ const initialState = {
   errors: [],
 };
 
-const AccountSettings = () => {
-  const [title, setTitle] = useState<string>("");
+interface Props {
+  instructor: {
+    firstname: string;
+    lastname: string;
+    avatar: string;
+    username: string;
+    phoneCode: string;
+    phoneNumber: string;
+    title: string;
+    bio: string;
+  };
+}
+
+const AccountSettings = ({ instructor }: Props) => {
+  const [title, setTitle] = useState<string>(instructor?.title || "");
 
   const [state, formAction, pending] = useActionState(
     saveAccountSettings,
@@ -50,14 +63,18 @@ const AccountSettings = () => {
   const form = useForm<AccountSettingFormData>({
     resolver: zodResolver(accountSettingSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      userName: "",
-      phoneCode: undefined,
-      phoneNumber: "",
-      title: "",
-      biography: "",
-      profile: "",
+      firstName: instructor?.firstname || "",
+      lastName: instructor?.lastname || "",
+      userName: instructor?.username || "",
+      phoneCode:
+        instructor.phoneCode &&
+        ["+87", "+880", "+98", "+95"].includes(instructor.phoneCode)
+          ? (instructor.phoneCode as "+87" | "+880" | "+98" | "+95")
+          : undefined,
+      phoneNumber: instructor?.phoneNumber || "",
+      title: title || "",
+      biography: instructor?.bio || "",
+      profile: instructor?.avatar || "",
     },
   });
 
@@ -71,13 +88,6 @@ const AccountSettings = () => {
       formAction(formData);
     });
   };
-
-  useEffect(() => {
-    if (state.message === "SUCCESS") {
-      form.reset();
-      setTitle("");
-    }
-  }, [state.message, form]);
 
   return (
     <section className="bg-base-100 container mx-auto p-6">

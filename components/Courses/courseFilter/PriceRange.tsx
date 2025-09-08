@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
-import { useSearchParams, useRouter } from "next/navigation";
 
 type PriceRangeProps = {
   min?: number;

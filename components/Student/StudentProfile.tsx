@@ -2,15 +2,17 @@
 
 import React from "react";
 import Image from "next/image";
-import { Icon } from "@iconify/react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
+import instructorModel from "@/lib/db/models/instructorModel";
 
-interface Student {
+import BecomeInstructorButton from "./BecomeInstructorButton";
+
+export interface Student {
   user: string;
   _id: string;
   bio: string;
@@ -33,6 +35,8 @@ const StudentProfile = async () => {
   if (!session?.user?.id) {
     return redirect("/auth/signin");
   }
+
+  const instructor = await instructorModel.findOne({ user: session.user.id });
 
   const student = await studentModel
     .findOne({ user: session.user.id })
@@ -69,10 +73,11 @@ const StudentProfile = async () => {
         </p>
       </div>
 
-      <button className="btn btn-primary btn-soft mt-2 w-full gap-2 font-bold md:mt-0 md:ml-auto md:w-auto">
-        Become Instructor
-        <Icon icon="ph:arrow-right" className="text-xl sm:text-2xl" />
-      </button>
+      <BecomeInstructorButton
+        userId={session.user.id}
+        student={JSON.parse(JSON.stringify(student))}
+        isInstructor={instructor ? true : false}
+      />
     </div>
   );
 };
