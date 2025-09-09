@@ -30,7 +30,7 @@ interface WatchTabsProps {
   comments: Comment[];
 }
 
-const WatchTabs = ({ currentLecture, comments }: WatchTabsProps) => {
+const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
   if (!currentLecture) {
     return <div>No lecture details available.</div>;
   }
@@ -123,7 +123,7 @@ const WatchTabs = ({ currentLecture, comments }: WatchTabsProps) => {
           )}
 
           {/* <WatchComments comments={comments} lectureId={currentLecture.id} /> */}
-          <WatchComments lectureId="" />
+          <WatchComments lectureId={currentLecture._id} />
         </div>
       </TabsContent>
 
@@ -185,7 +185,7 @@ const WatchTabs = ({ currentLecture, comments }: WatchTabsProps) => {
 
       <TabsContent value="comments" className="mt-6">
         {/* <WatchComments comments={comments}  lectureId={currentLecture.id}/> */}
-        <WatchComments lectureId="" />
+        <WatchComments lectureId={currentLecture._id} />
       </TabsContent>
     </Tabs>
   );

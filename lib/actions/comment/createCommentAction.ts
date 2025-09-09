@@ -12,17 +12,16 @@ import { revalidatePath } from "next/cache";
 
 interface SessionUser {
   id: string;
-  email?: string;
+  email: string;
+  role: "STUDENT" | "INSTRUCTOR" | "ADMIN";
   name?: string;
-  image?: string;
-  role?: "student" | "instructor" | "admin";
 }
 
 interface UserProfile {
   _id: Types.ObjectId;
   firstname?: string;
   lastname?: string;
-  avatar?: string;
+  avatar: string;
 }
 
 export const createCommentAction = async (
@@ -31,6 +30,8 @@ export const createCommentAction = async (
 ): Promise<ActionData> => {
   try {
     await connectDB();
+
+    // get lecture id from search params
 
     const session = await getServerSession(authOptions);
     const sessionUser = session?.user as SessionUser | undefined;
@@ -60,15 +61,12 @@ export const createCommentAction = async (
 
     const comment = commentRaw.trim();
 
-    const userRole = sessionUser.role ?? "student";
+    const userRole = sessionUser?.role ?? "STUDENT";
 
-    const refPathMap: Record<
-      "student" | "instructor" | "admin",
-      "Student" | "Instructor" | "Admin"
-    > = {
-      student: "Student",
-      instructor: "Instructor",
-      admin: "Admin",
+    const refPathMap= {
+      STUDENT: "Student",
+      INSTRUCTOR: "Instructor",
+      ADMIN: "Admin",
     };
 
     const refPath = refPathMap[userRole];
@@ -77,14 +75,14 @@ export const createCommentAction = async (
     try {
       if (refPath === "Student") {
         const studentResult = await studentModel
-          .find({ user: sessionUser.id })
-          .lean<UserProfile[]>();
-        userProfile = studentResult[0] ?? null;
+          .findOne({ user: sessionUser.id })
+          .lean<UserProfile>();
+        userProfile = studentResult ?? null;
       } else if (refPath === "Instructor") {
         const instructorResult = await instructorModel
-          .find({ user: sessionUser.id })
-          .lean<UserProfile[]>();
-        userProfile = instructorResult[0] ?? null;
+          .findOne({ user: sessionUser.id })
+          .lean<UserProfile>();
+        userProfile = instructorResult ?? null;
       }
     } catch (e: unknown) {
       console.error("Error fetching user profile:", e);
@@ -93,6 +91,8 @@ export const createCommentAction = async (
         errors: ["Failed to fetch user profile."],
       };
     }
+
+    console.log("userProfile", userProfile);
 
     if (!userProfile?._id) {
       console.error(
@@ -106,10 +106,10 @@ export const createCommentAction = async (
     }
 
     const userFullName =
-      `${userProfile.firstname ?? ""} ${userProfile.lastname ?? ""}`.trim();
+      `${userProfile?.firstname ?? ""} ${userProfile?.lastname ?? ""}`.trim();
 
     const userAvatar =
-      userProfile.avatar ?? sessionUser.image ?? "/default-avatar.png";
+      userProfile?.avatar  ?? "/default-avatar.png";
 
     if (!Types.ObjectId.isValid(lectureIdRaw)) {
       return {
@@ -120,12 +120,14 @@ export const createCommentAction = async (
 
     const lecture = new Types.ObjectId(lectureIdRaw);
 
+    console.log(lecture)
+
     const createComment = await commentModel.create({
-      userId: userProfile._id,
+      userId: userProfile?._id,
       comment,
       refPath,
       title: userFullName,
-      lecture,
+      lecture : lecture,
       avatar: userAvatar,
     });
 

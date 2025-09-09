@@ -15,6 +15,8 @@ interface UserFromDB {
 }
 
 interface ReplyFromDB {
+  title?: string;
+  avatar?: string;
   _id: Types.ObjectId;
   userId: UserFromDB;
   reply: string;
@@ -46,7 +48,7 @@ interface CommentUI {
 interface CommentItemProps {
   comment: CommentUI;
   commentId?: string;
-  lectureId: string;
+  lectureId: Types.ObjectId | string | undefined;
   isReply?: boolean;
 }
 
@@ -105,7 +107,7 @@ const CommentItem = ({
 export default async function WatchComments({
   lectureId,
 }: {
-  lectureId: string;
+  lectureId: Types.ObjectId | string | undefined;
 }) {
   if (!lectureId) {
     return (
@@ -162,12 +164,12 @@ export default async function WatchComments({
 
     const processedReplies: CommentUI[] =
       comment.replies?.map((reply: ReplyFromDB) => {
-        const replyUser = reply.userId;
+        // const replyUser = reply.userId;
         return {
           id: reply._id?.toString(),
-          name: `${replyUser.firstname} ${replyUser.lastname}`,
-          avatar: replyUser.avatar || "/default-avatar.png",
-          time: reply.createdAt.toISOString(),
+          name: reply.title,
+          avatar: "/images/student-dashboard/Teacher-profile-1.jpg",
+          time: reply.createdAt?.toISOString(),
           star: 0,
           comment: reply.reply,
           ADMIN: reply.refPath === "Admin",
@@ -177,9 +179,9 @@ export default async function WatchComments({
 
     return {
       id: comment._id?.toString(),
-      name: `${user.firstname} ${user.lastname}`,
-      avatar: user.avatar || "/default-avatar.png",
-      time: comment.createdAt.toISOString(),
+      name: `${user?.firstname} ${user?.lastname}`,
+      avatar: user?.avatar || "/default-avatar.png",
+      time: comment?.createdAt?.toISOString(),
       star: 0,
       comment: comment.comment,
       ADMIN: comment.refPath === "Admin",

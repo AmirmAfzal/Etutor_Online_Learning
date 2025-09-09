@@ -15,11 +15,13 @@ import Form from "next/form";
 import { createCommentAction } from "@/lib/actions/comment/createCommentAction";
 import { useSession } from "next-auth/react";
 import { useActionState, useRef, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface ToastState {
   message: string;
   errors?: string[];
 }
+
 
 const CreateComment = () => {
   const { data: session } = useSession();
@@ -28,6 +30,10 @@ const CreateComment = () => {
     message: "",
     errors: [],
   });
+
+  const searchParams = useSearchParams();
+  const lectureId = searchParams.get("lectureId");
+
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -93,7 +99,7 @@ const CreateComment = () => {
         <input
           name="lecture"
           type="hidden"
-          value={"68b479971dbb5cb95ee91f4f"}
+          value={lectureId ?? ""}
         />
         <input name="name" type="hidden" value={userName} />
       </div>
