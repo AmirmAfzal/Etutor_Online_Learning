@@ -1,14 +1,15 @@
 "use server";
 
+import { getServerSession } from "next-auth";
+import { Types } from "mongoose";
+import { revalidatePath } from "next/cache";
+
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import commentModel from "@/lib/db/models/commentModel";
 import instructorModel from "@/lib/db/models/instructorModel";
 import studentModel from "@/lib/db/models/studentModel";
 import { ActionData } from "@/lib/formTypes";
-import { getServerSession } from "next-auth";
-import { Types } from "mongoose";
-import { revalidatePath } from "next/cache";
 
 interface SessionUser {
   id: string;
