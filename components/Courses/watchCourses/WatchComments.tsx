@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { Types } from "mongoose";
 
-import TruncatedText from "../TruncatedText";
 import CommentReplyForm from "@/components/Courses/watchCourses/CommentReplyForm";
 import { connectDB } from "@/lib/db/db";
 import commentModel from "@/lib/db/models/commentModel";
+
+import TruncatedText from "../TruncatedText";
 import CreateComment from "./CreateComment";
 
 // Type definitions for the data from the database

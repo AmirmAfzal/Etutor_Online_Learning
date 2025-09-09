@@ -15,6 +15,7 @@ import { CourseTypes } from "@/app/page";
 
 import { Input } from "../ui/input";
 import Icon from "../ui/Icon";
+import InstructorProfile from "./InstructorProfile";
 
 interface Props {
   children: React.ReactNode;
@@ -152,12 +153,7 @@ const Navbar = ({ children }: Props) => {
             <Icon icon="ph:bell" width="20" height="20" />
           </div>
           <div>
-            <Image
-              src="/images/dashboard-profile.png"
-              alt="dashboard profile"
-              width={40}
-              height={40}
-            />
+            <InstructorProfile className="w-11 h-11" />
           </div>
         </div>
       </div>

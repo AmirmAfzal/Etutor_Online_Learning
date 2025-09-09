@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
 
 import {
   Sheet,
@@ -11,8 +14,16 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import Icon from "../ui/Icon";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Separator } from "../ui/separator";
 
 const MobileNavbar = () => {
+  const { data: session } = useSession();
   const links = [
     {
       title: "Home",
@@ -94,12 +105,67 @@ const MobileNavbar = () => {
           height={80}
         />
         <div>
-          <Link href="" className="btn btn-soft btn-primary btn-xs mr-2">
-            Create Account
-          </Link>
-          <Link href="" className="btn btn-primary btn-xs">
-            Sign In
-          </Link>
+          {session?.user.id ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <span className="bg-base-300 flex items-center justify-center rounded-full p-2">
+                  <Icon icon="ph:user" width="24" height="24" />
+                </span>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent className="absolute top-0 right-0 w-48">
+                <DropdownMenuItem>
+                  <Link
+                    href="/student"
+                    className="flex flex-row items-center gap-2"
+                  >
+                    <Icon icon="ph:chart-bar" width="24" height="24" />
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="/student/courses"
+                    className="flex flex-row items-center gap-2"
+                  >
+                    <Icon icon="ph:stack" width="24" height="24" />
+                    My Courses
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="/student/settings"
+                    className="flex flex-row items-center gap-2"
+                  >
+                    <Icon icon="ph:gear" width="24" height="24" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+                <Separator className="my-2" />
+                <DropdownMenuItem>
+                  <button
+                    onClick={() => signOut()}
+                    className="flex flex-row items-center gap-2"
+                  >
+                    <Icon icon="ph:sign-out" width="24" height="24" />
+                    Sign-out
+                  </button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Link
+                href="/auth/signup"
+                className="btn btn-soft btn-primary btn-xs ml-4"
+              >
+                Create Account
+              </Link>
+              <Link href="/auth/signin" className="btn btn-primary btn-xs">
+                Sign In
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

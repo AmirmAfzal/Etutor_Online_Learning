@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 import Icon from "../ui/Icon";
 import {
@@ -10,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import InstructorProfile from "./InstructorProfile";
 
 const compeleted = [
   {
@@ -51,13 +51,7 @@ const Bannar = () => {
           <div className="container mx-auto bg-[#111033] p-6">
             <div className="flex flex-col items-center justify-between space-y-6 md:flex-row md:space-y-0">
               <div className="flex flex-row items-center gap-4">
-                <Image
-                  src="/images/dashboard-profile.png"
-                  className="h-16 w-16"
-                  alt="bannar"
-                  width={100}
-                  height={100}
-                />
+                <InstructorProfile className="h-16 w-16" />
                 <div className="flex flex-col gap-1">
                   <p className="text-base-100 font-bold">Vako Shvili</p>
                   <p className="text-base-100/60 text-xs">
