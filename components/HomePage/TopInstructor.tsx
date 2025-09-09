@@ -89,7 +89,10 @@ const TopInstructor = () => {
           Thousands of students waiting for a instructor. Start teaching &
           earning now!
         </p>
-        <Link href="" className="text-primary flex flex-row items-center gap-2">
+        <Link
+          href="/student"
+          className="text-primary flex flex-row items-center gap-2"
+        >
           Become Instructor
           <Icon icon="ph:arrow-right" width="24" height="24" />
         </Link>

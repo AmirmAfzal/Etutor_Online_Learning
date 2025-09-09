@@ -122,7 +122,10 @@ const Category = () => {
         <p className="text-base-content/80 text-sm">
           We have more category & subcategory.
         </p>
-        <Link href="" className="text-primary flex flex-row items-center gap-2">
+        <Link
+          href="/category"
+          className="text-primary flex flex-row items-center gap-2"
+        >
           Browse All
           <Icon icon="ph:arrow-right" width="24" height="24" />
         </Link>
