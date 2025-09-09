@@ -57,11 +57,11 @@ const CourseTabs = ({
   studentsComments,
 }: CourseTabsProps) => {
   const tabTriggerClass =
-    "!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none";
+    "!text-base-content/70 data-[state=active]:!bg-base-100 py-3 !border-primary !rounded-none border-0  px-4 sm:px-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none";
 
   return (
     <Tabs defaultValue="overview" className="mt-8 w-full">
-      <TabsList className="!bg-base-100 mt-4 flex w-full flex-row items-start justify-start gap-6 overflow-x-scroll">
+      <TabsList className="!bg-base-100 mt-4 flex h-12 w-full flex-row items-start justify-start gap-6 overflow-x-scroll overflow-y-hidden">
         <TabsTrigger value="overview" className={tabTriggerClass}>
           Overview
         </TabsTrigger>
