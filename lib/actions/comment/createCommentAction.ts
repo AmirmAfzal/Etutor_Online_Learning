@@ -50,7 +50,7 @@ export const createCommentAction = async (
 
     const commentRaw = data.comment?.toString() ?? "";
     const lectureIdRaw =
-      data.lectureId?.toString() ?? "68b479971dbb5cb95ee91f4f";
+      data.lectureId?.toString() || "";
 
     if (!commentRaw.trim()) {
       return {
@@ -119,6 +119,7 @@ export const createCommentAction = async (
     }
 
     const lecture = new Types.ObjectId(lectureIdRaw);
+
 
     console.log(lecture)
 

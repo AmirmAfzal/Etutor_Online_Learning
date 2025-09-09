@@ -32,12 +32,13 @@ const CreateComment = () => {
   });
 
   const searchParams = useSearchParams();
-  const lectureId = searchParams.get("lectureId");
+  const currentLectureId = searchParams.get("lectureId");
 
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
+  const lectureId = currentLectureId || "";
   const userRole = session?.user?.role ?? "";
   const userName = session?.user?.name ?? "";
 
@@ -97,9 +98,9 @@ const CreateComment = () => {
         />
         <input name="refPath" type="hidden" value={userRole} />
         <input
-          name="lecture"
+          name="lectureId"
           type="hidden"
-          value={lectureId ?? ""}
+          value={lectureId}
         />
         <input name="name" type="hidden" value={userName} />
       </div>
