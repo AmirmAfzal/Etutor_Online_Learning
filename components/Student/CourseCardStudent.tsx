@@ -56,9 +56,9 @@ const CourseCard: React.FC<CourseCardProps> = ({
             </span>
           </div>
         ) : (
-          <button className="btn btn-soft btn-primary btn-xs w-full">
+          <Link href={`/courses/${id}/watch`} className="btn btn-soft btn-primary btn-xs w-full">
             Watch Lecture
-          </button>
+          </Link>
         )}
       </div>
     </Link>
