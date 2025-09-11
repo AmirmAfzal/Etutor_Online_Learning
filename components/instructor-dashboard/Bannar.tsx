@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { DataTypes } from "@/lib/actions/instructor/instructorProfile";
+
 import Icon from "../ui/Icon";
 import {
   Accordion,
@@ -43,6 +45,7 @@ const compeleted = [
 ];
 const Bannar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [instructor, setInstructor] = useState<DataTypes | null>(null);
 
   return (
     <>
@@ -51,11 +54,18 @@ const Bannar = () => {
           <div className="container mx-auto bg-[#111033] p-6">
             <div className="flex flex-col items-center justify-between space-y-6 md:flex-row md:space-y-0">
               <div className="flex flex-row items-center gap-4">
-                <InstructorProfile className="h-16 w-16" />
+                <InstructorProfile
+                  className="h-16 w-16"
+                  instructorData={(data: DataTypes) => setInstructor(data)}
+                />
                 <div className="flex flex-col gap-1">
-                  <p className="text-base-100 font-bold">Vako Shvili</p>
+                  <p className="text-base-100 font-bold">
+                    {/* Vako Shvili */}
+                    {instructor?.fullName}
+                  </p>
                   <p className="text-base-100/60 text-xs">
-                    vako.shvili@gmail.com
+                    {/* vako.shvili@gmail.com */}
+                    {instructor?.email}
                   </p>
                 </div>
               </div>

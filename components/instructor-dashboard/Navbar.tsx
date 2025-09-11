@@ -153,7 +153,7 @@ const Navbar = ({ children }: Props) => {
             <Icon icon="ph:bell" width="20" height="20" />
           </div>
           <div>
-            <InstructorProfile className="w-11 h-11" />
+            <InstructorProfile className="h-11 w-11" />
           </div>
         </div>
       </div>
