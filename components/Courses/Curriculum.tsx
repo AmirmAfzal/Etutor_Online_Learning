@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Icon } from "@iconify/react";
 
 import {
@@ -7,102 +6,163 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import sectionModel from "@/lib/db/models/sectionModel";
+import { connectDB } from "@/lib/db/db";
 
-interface CurriculumProps {
-  curriculum: {
-    title: string;
-    lectures: number;
-    duration: string;
-    content: { title: string; info: string; type: "video" | "file" | string }[];
-  }[];
+interface TransformedSection {
+  title: string;
+  lecturesCount: number;
+  duration: string;
+  content: { title: string; info: string; type: "video" | "file" | string }[];
 }
 
-const Curriculum: React.FC<CurriculumProps> = ({ curriculum }) => {
-  return (
-    <div className="mt-12 w-full">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <span className="text-base-content/80 block text-xl font-semibold sm:text-2xl">
-          Curriculum
-        </span>
+interface Lecture {
+  title?: string;
+  duration?: number;
+  video?: string;
+}
 
-        <div className="flex flex-row gap-3 sm:items-center sm:gap-6">
-          <span className="text-base-content/60 flex items-center text-sm">
-            <Icon icon="ph:folder-open" className="text-primary mr-2 text-lg" />
-            {curriculum.length} Sections
+interface Props {
+  courseId: string;
+}
+
+const convertMinutesToHoursAndMinutes = (totalMinutes: number): string => {
+  if (typeof totalMinutes !== "number" || totalMinutes < 0) {
+    return "Invalid input";
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  let output = "";
+
+  if (hours > 0) output += `${hours}h`;
+  if (minutes > 0) output += (output ? ", " : "") + `${minutes}min`;
+
+  return output || "0min";
+};
+
+const Curriculum = async ({ courseId }: Props) => {
+  try {
+    await connectDB();
+
+    const foundSections = await sectionModel
+      .find({ course: courseId })
+      .populate("lectures");
+
+    const curriculumData: TransformedSection[] = foundSections.map((section) => {
+      const totalSectionDurationMinutes = section.lectures.reduce(
+        (sum: number, lecture: Lecture) => sum + (lecture.duration || 0),
+        0
+      );
+
+      return {
+        title: section.title,
+        lecturesCount: section.lectures.length,
+        duration: convertMinutesToHoursAndMinutes(totalSectionDurationMinutes),
+        content: section.lectures.map((lecture: Lecture) => ({
+          title: lecture.title,
+          info: convertMinutesToHoursAndMinutes(lecture.duration || 0),
+          type: lecture.video ? "video" : "file",
+        })),
+      };
+    });
+
+    const allLecturesDurations = foundSections.flatMap((section) =>
+      section.lectures.map((lecture: Lecture) => lecture.duration || 0)
+    );
+
+    const totalCourseDurationMinutes = allLecturesDurations.reduce(
+      (sum, duration) => sum + duration,
+      0
+    );
+    const totalCourseDuration = convertMinutesToHoursAndMinutes(
+      totalCourseDurationMinutes
+    );
+
+    const totalLectures = curriculumData.reduce(
+      (acc, section) => acc + section.lecturesCount,
+      0
+    );
+
+    return (
+      <div className="mt-12 w-full">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <span className="block text-xl font-semibold text-base-content/80 sm:text-2xl">
+            Curriculum
           </span>
-          <span className="text-base-content/60 flex items-center gap-2 text-sm">
-            <Icon
-              icon="ph:play-circle-duotone"
-              className="text-secondary text-lg"
-            />
-            {curriculum.reduce((acc, section) => acc + section.lectures, 0)}
-            Lectures
-          </span>
-          <span className="text-base-content/60 flex items-center gap-2 text-sm">
-            {/* TODO: Add total course time */}
-          </span>
+
+          <div className="flex flex-row gap-3 sm:items-center sm:gap-6">
+            <span className="flex items-center text-sm text-base-content/60">
+              <Icon icon="ph:folder-open" className="mr-2 text-lg text-primary" />
+              {curriculumData.length} Sections
+            </span>
+            <span className="flex items-center gap-2 text-sm text-base-content/60">
+              <Icon icon="ph:play-circle-duotone" className="text-lg text-secondary" />
+              {totalLectures} Lectures
+            </span>
+            <span className="flex items-center gap-2 text-sm text-base-content/60">
+              <Icon icon="ph:clock" className="text-lg text-primary" />
+              {totalCourseDuration}
+            </span>
+          </div>
         </div>
-      </div>
 
-      {/* Accordion */}
-      <Accordion type="single" collapsible className="mt-6 w-full">
-        {curriculum.map((section, index) => (
-          <AccordionItem
-            key={index}
-            value={`section-${index + 1}`}
-            className="bg-base-100 border-base-content/10 border transition-all duration-150 hover:translate-y-[-1px]"
-          >
-            <AccordionTrigger className="min-h-[72px] p-2 sm:px-4 md:px-6 md:py-4">
-              <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <span className="text-base-content/80 text-sm font-semibold sm:text-base">
-                  {section.title}
-                </span>
-                <div className="flex flex-wrap gap-3 sm:gap-5">
-                  <span className="text-base-content/60 flex items-center gap-2 text-xs sm:text-sm">
-                    <Icon
-                      icon="ph:play-circle-duotone"
-                      className="text-secondary shrink-0"
-                    />
-                    {section.lectures} Lectures
+        <Accordion type="single" collapsible className="mt-6 w-full">
+          {curriculumData.map((section, index) => (
+            <AccordionItem
+              key={index}
+              value={`section-${index + 1}`}
+              className="border border-base-content/10 bg-base-100 transition-all duration-150 hover:-translate-y-[1px]"
+            >
+              <AccordionTrigger className="min-h-[72px] p-2 sm:px-4 md:px-6 md:py-4">
+                <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <span className="text-sm font-semibold text-base-content/80 sm:text-base">
+                    {section.title}
                   </span>
-                  <span className="text-base-content/60 flex items-center gap-2 text-xs sm:text-sm">
-                    <Icon
-                      icon="ph:clock"
-                      className="text-primary shrink-0 text-lg"
-                    />
-                    {section.duration}
-                  </span>
-                </div>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <ul className="px-3 sm:px-6">
-                {section.content.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-center gap-2 py-2 text-xs sm:text-sm"
-                  >
-                    <Icon
-                      icon={
-                        item.type === "video"
-                          ? "ph:play-circle"
-                          : "ph:file-text"
-                      }
-                      className="text-primary shrink-0 text-lg"
-                    />
-                    <span className="truncate">{item.title}</span>
-                    <span className="text-base-content/60 ml-auto text-xs">
-                      {item.info}
+                  <div className="flex flex-wrap gap-3 sm:gap-5">
+                    <span className="flex items-center gap-2 text-xs text-base-content/60 sm:text-sm">
+                      <Icon icon="ph:play-circle-duotone" className="shrink-0 text-secondary" />
+                      {section.lecturesCount} Lectures
                     </span>
-                  </li>
-                ))}
-              </ul>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </div>
-  );
+                    <span className="flex items-center gap-2 text-xs text-base-content/60 sm:text-sm">
+                      <Icon icon="ph:clock" className="shrink-0 text-lg text-primary" />
+                      {section.duration}
+                    </span>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <ul className="px-3 sm:px-6">
+                  {section.content.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-center gap-2 py-2 text-xs sm:text-sm"
+                    >
+                      <Icon
+                        icon={item.type === "video" ? "ph:play-circle" : "ph:file-text"}
+                        className="shrink-0 text-lg text-primary"
+                      />
+                      <span className="truncate">{item.title}</span>
+                      <span className="ml-auto text-xs text-base-content/60">
+                        {item.info}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    );
+  } catch (error) {
+    console.error("Error fetching curriculum data:", error);
+    return (
+      <div className="mt-12 w-full text-center text-error">
+        Failed to load curriculum. Please try again later.
+      </div>
+    );
+  }
 };
 
 export default Curriculum;

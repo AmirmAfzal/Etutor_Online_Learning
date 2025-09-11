@@ -154,64 +154,7 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
   };
 };
 
-const fakeCourses = {
-  curriculum: [
-    {
-      title: "Getting Started",
-      lectures: 4,
-      duration: "51m",
-      content: [
-        {
-          title: "What's is Webflow?",
-          info: "07:31",
-          type: "video",
-        },
-        {
-          title: "Sign up in Webflow",
-          info: "07:31",
-          type: "video",
-        },
-        {
-          title: "Webflow Terms & Conditions",
-          info: "5.3 MB",
-          type: "file",
-        },
-        { title: "Teaser of Webflow", info: "07:31", type: "video" },
-        { title: "Practice Project", info: "5.3 MB", type: "file" },
-      ],
-    },
-    {
-      title: "Secret of Good Design",
-      lectures: 52,
-      duration: "5h 49m",
-      content: [],
-    },
-    {
-      title: "Practice Design Like an Artist",
-      lectures: 43,
-      duration: "53m",
-      content: [],
-    },
-    {
-      title: "Web Development (webflow)",
-      lectures: 137,
-      duration: "10h 6m",
-      content: [],
-    },
-    {
-      title: "Secrets of Making Money Freelancing",
-      lectures: 21,
-      duration: "38m",
-      content: [],
-    },
-    {
-      title: "Advanced",
-      lectures: 39,
-      duration: "91m",
-      content: [],
-    },
-  ],
-};
+//
 
 const studentsComments = [
   {
@@ -306,7 +249,7 @@ const SingleCoursePage = async ({
                 thisCourseFor: singleCourse.thisCourseFor,
                 courseRequirements: singleCourse.courseRequirements,
               }}
-              curriculum={fakeCourses.curriculum}
+              courseId={singleCourse.id || id}
               instructors={instructorData}
               rating={singleCourse.rating}
               studentsComments={studentsComments}

@@ -5,18 +5,6 @@ import Comments from "@/components/Courses/Comments";
 import CourseRating from "@/components/Courses/CourseRating";
 import CourseOverview from "@/components/Courses/CourseOverview";
 
-type CurriculumItem = {
-  title: string;
-  info: string;
-  type: "video" | "file" | string;
-};
-
-type CurriculumSection = {
-  title: string;
-  lectures: number;
-  duration: string;
-  content: CurriculumItem[];
-};
 
 type InstructorForCourse = {
   avatar: string;
@@ -43,7 +31,7 @@ type CourseTabsProps = {
     thisCourseFor?: string[];
     courseRequirements?: string[];
   };
-  curriculum: CurriculumSection[];
+  courseId: string;
   instructors: InstructorForCourse[];
   rating: number;
   studentsComments: StudentComment[];
@@ -51,7 +39,7 @@ type CourseTabsProps = {
 
 const CourseTabs = ({
   overview,
-  curriculum,
+  courseId ,
   instructors,
   rating,
   studentsComments,
@@ -82,13 +70,13 @@ const CourseTabs = ({
           thisCourseFor={overview.thisCourseFor}
           courseRequirements={overview.courseRequirements}
         />
-        <Curriculum curriculum={curriculum} />
+        <Curriculum courseId={courseId} />
         <CourseInstructors instructors={instructors} />
         <CourseRating rating={rating} />
         <Comments studentsComments={studentsComments} />
       </TabsContent>
       <TabsContent value="curriculum">
-        <Curriculum curriculum={curriculum} />
+        <Curriculum courseId={courseId} />
       </TabsContent>
       <TabsContent value="instructors">
         <CourseInstructors instructors={instructors} />
