@@ -17,7 +17,7 @@ interface SessionUser {
   email?: string;
   name?: string;
   image?: string;
-  role?: "student" | "instructor" | "admin";
+  role: "STUDENT" | "INSTRUCTOR" | "ADMIN";
 }
 
 interface UserProfile {
@@ -66,15 +66,12 @@ export const addReplyAction = async (
       };
     }
 
-    const userRole = sessionUser.role ?? "student";
+    const userRole = sessionUser?.role ?? "STUDENT";
 
-    const refPathMap: Record<
-      "student" | "instructor" | "admin",
-      "Student" | "Instructor" | "Admin"
-    > = {
-      student: "Student",
-      instructor: "Instructor",
-      admin: "Admin",
+    const refPathMap= {
+      STUDENT: "Student",
+      INSTRUCTOR: "Instructor",
+      ADMIN: "Admin",
     };
 
     const refPath = refPathMap[userRole];

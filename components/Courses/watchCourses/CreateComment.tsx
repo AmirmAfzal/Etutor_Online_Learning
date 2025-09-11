@@ -16,11 +16,13 @@ import {
 } from "@/components/ui/dialog";
 import Icon from "@/components/ui/Icon";
 import { createCommentAction } from "@/lib/actions/comment/createCommentAction";
+import { useSearchParams } from "next/navigation";
 
 interface ToastState {
   message: string;
   errors?: string[];
 }
+
 
 const CreateComment = () => {
   const { data: session } = useSession();
@@ -30,9 +32,14 @@ const CreateComment = () => {
     errors: [],
   });
 
+  const searchParams = useSearchParams();
+  const currentLectureId = searchParams.get("lectureId");
+
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
+  const lectureId = currentLectureId || "";
   const userRole = session?.user?.role ?? "";
   const userName = session?.user?.name ?? "";
 
@@ -92,9 +99,9 @@ const CreateComment = () => {
         />
         <input name="refPath" type="hidden" value={userRole} />
         <input
-          name="lecture"
+          name="lectureId"
           type="hidden"
-          value={"68b479971dbb5cb95ee91f4f"}
+          value={lectureId}
         />
         <input name="name" type="hidden" value={userName} />
       </div>

@@ -78,8 +78,8 @@ const courseSchema = new Schema<CourseInterface & Document>(
     learningOutcomes: [{ type: String }],
     targetAudience: [{ type: String }],
     requirements: [{ type: String }],
-    tools: {type : [String] , default : []},
-    rating : {type : Number ,default :0},
+    tools: { type: [String], default: [] },
+    rating: { type: Number, default: 0 },
     // Fields updated by publish step
     welcomeMessage: { type: String },
     congratulationsMessage: { type: String },
