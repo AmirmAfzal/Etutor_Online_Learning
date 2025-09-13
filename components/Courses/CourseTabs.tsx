@@ -5,18 +5,6 @@ import Comments from "@/components/Courses/Comments";
 import CourseRating from "@/components/Courses/CourseRating";
 import CourseOverview from "@/components/Courses/CourseOverview";
 
-type CurriculumItem = {
-  title: string;
-  info: string;
-  type: "video" | "file" | string;
-};
-
-type CurriculumSection = {
-  title: string;
-  lectures: number;
-  duration: string;
-  content: CurriculumItem[];
-};
 
 type InstructorForCourse = {
   avatar: string;
@@ -43,7 +31,7 @@ type CourseTabsProps = {
     thisCourseFor?: string[];
     courseRequirements?: string[];
   };
-  curriculum: CurriculumSection[];
+  courseId: string;
   instructors: InstructorForCourse[];
   rating: number;
   studentsComments: StudentComment[];
@@ -51,17 +39,17 @@ type CourseTabsProps = {
 
 const CourseTabs = ({
   overview,
-  curriculum,
+  courseId ,
   instructors,
   rating,
   studentsComments,
 }: CourseTabsProps) => {
   const tabTriggerClass =
-    "!text-base-content/70 data-[state=active]:!bg-base-100 !border-primary !rounded-none border-0 p-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none";
+    "!text-base-content/70 data-[state=active]:!bg-base-100 py-3 !border-primary !rounded-none border-0  px-4 sm:px-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none";
 
   return (
     <Tabs defaultValue="overview" className="mt-8 w-full">
-      <TabsList className="!bg-base-100 mt-4 flex w-full flex-row items-start justify-start gap-6 overflow-x-scroll">
+      <TabsList className="!bg-base-100 mt-4 flex h-12 w-full flex-row items-start justify-start gap-6 overflow-x-scroll overflow-y-hidden">
         <TabsTrigger value="overview" className={tabTriggerClass}>
           Overview
         </TabsTrigger>
@@ -82,13 +70,13 @@ const CourseTabs = ({
           thisCourseFor={overview.thisCourseFor}
           courseRequirements={overview.courseRequirements}
         />
-        <Curriculum curriculum={curriculum} />
+        <Curriculum courseId={courseId} />
         <CourseInstructors instructors={instructors} />
         <CourseRating rating={rating} />
         <Comments studentsComments={studentsComments} />
       </TabsContent>
       <TabsContent value="curriculum">
-        <Curriculum curriculum={curriculum} />
+        <Curriculum courseId={courseId} />
       </TabsContent>
       <TabsContent value="instructors">
         <CourseInstructors instructors={instructors} />
