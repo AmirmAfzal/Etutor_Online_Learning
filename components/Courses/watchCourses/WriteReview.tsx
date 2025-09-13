@@ -1,7 +1,26 @@
+"use client";
+
 import Icon from "@/components/ui/Icon";
 import { Input } from "@/components/ui/input";
+import { useSession } from "next-auth/react";
+import { useActionState, useRef } from "react";
+import { addFeedbackAction } from "@/lib/actions/feedBack/addFeedbackAction";
 
-const WriteReview = () => {
+
+
+const WriteReview = ({ courseId } :{courseId: string}) => {
+  const { data: session } = useSession();
+  const [state, action, pending] = useActionState(addFeedbackAction, {
+    message: "",
+    errors: [],
+  });
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const userRole = session?.user?.role ?? "";
+  const userName = session?.user?.name ?? "";
+
+  console.log(courseId);
+
   return (
     <>
       <label
@@ -16,77 +35,104 @@ const WriteReview = () => {
           <div className="border-b-base-300 flex w-full flex-row items-center justify-between border-b">
             <span className="text-md text-sm">write a review</span>
             <label htmlFor="my_modal_6" className="btn btn-ghost">
-              <Icon icon="ph:x"   className="text-base-content/70 text-xl" />
+              <Icon icon="ph:x" className="text-base-content/70 text-xl" />
             </label>
           </div>
 
-          <div className="my-4 flex flex-col items-center gap-2">
-            <div className="flex flex-col items-center gap-3">
-              <span className="text-md font-semibold">
-                4.5
-                <span className="text-base-content/70 font-medium">{`(Good/Amazing)`}</span>
-              </span>
-              <div className="rating">
-                <input
-                  type="radio"
-                  name="rating-2"
-                  className="mask mask-star-2 bg-primary w-10"
-                  aria-label="1 star"
+          <form action={action} ref={formRef} className="w-full">
+            <div className="my-4 flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-3">
+                <span className="text-md font-semibold">
+                  4.5
+                  <span className="text-base-content/70 font-medium">{`(Good/Amazing)`}</span>
+                </span>
+                <div className="rating">
+                  <input
+                    type="radio"
+                    name="star"
+                    value={1}
+                    className="mask mask-star-2 bg-primary w-10"
+                    aria-label="1 star"
+                  />
+                  <input
+                    type="radio"
+                    name="star"
+                    value={2}
+                    className="mask mask-star-2 bg-primary w-10"
+                    aria-label="2 star"
+                  />
+                  <input
+                    type="radio"
+                    name="star"
+                    value={3}
+                    className="mask mask-star-2 bg-primary w-10"
+                    aria-label="3 star"
+                  />
+                  <input
+                    type="radio"
+                    name="star"
+                    value={4}
+                    className="mask mask-star-2 bg-primary w-10"
+                    aria-label="4 star"
+                  />
+                  <input
+                    type="radio"
+                    name="star"
+                    value={5}
+                    className="mask mask-star-2 bg-primary w-10"
+                    aria-label="5 star"
+                    defaultChecked
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="feedback-input"
+                  className="text-base-content/70 text-sm"
+                >
+                  feedback
+                </label>
+                <Input
+                  id="feedback-input"
+                  name="feedback"
+                  placeholder="Write down your feedback here"
+                  className="pt-3 pb-20"
                 />
-                <input
-                  type="radio"
-                  name="rating-2"
-                  className="mask mask-star-2 bg-primary w-10"
-                  aria-label="2 star"
-                  defaultChecked
-                />
-                <input
-                  type="radio"
-                  name="rating-2"
-                  className="mask mask-star-2 bg-primary w-10"
-                  aria-label="3 star"
-                />
-                <input
-                  type="radio"
-                  name="rating-2"
-                  className="mask mask-star-2 bg-primary w-10"
-                  aria-label="4 star"
-                />
-                <input
-                  type="radio"
-                  name="rating-2"
-                  className="mask mask-star-2 bg-primary w-10"
-                  aria-label="5 star"
-                />
+                <input name="refPath" type="hidden" value={userRole} />
+                <input name="name" type="hidden" value={userName} />
+                <input type="hidden" name="course" value={courseId} />
               </div>
             </div>
-            <form className="w-full">
-              <label
-                htmlFor="feedback-input"
-                className="text-base-content/70 text-sm"
-              >
-                feedback
-              </label>
-              <Input
-                id="feedback-input"
-                placeholder="Write down your feedback here"
-                className="pt-3 pb-20"
-              />
-            </form>
-          </div>
 
-          <div className="modal-action flex flex-row items-center justify-between">
-            <label htmlFor="my_modal_6" className="btn">
-              Cancel
-            </label>
-            <label htmlFor="my_modal_6" className="btn btn-primary">
-              Submit Review
-              <Icon
-                icon="ph:paper-plane-right-fill"
-                className="text-base-100 text-xl"
-              />
-            </label>
-          </div>
+            {state?.errors && (
+              <div className="mt-4 w-full">
+                {state.errors.map((error, index) => (
+                  <p key={index} className="text-error text-sm">
+                    {error}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            <div className="modal-action flex flex-row items-center justify-between">
+              <label htmlFor="my_modal_6" className="btn">
+                Cancel
+              </label>
+              <button
+                type="submit"
+                disabled={pending}
+                className="btn btn-primary"
+              >
+                <label htmlFor="my_modal_6">
+                  Submit Review
+                  <Icon
+                    icon="ph:paper-plane-right-fill"
+                    className="text-base-100 text-xl"
+                  />
+                </label>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </>

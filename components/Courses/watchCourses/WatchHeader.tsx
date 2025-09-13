@@ -3,13 +3,15 @@ import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import WriteReview from "@/components/Courses/watchCourses/WriteReview";
 import NextLectureBtn from "@/components/Courses/watchCourses/NextLectureBtn";
+import { connectDB } from "@/lib/db/db";
+import sectionModel from "@/lib/db/models/sectionModel";
 
 interface WatchHeaderProps {
   title: string;
   sectionsCount: number;
   lecturesCount: number;
   totalDuration: string;
-  searchParams: {lectureId: string , section:string};
+  searchParams: { lectureId: string; section: string };
 }
 
 const WatchHeader = async ({
@@ -19,6 +21,14 @@ const WatchHeader = async ({
   totalDuration,
   searchParams,
 }: WatchHeaderProps) => {
+  await connectDB();
+
+  const foundSection = await sectionModel
+    .findOne({ index: searchParams.section })
+    .lean();
+  const courseId = foundSection?.course.toString() || "";
+  console.log(courseId);
+
   return (
     <div className="bg-base-200 flex w-full flex-col items-start justify-between gap-4 p-4 lg:flex-row lg:items-center">
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
@@ -52,8 +62,8 @@ const WatchHeader = async ({
       </div>
 
       <div className="mt-3 flex w-full flex-row items-center justify-end gap-2 md:w-auto">
-        <WriteReview />
-        <NextLectureBtn  searchParams={searchParams} />
+        <WriteReview courseId={courseId} />
+        <NextLectureBtn searchParams={searchParams} />
       </div>
     </div>
   );
