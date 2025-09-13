@@ -16,7 +16,7 @@ const WriteReview = () => {
           <div className="border-b-base-300 flex w-full flex-row items-center justify-between border-b">
             <span className="text-md text-sm">write a review</span>
             <label htmlFor="my_modal_6" className="btn btn-ghost">
-              x
+              <Icon icon="ph:x"   className="text-base-content/70 text-xl" />
             </label>
           </div>
 
