@@ -2,19 +2,22 @@ import Link from "next/link";
 
 import Icon from "@/components/ui/Icon";
 import WriteReview from "@/components/Courses/watchCourses/WriteReview";
+import NextLectureBtn from "@/components/Courses/watchCourses/NextLectureBtn";
 
 interface WatchHeaderProps {
   title: string;
   sectionsCount: number;
   lecturesCount: number;
   totalDuration: string;
+  searchParams: {lectureId: string , section:string};
 }
 
-const WatchHeader = ({
+const WatchHeader = async ({
   title,
   sectionsCount,
   lecturesCount,
   totalDuration,
+  searchParams,
 }: WatchHeaderProps) => {
   return (
     <div className="bg-base-200 flex w-full flex-col items-start justify-between gap-4 p-4 lg:flex-row lg:items-center">
@@ -50,9 +53,7 @@ const WatchHeader = ({
 
       <div className="mt-3 flex w-full flex-row items-center justify-end gap-2 md:w-auto">
         <WriteReview />
-        <button className="btn btn-primary text-xs whitespace-nowrap md:text-base">
-          Next Lecture
-        </button>
+        <NextLectureBtn  searchParams={searchParams} />
       </div>
     </div>
   );

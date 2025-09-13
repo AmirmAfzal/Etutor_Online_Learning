@@ -31,7 +31,7 @@ interface Comment {
 
 interface Props {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ lectureId?: string; section?: string }>;
+  searchParams: Promise<{ lectureId: string; section: string }>;
 }
 
 const comments: Comment[] = [
@@ -123,6 +123,7 @@ const WatchCourse = async (
 ) => {
   await connectDB();
   const { id } = await props.params;
+  const searchParams = await props.searchParams;
 
 
   if (!Types.ObjectId.isValid(id)) {
@@ -144,7 +145,7 @@ const WatchCourse = async (
     (section) => section.lectures
   );
 
-  const { lectureId, section: sectionParam } = await props.searchParams;
+  const { lectureId, section: sectionParam } = searchParams;
 
   let currentLecture: LectureType | undefined;
   let currentSection: SectionType | undefined;
@@ -218,6 +219,7 @@ const WatchCourse = async (
     return (
     <section className="container mx-auto w-full px-4 py-6">
       <WatchHeader
+        searchParams={searchParams}
         title={course?.title ?? "The course does not have a title"}
         sectionsCount={foundSections.length}
         lecturesCount={lectures.length}
