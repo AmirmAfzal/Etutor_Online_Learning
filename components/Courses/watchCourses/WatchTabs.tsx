@@ -1,8 +1,9 @@
+import { Types } from "mongoose";
+import Link from "next/link";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Icon from "@/components/ui/Icon";
 import WatchComments from "@/components/Courses/watchCourses/WatchComments";
-import { Types } from "mongoose";
-import Link from "next/link";
 
 interface Lecture {
   _id: Types.ObjectId;
