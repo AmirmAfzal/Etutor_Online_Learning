@@ -8,7 +8,7 @@ import studentModel from "@/lib/db/models/studentModel";
 import instructorModel from "@/lib/db/models/instructorModel";
 import { Types } from "mongoose";
 import feedbackModel from "@/lib/db/models/feedbackModel";
-// import { revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 interface SessionUser {
   id: string;
@@ -27,12 +27,15 @@ export const addFeedbackAction = async (
   formData: FormData
 ): Promise<ActionData> => {
   try {
+
     await connectDB();
 
     const session = await getServerSession(authOptions);
+
     const sessionUser = session?.user as SessionUser | undefined;
 
     if (!sessionUser?.id) {
+      console.warn("⚠️ No session user found");
       return { message: "ERROR", errors: ["User not authenticated."] };
     }
 
@@ -45,11 +48,14 @@ export const addFeedbackAction = async (
     const courseIdRaw = data.courseId?.toString() ?? "";
     const starRaw = data.star?.toString() ?? "5";
 
+
     if (!feedbackRaw.trim()) {
+      console.warn("⚠️ Feedback text missing");
       return { message: "ERROR", errors: ["Feedback text is required."] };
     }
 
     if (!Types.ObjectId.isValid(courseIdRaw)) {
+      console.warn("⚠️ Invalid course ID:", courseIdRaw);
       return { message: "ERROR", errors: ["A valid course ID is required."] };
     }
 
@@ -87,17 +93,19 @@ export const addFeedbackAction = async (
         };
       }
     } catch (e) {
-      console.error("Error fetching user profile:", e);
+      console.error("❌ Error fetching user profile:", e);
       return { message: "ERROR", errors: ["Failed to fetch user profile."] };
     }
 
     if (!userProfile?._id) {
-      console.error("User profile not found for:", sessionUser);
+      console.error("❌ User profile not found in DB for:", sessionUser);
       return { message: "ERROR", errors: ["User profile not found in database."] };
     }
 
     const userFullName = `${userProfile.firstname ?? ""} ${userProfile.lastname ?? ""}`.trim();
     const userAvatar = userProfile.avatar ?? "/default-avatar.png";
+
+
 
     const createFeedback = await feedbackModel.create({
       userId: userProfile._id,
@@ -105,15 +113,17 @@ export const addFeedbackAction = async (
       star,
       refPath,
       title: userFullName,
-      course : course ,
+      course,
       avatar: userAvatar,
     });
 
+
     if (!createFeedback) {
+      console.error("❌ Failed to create feedback");
       return { message: "ERROR", errors: ["Failed to create feedback."] };
     }
 
-    // revalidatePath(`/courses/${courseIdRaw}/watch`);
+    revalidatePath(`/courses/${courseIdRaw}/watch`);
 
     return {
       message: "SUCCESS",
@@ -121,7 +131,7 @@ export const addFeedbackAction = async (
       errors: [],
     };
   } catch (error) {
-    console.error("Error creating feedback:", error);
+    console.error("❌ Error creating feedback:", error);
     return {
       message: "ERROR",
       errors: ["An unexpected error occurred. Please try again later."],

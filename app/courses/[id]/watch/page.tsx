@@ -219,6 +219,7 @@ const WatchCourse = async (
     return (
     <section className="container mx-auto w-full px-4 py-6">
       <WatchHeader
+        params={{ id }}
         searchParams={searchParams}
         title={course?.title ?? "The course does not have a title"}
         sectionsCount={foundSections.length}

@@ -1,7 +1,6 @@
 "use client";
 
 import Icon from "@/components/ui/Icon";
-import { Input } from "@/components/ui/input";
 import { useSession } from "next-auth/react";
 import { useActionState, useRef } from "react";
 import { addFeedbackAction } from "@/lib/actions/feedBack/addFeedbackAction";
@@ -30,8 +29,8 @@ const WriteReview = ({ courseId } :{courseId: string}) => {
         Write A Review
       </label>
       <input type="checkbox" id="my_modal_6" className="modal-toggle" />
-      <div className="modal" role="dialog">
-        <div className="modal-box">
+      <div className="modal " role="dialog">
+        <div className="modal-box rounded-none">
           <div className="border-b-base-300 flex w-full flex-row items-center justify-between border-b">
             <span className="text-md text-sm">write a review</span>
             <label htmlFor="my_modal_6" className="btn btn-ghost">
@@ -85,22 +84,24 @@ const WriteReview = ({ courseId } :{courseId: string}) => {
                   />
                 </div>
               </div>
-              <div>
+              <div className="w-full">
                 <label
                   htmlFor="feedback-input"
                   className="text-base-content/70 text-sm"
                 >
                   feedback
                 </label>
-                <Input
+                <textarea
+                  required
+                  rows={3}
                   id="feedback-input"
                   name="feedback"
                   placeholder="Write down your feedback here"
-                  className="pt-3 pb-20"
+                  className=" w-full border border-base-300 p-2 mt-2"
                 />
                 <input name="refPath" type="hidden" value={userRole} />
                 <input name="name" type="hidden" value={userName} />
-                <input type="hidden" name="course" value={courseId} />
+                <input type="hidden" name="courseId" value={courseId} />
               </div>
             </div>
 

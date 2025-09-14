@@ -11,8 +11,14 @@ interface WatchHeaderProps {
   sectionsCount: number;
   lecturesCount: number;
   totalDuration: string;
+  params: { id: string };
   searchParams: { lectureId: string; section: string };
 }
+
+interface Course {
+  course: string;
+}
+
 
 const WatchHeader = async ({
   title,
@@ -20,13 +26,19 @@ const WatchHeader = async ({
   lecturesCount,
   totalDuration,
   searchParams,
+  params,
 }: WatchHeaderProps) => {
+
+const  { id : courseIdUrl }  = params;
+
+  console.log("Course ID in WatchHeader:", courseIdUrl);
+  
   await connectDB();
 
   const foundSection = await sectionModel
     .findOne({ index: searchParams.section })
-    .lean();
-  const courseId = foundSection?.course.toString() || "";
+    .lean<Course>();
+  const courseId = foundSection?.course.toString() || courseIdUrl;
   console.log(courseId);
 
   return (
