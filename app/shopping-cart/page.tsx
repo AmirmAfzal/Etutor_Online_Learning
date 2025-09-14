@@ -8,44 +8,66 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import CourseShoppingCart from "@/components/shoppingCart/CourseShoppingCart";
+import { connectDB } from "@/lib/db/db";
+import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
+import { authOptions } from "@/lib/auth/authOptions";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { Document, Types } from "mongoose";
 
-interface props {
-  id: string;
+// Define the interface for the Course directly in this file
+interface Course extends Document {
   title: string;
-  image: string;
+  thumbnail: string;
   rating: number;
   reviews: number;
   instructor: string;
   price: number;
+  originalPrice: number;
+}
+
+interface Props {
+  _id?: Types.ObjectId;
+  id: string | undefined;
+  title?: string;
+  image: string;
+  rating?: number;
+  reviews?: number;
+  instructor?: string;
+  price?: number;
   originalPrice?: number;
 }
 
-const fakeCartData: props[] = [
-  {
-    id: "1",
-    title: "The Python Mega Course: Build 10 Real World Applications",
-    image: "/images/course-images-1.png",
-    rating: 4.8,
-    reviews: 1520,
-    instructor: "Leslie Alexander",
-    price: 37.99,
-    originalPrice: 45.0,
-  },
-  {
-    id: "2",
-    title: "React & Next.js 15 Bootcamp: Build Fullstack Apps",
-    image: "/images/course-images-2.png",
-    rating: 4.6,
-    reviews: 980,
-    instructor: "Jacob Jones",
-    price: 29.99,
-  },
-];
-
 const ShoppingCart = async () => {
+  await connectDB();
+
+  const session = await getServerSession(authOptions);
+  if (!session) return redirect("/auth/signin");
+
+  const foundStudent: StudentInterface | null = await studentModel
+    .findOne({
+      user: session.user.id,
+    })
+    .populate("coursesCart");
+
+  if (!foundStudent) return redirect("/auth/signin");
+
+  const coursesCart = foundStudent.coursesCart as unknown as Course[];
+
+  const courseData: Props[] = coursesCart.map((course: Course) => ({
+    id: course._id?.toString(),
+    title: course.title,
+    image: course?.thumbnail,
+    rating: course.rating,
+    reviews: course.reviews,
+    instructor: course.instructor,
+    price: course.price,
+    originalPrice: course.originalPrice,
+  }));
+
   return (
     <section className="flex flex-col items-center justify-start">
-      {/* Header */}
       <div className="bg-base-200 flex w-full flex-col items-center justify-center gap-4 px-4 py-8">
         <h3 className="text-lg font-semibold md:text-xl">Shopping Cart</h3>
         <Breadcrumb>
@@ -72,7 +94,7 @@ const ShoppingCart = async () => {
 
       <div className="mt-8 flex w-full max-w-7xl flex-col items-start justify-start px-4">
         <span className="text-md my-4 font-semibold md:text-lg">
-          shopping cart ({fakeCartData.length})
+          shopping cart ({courseData.length})
         </span>
 
         <div className="flex w-full flex-col items-center justify-start gap-6 lg:flex-row lg:items-start">
@@ -86,7 +108,7 @@ const ShoppingCart = async () => {
             </div>
 
             <div className="divide-base-content/10 divide-y">
-              {fakeCartData.map((course) => (
+              {courseData.map((course: Props) => (
                 <CourseShoppingCart key={course.id} {...course} />
               ))}
             </div>
@@ -95,7 +117,13 @@ const ShoppingCart = async () => {
           <div className="bg-base-100 border-base-content/10 mt-4 flex w-full flex-col gap-2 border p-4 md:w-[70%] lg:mt-0 lg:w-4/12">
             <div className="mb-2 flex justify-between text-sm">
               <span className="text-base-content/70">Subtotal</span>
-              <span className="font-medium">$61.97 USD</span>
+              <span className="font-medium">
+                $
+                {courseData
+                  .reduce((sum, c) => sum + (c.price || 0), 0)
+                  .toFixed(2)}
+                USD
+              </span>
             </div>
 
             <div className="mb-2 flex justify-between text-sm">
@@ -112,12 +140,19 @@ const ShoppingCart = async () => {
 
             <div className="mb-4 flex items-center justify-between">
               <span className="text-base-content/70 font-medium">Total:</span>
-              <span className="text-2xl font-semibold">$75.00 USD</span>
+              <span className="text-2xl font-semibold">
+                $
+                {courseData
+                  .reduce((sum, c) => sum + (c.price || 0), 0)
+                  .toFixed(2)}
+                USD
+              </span>
             </div>
 
-            <button className="btn btn-primary w-full">
+            <Link href="/student/checkout" className="btn btn-primary w-full">
+              {/* TODO : add icon  */}
               Proceed To Checkout →
-            </button>
+            </Link>
 
             <div className="divider divider-base-content/80 w-full"></div>
 

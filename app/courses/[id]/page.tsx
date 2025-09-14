@@ -139,14 +139,17 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
       { label: "Subtitle Language", value: `${course.subtitleLanguage}` },
     ],
     // breadcrumb: ["Home", "Development", "Web Development", "Webflow"],
-    instructors:course.authors?.map((author: InstructorDocument) =>{
-       author.name = `${author?.firstname || ""} ${author?.lastname || ""}`.trim();
-       author.avatar = author?.avatar || "/images/student-dashboard/Teacher-default.jpg";
-       return {
-         name: author.name,
-         avatar: author.avatar,
-       };
-  }) || [],
+    instructors:
+      course.authors?.map((author: InstructorDocument) => {
+        author.name =
+          `${author?.firstname || ""} ${author?.lastname || ""}`.trim();
+        author.avatar =
+          author?.avatar || "/images/student-dashboard/Teacher-default.jpg";
+        return {
+          name: author.name,
+          avatar: author.avatar,
+        };
+      }) || [],
     courseDescription: course.description || "",
     whatYouWillLearn: course.learningOutcomes || [],
     thisCourseFor: course.targetAudience || [],
