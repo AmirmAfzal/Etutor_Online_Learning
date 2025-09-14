@@ -45,7 +45,7 @@ const  { id : courseIdUrl }  = params;
     <div className="bg-base-200 flex w-full flex-col items-start justify-between gap-4 p-4 lg:flex-row lg:items-center">
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
         <Link
-          href="#"
+          href="/student"
           className="bg-base-100 flex h-10 w-10 items-center justify-center rounded-full"
           aria-label="Back to previous page"
         >
