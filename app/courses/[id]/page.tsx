@@ -154,33 +154,8 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
   };
 };
 
-//
 
-const studentsComments = [
-  {
-    name: "Alice Johnson",
-    avatar: "/images/profile-img.png",
-    star: 4,
-    time: "2 days ago",
-    comment:
-      "This course was amazing! I learned so much about web design and Figma.",
-  },
-  {
-    name: "Bob Smith",
-    avatar: "/images/profile-img.png",
-    star: 5,
-    time: "1 week ago",
-    comment:
-      "The instructors were very knowledgeable and the content was well-organized.",
-  },
-  {
-    name: "Charlie Brown",
-    avatar: "/images/profile-img.png",
-    star: 3,
-    time: "3 days ago",
-    comment: "Good course but could use more examples.",
-  },
-];
+
 
 const fakeSidebarCart = {
   includes: [
@@ -252,7 +227,7 @@ const SingleCoursePage = async ({
               courseId={singleCourse.id || id}
               instructors={instructorData}
               rating={singleCourse.rating}
-              studentsComments={studentsComments}
+
             />
           </div>
         </div>

@@ -6,7 +6,7 @@ import CourseRating from "@/components/Courses/CourseRating";
 import CourseOverview from "@/components/Courses/CourseOverview";
 
 
-type InstructorForCourse = {
+interface InstructorForCourse  {
   avatar: string;
   name: string;
   bio: string;
@@ -16,15 +16,8 @@ type InstructorForCourse = {
   description: string;
 };
 
-type StudentComment = {
-  name: string;
-  avatar: string;
-  time: string;
-  star: number;
-  comment: string;
-};
 
-type CourseTabsProps = {
+interface CourseTabsProps  {
   overview: {
     courseDescription?: string;
     whatYouWillLearn?: string[];
@@ -34,7 +27,7 @@ type CourseTabsProps = {
   courseId: string;
   instructors: InstructorForCourse[];
   rating: number;
-  studentsComments: StudentComment[];
+
 };
 
 const CourseTabs = ({
@@ -42,7 +35,7 @@ const CourseTabs = ({
   courseId ,
   instructors,
   rating,
-  studentsComments,
+
 }: CourseTabsProps) => {
   const tabTriggerClass =
     "!text-base-content/70 data-[state=active]:!bg-base-100 py-3 !border-primary !rounded-none border-0  px-4 sm:px-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none";
@@ -73,7 +66,7 @@ const CourseTabs = ({
         <Curriculum courseId={courseId} />
         <CourseInstructors instructors={instructors} />
         <CourseRating rating={rating} />
-        <Comments studentsComments={studentsComments} />
+        <Comments  />
       </TabsContent>
       <TabsContent value="curriculum">
         <Curriculum courseId={courseId} />
@@ -83,7 +76,7 @@ const CourseTabs = ({
       </TabsContent>
       <TabsContent value="review">
         <CourseRating rating={rating} />
-        <Comments studentsComments={studentsComments} />
+        <Comments />
       </TabsContent>
     </Tabs>
   );
