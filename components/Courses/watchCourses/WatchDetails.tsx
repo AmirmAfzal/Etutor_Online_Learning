@@ -14,7 +14,6 @@ interface Lecture {
 
 interface WatchDetailsProps {
   currentLecture: Lecture;
-  commentsCount: number;
   sectionNumber: number;
   sectionTitle: string;
   watchingStudents: number;
@@ -22,7 +21,6 @@ interface WatchDetailsProps {
 
 const WatchDetails = ({
   currentLecture,
-  commentsCount,
   sectionNumber,
   sectionTitle,
   watchingStudents,
@@ -69,7 +67,7 @@ const WatchDetails = ({
         <div className="text-base-content/70 flex flex-wrap items-center gap-4 text-sm md:text-base">
           {/* FIXME */}
           <span>Last updated: 3 days ago</span>
-          <span>Comments: {commentsCount}</span>
+          <span>Comments: 0</span>
         </div>
       </div>
     </div>

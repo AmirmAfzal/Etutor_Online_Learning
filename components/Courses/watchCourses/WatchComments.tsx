@@ -165,7 +165,6 @@ export default async function WatchComments({
 
     const processedReplies: CommentUI[] =
       comment.replies?.map((reply: ReplyFromDB) => {
-        // const replyUser = reply.userId;
         return {
           id: reply._id?.toString(),
           name: reply.title,

@@ -2,25 +2,50 @@ import Link from "next/link";
 
 import Icon from "@/components/ui/Icon";
 import WriteReview from "@/components/Courses/watchCourses/WriteReview";
+import NextLectureBtn from "@/components/Courses/watchCourses/NextLectureBtn";
+import { connectDB } from "@/lib/db/db";
+import sectionModel from "@/lib/db/models/sectionModel";
 
 interface WatchHeaderProps {
   title: string;
   sectionsCount: number;
   lecturesCount: number;
   totalDuration: string;
+  params: { id: string };
+  searchParams: { lectureId: string; section: string };
 }
 
-const WatchHeader = ({
+interface Course {
+  course: string;
+}
+
+
+const WatchHeader = async ({
   title,
   sectionsCount,
   lecturesCount,
   totalDuration,
+  searchParams,
+  params,
 }: WatchHeaderProps) => {
+
+const  { id : courseIdUrl }  = params;
+
+  console.log("Course ID in WatchHeader:", courseIdUrl);
+  
+  await connectDB();
+
+  const foundSection = await sectionModel
+    .findOne({ index: searchParams.section })
+    .lean<Course>();
+  const courseId = foundSection?.course.toString() || courseIdUrl;
+  console.log(courseId);
+
   return (
     <div className="bg-base-200 flex w-full flex-col items-start justify-between gap-4 p-4 lg:flex-row lg:items-center">
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
         <Link
-          href="#"
+          href="/student"
           className="bg-base-100 flex h-10 w-10 items-center justify-center rounded-full"
           aria-label="Back to previous page"
         >
@@ -49,10 +74,8 @@ const WatchHeader = ({
       </div>
 
       <div className="mt-3 flex w-full flex-row items-center justify-end gap-2 md:w-auto">
-        <WriteReview />
-        <button className="btn btn-primary text-xs whitespace-nowrap md:text-base">
-          Next Lecture
-        </button>
+        <WriteReview courseId={courseId} />
+        <NextLectureBtn searchParams={searchParams} />
       </div>
     </div>
   );
