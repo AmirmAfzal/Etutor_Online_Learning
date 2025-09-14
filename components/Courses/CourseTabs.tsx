@@ -34,7 +34,7 @@ const CourseTabs = ({
   overview,
   courseId ,
   instructors,
-  rating,
+
 
 }: CourseTabsProps) => {
   const tabTriggerClass =
@@ -65,7 +65,7 @@ const CourseTabs = ({
         />
         <Curriculum courseId={courseId} />
         <CourseInstructors instructors={instructors} />
-        <CourseRating rating={rating} />
+        <CourseRating courseId={courseId}/>
         <Comments  />
       </TabsContent>
       <TabsContent value="curriculum">
@@ -75,7 +75,7 @@ const CourseTabs = ({
         <CourseInstructors instructors={instructors} />
       </TabsContent>
       <TabsContent value="review">
-        <CourseRating rating={rating} />
+        <CourseRating courseId={courseId} />
         <Comments />
       </TabsContent>
     </Tabs>
