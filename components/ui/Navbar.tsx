@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { Separator } from "./separator";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -62,23 +63,53 @@ const Navbar = () => {
         </nav>
         <div className="flex flex-row items-center justify-between px-6 py-4">
           <div className="flex flex-row items-center gap-8">
-            <Image
-              src="/images/LOGO.png"
-              alt="logo"
-              className="w-35"
-              width={200}
-              height={80}
-            />
+            <Link href="/">
+              <Image
+                src="/images/LOGO.png"
+                alt="logo"
+                className="w-35"
+                width={200}
+                height={80}
+              />
+            </Link>
 
-            <Select>
-              <SelectTrigger className="text-base-100 border-0">
-                <SelectValue placeholder="Browse" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="englis">English</SelectItem>
-                <SelectItem value="english">English</SelectItem>
-              </SelectContent>
-            </Select>
+            <HoverCard>
+              <HoverCardTrigger className="group">
+                <p className="text-base-content/60 border-base-300 flex h-10 cursor-pointer flex-row items-center gap-8 border px-2 text-sm shadow">
+                  Browse
+                  <Icon
+                    icon="ph:caret-down"
+                    className="duration-300 group-data-[state=open]:rotate-180"
+                    width="16"
+                    height="16"
+                  />
+                </p>
+              </HoverCardTrigger>
+              <HoverCardContent className="mt-3 ml-8 w-3xl rounded-none">
+                <div className="grid w-full grid-cols-2 gap-6">
+                  <div>
+                    <Link href="#instructor" className="font-bold">
+                      Browse Instructor
+                    </Link>
+                    <p className="text-base-content/70 mt-2 text-sm">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Nisi ea nam hic assumenda qui harum accusantium et nihil
+                      error exercitationem?
+                    </p>
+                  </div>
+                  <div>
+                    <Link href="/courses" className="font-bold">
+                      Browse Courses
+                    </Link>
+                    <p className="text-base-content/70 mt-2 text-sm">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Nisi ea nam hic assumenda qui harum accusantium et nihil
+                      error exercitationem?
+                    </p>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
 
             <div className="relative">
               <Icon
@@ -100,13 +131,19 @@ const Navbar = () => {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <Icon icon="ph:bell" width="24" height="24" />
-            <Icon icon="ph:heart" width="24" height="24" />
-            <Icon icon="ph:shopping-cart-simple" width="24" height="24" />
+            <Link href="/student/messages">
+              <Icon icon="ph:bell" width="24" height="24" />
+            </Link>
+            <Link href="/student/wishlist">
+              <Icon icon="ph:heart" width="24" height="24" />
+            </Link>
+            <Link href="/shopping-cart">
+              <Icon icon="ph:shopping-cart-simple" width="24" height="24" />
+            </Link>
             {session?.user.id ? (
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <span className="bg-base-300 flex items-center justify-center rounded-full p-2">
+                  <span className="bg-base-300 flex cursor-pointer items-center justify-center rounded-full p-2">
                     <Icon icon="ph:user" width="24" height="24" />
                   </span>
                 </DropdownMenuTrigger>

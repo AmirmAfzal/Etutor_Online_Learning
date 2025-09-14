@@ -77,7 +77,7 @@ const RecentCourse = ({ courses }: Props) => {
                             className="text-primary"
                             icon="ph:star-fill"
                           />
-                          {course.rating}5
+                          {course.rating}
                           <span className="text-base-content/70 ml-1">
                             (365,654)
                           </span>
@@ -119,7 +119,7 @@ const RecentCourse = ({ courses }: Props) => {
                         <div className="flex flex-row items-center gap-2">
                           <p className="text-2xl font-light">${course.price}</p>
                           <p className="text-base-content/50 line-through">
-                            ${course.offer}.00
+                            ${course.offer}
                           </p>
                           <p className="text-primary bg-primary/20 p-1 text-sm">
                             56% OFF
