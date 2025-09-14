@@ -15,19 +15,10 @@ interface Lecture {
   caption: string;
 }
 
-interface Comment {
-  name: string;
-  avatar: string;
-  time: string;
-  star: number;
-  comment: string;
-  ADMIN: boolean;
-  replies?: Comment[];
-}
+
 
 interface WatchTabsProps {
   currentLecture: Lecture;
-  comments: Comment[];
 }
 
 const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
@@ -73,10 +64,7 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
           </p>
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <h3 className="text-lg font-semibold md:text-xl">Lecture Notes</h3>
-            <button className="btn btn-primary btn-soft w-full sm:w-auto">
-              <Icon icon="ph:download-simple" className="text-2xl" />
-              Download Notes
-            </button>
+
           </div>
           <p className="text-base-content/70 text-sm leading-6">
             {currentLecture.notes}
@@ -122,7 +110,7 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
             </span>
           )}
 
-          {/* <WatchComments comments={comments} lectureId={currentLecture.id} /> */}
+
           <WatchComments lectureId={currentLecture._id} />
         </div>
       </TabsContent>
@@ -131,10 +119,7 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <h3 className="text-xl font-semibold">Lecture Notes</h3>
-            <button className="btn btn-primary btn-soft w-full sm:w-auto">
-              <Icon icon="ph:download-simple" className="text-2xl" />
-              Download Notes
-            </button>
+
           </div>
           <p className="text-base-content/70 text-md font-semibold">
             {currentLecture.notes}
@@ -184,7 +169,6 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
       </TabsContent>
 
       <TabsContent value="comments" className="mt-6">
-        {/* <WatchComments comments={comments}  lectureId={currentLecture.id}/> */}
         <WatchComments lectureId={currentLecture._id} />
       </TabsContent>
     </Tabs>

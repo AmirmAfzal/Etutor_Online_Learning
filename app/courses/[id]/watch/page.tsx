@@ -19,58 +19,12 @@ interface CurriculumItem  {
   }[];
 }
 
-interface Comment {
-  name: string;
-  avatar: string;
-  time: string;
-  star: number;
-  comment: string;
-  ADMIN: boolean;
-  replies?: Comment[];
-}
 
 interface Props {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ lectureId: string; section: string }>;
 }
 
-const comments: Comment[] = [
-  {
-    name: "Theresa Webb",
-    avatar: "/images/instructors/instructor-1.png",
-    time: "3 weeks ago",
-    star: 5,
-    comment:
-      "Now I know that I will spent that 5 minutes of my life with pure pleasure and joy. I am so happy that I found this course. It is really amazing and I will recommend it to all my friends.",
-    ADMIN: false,
-    replies: [
-      {
-        name: "John Doe",
-        avatar: "/images/instructors/instructor-3.png",
-        time: "2 weeks ago",
-        star: 4,
-        comment: "Totally agree with you!",
-        ADMIN: false,
-      },
-      {
-        name: "Admin",
-        avatar: "/images/instructors/instructor-3.png",
-        time: "1 week ago",
-        star: 5,
-        comment: "Thanks for your feedback!",
-        ADMIN: true,
-      },
-    ],
-  },
-  {
-    name: "Jane Smith",
-    avatar: "/images/instructors/instructor-3.png",
-    time: "1 week ago",
-    star: 4,
-    comment: "I enjoyed it too!",
-    ADMIN: false,
-  },
-];
 
 const convertMinutesToHoursAndMinutes = (totalMinutes: number) => {
   if (typeof totalMinutes !== "number" || totalMinutes < 0) {
@@ -251,11 +205,10 @@ const WatchCourse = async (
         sectionTitle={courseData.sectionTitle}
         currentLecture={currentLecture}
         watchingStudents={courseData.students}
-        commentsCount={comments.length}
       />
 
       <div className="lg:w-2/3">
-        <WatchTabs currentLecture={currentLecture} comments={comments}  />
+        <WatchTabs currentLecture={currentLecture}   />
       </div>
     </section>
   );
