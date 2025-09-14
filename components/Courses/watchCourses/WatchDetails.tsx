@@ -1,26 +1,45 @@
 import Image from "next/image";
+import { Types } from "mongoose";
+
+interface Lecture {
+  _id: Types.ObjectId;
+  title: string;
+  description: string;
+  video: string;
+  duration: number;
+  files: string | string[];
+  notes: string;
+  caption: string;
+}
 
 interface WatchDetailsProps {
+  currentLecture: Lecture;
+  commentsCount: number;
   sectionNumber: number;
   sectionTitle: string;
   watchingStudents: number;
-  commentsCount: number;
 }
 
 const WatchDetails = ({
+  currentLecture,
+  commentsCount,
   sectionNumber,
   sectionTitle,
   watchingStudents,
-  commentsCount,
 }: WatchDetailsProps) => {
   const courseStudents = [
     { avatar: "/images/profile-img.png" },
     { avatar: "/images/profile-img.png" },
   ];
 
+  if (!currentLecture) {
+    return <div>No lecture details available.</div>;
+  }
+
   return (
     <div className="mt-12 w-full md:mt-8 lg:w-2/3">
       <h2 className="text-base-content/80 text-lg font-semibold md:text-xl">
+        {/* FIXME : fix the section || lecture number */}
         {sectionNumber} . {sectionTitle}
       </h2>
 
@@ -43,12 +62,12 @@ const WatchDetails = ({
               {watchingStudents}
             </span>
             <span className="text-base-content/60 text-sm md:text-base">
-              student Watching
+              students Watching
             </span>
           </div>
         </div>
-
         <div className="text-base-content/70 flex flex-wrap items-center gap-4 text-sm md:text-base">
+          {/* FIXME */}
           <span>Last updated: 3 days ago</span>
           <span>Comments: {commentsCount}</span>
         </div>

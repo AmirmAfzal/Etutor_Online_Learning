@@ -1,21 +1,26 @@
+import { Types } from "mongoose";
+
 import WatchCurriculum from "@/components/Courses/watchCourses/WatchCurriculum";
 import WatchHeader from "@/components/Courses/watchCourses/WatchHeader";
 import WatchPlayer from "@/components/Courses/watchCourses/WatchPlayer";
 import WatchDetails from "@/components/Courses/watchCourses/WatchDetails";
 import WatchTabs from "@/components/Courses/watchCourses/WatchTabs";
+import { connectDB } from "@/lib/db/db";
+import sectionModel from "@/lib/db/models/sectionModel";
 
-type CurriculumItem = {
+interface CurriculumItem  {
   title: string;
   lectures: number;
   duration: string;
   content: {
+    _id: string;
     title: string;
     info: string;
     type: string;
   }[];
-};
+}
 
-type Comment = {
+interface Comment {
   name: string;
   avatar: string;
   time: string;
@@ -23,75 +28,12 @@ type Comment = {
   comment: string;
   ADMIN: boolean;
   replies?: Comment[];
-};
+}
 
-const curriculum: CurriculumItem[] = [
-  {
-    title: "Getting Started",
-    lectures: 4,
-    duration: "51m",
-    content: [
-      {
-        title: "What's is Webflow?",
-        info: "07:31",
-        type: "video",
-      },
-      {
-        title: "Sign up in Webflow",
-        info: "07:31",
-        type: "video",
-      },
-      { title: "Teaser of Webflow", info: "07:31", type: "video" },
-    ],
-  },
-  {
-    title: "Secret of Good Design",
-    lectures: 52,
-    duration: "5h 49m",
-    content: [],
-  },
-  {
-    title: "Practice Design Like an Artist",
-    lectures: 43,
-    duration: "53m",
-    content: [],
-  },
-  {
-    title: "Web Development (webflow)",
-    lectures: 137,
-    duration: "10h 6m",
-    content: [],
-  },
-  {
-    title: "Secrets of Making Money Freelancing",
-    lectures: 21,
-    duration: "38m",
-    content: [],
-  },
-  {
-    title: "Advanced",
-    lectures: 39,
-    duration: "91m",
-    content: [],
-  },
-];
-
-const courseData = {
-  section: 2,
-  sectionTitle: "Sign up in WebFlow",
-  students: 122,
-};
-
-// students avatars rendered inside WatchDetails for simplicity
-
-const lactureData = {
-  description: `We cover everything you need to build your first website. From creating your first page through to uploading your website to the internet. We'll use the world's most popular (and free) web design tool called Visual Studio Code. There are exercise files you can download and then work along with me. At the end of each video I have a downloadable version of where we are in the process so that you can compare your project with mine. This will enable you to see easily where you might have a problem. We will delve into all the good stuff such as how to create your very own mobile burger menu from scratch learning some basic JavaScript and jQuery.
-
-If that all sounds a little too fancy - don't worry, this course is aimed at people new to web design and who have never coded before. We'll start right at the beginning and work our way through step by step. `,
-
-  note: `In ut aliquet ante. Curabitur mollis tincidunt turpis, sed aliquam mauris finibus vel. Praesent eget mi in mi maximus egestas. Mauris eget ipsum in justo bibendum pellentesque. Sed id arcu in arcu ullamcorper eleifend condimentum quis diam. Phasellus tempus, urna ut auctor mattis, nisi nunc tincidunt lorem, eu egestas augue lectus sit amet sapien. Maecenas tristique aliquet massa, a venenatis augue tempor in. Aliquam turpis urna, imperdiet in lacus a, posuere suscipit augue. , Donec congue aliquam lorem nec congue. Suspendisse eu risus mattis, interdum ante sed, fringilla urna. Praesent mattis dictum sapien a lacinia. Ut scelerisque magna aliquet, blandit arcu quis, consequat purus. Suspendisse eget scelerisque felis. Integer vulputate urna laoreet purus vehicula condimentum. Donec quis luctus quam. Curabitur quis molestie ante. Nam pharetra sagittis varius. Sed ullamcorper facilisis bibendum.`,
-  file: "",
-};
+interface Props {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ lectureId?: string; section?: string }>;
+}
 
 const comments: Comment[] = [
   {
@@ -131,32 +73,187 @@ const comments: Comment[] = [
   },
 ];
 
-const WatchCourse = () => {
-  return (
+const convertMinutesToHoursAndMinutes = (totalMinutes: number) => {
+  if (typeof totalMinutes !== "number" || totalMinutes < 0) {
+    return "Invalid input";
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  let output = "";
+
+  if (hours > 0) {
+    output += `${hours}h`;
+  }
+  if (minutes > 0) {
+    if (output !== "") {
+      output += ", ";
+    }
+    output += `${minutes}min`;
+  }
+  if (output === "") {
+    return "0min";
+  }
+  return output;
+};
+
+interface LectureType {
+  _id: Types.ObjectId;
+  title: string;
+  description: string;
+  video: string;
+  duration: number;
+  files: string | string[];
+  notes: string;
+  caption: string;
+}
+interface CourseType {
+  title: string;
+  duration: number;
+  sections: Types.ObjectId[];
+}
+interface SectionType {
+  _id: Types.ObjectId;
+  title: string;
+  lectures: LectureType[];
+  course: CourseType;
+}
+
+const WatchCourse = async (
+  props: Props
+) => {
+  await connectDB();
+  const { id } = await props.params;
+
+
+  if (!Types.ObjectId.isValid(id)) {
+    return <div>Invalid Course ID</div>;
+  }
+
+  const foundSections = await sectionModel
+    .find({ course: id })
+    .populate("lectures")
+    .populate("course")
+    .lean<SectionType[]>();
+
+  if (!foundSections || foundSections.length === 0) {
+    return <div>Course not found or has no sections.</div>;
+  }
+
+  const course: CourseType = foundSections[0]?.course as CourseType;
+  const lectures: LectureType[] = foundSections.flatMap(
+    (section) => section.lectures
+  );
+
+  const { lectureId, section: sectionParam } = await props.searchParams;
+
+  let currentLecture: LectureType | undefined;
+  let currentSection: SectionType | undefined;
+
+  if (sectionParam) {
+    const sectionIndex = parseInt(sectionParam, 10) - 1; // Convert to 0-based index
+    const targetSection = foundSections[sectionIndex];
+
+    if (targetSection) {
+      currentSection = targetSection;
+      if (lectureId) {
+        currentLecture = targetSection.lectures.find(
+          (lecture) => lecture._id.toString() === lectureId
+        );
+      }
+      if (!currentLecture) {
+        currentLecture = targetSection.lectures[0]; // Default to first lecture of the section
+      }
+    }
+  }
+
+  if (!currentLecture) {
+    currentLecture = lectureId
+      ? lectures.find((lecture) => lecture._id.toString() === lectureId)
+      : lectures[0];
+  }
+
+  if (!currentLecture) {
+    return <div>Lecture not found. Please select a valid lecture.</div>;
+  }
+
+  if (!currentSection) {
+    currentSection = foundSections.find((section) =>
+      section.lectures.some(
+        (l) => l._id.toString() === currentLecture?._id.toString()
+      )
+    );
+  }
+
+
+
+
+  const curriculum: CurriculumItem[] = foundSections.map((section) => {
+    const totalSectionDuration = section.lectures.reduce(
+      (sum, lecture) => sum + lecture.duration,
+      0
+    );
+    return {
+      title: section.title,
+      lectures: section.lectures.length,
+      duration: convertMinutesToHoursAndMinutes(totalSectionDuration),
+      content: section.lectures.map((lecture) => ({
+        _id: lecture._id.toString(), // Added _id
+        title: lecture.title,
+        info: convertMinutesToHoursAndMinutes(lecture.duration),
+        type: "video",
+      })),
+    };
+  });
+
+  const courseData = {
+    section: currentSection
+      ? foundSections.findIndex((s) => s._id === currentSection._id) + 1
+      : 0,
+    sectionTitle: currentLecture.title,
+    // FIXME : student number
+    students: 122,
+  };
+
+
+    return (
     <section className="container mx-auto w-full px-4 py-6">
       <WatchHeader
-        title="Complete Website Responsive Design: from Figma to Webflow to Website Design"
-        sectionsCount={6}
-        lecturesCount={203}
-        totalDuration="19h 37m"
+        title={course?.title ?? "The course does not have a title"}
+        sectionsCount={foundSections.length}
+        lecturesCount={lectures.length}
+
+        totalDuration={convertMinutesToHoursAndMinutes(course?.duration ?? 0)}
       />
 
       <div className="mt-6 flex w-full flex-col items-start gap-4 lg:flex-row lg:gap-6">
-        <WatchPlayer />
+        <WatchPlayer  videoSrc={currentLecture.video}/>
         <div className="w-full lg:w-5/12">
-          <WatchCurriculum curriculum={curriculum} />
+          <WatchCurriculum
+            curriculum={curriculum}
+            courseId={id}
+            currentLectureId={currentLecture._id.toString()}
+            currentSectionIndex={
+              currentSection
+                ? foundSections.findIndex((s) => s._id === currentSection._id) +
+                  1
+                : 0
+            }
+          />
         </div>
       </div>
 
+      {/* FIXME: replace section number with lecture number */}
       <WatchDetails
         sectionNumber={courseData.section}
         sectionTitle={courseData.sectionTitle}
+        currentLecture={currentLecture}
         watchingStudents={courseData.students}
         commentsCount={comments.length}
       />
 
       <div className="lg:w-2/3">
-        <WatchTabs lecture={lactureData} comments={comments} />
+        <WatchTabs currentLecture={currentLecture} comments={comments}  />
       </div>
     </section>
   );

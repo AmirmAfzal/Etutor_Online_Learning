@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 import { DataTypes } from "@/lib/actions/instructor/instructorProfile";
 
@@ -82,7 +84,12 @@ const Bannar = () => {
                 </p>
               </div>
               <div className="flex flex-row items-center gap-4">
-                <button className="btn btn-primary">Edit Biography</button>
+                <Link
+                  href="/instructor/dashboard/settings"
+                  className="btn btn-primary"
+                >
+                  Edit Biography
+                </Link>
                 <AccordionTrigger
                   onClick={() => setIsOpen(!isOpen)}
                   className="btn btn-soft flex items-center justify-center rounded-none"

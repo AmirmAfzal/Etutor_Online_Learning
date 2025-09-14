@@ -25,8 +25,8 @@ interface Course {
   _id?: string;
   id?: string;
   thumbnail: string;
-  name: string;
-  title?: string;
+  title: string;
+  subtitle: string;
   description?: string;
   category: string;
   price: number;
@@ -43,7 +43,7 @@ interface Course {
   whatYouWillLearn?: string[];
   thisCourseFor?: string[];
   courseRequirements?: string[];
-  createdBy?: string;
+  createdBy: string | undefined;
   curriculum?: CurriculumSection[];
 }
 
@@ -67,23 +67,26 @@ interface InstructorDocument {
   name?: string;
 }
 
-interface CourseAuthor {
-  name?: string;
-}
-
 interface FoundCourseDocument {
   _id?: { toString: () => string } | string;
   thumbnail?: string;
   title?: string;
+  subtitle?: string;
   description?: string;
+  level?: string;
+  language?: string;
+  subtitleLanguage?: string;
   category?: { name?: string } | null;
   price?: number;
   duration?: string;
   studentsCount?: number;
-  authors?: (CourseAuthor & InstructorDocument)[];
+  authors?: InstructorDocument[];
   originalPrice?: number;
   discount?: string;
   timeLeft?: string;
+  requirements?: string[];
+  targetAudience?: string[];
+  learningOutcomes?: string[];
 }
 
 const buildInstructorData = (
@@ -110,14 +113,16 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
       (typeof course._id === "string" ? course._id : course._id?.toString()) ||
       id,
     thumbnail: course.thumbnail || "/images/course-images-1.png",
-    name: course.title || "Untitled Course",
     title: course.title || "Untitled Course",
-    description: course.description || "No description available",
+    subtitle: course.subtitle || "No description available",
     category: course.category?.name || "Unknown",
     price: course.price || 0,
     students: course.studentsCount || 0,
-    createdBy:
-      authors.map((author) => author.name || "Unknown").join(", ") || "Unknown",
+    createdBy: authors
+      .map((author: InstructorDocument) =>
+        `${author?.firstname || ""} ${author?.lastname || ""}`.trim()
+      )
+      .join(", "),
     rating: 5,
     originalPrice: course.originalPrice || 0,
     discount: course.discount || "0%",
@@ -128,100 +133,28 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
         label: "Course Duration",
         value: ` ${course?.duration} hours` || "Unknown",
       },
-      { label: "Course Level", value: "Beginner" },
-      { label: "Students Enrolled", value: "69,419,618" },
-      { label: "Language", value: "Mandarin" },
-      { label: "Subtitle Language", value: "English" },
+      { label: "Course Level", value: `${course.level}` },
+      { label: "Students Enrolled", value: `${course.studentsCount}` },
+      { label: "Language", value: `${course.language}` },
+      { label: "Subtitle Language", value: `${course.subtitleLanguage}` },
     ],
-    breadcrumb: ["Home", "Development", "Web Development", "Webflow"],
-    instructors: [
-      { name: "Dianne Russell", avatar: "/images/profile-img.png" },
-      { name: "Kristin Watson", avatar: "/images/profile-img.png" },
-    ],
-    courseDescription:
-      "This course provides a comprehensive guide to designing and developing responsive websites. Learn the secrets of good design and how to turn your ideas into reality using Figma and Webflow.",
-    whatYouWillLearn: [
-      "How to design a complete website in Figma",
-      "How to create a responsive website in Webflow",
-      "How to export assets from Figma to Webflow",
-      "How to use Webflow CMS for dynamic content",
-      "How to publish and host your website on Webflow",
-    ],
-    thisCourseFor: [
-      "Anyone who wants to learn Web Design",
-      "Anyone who wants to learn Figma",
-      "Anyone who wants to learn Webflow",
-      "Anyone who wants to create responsive websites",
-    ],
-    courseRequirements: [
-      "Basic computer skills",
-      "A computer with internet access",
-      "Willingness to learn and practice",
-      "No prior design or coding experience required",
-    ],
+    // breadcrumb: ["Home", "Development", "Web Development", "Webflow"],
+    instructors:course.authors?.map((author: InstructorDocument) =>{
+       author.name = `${author?.firstname || ""} ${author?.lastname || ""}`.trim();
+       author.avatar = author?.avatar || "/images/student-dashboard/Teacher-default.jpg";
+       return {
+         name: author.name,
+         avatar: author.avatar,
+       };
+  }) || [],
+    courseDescription: course.description || "",
+    whatYouWillLearn: course.learningOutcomes || [],
+    thisCourseFor: course.targetAudience || [],
+    courseRequirements: course.requirements || [],
   };
 };
 
-// Fake data that would come from a database
-
-const fakeCourses = {
-  curriculum: [
-    {
-      title: "Getting Started",
-      lectures: 4,
-      duration: "51m",
-      content: [
-        {
-          title: "What's is Webflow?",
-          info: "07:31",
-          type: "video",
-        },
-        {
-          title: "Sign up in Webflow",
-          info: "07:31",
-          type: "video",
-        },
-        {
-          title: "Webflow Terms & Conditions",
-          info: "5.3 MB",
-          type: "file",
-        },
-        { title: "Teaser of Webflow", info: "07:31", type: "video" },
-        { title: "Practice Project", info: "5.3 MB", type: "file" },
-      ],
-    },
-    {
-      title: "Secret of Good Design",
-      lectures: 52,
-      duration: "5h 49m",
-      content: [],
-    },
-    {
-      title: "Practice Design Like an Artist",
-      lectures: 43,
-      duration: "53m",
-      content: [],
-    },
-    {
-      title: "Web Development (webflow)",
-      lectures: 137,
-      duration: "10h 6m",
-      content: [],
-    },
-    {
-      title: "Secrets of Making Money Freelancing",
-      lectures: 21,
-      duration: "38m",
-      content: [],
-    },
-    {
-      title: "Advanced",
-      lectures: 39,
-      duration: "91m",
-      content: [],
-    },
-  ],
-};
+//
 
 const studentsComments = [
   {
@@ -246,33 +179,6 @@ const studentsComments = [
     star: 3,
     time: "3 days ago",
     comment: "Good course but could use more examples.",
-  },
-];
-
-const relatedCourses = [
-  {
-    thumbnail: "/images/course-1.jpg",
-    name: "Web Design Masterclass",
-    category: "Web Design",
-    price: 49.99,
-    students: 1200,
-    rating: 4.5,
-  },
-  {
-    thumbnail: "/images/course-2.jpg",
-    name: "Figma for Beginners",
-    category: "Design",
-    price: 39.99,
-    students: 800,
-    rating: 4.7,
-  },
-  {
-    thumbnail: "/images/course-3.jpg",
-    name: "Advanced Webflow Techniques",
-    category: "Development",
-    price: 59.99,
-    students: 500,
-    rating: 4.8,
   },
 ];
 
@@ -327,7 +233,7 @@ const SingleCoursePage = async ({
         <div className="md:col-span-2">
           <SingleCourseHeader
             title={singleCourse.title}
-            description={singleCourse.description}
+            description={singleCourse.subtitle}
             breadcrumb={singleCourse.breadcrumb}
             instructors={singleCourse.instructors}
             createdBy={singleCourse.createdBy}
@@ -343,7 +249,7 @@ const SingleCoursePage = async ({
                 thisCourseFor: singleCourse.thisCourseFor,
                 courseRequirements: singleCourse.courseRequirements,
               }}
-              curriculum={fakeCourses.curriculum}
+              courseId={singleCourse.id || id}
               instructors={instructorData}
               rating={singleCourse.rating}
               studentsComments={studentsComments}
@@ -358,7 +264,7 @@ const SingleCoursePage = async ({
         />
       </div>
 
-      <RelatedCoursesSection courses={relatedCourses} />
+      <RelatedCoursesSection />
     </section>
   );
 };

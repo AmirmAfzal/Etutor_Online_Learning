@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
 import {
@@ -90,6 +91,11 @@ const Navbar = () => {
                 type="text"
                 className="w-96 pl-10"
                 placeholder="What do you want learn..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    redirect(`/courses?query=${e.currentTarget.value}`);
+                  }
+                }}
               />
             </div>
           </div>
@@ -135,7 +141,10 @@ const Navbar = () => {
                   </DropdownMenuItem>
                   <Separator className="my-2" />
                   <DropdownMenuItem>
-                    <button onClick={() => signOut()} className="flex flex-row items-center gap-2">
+                    <button
+                      onClick={() => signOut()}
+                      className="flex flex-row items-center gap-2"
+                    >
                       <Icon icon="ph:sign-out" width="24" height="24" />
                       Sign-out
                     </button>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import Icon from "../ui/Icon";
 
@@ -42,10 +43,10 @@ const BecomeInstructor = () => {
               Instructors from around the world teach millions of students on
               Udemy. We provide the tools and skills to teach what you love.
             </p>
-            <button className="btn btn-primary btn-soft">
+            <Link href="/student" className="btn btn-primary btn-soft">
               Start Teaching
               <Icon icon="ph:arrow-right" width="24" height="24" />
-            </button>
+            </Link>
           </div>
           <Image
             src="/images/Become-an-Instructor.png"

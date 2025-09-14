@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import moment from "moment";
 
 import CourseInformation from "@/components/instructor-dashboard/course-detail/CourseInformation";
@@ -117,7 +118,12 @@ const CourseDetailPage = async (props: Props) => {
                 </span>
               </div>
               <div className="flex flex-row items-center gap-4">
-                <button className="btn btn-primary">Withdrew Money</button>
+                <Link
+                  href="/instructor/dashboard/earning"
+                  className="btn btn-primary"
+                >
+                  Withdrew Money
+                </Link>
                 <button className="btn btn-soft">
                   <Icon icon="ph:dots-three" width="24" height="24" />
                 </button>
