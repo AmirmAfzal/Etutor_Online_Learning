@@ -1,9 +1,11 @@
 import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
+import { LectureInterface } from "@/lib/db/models/lectureModel";
+
 export interface SectionInterface extends Document {
   title: string;
   description: string;
-  lectures: ObjectId[];
+  lectures: (ObjectId | LectureInterface)[];
   course: ObjectId;
   duration: number;
   index: number;
