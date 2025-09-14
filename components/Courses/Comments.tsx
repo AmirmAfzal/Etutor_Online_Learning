@@ -1,4 +1,3 @@
-import { FC } from "react";
 import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
@@ -9,20 +8,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { connectDB } from "@/lib/db/db";
+import feedbackModel from "@/lib/db/models/feedbackModel";
 
-type Comment = {
-  name: string;
-  avatar: string;
-  time: string;
-  star: number;
-  comment: string;
-};
 
-type CommentsProps = {
-  studentsComments: Comment[];
-};
 
-const Comments: FC<CommentsProps> = ({ studentsComments }) => {
+
+const Comments = async () => {
+
+  await  connectDB()
+
+  const feedbacks = await  feedbackModel.find().lean()
+
+  const getFeedbacks = feedbacks.map(feedback  => ({
+    id: feedback._id?.toString() || "",
+    name: feedback.title,
+    avatar: feedback.avatar,
+    time: feedback.createdAt?.toDateString() || "Some time ago",
+    star: feedback.star,
+    comment: feedback.feedback,
+  }))
+
+
+
   return (
     <div className="mt-12 w-full space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -43,9 +51,9 @@ const Comments: FC<CommentsProps> = ({ studentsComments }) => {
         </Select>
       </div>
 
-      {studentsComments.map((comment) => (
+      {getFeedbacks.map((comment) => (
         <div
-          key={comment.name}
+          key={comment.id}
           className="border-base-300 flex items-start gap-4 border-b pb-4"
         >
           <Image

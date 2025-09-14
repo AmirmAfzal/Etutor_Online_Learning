@@ -5,8 +5,9 @@ import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 import { ActionData } from "@/lib/formTypes";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 
-export const actionAddToCart = async (
+export const actionDeleteCourse = async (
   prevState: ActionData,
   formData: FormData
 ): Promise<ActionData> => {
@@ -26,18 +27,20 @@ export const actionAddToCart = async (
 
     const updatedStudent = await studentModel.findOneAndUpdate(
       {
-        user: session?.user.id,
+        user: session.user.id,
       },
-      { $addToSet: { coursesCart: courseId } },
+      { $pull: { coursesCart: courseId } },
       { new: true }
     );
 
     if (!updatedStudent) {
       return {
         message: "ERROR",
-        errors: ["Failed to add course to cart"],
+        errors: ["Failed to delete course from cart"],
       };
     }
+
+    revalidatePath("/shopping-cart");
 
     return {
       message: "SUCCESS",
@@ -45,10 +48,7 @@ export const actionAddToCart = async (
       data: JSON.parse(JSON.stringify(updatedStudent.coursesCart)),
     };
   } catch (error) {
-    console.error("Error adding course to cart:", error);
-    return {
-      message: "ERROR",
-      errors: ["Failed to add course to cart"],
-    };
+    console.log("error deleting course from cart", error);
+    return { message: "ERROR", errors: ["Failed to delete course from cart"] };
   }
 };

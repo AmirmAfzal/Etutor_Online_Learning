@@ -1,41 +1,38 @@
 "use client";
-import React, { useActionState, useEffect, useState } from "react";
-import Link from "next/link";
-import Form from "next/form";
-
+import React, { useActionState } from "react";
+import Icon from "../ui/Icon";
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
 import { actionBuyNow } from "@/lib/actions/courses/buyNow";
 import CoursesLoading from "@/app/courses/loading";
+import AddToCartModal from "./AddToCartModal";
+import Toast from "../Toast";
+import Form from "next/form";
+import Link from "next/link";
 
-import Icon from "../ui/Icon";
-
-type SidebarCartProps = {
+interface SidebarCartProps {
   fakeSidebarCart: {
     includes: string[];
   };
   singleCourse: {
+id?: string;
+
     price: number;
     originalPrice: number;
+    title: string;
+    thumbnail: string;
+    createdBy: string | undefined;
     discount: string;
     timeLeft: string;
     courseDetails: { label: string; value: string }[];
   };
   courseId: string;
-};
-
-type ToastState = {
-  message: string;
-  errors?: string[];
-};
+}
 
 const SidebarCart = ({
   fakeSidebarCart,
   courseId,
   singleCourse,
 }: SidebarCartProps) => {
-  const [showBuyNowToast, setShowBuyNowToast] = useState(false);
-  const [showWishlistToast, setShowWishlistToast] = useState(false);
-
   const [wishlistState, wishlistAction, wishlistPending] = useActionState(
     actionAddToWishlist,
     { message: "", errors: [] as string[] }
@@ -49,22 +46,9 @@ const SidebarCart = ({
   const originalPrice = singleCourse?.originalPrice ?? 0;
   const discount = (singleCourse?.discount ?? "").trim();
   const showDiscount = discount !== "" && originalPrice > price;
-
-  useEffect(() => {
-    if (buyNowState.message) {
-      setShowBuyNowToast(true);
-      const timer = setTimeout(() => setShowBuyNowToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [buyNowState.message]);
-
-  useEffect(() => {
-    if (wishlistState.message) {
-      setShowWishlistToast(true);
-      const timer = setTimeout(() => setShowWishlistToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [wishlistState.message]);
+  const courseThumbnail = singleCourse?.thumbnail ?? "";
+  const courseTitle = singleCourse?.title ?? "";
+  const courseInstructor = singleCourse?.createdBy ?? "";
 
   // Helper function to get icon based on detail label
   const getDetailIcon = (label: string) => {
@@ -76,26 +60,6 @@ const SidebarCart = ({
     };
     return iconMap[label] || "ph:notepad-duotone";
   };
-
-  // Helper function to render toast
-  const renderToast = (show: boolean, state: ToastState) => (
-    <div className="toast toast-top toast-end">
-      {show && state.message && (
-        <div
-          role="alert"
-          className={`alert ${
-            state.errors?.length ? "alert-error" : "alert-success"
-          }`}
-        >
-          <Icon
-            icon={state.errors?.length ? "ph:x-circle" : "ph:check-circle"}
-            className="text-lg"
-          />
-          <span className="text-xs">{state.message}</span>
-        </div>
-      )}
-    </div>
-  );
 
   return (
     <div className="md:col-span-1">
@@ -147,12 +111,12 @@ const SidebarCart = ({
 
         <div className="flex flex-col items-center gap-1">
           {/* FIXME */}
-          <Link
-            href="/shopping-cart"
-            className="btn btn-primary w-full text-xs"
-          >
-            Add To Cart
-          </Link>
+          <AddToCartModal
+            courseTitle={courseTitle}
+            courseThumbnail={courseThumbnail}
+            courseInstructor={courseInstructor}
+            courseId={courseId}
+          />
 
           <Form action={buyNowAction} className="w-full">
             <input type="hidden" name="courseId" value={courseId} />
@@ -165,7 +129,12 @@ const SidebarCart = ({
             </button>
           </Form>
 
-          {renderToast(showBuyNowToast, buyNowState)}
+          {wishlistState.message && (
+            <Toast
+              message={wishlistState.message}
+              isError={!!wishlistState.errors?.length}
+            />
+          )}
 
           <div className="flex w-full flex-row items-center justify-between gap-1">
             <Form action={wishlistAction} className="w-1/2">
@@ -187,7 +156,12 @@ const SidebarCart = ({
             </Link>
           </div>
 
-          {renderToast(showWishlistToast, wishlistState)}
+          {buyNowState.message && (
+            <Toast
+              message={buyNowState.message}
+              isError={!!buyNowState.errors?.length}
+            />
+          )}
 
           <span className="text-base-content/60 text-xs">
             Note: All courses have 30-day money-back guarantee

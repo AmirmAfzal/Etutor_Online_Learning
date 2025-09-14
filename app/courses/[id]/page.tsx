@@ -139,14 +139,17 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
       { label: "Subtitle Language", value: `${course.subtitleLanguage}` },
     ],
     // breadcrumb: ["Home", "Development", "Web Development", "Webflow"],
-    instructors:course.authors?.map((author: InstructorDocument) =>{
-       author.name = `${author?.firstname || ""} ${author?.lastname || ""}`.trim();
-       author.avatar = author?.avatar || "/images/student-dashboard/Teacher-default.jpg";
-       return {
-         name: author.name,
-         avatar: author.avatar,
-       };
-  }) || [],
+    instructors:
+      course.authors?.map((author: InstructorDocument) => {
+        author.name =
+          `${author?.firstname || ""} ${author?.lastname || ""}`.trim();
+        author.avatar =
+          author?.avatar || "/images/student-dashboard/Teacher-default.jpg";
+        return {
+          name: author.name,
+          avatar: author.avatar,
+        };
+      }) || [],
     courseDescription: course.description || "",
     whatYouWillLearn: course.learningOutcomes || [],
     thisCourseFor: course.targetAudience || [],
@@ -154,33 +157,8 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
   };
 };
 
-//
 
-const studentsComments = [
-  {
-    name: "Alice Johnson",
-    avatar: "/images/profile-img.png",
-    star: 4,
-    time: "2 days ago",
-    comment:
-      "This course was amazing! I learned so much about web design and Figma.",
-  },
-  {
-    name: "Bob Smith",
-    avatar: "/images/profile-img.png",
-    star: 5,
-    time: "1 week ago",
-    comment:
-      "The instructors were very knowledgeable and the content was well-organized.",
-  },
-  {
-    name: "Charlie Brown",
-    avatar: "/images/profile-img.png",
-    star: 3,
-    time: "3 days ago",
-    comment: "Good course but could use more examples.",
-  },
-];
+
 
 const fakeSidebarCart = {
   includes: [
@@ -252,7 +230,7 @@ const SingleCoursePage = async ({
               courseId={singleCourse.id || id}
               instructors={instructorData}
               rating={singleCourse.rating}
-              studentsComments={studentsComments}
+
             />
           </div>
         </div>

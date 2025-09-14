@@ -1,34 +1,34 @@
 import React from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
-
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { connectDB } from "@/lib/db/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
+import { redirect } from "next/navigation";
+import PaymentBtn from "@/components/Student/PaymentBtn";
+import { Document, Types } from "mongoose";
 
-// FIXME: فعلا مشکلی نداره چون بعد قراره اینارو به سرور وصل کنیم ولی صفحه ای اگر باشه که دیتا داره اونو تو فولدر پایین میزاریم
-// مثلا : /lib/data/student/courses.ts
-const courses = [
-  {
-    title: "Graphic Design Masterclass - Learn GREAT Design",
-    instructor: "Courtney Henry",
-    price: 13.0,
-    image: "/images/student-dashboard/course-1.jpg",
-  },
-  {
-    title: "Learn Python Programming Masterclass",
-    instructor: "Marvin McKinney",
-    price: 39.0,
-    image: "/images/student-dashboard/course-2.jpg",
-  },
-  {
-    title: "Instagram Marketing 2021: Complete Guide To Instagram",
-    instructor: "Jacob Jones",
-    price: 32.0,
-    oldPrice: 52.0,
-    image: "/images/student-dashboard/course-3.jpg",
-  },
-];
+
+interface Course extends Document {
+  title: string;
+  thumbnail: string;
+  instructor: string;
+  price: number;
+  offer?: number;
+  _id: Types.ObjectId;
+}
+
+interface Props {
+  id?: string;
+  title?: string;
+  image: string;
+  instructor?: string;
+  price: number;
+  offer?: number ;
+}
 
 const paymentMethods = [
   {
@@ -53,7 +53,37 @@ const paymentMethods = [
   },
 ];
 
-const page = () => {
+const Page = async () => {
+
+  await connectDB();
+
+  const session = await getServerSession(authOptions);
+  if (!session) return redirect("/auth/signin");
+
+  const foundStudent: StudentInterface | null = await studentModel
+    .findOne({
+      user: session.user.id,
+    })
+    .populate("coursesCart");
+  if (!foundStudent) return redirect("/auth/signin");
+
+  const coursesCart = foundStudent.coursesCart as unknown as Course[];
+
+  const courseData: Props[] = coursesCart.map((course: Course) => ({
+    id: typeof course._id === "string" ? course._id : course._id?.toString(),
+    title: course.title,
+    image: course.thumbnail,
+    instructor: course.instructor,
+    price: course.price,
+    offer: typeof course.offer === 'number' ? course.offer : (course.offer ? parseFloat(course.offer as string) : 0) || 0,
+  }));
+
+  const subtotal = courseData.reduce((acc, c) => acc + c.price, 0);
+  const total = courseData.reduce((acc, c) => {
+    const discountAmount = c.offer ? (c.price * c.offer) / 100 : 0;
+    return acc + (c.price - discountAmount);
+  }, 0);
+
   return (
     <div className="flex w-full flex-col gap-10 md:flex-row">
       <div className="bg-base-100 flex-1 p-8">
@@ -64,21 +94,27 @@ const page = () => {
           {paymentMethods.map((pm) => (
             <div
               key={pm.id}
-              className={`bg-base-100/80 hover:border-primary/60 border-base-content/10 relative flex cursor-pointer items-center gap-3 border p-4 transition-all`}
+              className="bg-base-100/80 hover:border-primary/60 border-base-content/10 relative flex cursor-pointer items-center gap-3 border p-4 transition-all"
             >
               <Image src={pm.icon} alt={pm.id} width={32} height={32} />
               <span className="text-base-content/90 font-medium tracking-widest">
                 {pm.label}
               </span>
-              <span className="text-base-content/60 ml-auto text-sm">
-                {pm.expiry}
-              </span>
-              <span className="text-base-content/80 ml-4 text-sm">
-                {pm.name}
-              </span>
-              <span className="text-base-content/70 ml-2 text-xs">
-                {pm.desc}
-              </span>
+              {pm.expiry && (
+                <span className="text-base-content/60 ml-auto text-sm">
+                  {pm.expiry}
+                </span>
+              )}
+              {pm.name && (
+                <span className="text-base-content/80 ml-4 text-sm">
+                  {pm.name}
+                </span>
+              )}
+              {pm.desc && (
+                <span className="text-base-content/70 ml-2 text-xs">
+                  {pm.desc}
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -159,46 +195,53 @@ const page = () => {
       <div className="bg-base-100 border-base-content/10 flex w-full flex-col border p-7 md:mt-10 md:w-[370px]">
         <div className="mb-4 flex items-center justify-between">
           <span className="text-base-content/70 text-lg font-semibold">
-            Courses ({courses.length})
+            Courses ({courseData.length})
           </span>
         </div>
 
         <div className="mb-7 space-y-2">
-          {courses.map((course, idx) => (
-            <div
-              key={idx}
-              className="bg-base-100/80 flex items-center gap-2 p-2"
-            >
-              <Image
-                src={course.image}
-                alt={course.title}
-                width={100}
-                height={100}
-                className="object-cover"
-              />
-              <div className="min-w-0 flex-1">
-                <div className="text-base-content/50 truncate text-xs">
-                  Course by:
-                  <span className="text-base-content/60 ml-1 font-medium">
-                    {course.instructor}
-                  </span>
-                </div>
-                <div className="text-base-content truncate text-xs font-semibold">
-                  {course.title}
-                </div>
-                <div className="mt-1 flex items-center gap-2">
-                  <span className="text-primary text-md font-semibold">
-                    ${course.price.toFixed(2)}
-                  </span>
-                  {course.oldPrice && (
-                    <span className="text-base-content/40 text-xs line-through">
-                      ${course.oldPrice.toFixed(2)}
+          {courseData.map((course, idx) => {
+            const discountAmount = course.offer
+              ? (course.price * course.offer) / 100
+              : 0;
+            const finalPrice = course.price - discountAmount;
+
+            return (
+              <div
+                key={idx}
+                className="bg-base-100/80 flex items-center gap-2 p-2"
+              >
+                <Image
+                  src={course.image}
+                  alt={course.title || "course image"}
+                  width={100}
+                  height={100}
+                  className="object-cover"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="text-base-content/50 truncate text-xs">
+                    Course by:
+                    <span className="text-base-content/60 ml-1 font-medium">
+                      {course.instructor}
                     </span>
-                  )}
+                  </div>
+                  <div className="text-base-content truncate text-xs font-semibold">
+                    {course.title}
+                  </div>
+                  <div className="mt-1 flex items-center gap-2">
+                    <span className="text-primary text-md font-semibold">
+                      ${finalPrice.toFixed(2)}
+                    </span>
+                    {course.offer && (
+                      <span className="text-base-content/60 text-xs line-through">
+                        ${course.offer}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="border-base-300 mb-2 space-y-4 border-t pt-4">
@@ -207,27 +250,29 @@ const page = () => {
           </span>
           <div className="flex justify-between text-sm">
             <span className="text-base-content/70">Subtotal</span>
-            <span className="text-base-content/90 font-medium">$61.97 USD</span>
+            <span className="text-base-content/90 font-medium">
+              $ {subtotal.toFixed(2)} USD
+            </span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-base-content/70">Subtotal</span>
-            <span className="text-base-content/90 font-medium">$61.97 USD</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-base-content/70">Coupon Discount</span>
-            <span className="text-base-content/90 font-medium">8%</span>
+            <span className="text-base-content/70">Total Discount</span>
+            <span className="text-base-content/90 font-medium">
+              $ -{(subtotal - total).toFixed(2)} USD
+            </span>
           </div>
           <div className="mt-2 flex justify-between text-lg font-bold">
             <span className="text-base-content/70">Total:</span>
-            <span className="text-base-content/90">$75.00 USD</span>
+            <span className="text-base-content/90">
+              ${total.toFixed(2)} USD
+            </span>
           </div>
         </div>
-        <Button className="!btn !btn-primary mt-6 w-full py-3 text-lg font-bold tracking-wide transition-all">
-          Complete Payment
-        </Button>
+        <PaymentBtn
+          courseIds={courseData.map((course) => course.id!).filter(Boolean)}
+        />
       </div>
     </div>
   );
 };
 
-export default page;
+export default Page;

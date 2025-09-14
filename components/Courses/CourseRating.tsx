@@ -1,12 +1,29 @@
 import React from "react";
 
 import Icon from "@/components/ui/Icon";
+import { connectDB } from "@/lib/db/db";
+import feedbackModel from "@/lib/db/models/feedbackModel";
 
 type CourseRatingProps = {
-  rating: number;
+  courseId: string;
 };
 
-const CourseRating: React.FC<CourseRatingProps> = ({ rating }) => {
+const CourseRating: React.FC<CourseRatingProps> = async ({ courseId }) => {
+  await connectDB();
+
+  const feedbacks = await feedbackModel.find({ course: courseId }).lean();
+
+  const avgRating =
+    feedbacks.length > 0
+      ? feedbacks.reduce((sum, f) => sum + (f.star || 0), 0) / feedbacks.length
+      : 0;
+
+  const total = feedbacks.length || 1;
+  const distribution = [5, 4, 3, 2, 1].map(
+    (star) =>
+      (feedbacks.filter((f) => f.star === star).length / total) * 100
+  );
+
   return (
     <div className="mt-12 w-full">
       <span className="text-base-content/80 mb-4 block text-xl font-semibold sm:text-2xl">
@@ -15,13 +32,13 @@ const CourseRating: React.FC<CourseRatingProps> = ({ rating }) => {
 
       <div className="flex flex-col gap-6 sm:flex-row">
         <div className="border-base-300 flex flex-col items-center justify-center gap-2 border p-6 sm:w-1/3">
-          <span className="text-4xl font-bold">{rating.toFixed(1)}</span>
+          <span className="text-4xl font-bold">{avgRating.toFixed(1)}</span>
           <div className="flex items-center">
             {[...Array(5)].map((_, index) => (
               <Icon
                 key={index}
                 icon={
-                  index < Math.round(rating)
+                  index < Math.round(avgRating)
                     ? "ph:star-fill"
                     : "ph:star-duotone"
                 }
@@ -52,12 +69,12 @@ const CourseRating: React.FC<CourseRatingProps> = ({ rating }) => {
               <div className="bg-base-300 h-2 flex-1 overflow-hidden rounded-full">
                 <div
                   className="bg-primary h-2 rounded-full"
-                  style={{ width: `${[75, 21, 3, 1, 0.5][index]}%` }}
+                  style={{ width: `${distribution[index]}%` }}
                 ></div>
               </div>
 
               <span className="text-base-content/60 w-10 text-right text-xs sm:text-sm">
-                {[75, 21, 3, 1, 0.5][index]}%
+                {distribution[index].toFixed(1)}%
               </span>
             </div>
           ))}

@@ -6,49 +6,59 @@ import studentModel from "@/lib/db/models/studentModel";
 import { ActionData } from "@/lib/formTypes";
 import { getServerSession } from "next-auth";
 
-export const actionAddToCart = async (
+export const addToCheckout = async (
   prevState: ActionData,
   formData: FormData
 ): Promise<ActionData> => {
   try {
     await connectDB();
+
     const session = await getServerSession(authOptions);
 
     if (!session) {
-      return { message: "Error", errors: ["User not authenticated"] };
+      return {
+        message: "ERROR",
+        errors: ["User not authenticated."],
+      };
     }
 
-    const { courseId } = Object.fromEntries(formData);
+    const courseIds = formData.getAll("courseId").filter(Boolean) as string[];
 
-    if (!courseId || typeof courseId !== "string") {
-      return { message: "Error", errors: ["Invalid courseId"] };
+    if (!courseIds.length) {
+      return {
+        message: "ERROR",
+        errors: ["Invalid courseId."],
+      };
     }
 
     const updatedStudent = await studentModel.findOneAndUpdate(
+      { user: session.user.id },
       {
-        user: session?.user.id,
+        $addToSet: {
+          checkout: { $each: courseIds },
+          courses: { $each: courseIds },
+        },
       },
-      { $addToSet: { coursesCart: courseId } },
       { new: true }
     );
 
     if (!updatedStudent) {
       return {
         message: "ERROR",
-        errors: ["Failed to add course to cart"],
+        errors: ["Student not found."],
       };
     }
 
     return {
       message: "SUCCESS",
       errors: [],
-      data: JSON.parse(JSON.stringify(updatedStudent.coursesCart)),
+      data: JSON.parse(JSON.stringify(updatedStudent.checkout)),
     };
   } catch (error) {
-    console.error("Error adding course to cart:", error);
+    console.error("Error updating checkout:", error);
     return {
       message: "ERROR",
-      errors: ["Failed to add course to cart"],
+      errors: ["An unexpected error occurred."],
     };
   }
 };
