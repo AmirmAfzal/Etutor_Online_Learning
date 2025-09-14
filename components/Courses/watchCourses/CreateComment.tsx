@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useActionState, useRef, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Form from "next/form";
 
 import {
@@ -16,7 +17,6 @@ import {
 } from "@/components/ui/dialog";
 import Icon from "@/components/ui/Icon";
 import { createCommentAction } from "@/lib/actions/comment/createCommentAction";
-import { useSearchParams } from "next/navigation";
 
 interface ToastState {
   message: string;

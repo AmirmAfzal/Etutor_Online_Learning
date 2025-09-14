@@ -13,81 +13,21 @@ interface Props {
   category: Category[];
 }
 
-const categoryThemes = {
-  "development": {
-    icon: "ph:code-duotone",
-    bg: "bg-[#EBEBFF]",
-    color: "text-[#564FFD]",
-  },
-  "design": {
-    icon: "ph:pen-nib-duotone",
-    bg: "bg-[#FFEEE8]",
-    color: "text-[#FF6636]",
-  },
-  "marketing": {
-    icon: "ph:megaphone-simple-duotone",
-    bg: "bg-[#EBEBFF]",
-    color: "text-[#564FFD]",
-  },
-  "it & software": {
-    icon: "ph:chart-bar-horizontal-duotone",
-    bg: "bg-[#FFF0F0]",
-    color: "text-[#E34444]",
-  },
-  "business": {
-    icon: "ph:handshake-duotone",
-    bg: "bg-[#E1F7E3]",
-    color: "text-[#23BD33]",
-  },
-  "music": {
-    icon: "ph:headphones-duotone",
-    bg: "bg-[#FFF2E5]",
-    color: "text-[#FD8E1F]",
-  },
-  "lifestyle": {
-    icon: "ph:package-duotone",
-    bg: "bg-[#FFF2E5]",
-    color: "text-[#FD8E1F]",
-  },
-  "photography & video": {
-    icon: "ph:camera-duotone",
-    bg: "bg-[#F5F7FA]",
-    color: "text-[#1D2026]",
-  },
-  "office productivity": {
-    icon: "ph:receipt-duotone",
-    bg: "bg-[#F5F7FA]",
-    color: "text-[#1D2026]",
-  },
-  "personal development": {
-    icon: "ph:bug-droid-duotone",
-    bg: "bg-[#FFEEE8]",
-    color: "text-[#FD8E1F]",
-  },
-  "finance & accounting": {
-    icon: "ph:credit-card-duotone",
-    bg: "bg-[#FFF2E5]",
-    color: "text-[#FD8E1F]",
-  },
-  "label": {
-    icon: "ph:cpu-duotone",
-    bg: "bg-[#EBEBFF]",
-    color: "text-[#564FFD]",
-  },
-};
+const categoryTheme = [
+  { bg: "bg-[#EBEBFF]", color: "text-[#564FFD]" },
+  { bg: "bg-[#FFEEE8]", color: "text-[#FF6636]" },
+  { bg: "bg-[#FFF0F0]", color: "text-[#E34444]" },
+  { bg: "bg-[#E1F7E3]", color: "text-[#23BD33]" },
+  { bg: "bg-[#FFF2E5]", color: "text-[#FD8E1F]" },
+  { bg: "bg-[#F5F7FA]", color: "text-[#1D2026]" },
+];
 
 const CategoryCard = ({ category }: Props) => {
-  const getTheme = (name: string) => {
-    return (
-      categoryThemes[name.toLowerCase() as keyof typeof categoryThemes] ||
-      categoryThemes.label
-    );
-  };
-
   return (
     <div className="grid grid-cols-1 gap-6 px-8 md:grid-cols-3 md:px-0 lg:grid-cols-4">
-      {category.map((item) => {
-        const theme = getTheme(item.name);
+      {category.map((item, index) => {
+        const theme = categoryTheme[index % categoryTheme.length];
+
         return (
           <div
             key={item.name}
@@ -95,7 +35,7 @@ const CategoryCard = ({ category }: Props) => {
           >
             <div className="bg-base-100 flex h-16 w-16 items-center justify-center">
               <Icon
-                icon={theme.icon}
+                icon={item.icon || "ph:cpu-duotone"}
                 className={`${theme.color}`}
                 width="32"
                 height="32"
