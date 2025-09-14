@@ -1,10 +1,11 @@
+import { Types } from "mongoose";
+
 import WatchCurriculum from "@/components/Courses/watchCourses/WatchCurriculum";
 import WatchHeader from "@/components/Courses/watchCourses/WatchHeader";
 import WatchPlayer from "@/components/Courses/watchCourses/WatchPlayer";
 import WatchDetails from "@/components/Courses/watchCourses/WatchDetails";
 import WatchTabs from "@/components/Courses/watchCourses/WatchTabs";
 import { connectDB } from "@/lib/db/db";
-import { Types } from "mongoose";
 import sectionModel from "@/lib/db/models/sectionModel";
 
 interface CurriculumItem  {

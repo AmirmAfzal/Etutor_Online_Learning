@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import {
   Accordion,
   AccordionContent,
@@ -8,7 +10,6 @@ import {
 } from "@/components/ui/accordion";
 import { Progress } from "@/components/ui/progress";
 import Icon from "@/components/ui/Icon";
-import { useRouter } from "next/navigation";
 
 type CurriculumItem = {
   title: string;
