@@ -1,5 +1,7 @@
 import Icon from "@/components/ui/Icon";
 import CourseCard from "@/components/Student/CourseCard";
+import { connectDB } from "@/lib/db/db";
+import courseModel from "@/lib/db/models/courseModel";
 
 type RelatedCourse = {
   thumbnail: string;
@@ -10,11 +12,29 @@ type RelatedCourse = {
   rating: number;
 };
 
-type RelatedCoursesSectionProps = {
-  courses: RelatedCourse[];
-};
 
-const RelatedCoursesSection = ({ courses }: RelatedCoursesSectionProps) => {
+const RelatedCoursesSection =async () => {
+
+await connectDB()
+
+const foundCourses = await courseModel.find().limit(4).lean()
+
+let courses: RelatedCourse[] = []
+
+
+if(foundCourses.length > 0){
+  courses = foundCourses.map(course => ({
+    thumbnail: course.thumbnail,
+    name: course.title,
+    // FIXME: replace with actual category data if available
+    category: "development",
+    price: course.price,
+    students: course.studentsCount,
+    rating: course.rating
+  }))
+}
+
+
   return (
     <div className="border-base-300 mt-12 w-full border-t">
       <div className="flex flex-row items-center justify-between gap-4 p-6">
@@ -27,7 +47,7 @@ const RelatedCoursesSection = ({ courses }: RelatedCoursesSectionProps) => {
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 p-6 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {courses.map((course, index) => (
           <CourseCard
             key={index}

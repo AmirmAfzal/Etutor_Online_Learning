@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 import {
   Sidebar,
@@ -67,7 +70,7 @@ const Aside = () => {
                       key={link.name}
                       className="text-base-100/50 flex items-center py-6"
                     >
-                      <Icon icon={link.icon} width="24" height="24" />
+                      <Icon icon={link.icon} width="32" height="32" />
                       {link.name}
                     </Link>
                   </SidebarMenuButton>
@@ -78,13 +81,13 @@ const Aside = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="bg-neutral">
-        <Link
-          href=""
-          className="text-base-100/50 hover:text-base-100 flex items-center gap-4"
+        <button
+          onClick={() => signOut()}
+          className="text-base-100/50 hover:text-base-100 flex cursor-pointer items-center gap-4"
         >
           <Icon icon="ph:sign-out" width="32" height="32" />
           Sign-out
-        </Link>
+        </button>
       </SidebarFooter>
     </Sidebar>
   );

@@ -16,31 +16,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { deleteCard } from "@/lib/actions/instructor/earning/deleteCard";
 
 import NewPaymentCardModal from "./NewPaymentCardModal";
 
-const cards = [
-  {
-    id: 1,
-    number: "4855 **** **** ****",
-    name: "Vako Shvili",
-    expires: "02/27",
-  },
-  {
-    id: 2,
-    number: "5123 **** **** ****",
-    name: "Vako Shvili",
-    expires: "06/25",
-  },
-  {
-    id: 3,
-    number: "6037 **** **** ****",
-    name: "Vako Shvili",
-    expires: "04/26",
-  },
-];
+interface Card {
+  _id: string;
+  bank: string;
+  cardNumber: string;
+  expiration: string;
+  name: string;
+}
 
-const Cards = () => {
+interface Props {
+  cards: Card[];
+}
+
+const Cards = ({ cards }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(
@@ -50,6 +48,7 @@ const Cards = () => {
   const [isEnd, setIsEnd] = useState(false);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const [copiedCardId, setCopiedCardId] = useState(false);
 
   const swiperRef = useRef<SwiperClass | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -80,6 +79,12 @@ const Cards = () => {
       swiperInstance.navigation.update();
     }
   }, [swiperInstance]);
+
+  const handleCopyCardNumber = async (cardNumber: string) => {
+    await navigator.clipboard.writeText(cardNumber);
+    setCopiedCardId(true);
+    setTimeout(() => setCopiedCardId(false), 1000);
+  };
 
   return (
     <section className="bg-base-100 h-full w-full">
@@ -112,47 +117,82 @@ const Cards = () => {
             setIsEnd(swiper.isEnd);
             setActiveIndex(swiper.activeIndex);
           }}
+          allowTouchMove={false}
         >
-          {cards.map((card) => (
-            <SwiperSlide key={card.id}>
-              <div className="bg-secondary shadow-secondary/70 relative flex h-48 w-full flex-col justify-between p-4 shadow-lg">
-                <div className="flex flex-row items-center justify-between">
-                  <p className="text-base-100 text-2xl font-bold">VISA</p>
-                  <Icon
-                    icon="ph:dots-three"
-                    className="text-base-300 cursor-pointer"
-                    width="24"
-                    height="24"
-                  />
+          {cards.length === 0 ? (
+            <div className="flex h-48 w-full items-center justify-center">
+              <p>No Card</p>
+            </div>
+          ) : (
+            cards.map((card) => (
+              <SwiperSlide key={card._id}>
+                <div className="bg-secondary shadow-secondary/70 relative flex h-48 w-full flex-col justify-between p-4 shadow-lg">
+                  <div className="flex flex-row items-center justify-between">
+                    <p className="text-base-100 text-2xl font-bold">
+                      {card.bank}
+                    </p>
+                    <div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Icon
+                              icon="ph:dots-three"
+                              className="btn btn-ghost btn-xs"
+                              width="24"
+                              height="24"
+                            />
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent>
+                          <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
+                            <button onClick={() => deleteCard(card._id)}>
+                              Delete
+                            </button>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                  <div className="flex flex-row items-center gap-6">
+                    <p className="text-base-100 text-xl">
+                      {card.cardNumber.slice(0, 4) + " **** **** ****"}
+                    </p>
+                    <button
+                      className="relative"
+                      onClick={() => handleCopyCardNumber(card.cardNumber)}
+                    >
+                      {copiedCardId && (
+                        <p className="text-success bg-base-300 absolute bottom-8 -left-6 rounded-lg px-2 py-1 text-sm">
+                          {copiedCardId && "copied!"}
+                        </p>
+                      )}
+                      <Icon
+                        icon="ph:copy"
+                        className="text-base-300 cursor-pointer"
+                        width="24"
+                        height="24"
+                      />
+                    </button>
+                  </div>
+                  <div className="text-base-100 flex flex-row items-center gap-16">
+                    <span>
+                      <p className="text-base-300/70 text-xs">Expires</p>
+                      <p>{card.expiration}</p>
+                    </span>
+                    <span>
+                      <p className="text-base-300/70 text-xs">Card name</p>
+                      <p>{card.name}</p>
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-row items-center gap-6">
-                  <p className="text-base-100 text-xl">{card.number}</p>
-                  <Icon
-                    icon="ph:copy"
-                    className="text-base-300 cursor-pointer"
-                    width="24"
-                    height="24"
-                  />
-                </div>
-                <div className="text-base-100 flex flex-row items-center gap-16">
-                  <span>
-                    <p className="text-base-300/70 text-xs">Expires</p>
-                    <p>{card.expires}</p>
-                  </span>
-                  <span>
-                    <p className="text-base-300/70 text-xs">Card name</p>
-                    <p>{card.name}</p>
-                  </span>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            ))
+          )}
         </Swiper>
         <div className="mt-6 flex flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-1">
             {cards.map((card, index) => (
               <button
-                key={card.id}
+                key={card._id}
                 onClick={() => handleDotClick(index)}
                 className={`hover:bg-primary h-2 w-2 cursor-pointer rounded-full transition-all duration-300 ${
                   index === activeIndex ? "bg-primary" : "bg-primary/30"

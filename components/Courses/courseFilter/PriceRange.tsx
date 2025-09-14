@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
@@ -9,9 +10,6 @@ type PriceRangeProps = {
   min?: number;
   max?: number;
   step?: number;
-  defaultValue?: [number, number];
-  value?: [number, number];
-  onChange?: (range: [number, number]) => void;
 };
 
 const clamp = (value: number, min: number, max: number) =>
@@ -21,16 +19,44 @@ export default function PriceRange({
   min = 0,
   max = 100,
   step = 1,
-  defaultValue = [min, max],
-  value,
-  onChange,
 }: PriceRangeProps) {
-  const isControlled = Array.isArray(value);
-  const [internalRange, setInternalRange] = useState<[number, number]>(
-    (value as [number, number]) ?? defaultValue
-  );
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const range = (isControlled ? value : internalRange) ?? defaultValue;
+  const currentMinPrice = searchParams.get("min_price");
+  const currentMaxPrice = searchParams.get("max_price");
+
+  const initialMin = currentMinPrice ? parseFloat(currentMinPrice) : min;
+  const initialMax = currentMaxPrice ? parseFloat(currentMaxPrice) : max;
+
+  const [internalRange, setInternalRange] = useState<[number, number]>([
+    initialMin,
+    initialMax,
+  ]);
+
+  useEffect(() => {
+    // Sync internal state with URL params
+    const syncedMin = currentMinPrice ? parseFloat(currentMinPrice) : min;
+    const syncedMax = currentMaxPrice ? parseFloat(currentMaxPrice) : max;
+    setInternalRange([syncedMin, syncedMax]);
+  }, [currentMinPrice, currentMaxPrice, min, max]);
+
+  const [minValue, maxValue] = internalRange;
+
+  const handleApplyFilter = useCallback(
+    (newMin: number, newMax: number) => {
+      const newSearchParams = new URLSearchParams(
+        Array.from(searchParams.entries())
+      );
+      newSearchParams.set("minPrice", newMin.toString());
+      newSearchParams.set("maxPrice", newMax.toString());
+
+      router.push(`/courses?${newSearchParams.toString()}`, {
+        scroll: false,
+      });
+    },
+    [searchParams, router]
+  );
 
   const handleSliderChange = useCallback(
     (newValues: number[]) => {
@@ -38,32 +64,30 @@ export default function PriceRange({
         clamp(newValues[0] ?? min, min, max),
         clamp(newValues[1] ?? max, min, max),
       ];
-      if (!isControlled) setInternalRange(next);
-      onChange?.(next);
+      setInternalRange(next);
+      handleApplyFilter(next[0], next[1]);
     },
-    [isControlled, max, min, onChange]
+    [handleApplyFilter, max, min]
   );
-
-  const [minValue, maxValue] = range;
 
   const handleMinInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const nextMin = clamp(Number(e.target.value || 0), min, maxValue);
       const next: [number, number] = [nextMin, maxValue];
-      if (!isControlled) setInternalRange(next);
-      onChange?.(next);
+      setInternalRange(next);
+      handleApplyFilter(next[0], next[1]);
     },
-    [isControlled, maxValue, min, onChange]
+    [handleApplyFilter, maxValue, min]
   );
 
   const handleMaxInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const nextMax = clamp(Number(e.target.value || 0), minValue, max);
       const next: [number, number] = [minValue, nextMax];
-      if (!isControlled) setInternalRange(next);
-      onChange?.(next);
+      setInternalRange(next);
+      handleApplyFilter(next[0], next[1]);
     },
-    [isControlled, max, minValue, onChange]
+    [handleApplyFilter, max, minValue]
   );
 
   return (

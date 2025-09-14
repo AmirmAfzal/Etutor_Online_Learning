@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -11,7 +12,9 @@ const HeroSection = () => {
           Our mision is to help people to find the best course online and learn
           with expert anytime, anywhere.
         </p>
-        <button className="btn btn-primary mt-8">Create Account</button>
+        <Link href="/auth/signup" className="btn btn-primary mt-8">
+          Create Account
+        </Link>
       </div>
       <div>
         <Image

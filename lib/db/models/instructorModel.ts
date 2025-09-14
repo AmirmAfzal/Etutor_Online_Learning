@@ -5,12 +5,16 @@ export interface InstructorInterface extends Document {
   lastname: string;
   avatar: string;
   username: string;
+  phoneCode: string;
+  phoneNumber: string;
   user: mongoose.Types.ObjectId;
+  title: string;
   bio: string;
   rating: number;
   students: number;
   courses: ObjectId[];
   social: {
+    website: string | null;
     facebook: string | null;
     instagram: string | null;
     linkedin: string | null;
@@ -22,21 +26,25 @@ export interface InstructorInterface extends Document {
 
 const instructorSchema = new Schema<InstructorInterface>(
   {
-    firstname: { type: String, required: true },
-    lastname: { type: String, required: true },
+    firstname: { type: String, required: false },
+    lastname: { type: String, required: false },
     avatar: { type: String, required: false },
-    username: { type: String, required: true },
+    username: { type: String, required: false },
+    phoneCode: { type: String, required: false },
+    phoneNumber: { type: String, required: false },
     user: {
       type: Schema.Types.ObjectId,
       ref: "user",
       required: true,
       unique: true,
     },
-    bio: { type: String, required: true },
-    rating: { type: Number, required: true, default: 0 },
-    students: { type: Number, required: true, default: 0 },
+    title: { type: String, required: false },
+    bio: { type: String, required: false },
+    rating: { type: Number, required: false, default: 0 },
+    students: { type: Number, required: false, default: 0 },
     courses: [{ type: Schema.Types.ObjectId, ref: "course" }],
     social: {
+      website: { type: String, default: null },
       facebook: { type: String, default: null },
       instagram: { type: String, default: null },
       linkedin: { type: String, default: null },

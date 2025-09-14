@@ -1,5 +1,7 @@
-import Icon from "@/components/ui/Icon";
 import Form from "next/form";
+import Link from "next/link";
+
+import Icon from "@/components/ui/Icon";
 import {
   Select,
   SelectItem,
@@ -7,96 +9,73 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import CourseFilter from "@/components/Courses/CourseFilter";
 
-type Category = {
-  name: string;
-  icon: string;
-  subcategories: { [key: string]: number };
-};
+import FilterMobile from "../Courses/courseFilter/FilterMobile";
 
-type Rating = {
-  label: string;
-  count: number;
-};
+interface Props {
+  searchParams: Promise<{
+    query?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    level?: string;
+    rating?: string;
+    duration?: string;
+    tool?: string;
+    category?: string;
+    subCategories?: string;
+    filter?: string;
+    priceFree?: string;
+    pricePaid?: string;
+  }>;
+}
 
-type SearchFilterAndResultsProps = {
-  isFiltered: boolean;
-  query?: string;
-  coursesCount: number;
-  categories: Category[];
-  tools: { [key: string]: number };
-  rating: Rating[];
-  courseLevel: { [key: string]: number };
-  duration: { [key: string]: number };
-  price: { [key: string]: number };
-};
+const suggestions = ["User interface", "User experience", "Web design", "App"];
+const SearchFilterAndResults = async (props: Props) => {
+  const searchParams = await props.searchParams;
+  const isFilterPanelVisible = searchParams.filter === "true";
 
-const SearchFilterAndResults = ({
-  isFiltered,
-  query,
-  coursesCount,
-  categories,
-  tools,
-  rating,
-  courseLevel,
-  duration,
-  price,
-}: SearchFilterAndResultsProps) => {
-  const suggestions = [
-    "User interface",
-    "User experience",
-    "Web design",
-    "App",
-  ];
+  const filterUrl = new URLSearchParams(searchParams);
+  if (isFilterPanelVisible) {
+    filterUrl.delete("filter");
+  } else {
+    filterUrl.set("filter", "true");
+  }
 
   return (
     <>
       <div className="mb-6 flex flex-col flex-wrap items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-3">
-          <a
-            href={isFiltered ? "/category" : "/category?filter=true"}
-            className={`hidden items-center gap-3 rounded-none border px-2 py-3 md:flex ${isFiltered ? "border-primary text-primary bg-base-100" : "border-primary/20 text-base-content/80 bg-base-100"}`}
+          <Link
+            href={`/category?${filterUrl.toString()}`}
+            className={`bg-base-100 flex-row items-center gap-3 rounded-none border p-2 md:flex ${
+              isFilterPanelVisible
+                ? "border-primary text-primary"
+                : "border-primary/20 text-base-content/80"
+            } hidden`}
           >
             <Icon icon="ph:faders-fill" className="text-xl" />
             <span className="text-sm">Filter</span>
             <span
-              className={`px-2 ${isFiltered ? "bg-primary text-base-100" : "bg-primary/10 text-primary"}`}
+              className={`${
+                isFilterPanelVisible
+                  ? "text-base-100 bg-primary px-2"
+                  : "text-primary bg-primary/10 px-2"
+              }`}
             >
-              {isFiltered ? "3" : "0"}
+              {isFilterPanelVisible ? "1" : "0"}
             </span>
-          </a>
-
-          <Dialog>
-            <DialogTrigger className="bg-base-100 border-primary/20 text-base-content/80 flex w-24 items-center gap-3 rounded-none border px-2 py-3 md:hidden">
-              <Icon icon="ph:faders-fill" className="text-primary text-xl" />
-              <span className="text-sm">Filter</span>
-            </DialogTrigger>
-            <DialogContent className="">
-              <DialogTitle>Filter Courses</DialogTitle>
-              <CourseFilter
-                categories={categories}
-                tools={tools}
-                rating={rating}
-                courseLevel={courseLevel}
-                duration={duration}
-                price={price}
-              />
-            </DialogContent>
-          </Dialog>
+          </Link>
+          <FilterMobile searchParams={searchParams}>
+            <CourseFilter searchParams={Promise.resolve(searchParams)} />
+          </FilterMobile>
 
           <Form action="/category" className="relative w-full sm:w-72">
             <input
               type="text"
               name="query"
               placeholder="UI/UX Design"
-              className="border-base-300 w-full rounded-none border px-4 py-2.5 text-sm sm:py-3 sm:text-base"
+              className="border-base-300 w-full rounded-none border px-4 py-2.5 pl-8 text-sm sm:py-3 sm:text-base"
             />
             <Icon
               icon="ph:magnifying-glass"
@@ -138,23 +117,6 @@ const SearchFilterAndResults = ({
               {suggestion}
             </button>
           ))}
-        </div>
-        <div>
-          <span className="text-base-content/80">
-            {query ? (
-              <>
-                {coursesCount.toLocaleString()}
-                <span className="text-base-content/60 ml-2">
-                  results for &quot;{query}&quot;
-                </span>
-              </>
-            ) : (
-              <>
-                {coursesCount.toLocaleString()}
-                <span className="text-base-content/60 ml-2">courses</span>
-              </>
-            )}
-          </span>
         </div>
       </div>
     </>

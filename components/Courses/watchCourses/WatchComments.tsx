@@ -1,34 +1,65 @@
-"use client";
-
-import { FC, useState } from "react";
 import Image from "next/image";
+import { Types } from "mongoose";
 
-import Icon from "@/components/ui/Icon";
+import CommentReplyForm from "@/components/Courses/watchCourses/CommentReplyForm";
+import { connectDB } from "@/lib/db/db";
+import commentModel from "@/lib/db/models/commentModel";
 
 import TruncatedText from "../TruncatedText";
+import CreateComment from "./CreateComment";
 
-type Comment = {
+// Type definitions for the data from the database
+interface UserFromDB {
+  firstname: string;
+  lastname: string;
+  avatar: string;
+}
+
+interface ReplyFromDB {
+  title?: string;
+  avatar?: string;
+  _id: Types.ObjectId;
+  userId: UserFromDB;
+  reply: string;
+  createdAt: Date;
+  refPath: string;
+}
+
+interface CommentFromDB {
+  _id: Types.ObjectId;
+  userId: UserFromDB;
+  comment: string;
+  refPath: string;
+  createdAt: Date;
+  replies: ReplyFromDB[];
+}
+
+// Component-safe type after processing DB data
+interface CommentUI {
+  id?: string;
   name: string;
   avatar: string;
   time: string;
   star: number;
   comment: string;
   ADMIN: boolean;
-  replies?: Comment[];
-};
+  replies?: CommentUI[];
+}
 
-type CommentsProps = {
-  comments: Comment[];
-};
-
-const CommentItem: FC<{
-  comment: Comment;
+interface CommentItemProps {
+  comment: CommentUI;
+  commentId?: string;
+  lectureId: Types.ObjectId | string | undefined;
   isReply?: boolean;
-  onReplyClick?: (name: string) => void;
-  activeReply?: string | null;
-}> = ({ comment, isReply = false, onReplyClick, activeReply }) => {
+}
+
+const CommentItem = ({
+  comment,
+  commentId,
+  lectureId,
+  isReply = false,
+}: CommentItemProps) => {
   return (
-    // TODO : Add comments profile to profile line
     <div className={`${isReply ? "ml-10 border-l pl-4" : ""}`}>
       <div className="flex flex-col items-start gap-4 py-4">
         <div className="flex items-center gap-3">
@@ -54,69 +85,129 @@ const CommentItem: FC<{
 
         <div className="ml-6 flex w-full flex-col">
           <TruncatedText text={comment.comment} maxLength={60} />
-          {onReplyClick && (
-            <button
-              onClick={() => onReplyClick(comment.name)}
-              className={`text-base-content/70 text-md mt-2 flex items-center gap-2 font-semibold ${activeReply === comment.name && "text-primary"}`}
-            >
-              <Icon icon="ph:chats-circle" className="text-lg" /> REPLY
-            </button>
-          )}
 
-          {activeReply === comment.name && (
-            <form className="mt-3 flex w-full items-center gap-2">
-              <div className="relative flex-1">
-                <Icon
-                  icon="ph:chats-circle"
-                  className="absolute inset-y-0 left-0 pl-3 text-xl"
-                />
-                <input
-                  type="text"
-                  placeholder="Write your reply"
-                  className="input input-bordered w-full pl-10"
-                />
-              </div>
-
-              <button type="submit" className="btn btn-primary">
-                Post Reply
-              </button>
-            </form>
+          {!isReply && (
+            <CommentReplyForm parentName={comment.name} commentId={commentId} />
           )}
         </div>
       </div>
 
       {comment.replies?.map((reply) => (
-        <CommentItem key={reply.name + reply.comment} comment={reply} isReply />
+        <CommentItem
+          key={reply.id}
+          comment={reply}
+          lectureId={lectureId}
+          commentId={commentId}
+          isReply
+        />
       ))}
     </div>
   );
 };
 
-const WatchComments: FC<CommentsProps> = ({ comments }) => {
-  const [activeReply, setActiveReply] = useState<string | null>(null);
+export default async function WatchComments({
+  lectureId,
+}: {
+  lectureId: Types.ObjectId | string | undefined;
+}) {
+  if (!lectureId) {
+    return (
+      <div className="mt-12 w-full">
+        <span className="text-base-content/80 text-2xl font-semibold">
+          Comments (0)
+        </span>
+        <p className="text-base-content/60 mt-4 text-sm">
+          No comments available for this lecture.
+        </p>
+      </div>
+    );
+  }
 
-  const toggleReply = (name: string) => {
-    setActiveReply(activeReply === name ? null : name);
+  await connectDB();
+
+  const populateOptions = {
+    path: "userId",
+    select: "firstname lastname avatar",
   };
+
+  const populateReplies = {
+    path: "replies",
+    populate: [
+      {
+        path: "userId",
+        select: "firstname lastname avatar",
+        model: "student",
+      },
+      {
+        path: "userId",
+        select: "firstname lastname avatar",
+        model: "instructor",
+      },
+    ],
+  };
+
+  const studentComments = await commentModel
+    .find<CommentFromDB>({ lecture: lectureId, refPath: "Student" })
+    .populate({ ...populateOptions, model: "student" })
+    .populate(populateReplies)
+    .lean();
+
+  const instructorComments = await commentModel
+    .find<CommentFromDB>({ lecture: lectureId, refPath: "Instructor" })
+    .populate({ ...populateOptions, model: "instructor" })
+    .populate(populateReplies)
+    .lean();
+
+  const allComments = [...studentComments, ...instructorComments];
+
+  const commentsData: CommentUI[] = allComments.map((comment) => {
+    const user = comment.userId;
+
+    const processedReplies: CommentUI[] =
+      comment.replies?.map((reply: ReplyFromDB) => {
+        // const replyUser = reply.userId;
+        return {
+          id: reply._id?.toString(),
+          name: reply.title,
+          avatar: "/images/student-dashboard/Teacher-profile-1.jpg",
+          time: reply.createdAt?.toISOString(),
+          star: 0,
+          comment: reply.reply,
+          ADMIN: reply.refPath === "Admin",
+          replies: [],
+        };
+      }) || [];
+
+    return {
+      id: comment._id?.toString(),
+      name: `${user?.firstname} ${user?.lastname}`,
+      avatar: user?.avatar || "/default-avatar.png",
+      time: comment?.createdAt?.toISOString(),
+      star: 0,
+      comment: comment.comment,
+      ADMIN: comment.refPath === "Admin",
+      replies: processedReplies,
+    };
+  });
 
   return (
     <div className="mt-12 w-full space-y-4">
       <span className="text-base-content/80 text-2xl font-semibold">
-        Comments ({comments.length})
+        Comments ({commentsData.length})
       </span>
 
-      {comments.map((comment) => (
+      <CreateComment />
+
+      {commentsData.map((comment) => (
         <CommentItem
-          key={comment.name + comment.comment}
+          key={comment.id}
           comment={comment}
-          onReplyClick={toggleReply}
-          activeReply={activeReply}
+          commentId={comment.id}
+          lectureId={lectureId}
         />
       ))}
 
       <button className="btn btn-soft btn-primary mt-6">Load more..</button>
     </div>
   );
-};
-
-export default WatchComments;
+}

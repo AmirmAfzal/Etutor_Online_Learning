@@ -19,8 +19,12 @@ const Footer = () => {
                 Start learning with 67.1k students around the world.
               </h3>
               <span className="flex flex-col gap-2 md:flex-row">
-                <button className="btn btn-primary">Join The Family</button>
-                <button className="btn btn-soft">Browse All Course</button>
+                <Link href="/auth/signup" className="btn btn-primary">
+                  Join The Family
+                </Link>
+                <Link href="/courses" className="btn btn-soft">
+                  Browse All Course
+                </Link>
               </span>
             </div>
             <div className="flex flex-row items-center justify-center gap-8 md:gap-16">

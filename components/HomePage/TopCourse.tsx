@@ -1,88 +1,16 @@
-import CourseCard from "../Student/CourseCard";
+import { CourseTypes } from "@/app/page";
 
-const TopCourse = () => {
-  const courses = [
-    {
-      thumbnail: "/images/course-images-1.png",
-      name: "Machine Learning A-Z™: Hands-On Python & R In Data...",
-      category: "Design",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      thumbnail: "/images/course-images-2.png",
-      name: "The Complete 2021 Web Development Bootcamp",
-      category: "Developments",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      thumbnail: "/images/course-images-3.png",
-      name: "Learn Python Programming Masterclass",
-      category: "Business",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      thumbnail: "/images/course-images-4.png",
-      name: "The Complete Digital Marketing Course - 12 Courses in 1",
-      category: "Marketing",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      thumbnail: "/images/course-images-5.png",
-      name: "Reiki Level I, II and Master/Teacher Program",
-      category: "IT & Software",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      thumbnail: "/images/course-images-6.png",
-      name: "The Complete Foundation Stock Trading Course",
-      category: "Music",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      thumbnail: "/images/course-images-7.png",
-      name: "Beginner to Pro in Excel: Financial Modeling and Valuati...",
-      category: "Marketing",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      thumbnail: "/images/course-images-8.png",
-      name: "The Python Mega Course: Build 10 Real World Applications",
-      category: "Health & Fitness",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      thumbnail: "/images/course-images-9.png",
-      name: "Copywriting - Become a Freelance Copywriter, your ow...",
-      category: "Design",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-    {
-      thumbnail: "/images/course-images-10.png",
-      name: "Google Analytics Certification - Learn How To Pass The Exam",
-      category: "Lifestyle",
-      price: 57,
-      rating: 5,
-      students: 265.7,
-    },
-  ];
+import CourseCard from "../CourseCard";
+
+interface Props {
+  courses: CourseTypes[];
+}
+
+const TopCourse = ({ courses }: Props) => {
+
+  if (!Array.isArray(courses) || courses.length === 0) {
+    return null;
+  }
 
   return (
     <section className="bg-base-200 w-full pt-16 pb-48">
@@ -91,8 +19,8 @@ const TopCourse = () => {
           Best selling courses
         </h3>
         <div className="grid grid-cols-1 gap-6 px-8 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-5">
-          {courses.map((course) => (
-            <CourseCard key={course.name} {...course} />
+          {courses && courses.map((course: CourseTypes) => (
+            <CourseCard key={course.title} course={course} />
           ))}
         </div>
       </div>

@@ -1,11 +1,14 @@
 import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
+import { LectureInterface } from "@/lib/db/models/lectureModel";
+
 export interface SectionInterface extends Document {
   title: string;
   description: string;
-  lectures: ObjectId[];
+  lectures: (ObjectId | LectureInterface)[];
   course: ObjectId;
   duration: number;
+  index: number;
 }
 
 const sectionSchema = new Schema<SectionInterface & Document>({
@@ -14,6 +17,7 @@ const sectionSchema = new Schema<SectionInterface & Document>({
   lectures: [{ type: Schema.Types.ObjectId, ref: "lecture", required: true }],
   course: { type: Schema.Types.ObjectId, ref: "course", required: true },
   duration: { type: Number, required: true, default: 0 },
+  index: { type: Number, required: true },
 }, {
   timestamps: true,
 });

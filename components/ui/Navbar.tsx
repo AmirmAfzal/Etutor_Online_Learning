@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 import {
   Select,
@@ -13,8 +17,16 @@ import { Input } from "./input";
 import NavLink from "../NavLink";
 import Icon from "./Icon";
 import MobileNavbar from "../HomePage/MobileNavbar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
+import { Separator } from "./separator";
 
 const Navbar = () => {
+  const { data: session } = useSession();
   return (
     <>
       <header className="border-base-300 hidden border-b lg:block">
@@ -73,12 +85,17 @@ const Navbar = () => {
                 icon="ph:magnifying-glass"
                 width="24"
                 height="24"
-                className="absolute top-3 left-4 z-10"
+                className="absolute top-2 left-2 z-10"
               />
               <Input
                 type="text"
-                className="w-96 pl-12"
+                className="w-96 pl-10"
                 placeholder="What do you want learn..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    redirect(`/courses?query=${e.currentTarget.value}`);
+                  }
+                }}
               />
             </div>
           </div>
@@ -86,12 +103,67 @@ const Navbar = () => {
             <Icon icon="ph:bell" width="24" height="24" />
             <Icon icon="ph:heart" width="24" height="24" />
             <Icon icon="ph:shopping-cart-simple" width="24" height="24" />
-            <Link href="" className="btn btn-soft btn-primary ml-4">
-              Create Account
-            </Link>
-            <Link href="" className="btn btn-primary">
-              Sign In
-            </Link>
+            {session?.user.id ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <span className="bg-base-300 flex items-center justify-center rounded-full p-2">
+                    <Icon icon="ph:user" width="24" height="24" />
+                  </span>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="absolute top-0 right-0 w-48">
+                  <DropdownMenuItem>
+                    <Link
+                      href="/student"
+                      className="flex flex-row items-center gap-2"
+                    >
+                      <Icon icon="ph:chart-bar" width="24" height="24" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link
+                      href="/student/courses"
+                      className="flex flex-row items-center gap-2"
+                    >
+                      <Icon icon="ph:stack" width="24" height="24" />
+                      My Courses
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link
+                      href="/student/settings"
+                      className="flex flex-row items-center gap-2"
+                    >
+                      <Icon icon="ph:gear" width="24" height="24" />
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <Separator className="my-2" />
+                  <DropdownMenuItem>
+                    <button
+                      onClick={() => signOut()}
+                      className="flex flex-row items-center gap-2"
+                    >
+                      <Icon icon="ph:sign-out" width="24" height="24" />
+                      Sign-out
+                    </button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link
+                  href="/auth/signup"
+                  className="btn btn-soft btn-primary ml-4"
+                >
+                  Create Account
+                </Link>
+                <Link href="/auth/signin" className="btn btn-primary">
+                  Sign In
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
