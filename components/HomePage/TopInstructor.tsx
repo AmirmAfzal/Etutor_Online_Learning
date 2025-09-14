@@ -1,70 +1,41 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Document } from "mongoose";
+
+import { connectDB } from "@/lib/db/db";
+import instructorModel, {
+  InstructorInterface,
+} from "@/lib/db/models/instructorModel";
 
 import Icon from "../ui/Icon";
 
-const TopInstructor = () => {
-  const instructors = [
-    {
-      id: 1,
-      name: "Devon Lane",
-      img: "/images/instructors/instructor-1.png",
-      position: "Senior Developer",
-      rating: "4.6",
-      students: "854",
-    },
-    {
-      id: 2,
-      name: "Darrell Steward",
-      img: "/images/instructors/instructor-2.png",
-      position: "Digital Product Designer",
-      rating: "4.9",
-      students: "451,444",
-    },
-    {
-      id: 3,
-      name: "Jane Cooper",
-      img: "/images/instructors/instructor-3.png",
-      position: "UI/UX Designer",
-      rating: "4.8",
-      students: "435,671",
-    },
-    {
-      id: 4,
-      name: "Albert Flores",
-      img: "/images/instructors/instructor-4.png",
-      position: "Adobe Instructor",
-      rating: "4.7",
-      students: "511,123",
-    },
-    {
-      id: 5,
-      name: "Kathryn Murphy",
-      img: "/images/instructors/instructor-5.png",
-      position: "Lead Developer",
-      rating: "4.2",
-      students: "2,711",
-    },
-  ];
+type Instructor = Omit<InstructorInterface, keyof Document>;
+
+const TopInstructor = async () => {
+  await connectDB();
+
+  const instructors: Instructor[] = JSON.parse(
+    JSON.stringify(await instructorModel.find().lean())
+  );
 
   return (
-    <section className="bg-base-100 border-base-300 container mx-auto -mt-48 space-y-8 border p-8 md:p-16">
+    <section id="instructor" className="bg-base-100 border-base-300 container mx-auto -mt-48 space-y-8 border p-8 md:p-16">
       <h3 className="text-center text-2xl font-bold md:text-3xl">
         Top instructor of the month
       </h3>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-        {instructors.map((item) => (
-          <div key={item.id} className="border-base-300 border">
+        {instructors.map((instructor: Instructor, index: number) => (
+          <div key={index} className="border-base-300 border">
             <Image
-              src={item.img}
+              src={instructor.avatar}
               className="w-full"
-              alt={item.name}
+              alt={instructor.firstname}
               width={200}
               height={200}
             />
             <div className="flex flex-col items-center gap-1 p-2">
-              <p className="font-semibold">{item.name}</p>
-              <p className="text-base-content/50 text-sm">{item.position}</p>
+              <p className="font-semibold">{`${instructor.firstname}  ${instructor.lastname}`}</p>
+              <p className="text-base-content/50 text-sm">{instructor.title}</p>
             </div>
             <div className="border-base-300 flex flex-row items-center justify-between border-t p-2">
               <div className="flex flex-row items-center gap-1">
@@ -74,10 +45,10 @@ const TopInstructor = () => {
                   className="text-primary"
                   icon="ph:star-fill"
                 />
-                <p className="text-sm">{item.rating}</p>
+                <p className="text-sm">{instructor.rating}</p>
               </div>
               <div className="flex flex-row items-center gap-1 text-sm">
-                <p className="font-semibold">{item.students}</p>
+                <p className="font-semibold">{instructor.students}</p>
                 <p className="text-base-content/50">students</p>
               </div>
             </div>
