@@ -14,10 +14,22 @@ import { authOptions } from "@/lib/auth/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Document, Types } from "mongoose";
+
+// Define the interface for the Course directly in this file
+interface Course extends Document {
+  title: string;
+  thumbnail: string;
+  rating: number;
+  reviews: number;
+  instructor: string;
+  price: number;
+  originalPrice: number;
+}
 
 interface Props {
-  _id?: string;
-  id: string;
+  _id?: Types.ObjectId;
+  id: string | undefined;
   title?: string;
   image: string;
   rating?: number;
@@ -31,17 +43,20 @@ const ShoppingCart = async () => {
   await connectDB();
 
   const session = await getServerSession(authOptions);
+  if (!session) return redirect("/auth/signin");
+
   const foundStudent: StudentInterface | null = await studentModel
     .findOne({
-      user: session?.user.id,
+      user: session.user.id,
     })
     .populate("coursesCart");
+
   if (!foundStudent) return redirect("/auth/signin");
 
-  const coursesCart = foundStudent?.coursesCart;
+  const coursesCart = foundStudent.coursesCart as unknown as Course[];
 
-  const courseData: Props[] = coursesCart.map((course: any) => ({
-    id: course._id.toString(),
+  const courseData: Props[] = coursesCart.map((course: Course) => ({
+    id: course._id?.toString(),
     title: course.title,
     image: course?.thumbnail,
     rating: course.rating,

@@ -9,6 +9,17 @@ import { authOptions } from "@/lib/auth/authOptions";
 import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
 import { redirect } from "next/navigation";
 import PaymentBtn from "@/components/Student/PaymentBtn";
+import { Document, Types } from "mongoose";
+
+
+interface Course extends Document {
+  title: string;
+  thumbnail: string;
+  instructor: string;
+  price: number;
+  offer?: number;
+  _id: Types.ObjectId;
+}
 
 interface Props {
   id?: string;
@@ -16,7 +27,7 @@ interface Props {
   image: string;
   instructor?: string;
   price: number;
-  offer?: number;
+  offer?: number ;
 }
 
 const paymentMethods = [
@@ -43,25 +54,28 @@ const paymentMethods = [
 ];
 
 const Page = async () => {
+
   await connectDB();
 
   const session = await getServerSession(authOptions);
+  if (!session) return redirect("/auth/signin");
+
   const foundStudent: StudentInterface | null = await studentModel
     .findOne({
-      user: session?.user.id,
+      user: session.user.id,
     })
     .populate("coursesCart");
   if (!foundStudent) return redirect("/auth/signin");
 
-  const coursesCart = foundStudent?.coursesCart;
+  const coursesCart = foundStudent.coursesCart as unknown as Course[];
 
-  const courseData: Props[] = coursesCart.map((course: any) => ({
+  const courseData: Props[] = coursesCart.map((course: Course) => ({
     id: typeof course._id === "string" ? course._id : course._id?.toString(),
     title: course.title,
     image: course.thumbnail,
     instructor: course.instructor,
     price: course.price,
-    offer: course.offer || "0",
+    offer: typeof course.offer === 'number' ? course.offer : (course.offer ? parseFloat(course.offer as string) : 0) || 0,
   }));
 
   const subtotal = courseData.reduce((acc, c) => acc + c.price, 0);

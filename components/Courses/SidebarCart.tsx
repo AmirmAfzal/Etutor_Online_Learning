@@ -14,11 +14,13 @@ interface SidebarCartProps {
     includes: string[];
   };
   singleCourse: {
+id?: string;
+
     price: number;
     originalPrice: number;
     title: string;
     thumbnail: string;
-    createdBy: string;
+    createdBy: string | undefined;
     discount: string;
     timeLeft: string;
     courseDetails: { label: string; value: string }[];
