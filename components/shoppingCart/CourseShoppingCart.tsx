@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import Icon from "@/components/ui/Icon";
 import { useActionState } from "react";
-import { actionDeleteCourse } from "@/lib/actions/courses/actionDeleteCourse";
 import Form from "next/form";
+
+import Icon from "@/components/ui/Icon";
+import { actionDeleteCourse } from "@/lib/actions/courses/actionDeleteCourse";
 import CoursesLoading from "@/app/courses/loading";
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
+
 import Toast from "../Toast";
 
 type Props = {

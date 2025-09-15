@@ -1,15 +1,16 @@
 import React from "react";
 import Image from "next/image";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { Document, Types } from "mongoose";
 import { Icon } from "@iconify/react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { connectDB } from "@/lib/db/db";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
-import { redirect } from "next/navigation";
 import PaymentBtn from "@/components/Student/PaymentBtn";
-import { Document, Types } from "mongoose";
 
 
 interface Course extends Document {

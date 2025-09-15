@@ -1,11 +1,12 @@
 "use server";
 
+import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
+
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 import { ActionData } from "@/lib/formTypes";
-import { getServerSession } from "next-auth";
-import { revalidatePath } from "next/cache";
 
 export const actionDeleteCourse = async (
   prevState: ActionData,

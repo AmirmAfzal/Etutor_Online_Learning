@@ -1,4 +1,8 @@
 import React, { useActionState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import Form from "next/form";
+
 import {
   Dialog,
   DialogContent,
@@ -6,12 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Icon from "../ui/Icon";
-import Image from "next/image";
-import Link from "next/link";
 import { actionAddToCart } from "@/lib/actions/courses/addToCart";
 import CoursesLoading from "@/app/courses/loading";
-import Form from "next/form";
+
+import Icon from "../ui/Icon";
 import Toast from "../Toast";
 
 interface Props {
