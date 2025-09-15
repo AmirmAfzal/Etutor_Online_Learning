@@ -59,12 +59,12 @@ const WishlistPage = async () => {
 
   const courses = wishlistCourses.map((course) => {
 
+    // FIXME : fix this
     const instructors = (course.authors || []).map((instructor) => {
       const fullName = `${instructor.firstname || ""} ${instructor.lastname || ""}`.trim();
       return fullName || "Unknown Instructor";
     });
 
-    console.log("Processed Instructors:", instructors); // For debugging
 
     return {
       id: course._id.toString(),
@@ -99,7 +99,7 @@ const WishlistPage = async () => {
             Start adding courses to your wishlist to save them for later
           </div>
           <Link
-            href="/student/courses"
+            href="/courses"
             className="btn btn-primary btn-sm sm:btn-md"
           >
             Browse Courses

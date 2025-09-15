@@ -19,7 +19,7 @@ import Toast from "../Toast";
 interface Props {
   courseTitle: string;
   courseThumbnail: string;
-  courseInstructor: string[];
+  courseInstructor: string[] | string;
   courseId: string;
   className?: string;
 }
