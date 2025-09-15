@@ -1,9 +1,10 @@
 import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
+import WishlistBuyNow from "@/components/Student/student-wishlist/WishlistBuyNow";
 
 interface Props {
-  id: number;
+  id: string;
   title: string;
   image: string;
   instructors: string;
@@ -71,16 +72,7 @@ const WishlistCourseRow = ({
 
         <div className="col-span-2 ml-8 text-center text-nowrap">
           <div className="flex items-center justify-center gap-2">
-            {/* TODO: fix btn actions */}
-            <form method="POST" action="/api/cart/buy-now">
-              <input type="hidden" name="courseId" value={id} />
-              <button
-                type="submit"
-                className="btn btn-soft btn-base-content h-10 w-28 text-sm"
-              >
-                Buy Now
-              </button>
-            </form>
+            <WishlistBuyNow  id={id}/>
 
             <form method="POST" action="/api/cart/add">
               <input type="hidden" name="courseId" value={id} />

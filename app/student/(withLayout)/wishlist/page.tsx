@@ -8,9 +8,10 @@ import WishlistCourseRow from "@/components/Student/student-wishlist/WishlistCou
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
+import { Types } from "mongoose";
 
 interface CourseData {
-  _id: string;
+  _id: Types.ObjectId;
   title: string;
   subtitle: string;
   thumbnail: string;
@@ -105,7 +106,7 @@ const WishlistPage = async () => {
               <WishlistCourseRow
                 key={course.id || `course-${index}`}
                 {...course}
-                id={Number.isNaN(Number(course.id)) ? index : Number(course.id)}
+                id={course.id}
               />
             ))}
           </div>
