@@ -2,12 +2,14 @@ import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
 import WishlistBuyNow from "@/components/Student/student-wishlist/WishlistBuyNow";
+import AddToCartModal from "@/components/Courses/AddToCartModal";
+import React from "react";
 
 interface Props {
   id: string;
   title: string;
   image: string;
-  instructors: string;
+  instructors: string[];
   price: string;
   originalPrice: string | null;
   rating: number;
@@ -74,15 +76,23 @@ const WishlistCourseRow = ({
           <div className="flex items-center justify-center gap-2">
             <WishlistBuyNow  id={id}/>
 
-            <form method="POST" action="/api/cart/add">
-              <input type="hidden" name="courseId" value={id} />
-              <button
-                type="submit"
-                className="btn btn-primary h-10 w-28 text-sm"
-              >
-                Add To Cart
-              </button>
-            </form>
+            {/*<form method="POST" action="/api/cart/add">*/}
+            {/*  <input type="hidden" name="courseId" value={id} />*/}
+            {/*  <button*/}
+            {/*    type="submit"*/}
+            {/*    className="btn btn-primary h-10 w-28 text-sm"*/}
+            {/*  >*/}
+            {/*    Add To Cart*/}
+            {/*  </button>*/}
+            {/*</form>*/}
+
+            <AddToCartModal
+              courseTitle={title}
+              courseThumbnail={image}
+              courseInstructor={instructors}
+              courseId={id}
+              className="h-10 w-28 text-sm"
+            />
 
             <form method="POST" action="/api/wishlist/remove">
               <input type="hidden" name="courseId" value={id} />

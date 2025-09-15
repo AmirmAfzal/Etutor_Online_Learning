@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useActionState } from "react";
 import {
   Dialog,
@@ -17,8 +19,9 @@ import Toast from "../Toast";
 interface Props {
   courseTitle: string;
   courseThumbnail: string;
-  courseInstructor: string;
+  courseInstructor: string[];
   courseId: string;
+  className?: string;
 }
 
 const AddToCartModal = ({
@@ -26,6 +29,7 @@ const AddToCartModal = ({
   courseThumbnail,
   courseInstructor,
   courseId,
+  className,
 }: Props) => {
   const [courseCartState, courseCartAction, courseCartPending] = useActionState(
     actionAddToCart,
@@ -38,19 +42,19 @@ const AddToCartModal = ({
       <Dialog>
         <DialogTrigger
           type="submit"
-          className="btn btn-primary w-full"
+          className={`btn btn-primary w-full ${className}`}
           disabled={courseCartPending}
         >
           {courseCartPending ? <CoursesLoading /> : "Add to Cart"}
         </DialogTrigger>
 
-        <DialogContent>
+        <DialogContent className="rounded-none">
           <DialogHeader>
             <DialogTitle>Added to cart</DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col items-center justify-center gap-4">
-            <div className="border-base-300 flex flex-col items-start justify-between gap-2 border-2">
+          <div className="flex flex-col items-center justify-center  gap-4">
+            <div className=" flex flex-col items-start justify-between gap-2 ">
               <Image
                 src={courseThumbnail}
                 width={600}
@@ -62,7 +66,7 @@ const AddToCartModal = ({
                   icon="ph:check-circle"
                   className="text-success text-3xl"
                 />
-                <div className="flex w-full flex-col items-center gap-2">
+                <div className="flex w-full flex-col items-center gap-2 border-l-2 border-base-300 pl-4">
                   <span className="text-base-content/80 text-2xl font-semibold">
                     {courseTitle}
                   </span>

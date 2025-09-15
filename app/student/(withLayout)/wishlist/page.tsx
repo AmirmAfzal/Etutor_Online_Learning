@@ -19,13 +19,23 @@ interface CourseData {
   originalPrice?: string;
   rating?: number;
   reviews?: number;
-  author: string[];
+  authors?: InstructorDocument[];
 }
 
 interface Student {
   _id: string;
   user: string;
   wishlist: CourseData[];
+}
+
+interface InstructorDocument {
+  firstname?: string;
+  lastname?: string;
+  bio?: string;
+  avatar?: string;
+  rating?: number;
+  students?: number;
+  name?: string;
 }
 
 const WishlistPage = async () => {
@@ -47,18 +57,26 @@ const WishlistPage = async () => {
 
   const wishlistCourses: CourseData[] = student.wishlist || [];
 
-  const courses = wishlistCourses.map((course) => ({
-    id: course._id.toString(),
-    title: course.title,
-    image: course.thumbnail,
-    instructors: Array.isArray(course.author)
-      ? course.author.join(" • ")
-      : "Unknown",
-    price: course.price || "$22.00",
-    originalPrice: course.originalPrice || "18.00",
-    rating: course.rating || 545,
-    reviews: course.reviews || 667,
-  }));
+  const courses = wishlistCourses.map((course) => {
+
+    const instructors = (course.authors || []).map((instructor) => {
+      const fullName = `${instructor.firstname || ""} ${instructor.lastname || ""}`.trim();
+      return fullName || "Unknown Instructor";
+    });
+
+    console.log("Processed Instructors:", instructors); // For debugging
+
+    return {
+      id: course._id.toString(),
+      title: course.title,
+      image: course.thumbnail,
+      instructors, // Pass the array of instructor names
+      price: course.price || "00.00",
+      originalPrice: course.originalPrice || "00.00",
+      rating: course.rating || 545,
+      reviews: course.reviews || 667,
+    };
+  });
 
   return (
     <>
