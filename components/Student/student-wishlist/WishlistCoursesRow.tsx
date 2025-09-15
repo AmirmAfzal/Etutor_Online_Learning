@@ -4,6 +4,7 @@ import Icon from "@/components/ui/Icon";
 import WishlistBuyNow from "@/components/Student/student-wishlist/WishlistBuyNow";
 import AddToCartModal from "@/components/Courses/AddToCartModal";
 import React from "react";
+import WishlistRemoveBtn from "@/components/Student/student-wishlist/WishlistRemoveBtn";
 
 interface Props {
   id: string;
@@ -76,15 +77,7 @@ const WishlistCourseRow = ({
           <div className="flex items-center justify-center gap-2">
             <WishlistBuyNow  id={id}/>
 
-            {/*<form method="POST" action="/api/cart/add">*/}
-            {/*  <input type="hidden" name="courseId" value={id} />*/}
-            {/*  <button*/}
-            {/*    type="submit"*/}
-            {/*    className="btn btn-primary h-10 w-28 text-sm"*/}
-            {/*  >*/}
-            {/*    Add To Cart*/}
-            {/*  </button>*/}
-            {/*</form>*/}
+
 
             <AddToCartModal
               courseTitle={title}
@@ -94,16 +87,9 @@ const WishlistCourseRow = ({
               className="h-10 w-28 text-sm"
             />
 
-            <form method="POST" action="/api/wishlist/remove">
-              <input type="hidden" name="courseId" value={id} />
-              <button
-                type="submit"
-                className="btn btn-soft btn-primary h-8 w-8 p-0"
-                title="Remove from wishlist"
-              >
-                <Icon icon="ph:heart-fill" className="text-sm" />
-              </button>
-            </form>
+
+            <WishlistRemoveBtn id={id} />
+
           </div>
         </div>
       </div>
