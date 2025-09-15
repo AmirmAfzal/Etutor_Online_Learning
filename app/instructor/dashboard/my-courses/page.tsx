@@ -41,7 +41,7 @@ const MyCoursesPage = async (props: Props) => {
   const search = searchParams.search?.toLowerCase() || "";
   const sort = searchParams.sort || "latest";
   const category = searchParams.category || "all";
-  const rating = searchParams.rating || "4";
+  const rating = searchParams.rating || "0";
 
   const filteredCourses = courses
     .filter((course) => {
@@ -49,8 +49,8 @@ const MyCoursesPage = async (props: Props) => {
       const matchCategory =
         category === "all" ||
         course.category.name?.toLowerCase() === category.toLowerCase();
-      // const matchRating = course.rating >= +rating;
-      return matchSearch && matchCategory;
+      const matchRating = course.rating >= +rating;
+      return matchSearch && matchCategory && matchRating;
     })
     .sort((a, b) => {
       if (sort === "latest") return b.id - a.id;
@@ -142,6 +142,7 @@ const MyCoursesPage = async (props: Props) => {
                 <SelectItem value="3">3 Start & Up</SelectItem>
                 <SelectItem value="2">2 Start & Up</SelectItem>
                 <SelectItem value="1">1 Start & Up</SelectItem>
+                <SelectItem value="0">All</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -178,8 +179,7 @@ const MyCoursesPage = async (props: Props) => {
                     width="20"
                     height="20"
                   />
-                  {/* {course.rating} */}
-                  4.8
+                  {course.rating}
                 </div>
                 <div className="flex flex-row items-center gap-1 font-semibold">
                   <Icon
@@ -196,8 +196,7 @@ const MyCoursesPage = async (props: Props) => {
               </div>
               <div className="border-base-300 flex flex-row items-center justify-between border-t p-4">
                 <p className="text-primary text-lg font-bold">
-                  {/* ${course.price}.00 */}
-                  $57.00
+                  ${course.price}
                 </p>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
