@@ -5,6 +5,8 @@ import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 import { ActionData } from "@/lib/formTypes";
 import { getServerSession } from "next-auth";
+import purchaseHistoryModel from "@/lib/db/models/purchaseHistoryModel";
+import courseModel from "@/lib/db/models/courseModel";
 
 export const addToCheckout = async (
   prevState: ActionData,
@@ -43,6 +45,29 @@ export const addToCheckout = async (
       { new: true }
     );
 
+    const coursesData = await courseModel.find({ _id: { $in: courseIds } });
+
+    const totalPrice = coursesData.reduce((acc, c) => acc + c.price, 0);
+
+    await purchaseHistoryModel.create({
+      date: new Date().toLocaleString("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      }),
+      summary: {
+        courses: courseIds.length,
+        price: totalPrice,
+        method: "Credit Card",
+      },
+      courses: courseIds,
+      summaryCourses: courseIds.length,
+      userId: session.user.id,
+    });
+
     if (!updatedStudent) {
       return {
         message: "ERROR",
@@ -53,7 +78,7 @@ export const addToCheckout = async (
     return {
       message: "SUCCESS",
       errors: [],
-      data: JSON.parse(JSON.stringify(updatedStudent.checkout ,)),
+      data: JSON.parse(JSON.stringify(updatedStudent.checkout)),
     };
   } catch (error) {
     console.error("Error updating checkout:", error);
