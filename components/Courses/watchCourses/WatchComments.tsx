@@ -7,6 +7,8 @@ import commentModel from "@/lib/db/models/commentModel";
 
 import TruncatedText from "../TruncatedText";
 import CreateComment from "./CreateComment";
+import Icon from "@/components/ui/Icon";
+import React from "react";
 
 // Type definitions for the data from the database
 interface UserFromDB {
@@ -63,13 +65,20 @@ const CommentItem = ({
     <div className={`${isReply ? "ml-10 border-l pl-4" : ""}`}>
       <div className="flex flex-col items-start gap-4 py-4">
         <div className="flex items-center gap-3">
-          <Image
-            width={48}
-            height={48}
-            src={comment.avatar}
-            alt={comment.name}
-            className="h-12 w-12 rounded-full"
-          />
+          {comment.avatar ? (
+            <Image
+              width={48}
+              height={48}
+              src={comment.avatar}
+              alt={comment.name}
+              className="h-10 w-10 shrink-0 rounded-full object-cover sm:h-12 sm:w-12"
+            />
+          ) : (
+            <Icon
+              icon="ph:user"
+              className="border-base-300 rounded-full border p-3 text-3xl"
+            />
+          )}
           <span className="text-md font-semibold md:text-lg">
             {comment.name}
           </span>
@@ -168,7 +177,7 @@ export default async function WatchComments({
         return {
           id: reply._id?.toString(),
           name: reply.title,
-          avatar: "/images/student-dashboard/Teacher-profile-1.jpg",
+          avatar: reply.avatar,
           time: reply.createdAt?.toISOString(),
           star: 0,
           comment: reply.reply,
@@ -180,7 +189,7 @@ export default async function WatchComments({
     return {
       id: comment._id?.toString(),
       name: `${user?.firstname} ${user?.lastname}`,
-      avatar: user?.avatar || "/default-avatar.png",
+      avatar: user?.avatar,
       time: comment?.createdAt?.toISOString(),
       star: 0,
       comment: comment.comment,

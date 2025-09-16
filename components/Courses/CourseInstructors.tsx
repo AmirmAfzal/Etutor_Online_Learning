@@ -30,14 +30,20 @@ const CourseInstructors: React.FC<CourseInstructorsProps> = ({
       {instructors.map((instructor, index) => (
         <div key={index} className="border-base-300 bg-base-100 border p-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-            <Image
-              width={64}
-              height={64}
-              src={instructor.avatar}
-              alt={instructor.name}
-              className="border-base-300 mx-auto h-26 w-26 rounded-full border object-cover shadow sm:mx-0 sm:h-16 sm:w-16 sm:shadow-none"
-            />
-
+            {instructor.avatar ? (
+              <Image
+                width={64}
+                height={64}
+                src={instructor.avatar}
+                alt={instructor.name}
+                className="border-base-300 mx-auto h-26 w-26 rounded-full border object-cover shadow sm:mx-0 sm:h-16 sm:w-16 sm:shadow-none"
+              />
+            ) : (
+              <Icon
+                icon="ph:user"
+                className="border-base-300 rounded-full border p-4 text-5xl"
+              />
+            )}
             <div className="flex flex-1 flex-col gap-2">
               <span className="text-base-content/80 text-base font-semibold sm:text-lg">
                 {instructor.name}

@@ -10,26 +10,21 @@ import {
 } from "@/components/ui/select";
 import { connectDB } from "@/lib/db/db";
 import feedbackModel from "@/lib/db/models/feedbackModel";
-
-
-
+import React from "react";
 
 const Comments = async () => {
+  await connectDB();
 
-  await  connectDB()
+  const feedbacks = await feedbackModel.find().lean();
 
-  const feedbacks = await  feedbackModel.find().lean()
-
-  const getFeedbacks = feedbacks.map(feedback  => ({
+  const getFeedbacks = feedbacks.map((feedback) => ({
     id: feedback._id?.toString() || "",
     name: feedback.title,
     avatar: feedback.avatar,
     time: feedback.createdAt?.toDateString() || "Some time ago",
     star: feedback.star,
     comment: feedback.feedback,
-  }))
-
-
+  }));
 
   return (
     <div className="mt-12 w-full space-y-6">
@@ -56,13 +51,20 @@ const Comments = async () => {
           key={comment.id}
           className="border-base-300 flex items-start gap-4 border-b pb-4"
         >
-          <Image
-            width={48}
-            height={48}
-            src={comment.avatar}
-            alt={comment.name}
-            className="h-10 w-10 shrink-0 rounded-full object-cover sm:h-12 sm:w-12"
-          />
+          {comment.avatar ? (
+            <Image
+              width={48}
+              height={48}
+              src={comment.avatar}
+              alt={comment.name}
+              className="h-10 w-10 shrink-0 rounded-full object-cover sm:h-12 sm:w-12"
+            />
+          ) : (
+            <Icon
+              icon="ph:user"
+              className="border-base-300 rounded-full border p-3 text-3xl"
+            />
+          )}
 
           <div className="flex flex-1 flex-col gap-1">
             <div className="flex flex-wrap items-center gap-2">

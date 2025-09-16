@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { Types } from "mongoose";
+import Icon from "@/components/ui/Icon";
+import React from "react";
 
 interface Lecture {
   _id: Types.ObjectId;
@@ -25,9 +27,10 @@ const WatchDetails = ({
   sectionTitle,
   watchingStudents,
 }: WatchDetailsProps) => {
+  // FIXME : get students from course enrolled students
   const courseStudents = [
     { avatar: "/images/profile-img.png" },
-    { avatar: "/images/profile-img.png" },
+    { avatar: "" },
   ];
 
   if (!currentLecture) {
@@ -44,16 +47,24 @@ const WatchDetails = ({
       <div className="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
           <div className="flex -space-x-2">
-            {courseStudents.map((instructor, index) => (
-              <Image
-                key={index}
-                src={instructor.avatar}
-                alt={`Student ${index + 1}`}
-                width={35}
-                height={35}
-                className="border-base-100 rounded-full border-2"
-              />
-            ))}
+            {courseStudents.map((instructor, index) =>
+              instructor.avatar ? (
+                <Image
+                  key={index}
+                  src={instructor.avatar}
+                  alt={`Student ${index + 1}`}
+                  width={35}
+                  height={35}
+                  className="border-base-100 rounded-full border object-cover"
+                />
+              ) : (
+                <Icon
+                  key={index}
+                  icon="ph:user"
+                  className="border-base-300 rounded-full border p-2 text-2xl"
+                />
+              )
+            )}
           </div>
           <div className="flex flex-col items-start">
             <span className="text-md font-medium md:text-lg">

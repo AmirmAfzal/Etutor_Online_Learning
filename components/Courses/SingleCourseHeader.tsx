@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
+import React from "react";
 
 type Instructor = {
   name: string;
@@ -41,16 +42,24 @@ const SingleCourseHeader = ({
             <div className="flex w-full flex-row items-center justify-between">
               <div className="flex flex-row items-center gap-2">
                 <div className="flex -space-x-2">
-                  {instructors?.map((instructor, index) => (
-                    <Image
-                      key={index}
-                      src={instructor.avatar}
-                      alt={instructor.name}
-                      width={40}
-                      height={40}
-                      className="border-base-100 rounded-full border-2"
-                    />
-                  ))}
+                  {instructors?.map((instructor, index) =>
+                    instructor.avatar ? (
+                      <Image
+                        key={index}
+                        src={instructor.avatar}
+                        alt={instructor.name}
+                        width={40}
+                        height={40}
+                        className="border-base-100 rounded-full border-2 object-cover"
+                      />
+                    ) : (
+                      <Icon
+                        key={index}
+                        icon="ph:user"
+                        className="border-base-300 rounded-full border p-2 text-3xl"
+                      />
+                    )
+                  )}
                 </div>
                 <p className="text-base-content/60 flex flex-col text-sm">
                   Created by:
