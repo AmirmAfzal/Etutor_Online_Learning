@@ -37,6 +37,7 @@ export const addToCheckout = async (
         $addToSet: {
           checkout: { $each: courseIds },
           courses: { $each: courseIds },
+          purchases: { $each: courseIds },
         },
       },
       { new: true }
@@ -52,7 +53,7 @@ export const addToCheckout = async (
     return {
       message: "SUCCESS",
       errors: [],
-      data: JSON.parse(JSON.stringify(updatedStudent.checkout)),
+      data: JSON.parse(JSON.stringify(updatedStudent.checkout ,)),
     };
   } catch (error) {
     console.error("Error updating checkout:", error);

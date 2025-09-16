@@ -12,7 +12,6 @@ export interface StudentInterface extends Document {
   checkout: ObjectId[];
   purchases: ObjectId[];
   wishlist: ObjectId[];
-  history: ObjectId[];
 }
 
 const studentSchema = new Schema<StudentInterface>(
@@ -73,12 +72,7 @@ const studentSchema = new Schema<StudentInterface>(
         ref: "course",
       },
     ],
-    history: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "purchaseHistory",
-      },
-    ],
+
   },
 
   {
