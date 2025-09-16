@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { Types } from "mongoose";
+
 import { connectDB } from "@/lib/db/db";
 import lectureModel from "@/lib/db/models/lectureModel";
 import sectionModel from "@/lib/db/models/sectionModel";
-import { Types } from "mongoose";
 
 
 interface Lecture {

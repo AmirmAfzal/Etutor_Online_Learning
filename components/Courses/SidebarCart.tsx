@@ -1,20 +1,23 @@
 "use client";
+
 import React, { useActionState } from "react";
-import Icon from "../ui/Icon";
+import Form from "next/form";
+import Link from "next/link";
+
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
 import { actionBuyNow } from "@/lib/actions/courses/buyNow";
 import CoursesLoading from "@/app/courses/loading";
+
 import AddToCartModal from "./AddToCartModal";
+import Icon from "../ui/Icon";
 import Toast from "../Toast";
-import Form from "next/form";
-import Link from "next/link";
 
 interface SidebarCartProps {
   fakeSidebarCart: {
     includes: string[];
   };
   singleCourse: {
-id?: string;
+    id?: string;
 
     price: number;
     originalPrice: number;

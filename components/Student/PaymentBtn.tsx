@@ -1,8 +1,11 @@
 "use client";
-import CoursesLoading from "@/app/courses/loading";
-import { addToCheckout } from "@/lib/actions/student/addToCheckout";
+
 import Form from "next/form";
 import { useActionState } from "react";
+
+import CoursesLoading from "@/app/courses/loading";
+import { addToCheckout } from "@/lib/actions/student/addToCheckout";
+
 import Toast from "../Toast";
 
 interface Props {
