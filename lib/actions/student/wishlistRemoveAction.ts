@@ -1,14 +1,13 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { revalidatePath } from "next/cache";
-
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 import { ActionData } from "@/lib/formTypes";
+import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 
-export const actionDeleteCourse = async (
+export const wishlistRemoveAction = async (
   prevState: ActionData,
   formData: FormData
 ): Promise<ActionData> => {
@@ -28,28 +27,31 @@ export const actionDeleteCourse = async (
 
     const updatedStudent = await studentModel.findOneAndUpdate(
       {
-        user: session.user.id,
+        user: session?.user.id,
       },
-      { $pull: { coursesCart: courseId } },
+      { $pull: { wishlist: courseId } },
       { new: true }
     );
 
     if (!updatedStudent) {
       return {
         message: "ERROR",
-        errors: ["Failed to delete course from cart"],
+        errors: ["Failed to add course to cart"],
       };
     }
 
-    revalidatePath("/shopping-cart");
+    revalidatePath("/student/wishlist");
 
     return {
       message: "SUCCESS",
       errors: [],
-      data: JSON.parse(JSON.stringify(updatedStudent.coursesCart)),
+      data: JSON.parse(JSON.stringify(updatedStudent.wishlist)),
     };
   } catch (error) {
-    console.log("error deleting course from cart", error);
-    return { message: "ERROR", errors: ["Failed to delete course from cart"] };
+    console.error("Error adding course to cart:", error);
+    return {
+      message: "ERROR",
+      errors: ["Failed to add course to cart"],
+    };
   }
 };

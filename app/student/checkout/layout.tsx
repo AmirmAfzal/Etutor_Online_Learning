@@ -1,3 +1,5 @@
+import { SlashIcon } from "lucide-react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -5,7 +7,6 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { SlashIcon } from "lucide-react";
 
 const StudentCheckoutLayout = ({ children }: { children: React.ReactNode }) => {
   return (
