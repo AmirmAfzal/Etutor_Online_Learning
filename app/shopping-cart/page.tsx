@@ -1,3 +1,7 @@
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { Document, Types } from "mongoose";
 import { SlashIcon } from "lucide-react";
 
 import {
@@ -11,10 +15,6 @@ import CourseShoppingCart from "@/components/shoppingCart/CourseShoppingCart";
 import { connectDB } from "@/lib/db/db";
 import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
 import { authOptions } from "@/lib/auth/authOptions";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Document, Types } from "mongoose";
 
 // Define the interface for the Course directly in this file
 interface Course extends Document {

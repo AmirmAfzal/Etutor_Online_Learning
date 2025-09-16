@@ -19,20 +19,32 @@ const TopInstructor = async () => {
   );
 
   return (
-    <section id="instructor" className="bg-base-100 border-base-300 container mx-auto -mt-48 space-y-8 border p-8 md:p-16">
+    <section
+      id="instructor"
+      className="bg-base-100 border-base-300 container mx-auto -mt-48 space-y-8 border p-8 md:p-16"
+    >
       <h3 className="text-center text-2xl font-bold md:text-3xl">
         Top instructor of the month
       </h3>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {instructors.map((instructor: Instructor, index: number) => (
-          <div key={index} className="border-base-300 border">
-            <Image
-              src={instructor.avatar}
-              className="w-full"
-              alt={instructor.firstname}
-              width={200}
-              height={200}
-            />
+          <div
+            key={index}
+            className="border-base-300 flex flex-col justify-between border"
+          >
+            {instructor.avatar ? (
+              <Image
+                src={instructor.avatar}
+                className="h-64 w-full"
+                alt={instructor.firstname}
+                width={200}
+                height={200}
+              />
+            ) : (
+              <div className="bg-base-200 flex h-64 w-full flex-row items-center justify-center">
+                <Icon icon="ph:user" width="64" height="64" />
+              </div>
+            )}
             <div className="flex flex-col items-center gap-1 p-2">
               <p className="font-semibold">{`${instructor.firstname}  ${instructor.lastname}`}</p>
               <p className="text-base-content/50 text-sm">{instructor.title}</p>
