@@ -35,7 +35,8 @@ const PurchaseHistory = async () => {
   const foundPurchases = await purchaseHistoryModel
     .find()
     .populate("courses")
-    .populate("userId");
+    .populate("userId")
+    .sort({ createdAt: -1 });
 
 
 
