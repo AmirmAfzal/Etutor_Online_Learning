@@ -11,6 +11,7 @@ import studentModel from "@/lib/db/models/studentModel";
 import instructorModel from "@/lib/db/models/instructorModel";
 
 import BecomeInstructorButton from "./BecomeInstructorButton";
+import Icon from "@/components/ui/Icon";
 
 export interface Student {
   user: string;
@@ -49,21 +50,27 @@ const StudentProfile = async () => {
   const studentProfile: StudentProfileProp = {
     name: `${student.firstname} ${student.lastname}`,
     job: student.bio,
-    image: student.avatar || "/images/student-dashboard/profile-student.jpg",
+    image: student.avatar,
     _id: student._id,
   };
 
   return (
     <div className="bg-base-100 border-primary/20 mt-8 flex w-full flex-col items-center gap-4 border-2 p-4 sm:gap-6 sm:p-6 md:flex-row md:items-center">
-      <Image
-        src={studentProfile.image}
-        alt={`${studentProfile.name} profile`}
-        width={112}
-        height={112}
-        className="h-20 w-20 rounded-full object-cover sm:h-28 sm:w-28"
-        priority
-      />
-
+      {studentProfile.image ? (
+        <Image
+          src={studentProfile.image}
+          alt={`${studentProfile.name} profile`}
+          width={112}
+          height={112}
+          className="h-20 w-20 rounded-full object-cover sm:h-28 sm:w-28"
+          priority
+        />
+      ) : (
+        <Icon
+          icon="ph:user"
+          className="text-5xl rounded-full border p-4 border-base-300"
+        />
+      )}
       <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
         <h2 className="text-base-content text-lg font-bold sm:text-2xl">
           {studentProfile.name}

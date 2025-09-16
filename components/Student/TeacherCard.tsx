@@ -22,13 +22,20 @@ export default function TeacherCard({
 }: TeacherCardProps) {
   return (
     <div className="border-base-content/10 flex flex-col overflow-hidden border transition-all duration-300 hover:translate-y-[-2px]">
-      <Image
-        src={image}
-        alt={name}
-        width={800}
-        height={800}
-        className="h-48 w-full object-cover sm:h-56 md:h-64"
-      />
+      {image ? (
+        <Image
+          src={image}
+          alt={name}
+          width={800}
+          height={800}
+          className="h-48 w-full object-cover sm:h-56 md:h-64"
+        />
+      ) : (
+        <Icon
+          icon="ph:user"
+          className="w-full align-center h-48 sm:h-56 md:h-64 text-5xl"
+        />
+      )}
 
       <div className="flex flex-1 flex-col">
         <div className="py-3 text-center">

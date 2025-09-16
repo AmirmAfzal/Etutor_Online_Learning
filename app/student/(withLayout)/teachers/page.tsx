@@ -76,7 +76,7 @@ const TeachersPage = async (props: Props) => {
       name: `${instructor.firstname} ${instructor.lastname}`,
       title: instructor.bio || "Instructor",
       image:
-        instructor.avatar || "/images/student-dashboard/Teacher-default.jpg",
+        instructor.avatar || "",
       rating: instructor.rating,
       students: instructor.students,
     })

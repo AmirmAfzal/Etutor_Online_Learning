@@ -97,7 +97,7 @@ const buildInstructorData = (
     name: `${instructor.firstname || "Unknown"} ${instructor.lastname || ""}`.trim(),
     bio: instructor.bio || "Instructor",
     avatar:
-      instructor.avatar || "/images/student-dashboard/Teacher-default.jpg",
+      instructor.avatar || "",
     rating: instructor.rating || 5,
     students: instructor.students || 0,
     courses: 12,
@@ -144,7 +144,7 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
         author.name =
           `${author?.firstname || ""} ${author?.lastname || ""}`.trim();
         author.avatar =
-          author?.avatar || "/images/student-dashboard/Teacher-default.jpg";
+          author?.avatar || "";
         return {
           name: author.name,
           avatar: author.avatar,
