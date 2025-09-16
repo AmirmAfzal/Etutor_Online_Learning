@@ -33,23 +33,11 @@ export const addToCheckout = async (
       };
     }
 
-    const updatedStudent = await studentModel.findOneAndUpdate(
-      { user: session.user.id },
-      {
-        $addToSet: {
-          checkout: { $each: courseIds },
-          courses: { $each: courseIds },
-          purchases: { $each: courseIds },
-        },
-      },
-      { new: true }
-    );
-
     const coursesData = await courseModel.find({ _id: { $in: courseIds } });
 
     const totalPrice = coursesData.reduce((acc, c) => acc + c.price, 0);
 
-    await purchaseHistoryModel.create({
+    const newPurchase = await purchaseHistoryModel.create({
       date: new Date().toLocaleString("en-US", {
         day: "numeric",
         month: "short",
@@ -67,6 +55,18 @@ export const addToCheckout = async (
       summaryCourses: courseIds.length,
       userId: session.user.id,
     });
+
+    const updatedStudent = await studentModel.findOneAndUpdate(
+      { user: session.user.id },
+      {
+        $addToSet: {
+          checkout: { $each: courseIds },
+          courses: { $each: courseIds },
+          purchases: newPurchase._id,
+        },
+      },
+      { new: true }
+    );
 
     if (!updatedStudent) {
       return {
