@@ -72,7 +72,9 @@ const studentSchema = new Schema<StudentInterface>(
         ref: "course",
       },
     ],
+
   },
+
   {
     timestamps: true,
   }
