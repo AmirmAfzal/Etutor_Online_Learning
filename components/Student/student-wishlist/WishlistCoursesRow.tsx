@@ -1,12 +1,16 @@
 import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
+import WishlistBuyNow from "@/components/Student/student-wishlist/WishlistBuyNow";
+import AddToCartModal from "@/components/Courses/AddToCartModal";
+import React from "react";
+import WishlistRemoveBtn from "@/components/Student/student-wishlist/WishlistRemoveBtn";
 
 interface Props {
-  id: number;
+  id: string;
   title: string;
   image: string;
-  instructors: string;
+  instructors: string[];
   price: string;
   originalPrice: string | null;
   rating: number;
@@ -71,37 +75,21 @@ const WishlistCourseRow = ({
 
         <div className="col-span-2 ml-8 text-center text-nowrap">
           <div className="flex items-center justify-center gap-2">
-            {/* TODO: fix btn actions */}
-            <form method="POST" action="/api/cart/buy-now">
-              <input type="hidden" name="courseId" value={id} />
-              <button
-                type="submit"
-                className="btn btn-soft btn-base-content h-10 w-28 text-sm"
-              >
-                Buy Now
-              </button>
-            </form>
+            <WishlistBuyNow  id={id}/>
 
-            <form method="POST" action="/api/cart/add">
-              <input type="hidden" name="courseId" value={id} />
-              <button
-                type="submit"
-                className="btn btn-primary h-10 w-28 text-sm"
-              >
-                Add To Cart
-              </button>
-            </form>
 
-            <form method="POST" action="/api/wishlist/remove">
-              <input type="hidden" name="courseId" value={id} />
-              <button
-                type="submit"
-                className="btn btn-soft btn-primary h-8 w-8 p-0"
-                title="Remove from wishlist"
-              >
-                <Icon icon="ph:heart-fill" className="text-sm" />
-              </button>
-            </form>
+
+            <AddToCartModal
+              courseTitle={title}
+              courseThumbnail={image}
+              courseInstructor={instructors}
+              courseId={id}
+              className="h-10 w-28 text-sm"
+            />
+
+
+            <WishlistRemoveBtn id={id} />
+
           </div>
         </div>
       </div>
