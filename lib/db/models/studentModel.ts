@@ -41,6 +41,12 @@ const studentSchema = new Schema<StudentInterface>(
       required: false,
       default: "",
     },
+    avatar: {
+      type: String,
+      required: false,
+      default: "",
+    },
+
     courses: [
       {
         type: Schema.Types.ObjectId,

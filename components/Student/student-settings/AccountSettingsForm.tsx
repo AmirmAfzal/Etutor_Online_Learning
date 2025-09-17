@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-type Props = {
+interface Props {
   _id: string;
   firstName: string;
   lastName: string;
@@ -31,7 +31,7 @@ type Props = {
   email: string;
   title: string;
   avatar?: string;
-};
+}
 
 const AccountSettingsForm = (props: Props) => {
   const [profileImage, setProfileImage] = useState(props.avatar || "");
