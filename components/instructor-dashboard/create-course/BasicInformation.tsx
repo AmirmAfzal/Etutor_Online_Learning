@@ -33,14 +33,8 @@ import {
 } from "@/components/ui/form";
 import { CourseInterface } from "@/lib/db/models/courseModel";
 import ErrorMessage from "@/components/ErrorMessage";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { SearchableSelect } from "@/components/SearchableSelect";
 
 const toolOptions = [
   { value: "html", label: "HTML" },
@@ -143,16 +137,6 @@ const BasicInformation = ({ onNext, course }: Props) => {
     setSubCategories(subCategoryState.data);
   }, [categoryState.data, subCategoryState.data]);
 
-  const findCategoriesHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    startTransition(() => {
-      searchCategoryFormAction(e.target.value);
-    });
-  };
-  const findSubCategoriesHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    startTransition(() => {
-      searchSubCategoryFormAction(e.target.value);
-    });
-  };
   useEffect(() => {
     const initialCategory = form.getValues("category");
     const initialSubCategory = form.getValues("subCategory");
@@ -256,48 +240,20 @@ const BasicInformation = ({ onNext, course }: Props) => {
                 control={form.control}
                 name="category"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Course Category</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <Command>
-                            <Input
-                              className="w-full border-0"
-                              placeholder="Type a command or search..."
-                              onChange={findCategoriesHandler}
-                            />
-                            <CommandList className="w-full">
-                              <CommandGroup heading="Categories">
-                                {categories &&
-                                  categories.map((category, index) => (
-                                    <CommandItem key={index}>
-                                      <SelectItem value={category.name}>
-                                        {category.name}
-                                      </SelectItem>
-                                    </CommandItem>
-                                  ))}
-                              </CommandGroup>
-                              {categoryPending ? (
-                                <div className="flex h-full w-full items-center justify-center py-6">
-                                  <div className="loading loading-spinner" />
-                                </div>
-                              ) : (
-                                <CommandEmpty>No results found.</CommandEmpty>
-                              )}
-                            </CommandList>
-                          </Command>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                  <SearchableSelect
+                    label="Course categories"
+                    placeholder="Select..."
+                    items={categories?.map((c) => c.name) || []}
+                    value={field.value}
+                    loading={categoryPending}
+                    onSearch={(value) => {
+                      startTransition(() => {
+                        searchCategoryFormAction(value);
+                      });
+                    }}
+                    onSelect={field.onChange}
+                    error={form.formState.errors.category?.message}
+                  />
                 )}
               />
 
@@ -305,48 +261,20 @@ const BasicInformation = ({ onNext, course }: Props) => {
                 control={form.control}
                 name="subCategory"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Course Sub-category</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <Command>
-                            <Input
-                              className="w-full border-0"
-                              placeholder="Type a command or search..."
-                              onChange={findSubCategoriesHandler}
-                            />
-                            <CommandList className="w-full">
-                              <CommandGroup heading="SubCategories">
-                                {subCategories &&
-                                  subCategories.map((subCategory, index) => (
-                                    <CommandItem key={index}>
-                                      <SelectItem value={subCategory.name}>
-                                        {subCategory.name}
-                                      </SelectItem>
-                                    </CommandItem>
-                                  ))}
-                              </CommandGroup>
-                              {subCategoryPending ? (
-                                <div className="flex h-full w-full items-center justify-center py-6">
-                                  <div className="loading loading-spinner" />
-                                </div>
-                              ) : (
-                                <CommandEmpty>No results found.</CommandEmpty>
-                              )}
-                            </CommandList>
-                          </Command>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                  <SearchableSelect
+                    label="Course Sub-category"
+                    placeholder="Select..."
+                    items={subCategories?.map((c) => c.name) || []}
+                    value={field.value}
+                    loading={subCategoryPending}
+                    onSearch={(value) => {
+                      startTransition(() => {
+                        searchSubCategoryFormAction(value);
+                      });
+                    }}
+                    onSelect={field.onChange}
+                    error={form.formState.errors.subCategory?.message}
+                  />
                 )}
               />
             </div>
