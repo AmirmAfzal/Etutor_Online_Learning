@@ -9,6 +9,13 @@ import RevenueView from "@/components/instructor-dashboard/RevenueView";
 import Icon from "@/components/ui/Icon";
 import courseModel from "@/lib/db/models/courseModel";
 import { Instructor } from "@/lib/actions/instructor/create-course/findInstructors";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -100,14 +107,14 @@ const CourseDetailPage = async (props: Props) => {
                     />
                   ))}
                 </div>
-                <p className="font-bold">4.8</p>
+                <p className="font-bold">{course.rating}</p>
                 <p className="text-base-content/70 text-sm">(123,456 Rating)</p>
               </div>
             </div>
             <div className="border-base-300 flex flex-col items-center justify-between gap-4 border-t pt-4 md:flex-row">
               <div className="flex flex-row items-center gap-4">
                 <span className="border-base-300 border-r-2 pr-4">
-                  <p className="text-lg">$57.00</p>
+                  <p className="text-lg">${course.price}</p>
                   <p className="text-base-content/70 text-sm">Course prices</p>
                 </span>
                 <span>
@@ -125,7 +132,24 @@ const CourseDetailPage = async (props: Props) => {
                   Withdrew Money
                 </Link>
                 <button className="btn btn-soft">
-                  <Icon icon="ph:dots-three" width="24" height="24" />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Icon icon="ph:dots-three" width="24" height="24" />
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent>
+                      <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
+                        <Link
+                          href={`/instructor/dashboard/create-course?_id=${course._id}`}
+                        >
+                          Edit Course
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="focus:bg-primary focus:text-base-100">
+                        <DeleteButton courseId={course._id.toString()} />
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </button>
               </div>
             </div>
