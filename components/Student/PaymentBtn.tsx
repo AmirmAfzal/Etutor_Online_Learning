@@ -15,6 +15,7 @@ interface Props {
 const PaymentBtn = ({ courseIds }: Props) => {
   const [state, action, pending] = useActionState(addToCheckout, {
     message: "",
+    messageDetail: "",
     errors: [] as string[],
   });
 
@@ -31,7 +32,12 @@ const PaymentBtn = ({ courseIds }: Props) => {
         {pending ? <CoursesLoading /> : "Complete Payment"}
       </button>
       {state.message && (
-        <Toast message={state.message} isError={!!state.errors?.length} />
+        <Toast
+          message={state.message}
+          isError={!!state.errors?.length}
+          messageDetail={state.messageDetail}
+          errors={state.errors}
+        />
       )}
     </Form>
   );

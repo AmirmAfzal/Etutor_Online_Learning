@@ -18,9 +18,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { settingPasswordSchema } from "@/lib/validation/Student-dashboard/settingPasswordSchema";
 import { changeStudentPassword } from "@/lib/actions/student/changePassword";
+import Toast from "@/components/Toast";
 
 const initialState = {
   message: "",
+  messageDetail: "",
   errors: [],
 };
 
@@ -201,6 +203,12 @@ const PasswordSettingsForm = () => {
           {pending ? "Changing Password..." : "Change Password"}
         </button>
       </form>
+      <Toast
+        message={state.message}
+        isError={!!state.errors?.length}
+        errors={state.errors}
+        messageDetail={state.messageDetail}
+      />
     </Form>
   );
 };

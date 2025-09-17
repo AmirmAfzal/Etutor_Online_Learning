@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Toast from "@/components/Toast";
 
 type Props = {
   _id: string;
@@ -49,8 +50,9 @@ const AccountSettingsForm = (props: Props) => {
     },
   });
 
-  const [, formAction] = useActionState(updateStudentAccount, {
+  const [ state , formAction] = useActionState(updateStudentAccount, {
     message: "",
+    messageDetail:"",
     errors: [],
   });
 
@@ -227,6 +229,7 @@ const AccountSettingsForm = (props: Props) => {
           </form>
         </Form>
       </div>
+      <Toast message={state.message} isError={!!state.errors?.length} errors={state.errors} messageDetail={state.messageDetail} />
     </div>
   );
 };

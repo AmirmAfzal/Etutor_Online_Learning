@@ -5,6 +5,7 @@ import { useActionState, useRef } from "react";
 
 import Icon from "@/components/ui/Icon";
 import { addFeedbackAction } from "@/lib/actions/feedBack/addFeedbackAction";
+import Toast from "@/components/Toast";
 
 
 
@@ -12,6 +13,7 @@ const WriteReview = ({ courseId } :{courseId: string}) => {
   const { data: session } = useSession();
   const [state, action, pending] = useActionState(addFeedbackAction, {
     message: "",
+    messageDetail: "",
     errors: [],
   });
   const formRef = useRef<HTMLFormElement>(null);
@@ -135,6 +137,9 @@ const WriteReview = ({ courseId } :{courseId: string}) => {
               </button>
             </div>
           </form>
+
+          <Toast message={state.message} isError={!!state.errors?.length} errors={state.errors} messageDetail={state.messageDetail} />
+
         </div>
       </div>
     </>

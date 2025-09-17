@@ -128,6 +128,7 @@ export const addFeedbackAction = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Feedback submitted successfully.",
       data: JSON.parse(JSON.stringify(createFeedback)),
       errors: [],
     };

@@ -141,6 +141,7 @@ export const addReplyAction = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Reply added successfully.",
       data: JSON.parse(JSON.stringify(createReply)),
       errors: [],
     };

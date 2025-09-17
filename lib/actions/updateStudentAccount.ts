@@ -61,6 +61,7 @@ export const updateStudentAccount = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Account updated successfully.",
       errors: [],
     };
   } catch (error) {

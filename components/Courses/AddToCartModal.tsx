@@ -35,7 +35,7 @@ const AddToCartModal = ({
 }: Props) => {
   const [courseCartState, courseCartAction, courseCartPending] = useActionState(
     actionAddToCart,
-    { message: "", errors: [] as string[] }
+    { message: "", messageDetail: "", errors: [] as string[] }
   );
 
   return (
@@ -55,8 +55,8 @@ const AddToCartModal = ({
             <DialogTitle>Added to cart</DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col items-center justify-center  gap-4">
-            <div className=" flex flex-col items-start justify-between gap-2 ">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="flex flex-col items-start justify-between gap-2">
               <Image
                 src={courseThumbnail}
                 width={600}
@@ -68,7 +68,7 @@ const AddToCartModal = ({
                   icon="ph:check-circle"
                   className="text-success text-3xl"
                 />
-                <div className="flex w-full flex-col items-center gap-2 border-l-2 border-base-300 pl-4">
+                <div className="border-base-300 flex w-full flex-col items-center gap-2 border-l-2 pl-4">
                   <span className="text-base-content/80 text-2xl font-semibold">
                     {courseTitle}
                   </span>
@@ -88,6 +88,8 @@ const AddToCartModal = ({
           <Toast
             message={courseCartState.message}
             isError={!!courseCartState.errors?.length}
+            errors={courseCartState.errors}
+            messageDetail={courseCartState.messageDetail}
           />
         )}
       </Dialog>

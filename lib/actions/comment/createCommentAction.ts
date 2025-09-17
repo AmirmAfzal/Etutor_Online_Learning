@@ -147,6 +147,7 @@ export const createCommentAction = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Comment added successfully.",
       data: JSON.parse(JSON.stringify(createComment)),
       errors: [],
     };
