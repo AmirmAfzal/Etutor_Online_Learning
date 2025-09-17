@@ -1,7 +1,8 @@
 "use client";
 
-import Icon from "@/components/ui/Icon";
 import { useActionState, useEffect, useRef, useState } from "react";
+
+import Icon from "@/components/ui/Icon";
 import { wishlistRemoveAction } from "@/lib/actions/student/wishlistRemoveAction";
 
 interface Props {
@@ -11,7 +12,6 @@ interface ToastState {
   message: string;
   errors?: string[];
 }
-
 
 const WishlistRemoveBtn = (props: Props) => {
   const { id } = props;
@@ -52,9 +52,8 @@ const WishlistRemoveBtn = (props: Props) => {
     </div>
   );
 
-
   return (
-    <form action={action} ref={formRef} >
+    <form action={action} ref={formRef}>
       <input type="hidden" name="courseId" value={id} />
       <button
         type="submit"
@@ -65,7 +64,6 @@ const WishlistRemoveBtn = (props: Props) => {
         <Icon icon="ph:heart-fill" className="text-sm" />
       </button>
       {renderToast(showToast, state)}
-
     </form>
   );
 };
