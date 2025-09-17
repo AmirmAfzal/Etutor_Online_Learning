@@ -1,7 +1,8 @@
 "use client";
 
-import Icon from "@/components/ui/Icon";
 import { useActionState, useEffect, useRef, useState } from "react";
+
+import Icon from "@/components/ui/Icon";
 import { wishlistRemoveAction } from "@/lib/actions/student/wishlistRemoveAction";
 
 interface Props {

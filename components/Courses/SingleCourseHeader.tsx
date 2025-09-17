@@ -1,7 +1,7 @@
+import React from "react";
 import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
-import React from "react";
 
 type Instructor = {
   name: string;

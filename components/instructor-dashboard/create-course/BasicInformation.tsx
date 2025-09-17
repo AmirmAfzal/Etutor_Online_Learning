@@ -241,7 +241,7 @@ const BasicInformation = ({ onNext, course }: Props) => {
                 name="category"
                 render={({ field }) => (
                   <SearchableSelect
-                    label="Course categories"
+                    label="Course category"
                     placeholder="Select..."
                     items={categories?.map((c) => c.name) || []}
                     value={field.value}
