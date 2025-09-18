@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useActionState } from "react";
 import Form from "next/form";
+import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
 import { actionDeleteCourse } from "@/lib/actions/courses/actionDeleteCourse";
