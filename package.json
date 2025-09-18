@@ -50,6 +50,7 @@
     "cloudinary": "^2.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "copy-to-clipboard": "^3.3.3",
     "dotenv": "^16.4.7",
     "embla-carousel-react": "^8.5.2",
     "formdata-node": "^6.0.3",
