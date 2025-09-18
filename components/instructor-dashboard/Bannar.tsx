@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+
 import { DataTypes } from "@/lib/actions/instructor/instructorProfile";
 
 import Icon from "../ui/Icon";

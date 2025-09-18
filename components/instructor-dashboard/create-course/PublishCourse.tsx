@@ -114,7 +114,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
       formAction(formDataWithCourseId);
     });
   };
-console.log(searchState.data)
+
   return (
     <div>
       <div className="border-base-300 flex flex-col items-center justify-between gap-2 border-t border-b p-4 md:flex-row">

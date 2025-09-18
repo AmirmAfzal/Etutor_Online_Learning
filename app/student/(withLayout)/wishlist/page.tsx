@@ -3,12 +3,12 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { Types } from "mongoose";
 
 import WishlistCourseRow from "@/components/Student/student-wishlist/WishlistCoursesRow";
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
-import { Types } from "mongoose";
 
 interface CourseData {
   _id: Types.ObjectId;

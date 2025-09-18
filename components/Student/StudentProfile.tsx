@@ -9,9 +9,9 @@ import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 import instructorModel from "@/lib/db/models/instructorModel";
+import Icon from "@/components/ui/Icon";
 
 import BecomeInstructorButton from "./BecomeInstructorButton";
-import Icon from "@/components/ui/Icon";
 
 export interface Student {
   user: string;
