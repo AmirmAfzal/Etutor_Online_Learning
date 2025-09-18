@@ -3,6 +3,7 @@
 import React, { useActionState } from "react";
 import Form from "next/form";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { actionAddToWishlist } from "@/lib/actions/courses/addToWishlist";
 import { actionBuyNow } from "@/lib/actions/courses/buyNow";
@@ -44,6 +45,13 @@ const SidebarCart = ({
     actionBuyNow,
     { message: "", errors: [] as string[] }
   );
+
+  if (
+    wishlistState.errors?.includes("User not authenticated.") ||
+    buyNowState.errors?.includes("User not authenticated.")
+  ) {
+    redirect("/auth/signin");
+  }
 
   const price = singleCourse?.price ?? 0;
   const originalPrice = singleCourse?.originalPrice ?? 0;

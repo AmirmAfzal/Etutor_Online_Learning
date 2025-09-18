@@ -17,6 +17,7 @@ import CoursesLoading from "@/app/courses/loading";
 
 import Icon from "../ui/Icon";
 import Toast from "../Toast";
+import { redirect } from "next/navigation";
 
 interface Props {
   courseTitle: string;
@@ -38,6 +39,10 @@ const AddToCartModal = ({
     { message: "", errors: [] as string[] }
   );
 
+  if (courseCartState.errors?.includes("User not authenticated")) {
+    redirect("/auth/signin");
+  }
+
   return (
     <Form action={courseCartAction} className="w-full">
       <input type="hidden" name="courseId" value={courseId} />
@@ -55,8 +60,8 @@ const AddToCartModal = ({
             <DialogTitle>Added to cart</DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col items-center justify-center  gap-4">
-            <div className=" flex flex-col items-start justify-between gap-2 ">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="flex flex-col items-start justify-between gap-2">
               <Image
                 src={courseThumbnail}
                 width={600}
@@ -68,7 +73,7 @@ const AddToCartModal = ({
                   icon="ph:check-circle"
                   className="text-success text-3xl"
                 />
-                <div className="flex w-full flex-col items-center gap-2 border-l-2 border-base-300 pl-4">
+                <div className="border-base-300 flex w-full flex-col items-center gap-2 border-l-2 pl-4">
                   <span className="text-base-content/80 text-2xl font-semibold">
                     {courseTitle}
                   </span>
