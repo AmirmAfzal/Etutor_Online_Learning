@@ -1,6 +1,12 @@
 "use client";
 
-import { startTransition, useActionState, useState, useEffect } from "react";
+import {
+  startTransition,
+  useActionState,
+  useState,
+  useEffect,
+  ChangeEvent,
+} from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,15 +49,18 @@ const PublishCourse = ({ onBack, course }: Props) => {
     publishCourse,
     initialState
   );
-  const [searchState, formActionSearch] = useActionState(findInstructor, {
-    message: "",
-    errors: [],
-    data: [],
-  });
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchState, formActionSearch, searchPending] = useActionState(
+    findInstructor,
+    {
+      message: "",
+      errors: [],
+      data: [],
+    }
+  );
   const [instructors, setInstructors] = useState<Instructor[]>(
     course?.instructors || []
   );
+  const [showResult, setShowResult] = useState(false);
 
   const form = useForm<PublishMessageFormData>({
     resolver: zodResolver(publishMessageSchema),
@@ -70,10 +79,10 @@ const PublishCourse = ({ onBack, course }: Props) => {
     });
   }, [instructors, form]);
 
-  const searchHandler = () => {
+  const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
     startTransition(() => {
-      if (typeof searchValue === "string") {
-        formActionSearch(searchValue);
+      if (e.target.value.trim()) {
+        formActionSearch(e.target.value.trim());
       }
     });
   };
@@ -100,12 +109,12 @@ const PublishCourse = ({ onBack, course }: Props) => {
       // Add courseId to the form data
       const formDataWithCourseId = {
         ...data,
-        courseId: (course._id as string),
+        courseId: course._id as string,
       };
       formAction(formDataWithCourseId);
     });
   };
-
+console.log(searchState.data)
   return (
     <div>
       <div className="border-base-300 flex flex-col items-center justify-between gap-2 border-t border-b p-4 md:flex-row">
@@ -183,33 +192,58 @@ const PublishCourse = ({ onBack, course }: Props) => {
                     type="text"
                     placeholder="Search by username"
                     className="pl-12"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && searchHandler()}
+                    onChange={searchHandler}
+                    onFocus={() => setShowResult(true)}
                   />
-                  {searchState.message === "SUCCESS" &&
-                    searchState.data.map((instructor) => (
-                      <button
-                        key={instructor.id}
-                        type="button"
-                        className="bg-base-200 flex w-full cursor-pointer flex-row items-center justify-between p-4"
-                        onClick={() => addInstructorHandler(instructor)}
-                      >
-                        <div className="flex flex-row items-center gap-4">
-                          <Image
-                            src={instructor.profile}
-                            alt="profile"
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                          />
-                          <p className="text-sm font-bold">{instructor.name}</p>
-                        </div>
-                        <p className="text-base-content/70 ml-8 text-xs">
-                          {instructor.skill}
+                  {showResult && (
+                    <div className="z-10 w-full">
+                      <div className="flex flex-row items-center justify-between p-2">
+                        <p className="text-base-content/60 text-sm">
+                          Search Result
                         </p>
-                      </button>
-                    ))}
+                        <button
+                          onClick={() => setShowResult(false)}
+                          className="text-error cursor-pointer"
+                        >
+                          <Icon icon="ph:x" width="24" height="24" />
+                        </button>
+                      </div>
+                      {searchState.message === "SUCCESS" && searchPending ? (
+                        <div className="flex h-full w-full items-center justify-center py-8">
+                          <div className="loading loading-spinner" />
+                        </div>
+                      ) : searchState.data.length == 0 ? (
+                        <div className="flex h-full w-full items-center justify-center py-8">
+                          <p>No Result</p>
+                        </div>
+                      ) : (
+                        searchState.data.map((instructor) => (
+                          <button
+                            key={instructor.id}
+                            type="button"
+                            className="bg-base-200 flex w-full cursor-pointer flex-row items-center justify-between p-4"
+                            onClick={() => addInstructorHandler(instructor)}
+                          >
+                            <div className="flex flex-row items-center gap-4">
+                              <Image
+                                src={instructor.profile}
+                                alt="profile"
+                                width={40}
+                                height={40}
+                                className="rounded-full"
+                              />
+                              <p className="text-sm font-bold">
+                                {instructor.name}
+                              </p>
+                            </div>
+                            <p className="text-base-content/70 ml-8 text-xs">
+                              {instructor.skill}
+                            </p>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
