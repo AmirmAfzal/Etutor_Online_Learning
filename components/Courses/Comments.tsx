@@ -1,3 +1,4 @@
+import React from "react";
 import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
@@ -10,7 +11,6 @@ import {
 } from "@/components/ui/select";
 import { connectDB } from "@/lib/db/db";
 import feedbackModel from "@/lib/db/models/feedbackModel";
-import React from "react";
 
 const Comments = async () => {
   await connectDB();

@@ -44,7 +44,7 @@ const WishlistBuyNow = (props: Props) => {
       const timer = setTimeout(() => setShowToast(false), 2000);
       return () => clearTimeout(timer);
     }
-  }, [state.message]);
+  }, [state.message, router]);
 
   const renderToast = (show: boolean, state: ToastState) => (
     <div className="toast toast-top toast-end">

@@ -1,9 +1,9 @@
 import Image from "next/image";
+import React from "react";
 
 import Icon from "@/components/ui/Icon";
 import WishlistBuyNow from "@/components/Student/student-wishlist/WishlistBuyNow";
 import AddToCartModal from "@/components/Courses/AddToCartModal";
-import React from "react";
 import WishlistRemoveBtn from "@/components/Student/student-wishlist/WishlistRemoveBtn";
 
 interface Props {
