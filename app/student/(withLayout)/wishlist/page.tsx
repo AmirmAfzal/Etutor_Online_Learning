@@ -3,12 +3,12 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { Types } from "mongoose";
 
 import WishlistCourseRow from "@/components/Student/student-wishlist/WishlistCoursesRow";
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
-import { Types } from "mongoose";
 
 interface CourseData {
   _id: Types.ObjectId;
@@ -58,13 +58,12 @@ const WishlistPage = async () => {
   const wishlistCourses: CourseData[] = student.wishlist || [];
 
   const courses = wishlistCourses.map((course) => {
-
     // FIXME : fix this
     const instructors = (course.authors || []).map((instructor) => {
-      const fullName = `${instructor.firstname || ""} ${instructor.lastname || ""}`.trim();
+      const fullName =
+        `${instructor.firstname || ""} ${instructor.lastname || ""}`.trim();
       return fullName || "Unknown Instructor";
     });
-
 
     return {
       id: course._id.toString(),
@@ -98,10 +97,7 @@ const WishlistPage = async () => {
           <div className="text-base-content/50 max-w-sm text-sm leading-relaxed sm:text-base">
             Start adding courses to your wishlist to save them for later
           </div>
-          <Link
-            href="/courses"
-            className="btn btn-primary btn-sm sm:btn-md"
-          >
+          <Link href="/courses" className="btn btn-primary btn-sm sm:btn-md">
             Browse Courses
           </Link>
         </div>

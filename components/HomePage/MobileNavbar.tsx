@@ -91,9 +91,15 @@ const MobileNavbar = () => {
           </SheetContent>
         </Sheet>
         <div className="flex flex-row items-center gap-2">
-          <Icon icon="ph:bell" width="20" height="20" />
-          <Icon icon="ph:heart" width="20" height="20" />
-          <Icon icon="ph:shopping-cart-simple" width="20" height="20" />
+          <Link href="/student/messages">
+            <Icon icon="ph:bell" width="20" height="20" />
+          </Link>
+          <Link href="/student/wishlist">
+            <Icon icon="ph:heart" width="20" height="20" />
+          </Link>
+          <Link href="/shopping-cart">
+            <Icon icon="ph:shopping-cart-simple" width="20" height="20" />
+          </Link>
         </div>
       </nav>
       <div className="flex flex-row items-center justify-between p-2">

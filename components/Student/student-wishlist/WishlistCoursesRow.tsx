@@ -1,9 +1,9 @@
+import React from "react";
 import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
 import WishlistBuyNow from "@/components/Student/student-wishlist/WishlistBuyNow";
 import AddToCartModal from "@/components/Courses/AddToCartModal";
-import React from "react";
 import WishlistRemoveBtn from "@/components/Student/student-wishlist/WishlistRemoveBtn";
 
 interface Props {
@@ -75,9 +75,7 @@ const WishlistCourseRow = ({
 
         <div className="col-span-2 ml-8 text-center text-nowrap">
           <div className="flex items-center justify-center gap-2">
-            <WishlistBuyNow  id={id}/>
-
-
+            <WishlistBuyNow id={id} />
 
             <AddToCartModal
               courseTitle={title}
@@ -87,9 +85,7 @@ const WishlistCourseRow = ({
               className="h-10 w-28 text-sm"
             />
 
-
             <WishlistRemoveBtn id={id} />
-
           </div>
         </div>
       </div>

@@ -7,7 +7,6 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { wishlistBuyNowAction } from "@/lib/actions/student/wishlistBuyNowAction";
 import Icon from "@/components/ui/Icon";
 
-
 interface Props {
   id: string;
 }
@@ -20,7 +19,6 @@ interface ToastState {
 const WishlistBuyNow = (props: Props) => {
   const { id } = props;
   const router = useRouter();
-
 
   const [showToast, setShowToast] = useState(false);
 
@@ -35,16 +33,14 @@ const WishlistBuyNow = (props: Props) => {
     if (state.message) {
       setShowToast(true);
 
-
       if (state.message === "SUCCESS") {
         router.push("/student/checkout");
       }
 
-
       const timer = setTimeout(() => setShowToast(false), 2000);
       return () => clearTimeout(timer);
     }
-  }, [state.message]);
+  }, [state.message, router]);
 
   const renderToast = (show: boolean, state: ToastState) => (
     <div className="toast toast-top toast-end">
