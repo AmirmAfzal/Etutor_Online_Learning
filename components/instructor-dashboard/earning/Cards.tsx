@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+import copy from "copy-to-clipboard";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -48,7 +49,7 @@ const Cards = ({ cards }: Props) => {
   const [isEnd, setIsEnd] = useState(false);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const [copiedCardId, setCopiedCardId] = useState(false);
+  const [copiedCardId, setCopiedCardId] = useState<string | null>(null);
 
   const swiperRef = useRef<SwiperClass | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -80,10 +81,11 @@ const Cards = ({ cards }: Props) => {
     }
   }, [swiperInstance]);
 
-  const handleCopyCardNumber = async (cardNumber: string) => {
-    await navigator.clipboard.writeText(cardNumber);
-    setCopiedCardId(true);
-    setTimeout(() => setCopiedCardId(false), 1000);
+  const handleCopyCardNumber = async (cardNumber: string, cardId: string) => {
+    // await navigator.clipboard.writeText(cardNumber);
+    copy(cardNumber);
+    setCopiedCardId(cardId);
+    setTimeout(() => setCopiedCardId(null), 1000);
   };
 
   return (
@@ -158,9 +160,9 @@ const Cards = ({ cards }: Props) => {
                     </p>
                     <button
                       className="relative"
-                      onClick={() => handleCopyCardNumber(card.cardNumber)}
+                      onClick={() => handleCopyCardNumber(card.cardNumber, card._id)}
                     >
-                      {copiedCardId && (
+                      {copiedCardId === card._id && (
                         <p className="text-success bg-base-300 absolute bottom-8 -left-6 rounded-lg px-2 py-1 text-sm">
                           {copiedCardId && "copied!"}
                         </p>
