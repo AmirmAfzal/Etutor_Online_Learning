@@ -1,14 +1,14 @@
+import React from "react";
 import Image from "next/image";
 import { Types } from "mongoose";
 
 import CommentReplyForm from "@/components/Courses/watchCourses/CommentReplyForm";
 import { connectDB } from "@/lib/db/db";
 import commentModel from "@/lib/db/models/commentModel";
+import Icon from "@/components/ui/Icon";
 
 import TruncatedText from "../TruncatedText";
 import CreateComment from "./CreateComment";
-import Icon from "@/components/ui/Icon";
-import React from "react";
 
 // Type definitions for the data from the database
 interface UserFromDB {

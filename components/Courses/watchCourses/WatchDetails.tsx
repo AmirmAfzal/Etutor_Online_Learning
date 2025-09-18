@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { Types } from "mongoose";
-import Icon from "@/components/ui/Icon";
 import React from "react";
+
+import Icon from "@/components/ui/Icon";
 
 interface Lecture {
   _id: Types.ObjectId;
