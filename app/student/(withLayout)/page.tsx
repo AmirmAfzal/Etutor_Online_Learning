@@ -7,15 +7,14 @@ import CourseCard from "@/components/Student/CourseCardStudent";
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
+import sectionModel from "@/lib/db/models/sectionModel";
+import courseProgressModel from "@/lib/db/models/courseProgressModel";
 
 interface CourseData {
-  id?: string;
   _id: string;
   title: string;
   subtitle: string;
-  image: string;
   thumbnail?: string;
-  progress?: string;
 }
 
 interface Student {
@@ -42,18 +41,50 @@ const StudentDashboard = async () => {
     return redirect("/auth/signin");
   }
 
-  const courses = (student.courses || []).map((course) => ({
-    id: course._id,
-    title: course.title,
-    subtitle: course.subtitle,
-    image: course.thumbnail || "/images/course-images-01.png",
-    progress: course.progress || "0%",
-  }));
+  const enrolledCourses = student.courses || [];
+
+  const coursesWithProgress = await Promise.all(
+    enrolledCourses.map(async (course) => {
+      const sections = await sectionModel.find({
+        course: course._id,
+      });
+
+      const lectureIds = sections.flatMap((section) => section.lectures);
+
+      const totalLectures = lectureIds.length;
+
+      console.log(`Processing course: ${course.title} (ID: ${course._id})`);
+      console.log(`Total lectures for this course: ${totalLectures}`);
+
+      const completedLectures = await courseProgressModel.countDocuments({
+        lecture: { $in: lectureIds },
+        user: session.user.id,
+        completed: true,
+      });
+
+      console.log(`Completed lectures for this course: ${completedLectures}`);
+
+      const progress =
+        totalLectures > 0
+          ? Math.round((completedLectures / totalLectures) * 100)
+          : 0;
+
+      console.log(`Calculated progress: ${progress}%`);
+
+      return {
+        id: course._id,
+        title: course.title,
+        subtitle: course.subtitle,
+        image: course.thumbnail || "/images/course-images-01.png",
+        progress: `${progress}%`,
+      };
+    })
+  );
 
   const stats = [
     {
       label: "Enrolled Courses",
-      value: "957",
+      value: enrolledCourses.length.toString(),
       icon: "ph:play-circle-fill",
       color: "primary",
     },
@@ -123,7 +154,7 @@ const StudentDashboard = async () => {
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {courses.map((course, i) => (
+        {coursesWithProgress.map((course, i) => (
           <CourseCard key={i} {...course} />
         ))}
       </div>
