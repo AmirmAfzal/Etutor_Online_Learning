@@ -18,8 +18,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   id,
 }) => {
   return (
-    <Link
-      href={`/courses/${id}/watch`}
+    <div
       className="bg-base-100 border-base-content/10 flex h-full min-w-[220px] flex-col border-1 transition-all duration-300 hover:translate-y-[-2px] sm:min-w-0"
     >
       {image ? (
@@ -61,7 +60,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
           </Link>
         )}
       </div>
-    </Link>
+    </div>
   );
 };
 

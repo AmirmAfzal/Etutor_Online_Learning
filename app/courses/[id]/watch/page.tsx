@@ -12,6 +12,7 @@ import { authOptions } from "@/lib/auth/authOptions";
 import studentModel from "@/lib/db/models/studentModel";
 import { redirect } from "next/navigation";
 import courseProgressModel from "@/lib/db/models/courseProgressModel";
+import courseModel from "@/lib/db/models/courseModel";
 
 interface CurriculumItem {
   title: string;
@@ -193,6 +194,8 @@ const WatchCourse = async (props: Props) => {
         Math.round((completedLectures.length / lectures.length) * 100)
       )
     : 0;
+
+
 
   const curriculum: CurriculumItem[] = foundSections.map((section) => {
     const totalSectionDuration = section.lectures.reduce(

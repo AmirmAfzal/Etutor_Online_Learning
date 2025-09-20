@@ -1,9 +1,9 @@
-import mongoose, { ObjectId, Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface CourseProgressInterface extends Document {
-  user: ObjectId;
-  course: ObjectId;
-  lecture: ObjectId;
+  user: Types.ObjectId;
+  course: Types.ObjectId;
+  lecture: Types.ObjectId;
   completed: boolean;
   completedAt?: Date;
 }
