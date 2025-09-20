@@ -7,8 +7,12 @@ import WatchDetails from "@/components/Courses/watchCourses/WatchDetails";
 import WatchTabs from "@/components/Courses/watchCourses/WatchTabs";
 import { connectDB } from "@/lib/db/db";
 import sectionModel from "@/lib/db/models/sectionModel";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import studentModel from "@/lib/db/models/studentModel";
+import { redirect } from "next/navigation";
 
-interface CurriculumItem  {
+interface CurriculumItem {
   title: string;
   lectures: number;
   duration: string;
@@ -20,12 +24,32 @@ interface CurriculumItem  {
   }[];
 }
 
-
 interface Props {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ lectureId: string; section: string }>;
 }
 
+interface LectureType {
+  _id: Types.ObjectId;
+  title: string;
+  description: string;
+  video: string;
+  duration: number;
+  files: string | string[];
+  notes: string;
+  caption: string;
+}
+interface CourseType {
+  title: string;
+  duration: number;
+  sections: Types.ObjectId[];
+}
+interface SectionType {
+  _id: Types.ObjectId;
+  title: string;
+  lectures: LectureType[];
+  course: CourseType;
+}
 
 const convertMinutesToHoursAndMinutes = (totalMinutes: number) => {
   if (typeof totalMinutes !== "number" || totalMinutes < 0) {
@@ -51,39 +75,22 @@ const convertMinutesToHoursAndMinutes = (totalMinutes: number) => {
   return output;
 };
 
-interface LectureType {
-  _id: Types.ObjectId;
-  title: string;
-  description: string;
-  video: string;
-  duration: number;
-  files: string | string[];
-  notes: string;
-  caption: string;
-}
-interface CourseType {
-  title: string;
-  duration: number;
-  sections: Types.ObjectId[];
-}
-interface SectionType {
-  _id: Types.ObjectId;
-  title: string;
-  lectures: LectureType[];
-  course: CourseType;
-}
-
-const WatchCourse = async (
-  props: Props
-) => {
+const WatchCourse = async (props: Props) => {
   await connectDB();
+
+  const session = await getServerSession(authOptions);
+
   const { id } = await props.params;
   const searchParams = await props.searchParams;
-
 
   if (!Types.ObjectId.isValid(id)) {
     return <div>Invalid Course ID</div>;
   }
+
+  const studentCourses = await studentModel
+    .findOne({ user: session?.user?.id, courses: new Types.ObjectId(id) })
+    .populate("courses")
+    .lean();
 
   const foundSections = await sectionModel
     .find({ course: id })
@@ -92,7 +99,7 @@ const WatchCourse = async (
     .lean<SectionType[]>();
 
   if (!foundSections || foundSections.length === 0) {
-    return <div>Course not found or has no sections.</div>;
+    return <div className="flex items-center justify-center h-screen text-lg font-md">Course not found or has no sections.</div>;
   }
 
   const course: CourseType = foundSections[0]?.course as CourseType;
@@ -129,7 +136,7 @@ const WatchCourse = async (
   }
 
   if (!currentLecture) {
-    return <div>Lecture not found. Please select a valid lecture.</div>;
+    return <div className="flex items-center justify-center text-lg font-md">Lecture not found. Please select a valid lecture.</div>;
   }
 
   if (!currentSection) {
@@ -139,9 +146,6 @@ const WatchCourse = async (
       )
     );
   }
-
-
-
 
   const curriculum: CurriculumItem[] = foundSections.map((section) => {
     const totalSectionDuration = section.lectures.reduce(
@@ -170,8 +174,15 @@ const WatchCourse = async (
     students: 122,
   };
 
+  if (!studentCourses) {
+    redirect(`/courses/${id}`);
+  }
 
-    return (
+  if (!session) {
+    redirect(`/auth/signin`);
+  }
+
+  return (
     <section className="container mx-auto w-full px-4 py-6">
       <WatchHeader
         params={{ id }}
@@ -179,12 +190,11 @@ const WatchCourse = async (
         title={course?.title ?? "The course does not have a title"}
         sectionsCount={foundSections.length}
         lecturesCount={lectures.length}
-
         totalDuration={convertMinutesToHoursAndMinutes(course?.duration ?? 0)}
       />
 
       <div className="mt-6 flex w-full flex-col items-start gap-4 lg:flex-row lg:gap-6">
-        <WatchPlayer  videoSrc={currentLecture.video}/>
+        <WatchPlayer videoSrc={currentLecture.video} />
         <div className="w-full lg:w-5/12">
           <WatchCurriculum
             curriculum={curriculum}
@@ -209,7 +219,7 @@ const WatchCourse = async (
       />
 
       <div className="lg:w-2/3">
-        <WatchTabs currentLecture={currentLecture}   />
+        <WatchTabs currentLecture={currentLecture} />
       </div>
     </section>
   );
