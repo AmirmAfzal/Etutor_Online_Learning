@@ -11,6 +11,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import studentModel from "@/lib/db/models/studentModel";
 import { redirect } from "next/navigation";
+import courseProgressModel from "@/lib/db/models/courseProgressModel";
 
 interface CurriculumItem {
   title: string;
@@ -99,7 +100,11 @@ const WatchCourse = async (props: Props) => {
     .lean<SectionType[]>();
 
   if (!foundSections || foundSections.length === 0) {
-    return <div className="flex items-center justify-center h-screen text-lg font-md">Course not found or has no sections.</div>;
+    return (
+      <div className="font-md flex h-screen items-center justify-center text-lg">
+        Course not found or has no sections.
+      </div>
+    );
   }
 
   const course: CourseType = foundSections[0]?.course as CourseType;
@@ -136,7 +141,11 @@ const WatchCourse = async (props: Props) => {
   }
 
   if (!currentLecture) {
-    return <div className="flex items-center justify-center text-lg font-md">Lecture not found. Please select a valid lecture.</div>;
+    return (
+      <div className="font-md flex items-center justify-center text-lg">
+        Lecture not found. Please select a valid lecture.
+      </div>
+    );
   }
 
   if (!currentSection) {
@@ -146,6 +155,35 @@ const WatchCourse = async (props: Props) => {
       )
     );
   }
+
+  await courseProgressModel.findOneAndUpdate(
+    {
+      user: session?.user.id,
+      course: id,
+      lecture: lectureId,
+    },
+    {
+      user: session?.user.id,
+      course: id,
+      lecture: lectureId,
+      completed: true,
+      completedAt: new Date(),
+    },
+    { upsert: true, new: true }
+  );
+
+  const completedLectures = await courseProgressModel
+    .find({
+      user: session?.user?.id,
+      course: id,
+      completed: true,
+    })
+    .lean();
+
+  const completionPercentage = lectures.length
+    ? Math.round((completedLectures.length / lectures.length) * 100)
+    : 0;
+
 
   const curriculum: CurriculumItem[] = foundSections.map((section) => {
     const totalSectionDuration = section.lectures.reduce(
@@ -197,6 +235,7 @@ const WatchCourse = async (props: Props) => {
         <WatchPlayer videoSrc={currentLecture.video} />
         <div className="w-full lg:w-5/12">
           <WatchCurriculum
+            completionPercentage={completionPercentage}
             curriculum={curriculum}
             courseId={id}
             currentLectureId={currentLecture._id.toString()}

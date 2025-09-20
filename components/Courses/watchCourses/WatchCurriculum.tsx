@@ -35,7 +35,7 @@ type WatchCurriculumProps = {
 
 const WatchCurriculum = ({
   curriculum,
-  completionPercentage = 15,
+  completionPercentage,
   courseId,
   currentLectureId,
 }: WatchCurriculumProps) => {
@@ -81,25 +81,25 @@ const WatchCurriculum = ({
               className="border-base-content/10 bg-base-100 border transition-all duration-150 hover:shadow-sm"
             >
               <AccordionTrigger className="px-4 py-3 hover:no-underline sm:px-6 sm:py-4">
-                  <Icon icon="ph:caret-down" className="text-xl text-primary" />
+                <Icon icon="ph:caret-down" className="text-primary text-xl" />
                 <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between lg:flex-col lg:items-start xl:flex-row xl:justify-between">
                   <span className="text-base-content/80 text-base font-medium">
                     {section.title}
                   </span>
 
                   <div className="text-base-content/60 flex flex-nowrap items-center gap-2 text-xs sm:gap-4 sm:text-sm md:text-xs">
-                    <span className="flex items-center text-nowrap gap-1">
+                    <span className="flex items-center gap-1 text-nowrap">
                       <Icon
                         icon="ph:play-circle-duotone"
                         className="text-secondary"
                       />
                       {section.lectures} Lectures
                     </span>
-                    <span className="flex items-center text-nowrap gap-1">
+                    <span className="flex items-center gap-1 text-nowrap">
                       <Icon icon="ph:clock" className="text-primary" />
                       {section.duration}
                     </span>
-                    <span className="flex items-center text-nowrap gap-1">
+                    <span className="flex items-center gap-1 text-nowrap">
                       <Icon icon="ph:checks" className="text-success" />
                       {`${sectionCompletion}% (${completedLectures}/${section.lectures})`}
                     </span>
@@ -127,7 +127,9 @@ const WatchCurriculum = ({
                                 checked={isActive}
                                 readOnly
                               />
-                              <span className="text-sm md:text-base">{item.title}</span>
+                              <span className="text-sm md:text-base">
+                                {item.title}
+                              </span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Icon
@@ -138,7 +140,9 @@ const WatchCurriculum = ({
                                 }
                                 className="text-base-content/70 text-base"
                               />
-                              <span className="text-xs md:text-sm">{item.info}</span>
+                              <span className="text-xs md:text-sm">
+                                {item.info}
+                              </span>
                             </div>
                           </button>
                         </li>
