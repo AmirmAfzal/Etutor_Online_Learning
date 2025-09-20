@@ -1,7 +1,8 @@
 "use client";
 
-import Icon from "@/components/ui/Icon";
 import { useActionState, useRef } from "react";
+
+import Icon from "@/components/ui/Icon";
 import { wishlistRemoveAction } from "@/lib/actions/student/wishlistRemoveAction";
 import Toast from "@/components/Toast";
 
