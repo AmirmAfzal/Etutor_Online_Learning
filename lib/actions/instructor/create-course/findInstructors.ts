@@ -1,5 +1,6 @@
 "use server";
 
+import instructorModel from "@/lib/db/models/instructorModel";
 import { ActionData } from "@/lib/formTypes";
 
 export type Instructor = {
@@ -8,33 +9,6 @@ export type Instructor = {
   name: string;
   skill: string;
 };
-
-const instructors: Instructor[] = [
-  {
-    id: 1,
-    profile: "/images/instructors/instructor-1.png",
-    name: "John Doe",
-    skill: "UI/UX Designer",
-  },
-  {
-    id: 2,
-    profile: "/images/instructors/instructor-2.png",
-    name: "John Doer",
-    skill: "Front-End Developer",
-  },
-  {
-    id: 3,
-    profile: "/images/instructors/instructor-3.png",
-    name: "John Does",
-    skill: "UI/UX Designer",
-  },
-  {
-    id: 4,
-    profile: "/images/instructors/instructor-4.png",
-    name: "Jane Smith",
-    skill: "Back-End Developer",
-  },
-];
 
 export async function findInstructor(
   prevState: ActionData,
@@ -53,6 +27,14 @@ export async function findInstructor(
       data: [],
     };
   }
+
+  const foundInstructors = await instructorModel.find().lean();
+  const instructors: Instructor[] = foundInstructors.map((instructor, index) => ({
+    id: index + 1,
+    profile: instructor.avatar,
+    name: `${instructor.firstname} ${instructor.lastname}`,
+    skill: instructor.title,
+  }));
 
   const matched = instructors.filter((instructor) =>
     instructor.name.toLowerCase().includes(search)

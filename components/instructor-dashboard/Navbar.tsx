@@ -99,7 +99,7 @@ const Navbar = ({ children }: Props) => {
             {openSearchResult && (
               <div className="bg-base-100 absolute z-10 w-full p-2">
                 <div className="flex flex-row items-center justify-between">
-                  <div className="">Search Result</div>
+                  <p className="text-base-content/60 text-sm">Search Result</p>
                   <button
                     onClick={() => setOpenSearchResult(false)}
                     className="text-error cursor-pointer"

@@ -20,6 +20,7 @@ import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
 import MyCoursesPagination from "@/components/instructor-dashboard/my-courses/MyCoursesPagination";
+import categoryModel from "@/lib/db/models/categoryModel";
 
 interface Props {
   searchParams: Promise<{
@@ -36,6 +37,8 @@ const MyCoursesPage = async (props: Props) => {
     .find()
     .populate("category", "name")
     .sort({ createdAt: -1 });
+
+  const categories = await categoryModel.find().lean();
 
   const searchParams = await props.searchParams;
   const search = searchParams.search?.toLowerCase() || "";
@@ -113,14 +116,17 @@ const MyCoursesPage = async (props: Props) => {
                 <SelectValue placeholder="All Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Category</SelectItem>
-                <SelectItem value="design">Design</SelectItem>
-                <SelectItem value="development">Development</SelectItem>
-                <SelectItem value="business">Business</SelectItem>
-                <SelectItem value="marketing">Marketing</SelectItem>
-                <SelectItem value="it">IT & Software</SelectItem>
-                <SelectItem value="music">Music</SelectItem>
-                <SelectItem value="health">Health & Fitness</SelectItem>
+                <SelectItem value="all">All</SelectItem>
+
+                {categories.map((category) => (
+                  <SelectItem
+                    key={category._id as string}
+                    value={category.name}
+                  >
+                    {category.name.charAt(0).toUpperCase() +
+                      category.name.slice(1)}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
