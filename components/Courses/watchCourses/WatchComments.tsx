@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Types } from "mongoose";
+import React from "react";
 
 import CommentReplyForm from "@/components/Courses/watchCourses/CommentReplyForm";
 import { connectDB } from "@/lib/db/db";
