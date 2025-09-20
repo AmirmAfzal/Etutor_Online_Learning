@@ -18,7 +18,7 @@ export const actionBuyNow = async (
 
     if (!session) {
       return {
-        message: "ERROR1",
+        message: "ERROR",
         errors: ["User not authenticated."],
       };
     }
@@ -27,7 +27,7 @@ export const actionBuyNow = async (
 
     if (!courseId || typeof courseId !== "string") {
       return {
-        message: "ERROR2",
+        message: "ERROR",
         errors: ["Invalid CourseId."],
       };
     }
@@ -40,20 +40,21 @@ export const actionBuyNow = async (
 
     if (!updatedStudent) {
       return {
-        message: "ERROR3",
+        message: "ERROR",
         errors: ["Student not found"],
       };
     }
 
     return {
       message: "SUCCESS",
+      messageDetail: "Course added to your courses.",
       errors: [],
       data: JSON.parse(JSON.stringify(updatedStudent.courses)),
     };
   } catch (error) {
     console.error("Error updating student wishlist:", error);
     return {
-      message: "ERROR4",
+      message: "ERROR",
       errors: ["An unexpected error occurred."],
     };
   }

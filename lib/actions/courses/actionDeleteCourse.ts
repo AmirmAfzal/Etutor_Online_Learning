@@ -45,6 +45,7 @@ export const actionDeleteCourse = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Course removed from cart.",
       errors: [],
       data: JSON.parse(JSON.stringify(updatedStudent.coursesCart)),
     };

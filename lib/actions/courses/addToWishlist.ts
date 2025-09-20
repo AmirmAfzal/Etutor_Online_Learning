@@ -47,6 +47,7 @@ export const actionAddToWishlist = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Course added to wishlist.",
       errors: [],
       data: JSON.parse(JSON.stringify(updatedStudent.wishlist)),
     };

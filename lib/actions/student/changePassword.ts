@@ -67,6 +67,7 @@ export const changeStudentPassword = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Password changed successfully.",
       errors: [],
     };
   } catch (error) {

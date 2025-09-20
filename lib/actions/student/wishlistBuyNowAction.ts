@@ -47,6 +47,7 @@ export const wishlistBuyNowAction = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Course added to your cart.",
       errors: [],
       data: JSON.parse(JSON.stringify(updatedStudent.coursesCart)),
     };

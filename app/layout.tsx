@@ -9,6 +9,7 @@ import Footer from "@/components/ui/Footer";
 import AuthProvider from "./auth/AuthProvider";
 
 import "./globals.css";
+import { ToastContainer } from "react-toastify";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fa">
       <body className={`bg-base-100 ${poppins.variable}`}>
+      <ToastContainer />
         <AuthProvider>
           {!url && <Navbar />}
           <main className="no-scrollbar min-h-screen">{children}</main>

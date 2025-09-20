@@ -45,6 +45,7 @@ export const wishlistRemoveAction = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Course removed from wishlist.",
       errors: [],
       data: JSON.parse(JSON.stringify(updatedStudent.wishlist)),
     };

@@ -42,6 +42,7 @@ export const actionAddToCart = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Course added to cart.",
       errors: [],
       data: JSON.parse(JSON.stringify(updatedStudent.coursesCart)),
     };

@@ -36,7 +36,7 @@ const AddToCartModal = ({
 }: Props) => {
   const [courseCartState, courseCartAction, courseCartPending] = useActionState(
     actionAddToCart,
-    { message: "", errors: [] as string[] }
+    { message: "", messageDetail: "", errors: [] as string[] }
   );
 
   if (courseCartState.errors?.includes("User not authenticated")) {
@@ -93,6 +93,8 @@ const AddToCartModal = ({
           <Toast
             message={courseCartState.message}
             isError={!!courseCartState.errors?.length}
+            errors={courseCartState.errors}
+            messageDetail={courseCartState.messageDetail}
           />
         )}
       </Dialog>

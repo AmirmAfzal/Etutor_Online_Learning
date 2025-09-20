@@ -43,7 +43,7 @@ const SidebarCart = ({
   );
   const [buyNowState, buyNowAction, buyNowPending] = useActionState(
     actionBuyNow,
-    { message: "", errors: [] as string[] }
+    { message: "", messageDetail: "" , errors: [] as string[] }
   );
 
   if (
@@ -144,6 +144,8 @@ const SidebarCart = ({
             <Toast
               message={wishlistState.message}
               isError={!!wishlistState.errors?.length}
+              errors={wishlistState.errors}
+              messageDetail={wishlistState.messageDetail}
             />
           )}
 
@@ -170,7 +172,9 @@ const SidebarCart = ({
           {buyNowState.message && (
             <Toast
               message={buyNowState.message}
+              errors={buyNowState.errors}
               isError={!!buyNowState.errors?.length}
+              messageDetail={buyNowState.messageDetail}
             />
           )}
 

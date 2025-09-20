@@ -78,6 +78,7 @@ export const addToCheckout = async (
 
     return {
       message: "SUCCESS",
+      messageDetail: "Courses added to checkout.",
       errors: [],
       data: JSON.parse(JSON.stringify(updatedStudent.checkout)),
     };

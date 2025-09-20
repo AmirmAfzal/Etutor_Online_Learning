@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState, useEffect } from "react";
+import { useActionState, useRef, useState } from "react";
 import Form from "next/form";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
@@ -17,45 +17,26 @@ import {
 } from "@/components/ui/dialog";
 import Icon from "@/components/ui/Icon";
 import { createCommentAction } from "@/lib/actions/comment/createCommentAction";
-
-interface ToastState {
-  message: string;
-  errors?: string[];
-}
-
+import Toast from "@/components/Toast";
 
 const CreateComment = () => {
   const { data: session } = useSession();
-  const [showToast, setShowToast] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
   const [state, action, pending] = useActionState(createCommentAction, {
     message: "",
+    messageDetail: "",
     errors: [],
   });
 
   const searchParams = useSearchParams();
   const currentLectureId = searchParams.get("lectureId");
 
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
 
   const lectureId = currentLectureId || "";
   const userRole = session?.user?.role ?? "";
   const userName = session?.user?.name ?? "";
-
-  useEffect(() => {
-    if (!pending && state.message) {
-      setIsDialogOpen(false);
-    }
-  }, [pending, state.message]);
-
-  useEffect(() => {
-    if (state.message) {
-      setShowToast(true);
-      const timer = setTimeout(() => setShowToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [state.message]);
 
   const handlePostComment = () => {
     if (formRef.current) {
@@ -63,28 +44,8 @@ const CreateComment = () => {
     }
   };
 
-  // FIXME : replace with render toast component
-  const renderToast = (show: boolean, state: ToastState) => (
-    <div className="toast toast-top toast-end">
-      {show && state.message && (
-        <div
-          role="alert"
-          className={`alert ${
-            state.errors?.length ? "alert-error" : "alert-success"
-          }`}
-        >
-          <Icon
-            icon={state.errors?.length ? "ph:x-circle" : "ph:check-circle"}
-            className="text-lg"
-          />
-          <span className="text-xs">{state.message}</span>
-        </div>
-      )}
-    </div>
-  );
-
   return (
-    <Form ref={formRef} action={action} className="mt-6 flex gap-2">
+    <Form action={action} ref={formRef} className="mt-6 flex gap-2">
       <div className="relative flex-1">
         <Icon
           icon="ph:chats-circle"
@@ -98,11 +59,7 @@ const CreateComment = () => {
           required
         />
         <input name="refPath" type="hidden" value={userRole} />
-        <input
-          name="lectureId"
-          type="hidden"
-          value={lectureId}
-        />
+        <input name="lectureId" type="hidden" value={lectureId} />
         <input name="name" type="hidden" value={userName} />
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -135,7 +92,12 @@ const CreateComment = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {renderToast(showToast, state)}
+      <Toast
+        message={state.message}
+        messageDetail={state.messageDetail}
+        isError={!!state.errors?.length}
+        errors={state.errors}
+      />
     </Form>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import Form from "next/form";
 
 import {
@@ -15,15 +15,11 @@ import {
 } from "@/components/ui/dialog";
 import { addReplyAction } from "@/lib/actions/comment/addReplyAction";
 import Icon from "@/components/ui/Icon";
+import Toast from "@/components/Toast";
 
 interface CommentReplyFormProps {
   commentId?: string;
   parentName?: string;
-}
-
-interface ToastState {
-  message: string;
-  errors?: string[];
 }
 
 export default function CommentReplyForm({
@@ -32,32 +28,12 @@ export default function CommentReplyForm({
 }: CommentReplyFormProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [active, setActive] = useState(false);
-  const [showToast, setShowToast] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const [state, action, pending] = useActionState(addReplyAction, {
     message: "",
+    messageDetail: "",
     errors: [],
   });
-
-  useEffect(() => {
-    if (state.message && state.errors.length === 0) {
-      setActive(false);
-    }
-  }, [state]);
-
-  useEffect(() => {
-    if (!pending && state.message) {
-      setIsDialogOpen(false);
-    }
-  }, [pending, state.message]);
-
-  useEffect(() => {
-    if (state.message) {
-      setShowToast(true);
-      const timer = setTimeout(() => setShowToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [state.message]);
 
   const handlePostComment = () => {
     if (formRef.current) {
@@ -66,24 +42,6 @@ export default function CommentReplyForm({
   };
 
   // FIXME : replace with render toast component
-  const renderToast = (show: boolean, state: ToastState) => (
-    <div className="toast toast-top toast-end">
-      {show && state.message && (
-        <div
-          role="alert"
-          className={`alert ${
-            state.errors?.length ? "alert-error" : "alert-success"
-          }`}
-        >
-          <Icon
-            icon={state.errors?.length ? "ph:x-circle" : "ph:check-circle"}
-            className="text-lg"
-          />
-          <span className="text-xs">{state.message}</span>
-        </div>
-      )}
-    </div>
-  );
 
   return (
     <div className="mt-3">
@@ -162,7 +120,12 @@ export default function CommentReplyForm({
           )}
         </Form>
       )}
-      {renderToast(showToast, state)}
+      <Toast
+        message={state.message}
+        messageDetail={state.messageDetail}
+        isError={!!state.errors?.length}
+        errors={state.errors}
+      />
     </div>
   );
 }
