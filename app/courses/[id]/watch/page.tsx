@@ -12,7 +12,6 @@ import { authOptions } from "@/lib/auth/authOptions";
 import studentModel from "@/lib/db/models/studentModel";
 import { redirect } from "next/navigation";
 import courseProgressModel from "@/lib/db/models/courseProgressModel";
-import courseModel from "@/lib/db/models/courseModel";
 
 interface CurriculumItem {
   title: string;
