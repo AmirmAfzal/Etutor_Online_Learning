@@ -81,7 +81,6 @@ const WatchCurriculum = ({
               className="border-base-content/10 bg-base-100 border transition-all duration-150 hover:shadow-sm"
             >
               <AccordionTrigger className="px-4 py-3 hover:no-underline sm:px-6 sm:py-4">
-                  <Icon icon="ph:caret-down" className="text-xl text-primary" />
                 <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between lg:flex-col lg:items-start xl:flex-row xl:justify-between">
                   <span className="text-base-content/80 text-base font-medium">
                     {section.title}
