@@ -5,7 +5,6 @@ import { connectDB } from "@/lib/db/db";
 import lectureModel from "@/lib/db/models/lectureModel";
 import sectionModel from "@/lib/db/models/sectionModel";
 
-
 interface Lecture {
   _id: Types.ObjectId;
   index: number;
@@ -19,19 +18,40 @@ interface Section {
 }
 
 const NextLectureBtn = async ({
-                                searchParams,
-                              }: {
-  searchParams: { lectureId: string; section: string };
+  searchParams,
+}: {
+  searchParams: { lectureId?: string; section?: string };
 }) => {
   await connectDB();
 
-  const foundCurrentLecture = await lectureModel
-    .findById(searchParams.lectureId)
-    .populate("section")
-    .lean<Lecture | null>();
+  let foundCurrentLecture: Lecture | null = null;
 
-  if (!foundCurrentLecture) {
-    return null;
+  if (!searchParams.lectureId || !searchParams.section) {
+    const firstSection = await sectionModel
+      .findOne()
+      .sort({ index: 1 })
+      .lean<Section | null>();
+
+    if (!firstSection) return null;
+
+    const firstLecture = await lectureModel
+      .findOne({ section: firstSection._id })
+      .sort({ index: 1 })
+      .lean<Lecture | null>();
+
+    if (!firstLecture) return null;
+
+    foundCurrentLecture = {
+      ...firstLecture,
+      section: firstSection,
+    };
+  } else {
+    foundCurrentLecture = await lectureModel
+      .findById(searchParams.lectureId)
+      .populate("section")
+      .lean<Lecture | null>();
+
+    if (!foundCurrentLecture) return null;
   }
 
   const nextLectureInSameSection = await lectureModel
@@ -62,9 +82,7 @@ const NextLectureBtn = async ({
 
   if (nextSection) {
     const firstLectureInNextSection = await lectureModel
-      .findOne({
-        section: nextSection._id,
-      })
+      .findOne({ section: nextSection._id })
       .sort({ index: 1 })
       .lean<Lecture | null>();
 

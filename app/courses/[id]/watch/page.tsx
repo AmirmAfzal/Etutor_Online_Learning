@@ -117,29 +117,33 @@ const WatchCourse = async (props: Props) => {
   let currentLecture: LectureType | undefined;
   let currentSection: SectionType | undefined;
 
-  if (sectionParam) {
-    const sectionIndex = parseInt(sectionParam, 10) - 1; // Convert to 0-based index
-    const targetSection = foundSections[sectionIndex];
+  // Set the default lecture if lectureId is not provided
+  if (!lectureId) {
+    currentSection = foundSections[0];
+    currentLecture = currentSection?.lectures[0];
+  } else {
+    // Find the lecture from search params
+    if (sectionParam) {
+      const sectionIndex = parseInt(sectionParam, 10) - 1; // Convert to 0-based index
+      const targetSection = foundSections[sectionIndex];
 
-    if (targetSection) {
-      currentSection = targetSection;
-      if (lectureId) {
+      if (targetSection) {
+        currentSection = targetSection;
         currentLecture = targetSection.lectures.find(
           (lecture) => lecture._id.toString() === lectureId
         );
       }
-      if (!currentLecture) {
-        currentLecture = targetSection.lectures[0]; // Default to first lecture of the section
-      }
+    }
+
+    // Fallback if lecture is not found in the specified section
+    if (!currentLecture) {
+      currentLecture = lectures.find(
+        (lecture) => lecture._id.toString() === lectureId
+      );
     }
   }
 
-  if (!currentLecture) {
-    currentLecture = lectureId
-      ? lectures.find((lecture) => lecture._id.toString() === lectureId)
-      : lectures[0];
-  }
-
+  // If a lecture is still not found, return an error
   if (!currentLecture) {
     return (
       <div className="font-md flex items-center justify-center text-lg">
@@ -148,6 +152,7 @@ const WatchCourse = async (props: Props) => {
     );
   }
 
+  // Find the section for the current lecture if not already set
   if (!currentSection) {
     currentSection = foundSections.find((section) =>
       section.lectures.some(
@@ -156,21 +161,23 @@ const WatchCourse = async (props: Props) => {
     );
   }
 
-  await courseProgressModel.findOneAndUpdate(
-    {
-      user: session?.user.id,
-      course: id,
-      lecture: lectureId,
-    },
-    {
-      user: session?.user.id,
-      course: id,
-      lecture: lectureId,
-      completed: true,
-      completedAt: new Date(),
-    },
-    { upsert: true, new: true }
-  );
+  if (currentLecture) {
+    await courseProgressModel.findOneAndUpdate(
+      {
+        user: session?.user.id,
+        course: id,
+        lecture: currentLecture._id,
+      },
+      {
+        user: session?.user.id,
+        course: id,
+        lecture: currentLecture._id,
+        completed: true,
+        completedAt: new Date(),
+      },
+      { upsert: true, new: true, runValidators: true }
+    );
+  }
 
   const completedLectures = await courseProgressModel
     .find({
@@ -181,9 +188,11 @@ const WatchCourse = async (props: Props) => {
     .lean();
 
   const completionPercentage = lectures.length
-    ? Math.round((completedLectures.length / lectures.length) * 100)
+    ? Math.min(
+        100,
+        Math.round((completedLectures.length / lectures.length) * 100)
+      )
     : 0;
-
 
   const curriculum: CurriculumItem[] = foundSections.map((section) => {
     const totalSectionDuration = section.lectures.reduce(
@@ -195,7 +204,7 @@ const WatchCourse = async (props: Props) => {
       lectures: section.lectures.length,
       duration: convertMinutesToHoursAndMinutes(totalSectionDuration),
       content: section.lectures.map((lecture) => ({
-        _id: lecture._id.toString(), // Added _id
+        _id: lecture._id.toString(),
         title: lecture.title,
         info: convertMinutesToHoursAndMinutes(lecture.duration),
         type: "video",
@@ -208,8 +217,7 @@ const WatchCourse = async (props: Props) => {
       ? foundSections.findIndex((s) => s._id === currentSection._id) + 1
       : 0,
     sectionTitle: currentLecture.title,
-    // FIXME : student number
-    students: 122,
+    students: 122, // FIXME: student number
   };
 
   if (!studentCourses) {
@@ -249,7 +257,6 @@ const WatchCourse = async (props: Props) => {
         </div>
       </div>
 
-      {/* FIXME: replace section number with lecture number */}
       <WatchDetails
         sectionNumber={courseData.section}
         sectionTitle={courseData.sectionTitle}
