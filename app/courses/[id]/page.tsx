@@ -96,8 +96,7 @@ const buildInstructorData = (
   return authors.map((instructor) => ({
     name: `${instructor.firstname || "Unknown"} ${instructor.lastname || ""}`.trim(),
     bio: instructor.bio || "Instructor",
-    avatar:
-      instructor.avatar || "",
+    avatar: instructor.avatar || "",
     rating: instructor.rating || 5,
     students: instructor.students || 0,
     courses: 12,
@@ -143,8 +142,7 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
       course.authors?.map((author: InstructorDocument) => {
         author.name =
           `${author?.firstname || ""} ${author?.lastname || ""}`.trim();
-        author.avatar =
-          author?.avatar || "";
+        author.avatar = author?.avatar || "";
         return {
           name: author.name,
           avatar: author.avatar,
@@ -156,9 +154,6 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
     courseRequirements: course.requirements || [],
   };
 };
-
-
-
 
 const fakeSidebarCart = {
   includes: [
@@ -174,8 +169,10 @@ const fakeSidebarCart = {
 
 const SingleCoursePage = async ({
   params,
+  searchParams
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ sort: string }>;
 }) => {
   await connectDB();
   const { id } = await params;
@@ -205,6 +202,9 @@ const SingleCoursePage = async ({
     id
   );
 
+  // const sorted = searchParams.sorted || "trending";
+
+
   return (
     <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-3">
@@ -230,7 +230,7 @@ const SingleCoursePage = async ({
               courseId={singleCourse.id || id}
               instructors={instructorData}
               rating={singleCourse.rating}
-
+              searchParams={searchParams}
             />
           </div>
         </div>
