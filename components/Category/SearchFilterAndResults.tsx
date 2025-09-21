@@ -2,13 +2,7 @@ import Form from "next/form";
 import Link from "next/link";
 
 import Icon from "@/components/ui/Icon";
-import {
-  Select,
-  SelectItem,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import CourseFilter from "@/components/Courses/CourseFilter";
 
 import FilterMobile from "../Courses/courseFilter/FilterMobile";
