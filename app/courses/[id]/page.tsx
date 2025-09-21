@@ -172,7 +172,7 @@ const fakeSidebarCart = {
 
 const SingleCoursePage = async ({
   params,
-  searchParams
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ sort: string }>;
@@ -207,11 +207,11 @@ const SingleCoursePage = async ({
 
   // const sorted = searchParams.sorted || "trending";
 
-
   return (
-    <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
+    <section className="relative mx-auto px-4 py-8 md:px-8 lg:px-16">
+      <div className="bg-base-200 absolute top-0 left-0 z-0 h-[30vh] w-screen"></div>
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-3">
-        <div className="md:col-span-2">
+        <div className="z-10 md:col-span-2">
           <SingleCourseHeader
             title={singleCourse.title}
             description={singleCourse.subtitle}
