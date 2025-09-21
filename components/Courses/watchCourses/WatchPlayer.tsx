@@ -8,7 +8,6 @@ interface WatchPlayerProps {
 }
 
 const WatchPlayer = ({
-  // posterSrc = "/images/courses/videoPlayer.png",
   videoSrc,
 }: WatchPlayerProps) => {
   return (
