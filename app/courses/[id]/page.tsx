@@ -172,8 +172,10 @@ const fakeSidebarCart = {
 
 const SingleCoursePage = async ({
   params,
+  searchParams
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ sort: string }>;
 }) => {
   await connectDB();
   const { id } = await params;
@@ -203,6 +205,9 @@ const SingleCoursePage = async ({
     id
   );
 
+  // const sorted = searchParams.sorted || "trending";
+
+
   return (
     <section className="container mx-auto px-4 py-8 md:px-8 lg:px-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-3">
@@ -228,6 +233,7 @@ const SingleCoursePage = async ({
               courseId={singleCourse.id || id}
               instructors={instructorData}
               rating={singleCourse.rating}
+              searchParams={searchParams}
             />
           </div>
         </div>

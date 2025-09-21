@@ -2,16 +2,11 @@ import Form from "next/form";
 import Link from "next/link";
 
 import Icon from "@/components/ui/Icon";
-import {
-  Select,
-  SelectItem,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import CourseFilter from "@/components/Courses/CourseFilter";
 
 import FilterMobile from "../Courses/courseFilter/FilterMobile";
+import CoursesSelect from "@/components/Courses/CoursesSelect";
 
 interface Props {
   searchParams: Promise<{
@@ -87,26 +82,7 @@ const SearchFilterAndResults = async (props: Props) => {
           </Form>
         </div>
 
-        <div className="flex flex-row gap-2">
-          <div className="flex flex-row items-center gap-2">
-            <label
-              htmlFor="sort"
-              className="text-base-content/60 text-xs sm:text-sm"
-            >
-              Sorted by:
-            </label>
-          </div>
-          <Select name="sort">
-            <SelectTrigger className="w-32 sm:w-40">
-              <SelectValue placeholder="Sorted by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Latest">Latest</SelectItem>
-              <SelectItem value="Oldest">Oldest</SelectItem>
-              <SelectItem value="Most Viewed">Most Viewed</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <CoursesSelect className="sm:!justify-start" />
       </div>
 
       <div className="border-base-300 flex flex-col items-start justify-between gap-3 border-b pb-4 text-sm sm:flex-row sm:items-center sm:text-base">

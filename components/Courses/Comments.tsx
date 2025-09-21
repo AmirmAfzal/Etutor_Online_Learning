@@ -2,20 +2,49 @@ import React from "react";
 import Image from "next/image";
 
 import Icon from "@/components/ui/Icon";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { connectDB } from "@/lib/db/db";
 import feedbackModel from "@/lib/db/models/feedbackModel";
+import StarSelect from "@/components/Courses/StarSelect";
 
-const Comments = async () => {
+interface Props {
+  searchParams: Promise<{
+    sort: string;
+  }>;
+}
+
+const Comments = async (props: Props) => {
   await connectDB();
 
-  const feedbacks = await feedbackModel.find().lean();
+  const searchParams = await props.searchParams;
+  const sortRating = searchParams?.sort || "5";
+
+  let filterQuery = {};
+
+  switch (sortRating) {
+    case "5":
+      filterQuery = { star: { $lte: 5 } };
+      break;
+    case "4":
+      filterQuery = { star: { $lte: 4 } };
+      break;
+    case "3":
+      filterQuery = { star: { $lte: 3 } };
+      break;
+    case "2":
+      filterQuery = { star: { $lte: 2 } };
+      break;
+    case "1":
+      filterQuery = { star: { $lte: 1 } };
+      break;
+    default:
+      filterQuery = {};
+  }
+
+  const feedbacks = await feedbackModel
+    .find(filterQuery)
+    .lean()
+    .sort({ star: -1 });
 
   const getFeedbacks = feedbacks.map((feedback) => ({
     id: feedback._id?.toString() || "",
@@ -28,23 +57,7 @@ const Comments = async () => {
 
   return (
     <div className="mt-12 w-full space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <span className="text-base-content/80 text-xl font-semibold sm:text-2xl">
-          Students Feedback
-        </span>
-        <Select>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="5 Star Rating" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="5">5 Star Rating</SelectItem>
-            <SelectItem value="4">4 Star Rating</SelectItem>
-            <SelectItem value="3">3 Star Rating</SelectItem>
-            <SelectItem value="2">2 Star Rating</SelectItem>
-            <SelectItem value="1">1 Star Rating</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <StarSelect />
 
       {getFeedbacks.map((comment) => (
         <div

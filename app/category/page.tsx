@@ -25,8 +25,11 @@ interface Props {
 }
 
 export default async function CategoryPage(props: Props) {
-  await connectDB();
   const searchParams = await props.searchParams;
+
+
+
+  await connectDB();
 
   const foundAllCourse = await courseModel.find().limit(5).lean();
   const foundInstructor = await instructorModel.find().lean();

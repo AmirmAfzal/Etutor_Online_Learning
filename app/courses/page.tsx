@@ -34,6 +34,7 @@ interface Props {
     filter?: string;
     priceFree?: string;
     pricePaid?: string;
+    sorted?: string;
   }>;
 }
 
@@ -46,6 +47,7 @@ const CoursesPage = async (props: Props) => {
   const maxPrice = searchParams.maxPrice
     ? parseFloat(searchParams.maxPrice)
     : undefined;
+  const sorted = searchParams.sorted || "trending";
 
   const isFilterPanelVisible = searchParams.filter === "true";
 
@@ -97,8 +99,24 @@ const CoursesPage = async (props: Props) => {
     mongoQuery.rating = { $gte: Number(rating) };
   }
 
+  let sortQuery = {};
+  switch (sorted) {
+    case "trending":
+      sortQuery = { views: -1 };
+      break;
+    case "newest":
+      sortQuery = { createdAt: -1 };
+      break;
+    case "oldest":
+      sortQuery = { createdAt: 1 };
+      break;
+    default:
+      sortQuery = { views: -1 };
+  }
+
   const foundCourses = await courseModel
     .find(mongoQuery)
+    .sort(sortQuery)
     .populate("category")
     .populate("subCategory")
     .lean();

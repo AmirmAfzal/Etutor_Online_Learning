@@ -5,8 +5,7 @@ import Comments from "@/components/Courses/Comments";
 import CourseRating from "@/components/Courses/CourseRating";
 import CourseOverview from "@/components/Courses/CourseOverview";
 
-
-interface InstructorForCourse  {
+interface InstructorForCourse {
   avatar: string;
   name: string;
   bio: string;
@@ -14,10 +13,9 @@ interface InstructorForCourse  {
   students: number;
   courses: number;
   description: string;
-};
+}
 
-
-interface CourseTabsProps  {
+interface CourseTabsProps {
   overview: {
     courseDescription?: string;
     whatYouWillLearn?: string[];
@@ -27,15 +25,14 @@ interface CourseTabsProps  {
   courseId: string;
   instructors: InstructorForCourse[];
   rating: number;
-
-};
+  searchParams: Promise<{ sort: string }>;
+}
 
 const CourseTabs = ({
   overview,
-  courseId ,
+  courseId,
   instructors,
-
-
+  searchParams
 }: CourseTabsProps) => {
   const tabTriggerClass =
     "!text-base-content/70 data-[state=active]:!bg-base-100 py-3 !border-primary !rounded-none border-0  px-4 sm:px-6 text-lg font-semibold data-[state=active]:!border-b-2 data-[state=active]:!shadow-none";
@@ -65,8 +62,8 @@ const CourseTabs = ({
         />
         <Curriculum courseId={courseId} />
         <CourseInstructors instructors={instructors} />
-        <CourseRating courseId={courseId}/>
-        <Comments  />
+        <CourseRating courseId={courseId} />
+        <Comments searchParams={searchParams}/>
       </TabsContent>
       <TabsContent value="curriculum">
         <Curriculum courseId={courseId} />
@@ -76,7 +73,7 @@ const CourseTabs = ({
       </TabsContent>
       <TabsContent value="review">
         <CourseRating courseId={courseId} />
-        <Comments />
+        <Comments searchParams={searchParams} />
       </TabsContent>
     </Tabs>
   );

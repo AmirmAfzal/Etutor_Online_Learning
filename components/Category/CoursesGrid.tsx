@@ -18,6 +18,8 @@ interface Props {
     query?: string;
     minPrice?: string;
     maxPrice?: string;
+    sorted?: string;
+
     level?: string;
     rating?: string;
     duration?: string;
@@ -90,11 +92,27 @@ const CoursesGrid = async (props: Props) => {
     mongoQuery.rating = { $gte: Number(rating) };
   }
 
+  let sortQuery = {};
+  switch (searchParams.sorted) {
+    case "trending":
+      sortQuery = { views: -1 };
+      break;
+    case "newest":
+      sortQuery = { createdAt: -1 };
+      break;
+    case "oldest":
+      sortQuery = { createdAt: 1 };
+      break;
+    default:
+      sortQuery = { views: -1 };
+  }
+
   const foundCourses = await courseModel
     .find(mongoQuery)
     .populate("category")
     .populate("subCategory")
-    .lean();
+    .lean()
+    .sort(sortQuery);
 
   const courses: Course[] = foundCourses.map((course) => ({
     id: course._id?.toString(),
