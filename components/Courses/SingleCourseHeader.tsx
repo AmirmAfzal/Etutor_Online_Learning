@@ -28,7 +28,7 @@ const SingleCourseHeader = ({
   reviews,
 }: SingleCourseHeaderProps) => {
   return (
-    <div className="bg-base-200 w-full">
+    <div className="w-full">
       <div className="flex max-w-7xl items-center justify-center">
         <div className="mt-12 mb-6 w-full px-2">
           <span className="text-base-content/70 mb-4 flex items-center gap-2 text-sm">
