@@ -4,7 +4,7 @@ import SingleCourseHeader from "@/components/Courses/SingleCourseHeader";
 import CourseTabs from "@/components/Courses/CourseTabs";
 import RelatedCoursesSection from "@/components/Courses/RelatedCoursesSection";
 import SidebarCart from "@/components/Courses/SidebarCart";
-import CourseTrailer from "@/components/Courses/CourseHero";
+import CourseTrailer from "@/components/Courses/CourseTrailer";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 
@@ -32,6 +32,7 @@ interface Course {
   price: number;
   rating: number;
   students: number;
+  trailer: string;
   reviews?: number;
   breadcrumb?: string[];
   originalPrice: number;
@@ -78,6 +79,7 @@ interface FoundCourseDocument {
   subtitleLanguage?: string;
   category?: { name?: string } | null;
   price?: number;
+  trailer: string;
   duration?: string;
   studentsCount?: number;
   authors?: InstructorDocument[];
@@ -96,8 +98,7 @@ const buildInstructorData = (
   return authors.map((instructor) => ({
     name: `${instructor.firstname || "Unknown"} ${instructor.lastname || ""}`.trim(),
     bio: instructor.bio || "Instructor",
-    avatar:
-      instructor.avatar || "",
+    avatar: instructor.avatar || "",
     rating: instructor.rating || 5,
     students: instructor.students || 0,
     courses: 12,
@@ -118,6 +119,7 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
     category: course.category?.name || "Unknown",
     price: course.price || 0,
     students: course.studentsCount || 0,
+    trailer: course.trailer,
     createdBy: authors
       .map((author: InstructorDocument) =>
         `${author?.firstname || ""} ${author?.lastname || ""}`.trim()
@@ -143,8 +145,7 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
       course.authors?.map((author: InstructorDocument) => {
         author.name =
           `${author?.firstname || ""} ${author?.lastname || ""}`.trim();
-        author.avatar =
-          author?.avatar || "";
+        author.avatar = author?.avatar || "";
         return {
           name: author.name,
           avatar: author.avatar,
@@ -156,9 +157,6 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
     courseRequirements: course.requirements || [],
   };
 };
-
-
-
 
 const fakeSidebarCart = {
   includes: [
@@ -219,7 +217,7 @@ const SingleCoursePage = async ({
             reviews={singleCourse.reviews}
           />
           <div className="bg-base-100 flex w-full flex-col items-center justify-center">
-            <CourseTrailer />
+            <CourseTrailer videoSrc={singleCourse?.trailer} />
             <CourseTabs
               overview={{
                 courseDescription: singleCourse.courseDescription,
@@ -230,7 +228,6 @@ const SingleCoursePage = async ({
               courseId={singleCourse.id || id}
               instructors={instructorData}
               rating={singleCourse.rating}
-
             />
           </div>
         </div>
