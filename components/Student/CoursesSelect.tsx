@@ -1,8 +1,5 @@
 "use client";
 
-import { useRef } from "react";
-import Form from "next/form";
-
 import {
   Select,
   SelectItem,
@@ -10,35 +7,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-async function formAction(formData: FormData) {
-  const data = Object.fromEntries(formData);
-  console.log(data);
-}
+import { useRouter, useSearchParams } from "next/navigation";
 
 const CoursesSelect = () => {
-  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
 
-  const handleValueChange = () => {
-    if (formRef.current) formRef.current.requestSubmit();
+  const handleSortValueChange = (value: string) => {
+    params.set("sorted", value);
+    router.push(`?${params.toString()}`);
   };
 
+  const handleStatusValueChange = (value: string) => {
+    params.set("status", value);
+    router.push(`?${params.toString()}`);
+  };
+
+  const currentSort = searchParams.get("sorted") || "Latest";
+  const currentStatus = searchParams.get("status") || "AllCourses";
+
   return (
-    <Form action={formAction} ref={formRef} className="flex flex-row gap-2">
+    <div className="flex flex-row gap-2">
       <div className="flex flex-col gap-2">
         <div className="flex flex-row items-center gap-2">
           <label htmlFor="sort" className="text-base-content/60 text-xs">
             Sorted by:
           </label>
         </div>
-        <Select name="sort" onValueChange={handleValueChange}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Sorted by" />
+        <Select
+          name="sort"
+          onValueChange={handleSortValueChange}
+          value={currentSort}
+        >
+          <SelectTrigger className="text-base-content/60 w-40">
+            <SelectValue placeholder="select" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Latest">Latest</SelectItem>
             <SelectItem value="Oldest">Oldest</SelectItem>
-            <SelectItem value="Most Viewed">Most Viewed</SelectItem>
+            <SelectItem value="MostViewed">Most Viewed</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -48,12 +56,16 @@ const CoursesSelect = () => {
             Status:
           </label>
         </div>
-        <Select name="status" onValueChange={handleValueChange}>
-          <SelectTrigger className="w-40">
+        <Select
+          name="status"
+          onValueChange={handleStatusValueChange}
+          value={currentStatus}
+        >
+          <SelectTrigger className="text-base-content/60 w-40">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="All Courses">All Courses</SelectItem>
+            <SelectItem value="AllCourses">All Courses</SelectItem>
             <SelectItem value="Ongoing">Ongoing</SelectItem>
             <SelectItem value="Completed">Completed</SelectItem>
           </SelectContent>
@@ -65,7 +77,7 @@ const CoursesSelect = () => {
             Teacher:
           </label>
         </div>
-        <Select name="teacher" onValueChange={handleValueChange}>
+        <Select name="teacher">
           <SelectTrigger className="w-40">
             <SelectValue placeholder="Teacher" />
           </SelectTrigger>
@@ -77,7 +89,7 @@ const CoursesSelect = () => {
         </Select>
       </div>
       <button type="submit" className="hidden" />
-    </Form>
+    </div>
   );
 };
 
