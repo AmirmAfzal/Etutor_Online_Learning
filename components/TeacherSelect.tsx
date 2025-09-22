@@ -1,4 +1,6 @@
-import Form from "next/form";
+"use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
 
 import {
   Select,
@@ -7,9 +9,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 const TeacherSelect = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
+
+  const handleSortValueChange = (value: string) => {
+    params.set("sorted", value);
+    router.push(`?${params.toString()}`);
+  };
+  const currentSort = searchParams.get("sorted") || "Latest";
+
   return (
-    <Form className="flex flex-1 flex-row gap-2" action="">
+    <div className="flex flex-1 flex-row gap-2">
       <div className="flex flex-2 flex-col gap-2">
         <div className="flex flex-row items-center gap-2">
           <label htmlFor="sort" className="text-base-content/60 text-xs">
@@ -34,19 +47,23 @@ const TeacherSelect = () => {
             Sort by:
           </label>
         </div>
-        <Select name="sort">
-          <SelectTrigger className="w-40">
+        <Select
+          name="sort"
+          onValueChange={handleSortValueChange}
+          value={currentSort}
+        >
+          <SelectTrigger className="text-base-content/60 w-40">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Latest">Latest</SelectItem>
             <SelectItem value="Oldest">Oldest</SelectItem>
-            <SelectItem value="Most Students">Most Students</SelectItem>
+            <SelectItem value="MostStudents">Most Students</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <button type="submit" className="hidden" />
-    </Form>
+    </div>
   );
 };
 
