@@ -1,7 +1,5 @@
 "use client";
 
-
-
 import {
   Select,
   SelectItem,
@@ -14,14 +12,20 @@ import { useRouter, useSearchParams } from "next/navigation";
 const CoursesSelect = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
 
-  const handleValueChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+  const handleSortValueChange = (value: string) => {
     params.set("sorted", value);
     router.push(`?${params.toString()}`);
   };
 
+  const handleStatusValueChange = (value: string) => {
+    params.set("status", value);
+    router.push(`?${params.toString()}`);
+  };
+
   const currentSort = searchParams.get("sorted") || "Latest";
+  const currentStatus = searchParams.get("status") || "AllCourses";
 
   return (
     <div className="flex flex-row gap-2">
@@ -31,8 +35,12 @@ const CoursesSelect = () => {
             Sorted by:
           </label>
         </div>
-        <Select name="sort" onValueChange={handleValueChange} value={currentSort}>
-          <SelectTrigger className="w-40 text-base-content/60 ">
+        <Select
+          name="sort"
+          onValueChange={handleSortValueChange}
+          value={currentSort}
+        >
+          <SelectTrigger className="text-base-content/60 w-40">
             <SelectValue placeholder="select" />
           </SelectTrigger>
           <SelectContent>
@@ -48,12 +56,16 @@ const CoursesSelect = () => {
             Status:
           </label>
         </div>
-        <Select name="status" onValueChange={handleValueChange}>
-          <SelectTrigger className="w-40">
+        <Select
+          name="status"
+          onValueChange={handleStatusValueChange}
+          value={currentStatus}
+        >
+          <SelectTrigger className="text-base-content/60 w-40">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="All Courses">All Courses</SelectItem>
+            <SelectItem value="AllCourses">All Courses</SelectItem>
             <SelectItem value="Ongoing">Ongoing</SelectItem>
             <SelectItem value="Completed">Completed</SelectItem>
           </SelectContent>
@@ -65,7 +77,7 @@ const CoursesSelect = () => {
             Teacher:
           </label>
         </div>
-        <Select name="teacher" onValueChange={handleValueChange}>
+        <Select name="teacher">
           <SelectTrigger className="w-40">
             <SelectValue placeholder="Teacher" />
           </SelectTrigger>
