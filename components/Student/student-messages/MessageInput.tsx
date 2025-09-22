@@ -1,11 +1,34 @@
-import Icon from "@/components/ui/Icon";
+"use client";
 
-function MessageInput() {
+import Icon from "@/components/ui/Icon";
+import { useActionState, useRef, useEffect } from "react";
+import { createMessageAction } from "@/lib/actions/student/messages/createMessage";
+
+const MessageInput = () => {
+  const [state, action] = useActionState(createMessageAction, {
+    message: "",
+    errors: [],
+  });
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (state.message === "SUCCESS") {
+      formRef.current?.reset();
+    }
+  }, [state.message]);
+
   return (
-    <div className="border-base-300 bg-base-100 flex items-center gap-2 border-t p-4">
+    <form
+      ref={formRef}
+      action={action}
+      className="border-base-300 bg-base-100 flex items-center gap-2 border-t p-4"
+    >
       <div className="relative flex-1">
         <input
           type="text"
+          name="message"
+          id="message-input"
           placeholder="Type your message"
           className="input w-full pr-12"
         />
@@ -14,12 +37,20 @@ function MessageInput() {
           className="text-primary/50 text-md absolute top-1/2 right-4 -translate-y-1/2 md:text-lg"
         />
       </div>
-      <button className="btn btn-primary btn-sm gap-2 py-6">
+      <button className="btn btn-primary btn-sm gap-2 py-6" type="submit">
         Send
         <Icon icon="ph:paper-plane-right-fill" className="md:xt-xl text-lg" />
       </button>
-    </div>
+
+      {state.errors.length > 0 && (
+        <div className="text-error text-sm mt-2 absolute bottom-2 left-4">
+          {state.errors.map((error, index) => (
+            <p key={index}>{error}</p>
+          ))}
+        </div>
+      )}
+    </form>
   );
-}
+};
 
 export default MessageInput;

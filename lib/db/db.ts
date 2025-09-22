@@ -13,6 +13,7 @@ import instructorModel from "./models/instructorModel";
 import videoModel from "./models/videoModel";
 import tagModel from "./models/tagModel";
 import categoryModel from "./models/categoryModel";
+import messageModel from "@/lib/db/models/messageModel";
 
 const DATABASE_URL = process.env.DATABASE_URL as string;
 
@@ -33,6 +34,7 @@ export async function connectDB(): Promise<void> {
     const replyCount = await replyModel.countDocuments();
     const commentCount = await commentModel.countDocuments();
     const feedbackCount = await feedbackModel.countDocuments();
+    const messageCount = await messageModel.countDocuments();
 
     console.log("✅ Connected to MongoDB");
     console.log("📊 Database Statistics:");
@@ -48,6 +50,7 @@ export async function connectDB(): Promise<void> {
     console.log(`- Comments: ${commentCount}`);
     console.log(`- Replies: ${replyCount}`);
     console.log(`- FeedBacks: ${feedbackCount}`);
+    console.log(`- message: ${messageCount}`);
   } catch (error) {
     console.error("❌ MongoDB Connection Error:", error);
   }
