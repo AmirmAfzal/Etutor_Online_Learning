@@ -1,27 +1,104 @@
-import React from "react";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+
+import { connectDB } from "@/lib/db/db";
+import instructorModel from "@/lib/db/models/instructorModel";
+import { authOptions } from "@/lib/auth/authOptions";
+import courseModel from "@/lib/db/models/courseModel";
+import studentModel from "@/lib/db/models/studentModel";
+import purchaseHistoryModel from "@/lib/db/models/purchaseHistoryModel";
 
 import Icon from "../ui/Icon";
 
-const InstructorOverview = () => {
+export async function calculateInstructorIncome(instructorId: string) {
+  const result = await purchaseHistoryModel.aggregate([
+    {
+      $lookup: {
+        from: "courses",
+        localField: "courses",
+        foreignField: "_id",
+        as: "courseDetails",
+      },
+    },
+    { $unwind: "$courseDetails" },
+
+    {
+      $match: {
+        "courseDetails.authors": instructorId,
+      },
+    },
+
+    {
+      $group: {
+        _id: instructorId,
+        totalIncome: { $sum: "$courseDetails.price" },
+        totalCoursesSold: { $sum: 1 },
+      },
+    },
+  ]);
+
+  if (result.length === 0)
+    return {
+      totalIncome: 0,
+      totalCoursesSold: 0,
+      instructorShare: 0,
+      siteShare: 0,
+    };
+  const totalIncome = result[0].totalIncome;
+
+  return {
+    ...result[0],
+    instructorShare: totalIncome * 0.8,
+    siteShare: totalIncome * 0.2,
+  };
+}
+
+const InstructorOverview = async () => {
+  await connectDB();
+  const session = await getServerSession(authOptions);
+  if (!session?.user.id) {
+    redirect("/auth/signin");
+  }
+  const instructor = await instructorModel.findOne({ user: session.user.id });
+  const student = await studentModel.findOne({ user: session.user.id });
+  const courses = await courseModel.find().lean();
+
+  const courseInstructorCount = () => {
+    let count = 0;
+    courses.map((course) => {
+      course.instructors.map((courseInstructor: { name: string }) => {
+        if (
+          courseInstructor.name.toLowerCase() ===
+          `${instructor?.firstname} ${instructor?.lastname}`.toLowerCase()
+        ) {
+          count++;
+        }
+      });
+    });
+    return count;
+  };
+
+  const income = await calculateInstructorIncome(instructor._id);
+
   const overviewData = [
     {
       icon: "ph:play-circle-duotone",
       name: "Enrolled Courses",
-      value: "957",
+      value: String(student?.courses?.length || 0),
       bg: "bg-[#FFEEE8]",
       color: "text-[#FF6636]",
     },
     {
       icon: "ph:check-square-offset-duotone",
       name: "Active Courses",
-      value: "19",
+      value: String(instructor?.courses?.length || 0),
       bg: "bg-[#EBEBFF]",
       color: "text-[#564FFD]",
     },
     {
       icon: "ph:users-duotone",
       name: "Course Instructors",
-      value: "241",
+      value: String(courseInstructorCount()),
       bg: "bg-[#FFF2E5]",
       color: "text-[#FD8E1F]",
     },
@@ -35,28 +112,28 @@ const InstructorOverview = () => {
     {
       icon: "ph:user-circle-duotone",
       name: "Students",
-      value: "1,674,767",
+      value: String(instructor?.students || 0),
       bg: "bg-[#FFF0F0]",
       color: "text-[#E34444]",
     },
     {
       icon: "ph:notepad-duotone",
       name: "Online Courses",
-      value: "3",
+      value: String(instructor?.courses?.length || 0),
       bg: "bg-[#E1F7E3]",
       color: "text-[#23BD33]",
     },
     {
       icon: "ph:credit-card-duotone",
       name: "USD Total Earning",
-      value: "$7,461,767",
+      value: `$${income.instructorShare.toLocaleString("en-US")}`,
       bg: "bg-[#F5F7FA]",
       color: "text-[#1D2026]",
     },
     {
       icon: "ph:stack-duotone",
       name: "Course Sold",
-      value: "56,489",
+      value: income.totalCoursesSold,
       bg: "bg-[#EBEBFF]",
       color: "text-[#564FFD]",
     },

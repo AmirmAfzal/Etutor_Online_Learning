@@ -29,7 +29,7 @@ const CourseDetailPage = async (props: Props) => {
     <section className="bg-base-200 w-full">
       <div className="container mx-auto p-6">
         <div className="py-4">
-          course / My Courses /{" "}
+          Course / My Courses /{" "}
           {course.category.name.charAt(0).toUpperCase() +
             course.category.name.slice(1)}{" "}
           / {course.title}
@@ -157,7 +157,7 @@ const CourseDetailPage = async (props: Props) => {
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-          <CourseInformation />
+          <CourseInformation courseId={id} />
           <CourseRating />
         </div>
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-12">

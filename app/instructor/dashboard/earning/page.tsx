@@ -1,3 +1,7 @@
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import mongoose from "mongoose";
+
 import Icon from "@/components/ui/Icon";
 import Cards from "@/components/instructor-dashboard/earning/Cards";
 import Statistic from "@/components/instructor-dashboard/earning/Statistic";
@@ -5,47 +9,111 @@ import WithdrawHistory from "@/components/instructor-dashboard/earning/WithdrawH
 import WithdrawMoney from "@/components/instructor-dashboard/earning/WithdrawMoney";
 import { connectDB } from "@/lib/db/db";
 import paymentCardModel from "@/lib/db/models/paymentCardModel";
+import { calculateInstructorIncome } from "@/components/instructor-dashboard/InstructorOverview";
+import { authOptions } from "@/lib/auth/authOptions";
+import instructorModel from "@/lib/db/models/instructorModel";
+import purchaseHistoryModel from "@/lib/db/models/purchaseHistoryModel";
 
-const earningInformation = [
-  {
-    id: 1,
-    icon: "ph:stack-duotone",
-    name: "Total Revenue",
-    value: "$13,804.00",
-    bg: "bg-[#FFEEE8]",
-    color: "text-[#FF6636]",
-  },
-  {
-    id: 2,
-    icon: "ph:receipt-duotone",
-    name: "Current Balance",
-    value: "$16,593.00",
-    bg: "bg-[#EBEBFF]",
-    color: "text-[#564FFD]",
-  },
-  {
-    id: 3,
-    icon: "ph:credit-card-duotone",
-    name: "Total Withdrawals",
-    value: "$13,184.00",
-    bg: "bg-[#FFF0F0]",
-    color: "text-[#E34444]",
-  },
-  {
-    id: 4,
-    icon: "ph:crown-simple-duotone",
-    name: "Today Revenue",
-    value: "$162.00",
-    bg: "bg-[#E1F7E3]",
-    color: "text-[#23BD33]",
-  },
-];
+export async function calculateTodayIncome(instructorId: string) {
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const endOfToday = new Date();
+  endOfToday.setHours(23, 59, 59, 999);
+
+  const result = await purchaseHistoryModel.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: startOfToday, $lte: endOfToday },
+      },
+    },
+    {
+      $lookup: {
+        from: "courses",
+        localField: "courses",
+        foreignField: "_id",
+        as: "courseDetails",
+      },
+    },
+    { $unwind: "$courseDetails" },
+    {
+      $match: {
+        "courseDetails.authors": new mongoose.Types.ObjectId(instructorId),
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalIncome: { $sum: "$courseDetails.price" },
+        totalCoursesSold: { $sum: 1 },
+      },
+    },
+  ]);
+
+  if (!result.length)
+    return {
+      totalIncome: 0,
+      totalCoursesSold: 0,
+      instructorShare: 0,
+      siteShare: 0,
+    };
+
+  const totalIncome = result[0].totalIncome;
+  return {
+    totalIncome,
+    totalCoursesSold: result[0].totalCoursesSold,
+    instructorShare: totalIncome * 0.8,
+    siteShare: totalIncome * 0.2,
+  };
+}
 
 const EarningPage = async () => {
   await connectDB();
+  const session = await getServerSession(authOptions);
+  if (!session?.user.id) {
+    redirect("/auth/signin");
+  }
+  const instructor = await instructorModel.findOne({ user: session.user.id });
   const paymentCards = await paymentCardModel.find().lean();
   const plainCards = JSON.parse(JSON.stringify(paymentCards));
 
+  const income = await calculateInstructorIncome(instructor._id);
+  const todayIncome = await calculateTodayIncome(instructor._id);
+
+  const earningInformation = [
+    {
+      id: 1,
+      icon: "ph:stack-duotone",
+      name: "Total Revenue",
+      value: `$${income.instructorShare.toLocaleString("en-US")}.00`,
+      bg: "bg-[#FFEEE8]",
+      color: "text-[#FF6636]",
+    },
+    {
+      id: 2,
+      icon: "ph:receipt-duotone",
+      name: "Current Balance",
+      value: "$16,593.00",
+      bg: "bg-[#EBEBFF]",
+      color: "text-[#564FFD]",
+    },
+    {
+      id: 3,
+      icon: "ph:credit-card-duotone",
+      name: "Total Withdrawals",
+      value: "$13,184.00",
+      bg: "bg-[#FFF0F0]",
+      color: "text-[#E34444]",
+    },
+    {
+      id: 4,
+      icon: "ph:crown-simple-duotone",
+      name: "Today Revenue",
+      value: `$${todayIncome.instructorShare.toLocaleString("en-US")}.00`,
+      bg: "bg-[#E1F7E3]",
+      color: "text-[#23BD33]",
+    },
+  ];
   return (
     <section className="bg-base-200 w-full">
       <div className="container mx-auto p-6">
