@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import Form from "next/form";
+
 
 import {
   Select,
@@ -10,35 +9,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-async function formAction(formData: FormData) {
-  const data = Object.fromEntries(formData);
-  console.log(data);
-}
+import { useRouter, useSearchParams } from "next/navigation";
 
 const CoursesSelect = () => {
-  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleValueChange = () => {
-    if (formRef.current) formRef.current.requestSubmit();
+  const handleValueChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sorted", value);
+    router.push(`?${params.toString()}`);
   };
 
+  const currentSort = searchParams.get("sorted") || "Latest";
+
   return (
-    <Form action={formAction} ref={formRef} className="flex flex-row gap-2">
+    <div className="flex flex-row gap-2">
       <div className="flex flex-col gap-2">
         <div className="flex flex-row items-center gap-2">
           <label htmlFor="sort" className="text-base-content/60 text-xs">
             Sorted by:
           </label>
         </div>
-        <Select name="sort" onValueChange={handleValueChange}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Sorted by" />
+        <Select name="sort" onValueChange={handleValueChange} value={currentSort}>
+          <SelectTrigger className="w-40 text-base-content/60 ">
+            <SelectValue placeholder="select" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Latest">Latest</SelectItem>
             <SelectItem value="Oldest">Oldest</SelectItem>
-            <SelectItem value="Most Viewed">Most Viewed</SelectItem>
+            <SelectItem value="MostViewed">Most Viewed</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -77,7 +77,7 @@ const CoursesSelect = () => {
         </Select>
       </div>
       <button type="submit" className="hidden" />
-    </Form>
+    </div>
   );
 };
 

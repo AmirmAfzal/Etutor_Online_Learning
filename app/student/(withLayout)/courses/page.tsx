@@ -18,6 +18,8 @@ interface CourseData {
   progress?: string;
   status?: string;
   author: string[];
+  views: number;
+  createdAt?: Date;
 }
 
 interface Student {
@@ -27,13 +29,13 @@ interface Student {
 }
 
 interface Props {
-  searchParams: Promise<{ query?: string }>;
+  searchParams: Promise<{ query?: string; sorted?: string }>;
 }
 
-const StudentCoursesPage = async ({ searchParams }: Props) => {
+const StudentCoursesPage = async (props: Props) => {
   await connectDB();
-  const resolvedSearchParams = await searchParams;
-  const query = resolvedSearchParams.query?.toLowerCase();
+  const searchParams = await props.searchParams;
+  const query = searchParams.query?.toLowerCase();
 
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -60,6 +62,28 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
   }
 
   const courses: CourseData[] = student.courses || [];
+
+  switch (searchParams.sorted) {
+    case "MostViewed":
+      courses.sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
+      break;
+    case "Latest":
+      courses.sort(
+        (a, b) =>
+          new Date(b.createdAt ?? 0).getTime() -
+          new Date(a.createdAt ?? 0).getTime()
+      );
+      break;
+    case "oldest":
+      courses.sort(
+        (a, b) =>
+          new Date(a.createdAt ?? 0).getTime() -
+          new Date(b.createdAt ?? 0).getTime()
+      );
+      break;
+    default:
+      courses.sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
+  }
 
   const mappedCourses = courses.map((course) => ({
     id: course._id,
