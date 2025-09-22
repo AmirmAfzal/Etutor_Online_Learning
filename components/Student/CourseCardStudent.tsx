@@ -18,9 +18,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   id,
 }) => {
   return (
-    <div
-      className="bg-base-100 border-base-content/10 flex h-full min-w-[220px] flex-col border-1 transition-all duration-300 hover:translate-y-[-2px] sm:min-w-0"
-    >
+    <div className="bg-base-100 border-base-content/10 flex h-full min-w-[220px] flex-col border-1 transition-all duration-300 hover:translate-y-[-2px] sm:min-w-0">
       {image ? (
         <Image
           src={image}
@@ -45,9 +43,12 @@ const CourseCard: React.FC<CourseCardProps> = ({
       <div className="border-base-content/20 mt-auto border-t-1 p-2 sm:p-3 md:p-4">
         {progress ? (
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <button className="btn btn-soft btn-primary btn-xs w-full sm:w-auto">
+            <Link
+              href={`/courses/${id}/watch`}
+              className="btn btn-soft btn-primary btn-xs w-full sm:w-auto"
+            >
               Watch Lecture
-            </button>
+            </Link>
             <span
               className={`text-success text-[10px] font-semibold sm:text-xs`}
             >
@@ -55,7 +56,10 @@ const CourseCard: React.FC<CourseCardProps> = ({
             </span>
           </div>
         ) : (
-          <Link href={`/courses/${id}/watch`} className="btn btn-soft btn-primary btn-xs w-full">
+          <Link
+            href={`/courses/${id}/watch`}
+            className="btn btn-soft btn-primary btn-xs w-full"
+          >
             Watch Lecture
           </Link>
         )}
