@@ -41,6 +41,8 @@ export const createMessageAction = async (
 
     const messageRaw = formData.get("message")?.toString() ?? "";
     const pathname = formData.get("pathname")?.toString() ?? "";
+    const receiverId = formData.get("receiverId")?.toString() ?? "";
+    const receiverRole = formData.get("receiverRole")?.toString() ?? "";
 
     if (!messageRaw.trim()) {
       return {
@@ -73,13 +75,25 @@ export const createMessageAction = async (
       }
     }
 
-    // FIXME : fix student , instructor id
+    const studentId =
+      senderRole === "STUDENT"
+        ? senderId
+        : receiverRole === "STUDENT"
+          ? new Types.ObjectId(receiverId)
+          : null;
+
+    const instructorId =
+      senderRole === "INSTRUCTOR"
+        ? senderId
+        : receiverRole === "INSTRUCTOR"
+          ? new Types.ObjectId(receiverId)
+          : null;
+
     const messageData = {
       message: sanitizedMessage,
-
       sender: senderRole,
-      student: senderRole === "STUDENT" ? senderId : new Types.ObjectId(),
-      instructor: senderRole === "INSTRUCTOR" ? senderId : new Types.ObjectId(),
+      student: studentId,
+      instructor: instructorId,
     };
 
     const createMessage = await messageModel.create(messageData);

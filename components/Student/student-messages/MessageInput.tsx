@@ -5,12 +5,12 @@ import { useActionState, useRef, useEffect } from "react";
 import { createMessageAction } from "@/lib/actions/student/messages/createMessage";
 import { usePathname } from "next/navigation";
 
-const MessageInput = () => {
+const MessageInput = ({ receiverId }: { receiverId: string }) => {
   const [state, action] = useActionState(createMessageAction, {
     message: "",
     errors: [],
   });
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -19,6 +19,10 @@ const MessageInput = () => {
       formRef.current?.reset();
     }
   }, [state.message]);
+
+  const receiverRole = pathname.includes("instructor")
+    ? "STUDENT"
+    : "INSTRUCTOR";
 
   return (
     <form
@@ -35,6 +39,9 @@ const MessageInput = () => {
           className="input w-full pr-12"
         />
         <input type="hidden" name="pathname" value={pathname} />
+        <input type="hidden" name="receiverId" value={receiverId} />
+        <input type="hidden" name="receiverRole" value={receiverRole} />
+
         <Icon
           icon="ph:pencil-simple-line"
           className="text-primary/50 text-md absolute top-1/2 right-4 -translate-y-1/2 md:text-lg"

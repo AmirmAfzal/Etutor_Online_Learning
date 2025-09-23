@@ -1,40 +1,66 @@
 "use server";
+
 import { connectDB } from "@/lib/db/db";
 import messageModel from "@/lib/db/models/messageModel";
-
-// interface Message {
-//   _id: string;
-//   sender: string;
-//   message: string;
-//   timestamp: string;
-// }
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import { Types } from "mongoose";
 
 interface Props {
-  searchParams: Promise<{ id: string }>;
+  searchParams?: Promise<{ id: string }>;
+  params?: Promise<{ id: string }>;
+  receiverId: Types.ObjectId;
 }
 
 const ChatMessages = async (props: Props) => {
-  const searchParams = await props.searchParams;
-
-  const { id } = searchParams;
-
-  console.log(id);
+  // const searchParams = await props.searchParams;
+  // const params = await props.params;
 
   await connectDB();
 
-  const foundMessages = await messageModel.find().lean();
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || !session?.user?.role) return <p>Unauthorized</p>;
+
+  const senderRole = session?.user?.role;
+  const senderId = new Types.ObjectId(session.user.id);
+
+  // const receiverIdRaw = params?.id || searchParams?.id;
+  const receiverIdRaw = props.receiverId;
+  if (!receiverIdRaw) return <p>No receiver selected</p>;
+  const receiverId = new Types.ObjectId(receiverIdRaw);
+
+  let studentId: Types.ObjectId;
+  let instructorId: Types.ObjectId;
+
+  if (senderRole === "STUDENT") {
+    studentId = senderId;
+    instructorId = receiverId;
+  } else {
+    instructorId = senderId;
+    studentId = receiverId;
+  }
+
+  console.log("s", studentId);
+  console.log("i", instructorId);
+
+
+  const messages = await messageModel
+    .find({ student: studentId, instructor: instructorId })
+    .sort({ createdAt: 1 })
+    .lean();
+
+  console.log(messages);
 
   return (
     <div className="bg-base-100 flex-1 overflow-y-auto p-4">
       <div className="flex h-full flex-col justify-end space-y-4">
-        {foundMessages.map((message) => (
+        {messages.map((message) => (
           <div
-            key={message?._id}
+            key={message?._id?.toString()}
             className={`flex flex-col ${
               message.sender === "STUDENT" ? "items-end" : "items-start"
             }`}
           >
-            {/*FIXME : add instructor profile*/}
             <p className="mb-1 text-xs opacity-70">
               {new Date(message.createdAt).toLocaleTimeString([], {
                 hour: "2-digit",
@@ -42,12 +68,10 @@ const ChatMessages = async (props: Props) => {
               })}
             </p>
             <div
-              className={`max-w-xs rounded-none p-2.5 ${
+              className={`max-w-xs rounded-md p-2.5 ${
                 message.sender === "STUDENT"
                   ? "bg-primary text-primary-content"
-                  : message.sender === "INSTRUCTOR"
-                    ? "bg-primary/20 text-base-content/70"
-                    : "hidden"
+                  : "bg-primary/20 text-base-content/70"
               }`}
             >
               <p className="text-xs font-medium md:text-sm">
