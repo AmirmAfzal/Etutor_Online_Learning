@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
-
 import Icon from "@/components/ui/Icon";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
-import purchaseHistoryModel from "@/lib/db/models/purchaseHistoryModel";
-import sectionModel from "@/lib/db/models/sectionModel";
+import { getCourseCommentsCount } from "@/lib/utils/getCourseCommentsCount";
+import { countLecturesOfCourse } from "@/lib/utils/countLecturesOfCourse";
+import { studentsEnrolledCount } from "@/lib/utils/studentsEnrolledCount";
+import { setCourseLanguage } from "@/lib/utils/setCourseLanguage";
 
 interface Props {
   courseId: string;
@@ -13,54 +13,11 @@ interface Props {
 const CourseInformation = async ({ courseId }: Props) => {
   await connectDB();
   const course = await courseModel.findById(courseId);
-  const purchaseHistories = await purchaseHistoryModel.find();
 
-  const studentsEnrolledCount = () => {
-    return purchaseHistories.reduce((total, purchase) => {
-      const matchingCourses = purchase.courses.includes(String(course._id));
-      matchingCourses && total++;
-      return total;
-    }, 0);
-  };
-
-  const setCourseLanguage = () => {
-    switch (course.language) {
-      case "en":
-        return "English";
-      case "fa":
-        return "Farsi";
-
-      default:
-        return "English";
-    }
-  };
-
-  async function countLecturesOfCourse(courseId: string) {
-    const result = await sectionModel.aggregate([
-      { $match: { course: new mongoose.Types.ObjectId(courseId) } }, // همه Sectionهای دوره
-      { 
-        $lookup: {
-          from: "lectures",
-          localField: "lectures",
-          foreignField: "_id",
-          as: "lectureDetails",
-        }
-      },
-      {
-        $unwind: "$lectureDetails"
-      },
-      {
-        $group: {
-          _id: null,
-          totalLectures: { $sum: 1 }
-        }
-      }
-    ]);
-
-    return result[0]?.totalLectures ?? 0;
-  }
-
+  const studentEnrolledCount = studentsEnrolledCount(course._id);
   const lectureCount = await countLecturesOfCourse(course._id);
+  const commentsCount = await getCourseCommentsCount(course._id);
+  const courseLanguage = setCourseLanguage(course.language);
 
   const information = [
     {
@@ -75,7 +32,7 @@ const CourseInformation = async ({ courseId }: Props) => {
       id: 2,
       icon: "ph:chat-circle-dots-duotone",
       name: "Total Commends",
-      value: "51, 429",
+      value: commentsCount.toLocaleString("en-US"),
       bg: "bg-[#EBEBFF]",
       color: "text-[#564FFD]",
     },
@@ -83,7 +40,7 @@ const CourseInformation = async ({ courseId }: Props) => {
       id: 3,
       icon: "ph:users-duotone",
       name: "Students enrolled",
-      value: String(studentsEnrolledCount()),
+      value: studentEnrolledCount,
       bg: "bg-[#FFF0F0]",
       color: "text-[#E34444]",
     },
@@ -99,7 +56,7 @@ const CourseInformation = async ({ courseId }: Props) => {
       id: 5,
       icon: "ph:notepad-duotone",
       name: "Course Language",
-      value: setCourseLanguage(),
+      value: courseLanguage,
       bg: "bg-[#F5F7FA]",
       color: "text-[#1D2026]",
     },

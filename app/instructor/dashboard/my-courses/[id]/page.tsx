@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
+import { getCourseRevenue } from "@/lib/utils/getCourseRevenue";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -24,6 +25,8 @@ interface Props {
 const CourseDetailPage = async (props: Props) => {
   const { id } = await props.params;
   const course = await courseModel.findById(id).populate("category", "name");
+
+  const revenue = await getCourseRevenue(course._id, course.price);
 
   return (
     <section className="bg-base-200 w-full">
@@ -118,7 +121,9 @@ const CourseDetailPage = async (props: Props) => {
                   <p className="text-base-content/70 text-sm">Course prices</p>
                 </span>
                 <span>
-                  <p className="text-lg">$132,829,277</p>
+                  <p className="text-lg">
+                    ${revenue.totalRevenue.toLocaleString("en-US")}
+                  </p>
                   <p className="text-base-content/70 text-sm">
                     USD dollar revenue
                   </p>

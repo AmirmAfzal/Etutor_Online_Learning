@@ -4,6 +4,7 @@ import React, { useActionState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Form from "next/form";
+import { redirect } from "next/navigation";
 
 import {
   Dialog,
@@ -17,7 +18,6 @@ import CoursesLoading from "@/app/courses/loading";
 
 import Icon from "../ui/Icon";
 import Toast from "../Toast";
-import { redirect } from "next/navigation";
 
 interface Props {
   courseTitle: string;
