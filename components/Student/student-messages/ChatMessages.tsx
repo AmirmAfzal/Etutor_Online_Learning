@@ -25,12 +25,12 @@ const ChatMessages = async () => {
             }`}
           >
             {/*FIXME : add instructor profile*/}
-              <p className="mb-1 text-xs opacity-70">
-                {new Date(message.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
+            <p className="mb-1 text-xs opacity-70">
+              {new Date(message.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
             <div
               className={`max-w-xs rounded-none p-2.5 ${
                 message.sender === "STUDENT"

@@ -42,6 +42,7 @@ export const createMessageAction = async (
     }
 
     const messageRaw = formData.get("message")?.toString() ?? "";
+    const pathname = formData.get("pathname")?.toString() ?? "";
 
     if (!messageRaw.trim()) {
       return {
@@ -55,7 +56,11 @@ export const createMessageAction = async (
     let userProfile: UserProfile | null = null;
     let senderId: Types.ObjectId | null = null;
 
-    if (sessionUser.role === "STUDENT") {
+    const senderRole = pathname.includes("instructor")
+      ? "INSTRUCTOR"
+      : "STUDENT";
+
+    if (senderRole === "STUDENT") {
       const studentResult = await studentModel
         .findOne({ user: sessionUser.id })
         .lean<UserProfile>();
@@ -63,7 +68,7 @@ export const createMessageAction = async (
         userProfile = studentResult;
         senderId = studentResult._id;
       }
-    } else if (sessionUser.role === "INSTRUCTOR") {
+    } else if (senderRole === "INSTRUCTOR") {
       const instructorResult = await instructorModel
         .findOne({ user: sessionUser.id })
         .lean<UserProfile>();
@@ -85,16 +90,14 @@ export const createMessageAction = async (
       `${userProfile.firstname ?? ""} ${userProfile.lastname ?? ""}`.trim();
     const userAvatar = userProfile.avatar ?? DEFAULT_AVATAR;
 
-
     // FIXME : fix student , instructor id
     const messageData = {
       message: sanitizedMessage,
       name: userFullName,
       avatar: userAvatar,
-      sender: sessionUser.role,
-      student: sessionUser.role === "STUDENT" ? senderId : new Types.ObjectId(),
-      instructor:
-        sessionUser.role === "INSTRUCTOR" ? senderId : new Types.ObjectId(),
+      sender: senderRole,
+      student: senderRole === "STUDENT" ? senderId : new Types.ObjectId(),
+      instructor: senderRole === "INSTRUCTOR" ? senderId : new Types.ObjectId(),
     };
 
     const createMessage = await messageModel.create(messageData);
@@ -111,7 +114,11 @@ export const createMessageAction = async (
       JSON.parse(JSON.stringify(createMessage))
     );
 
-    revalidatePath("student/messages")
+    const revalidatePathname =
+      senderRole === "STUDENT"
+        ? "/student/messages"
+        : "/instructor/dashboard/message";
+    revalidatePath(revalidatePathname);
 
     return {
       message: "SUCCESS",

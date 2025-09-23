@@ -3,12 +3,14 @@
 import Icon from "@/components/ui/Icon";
 import { useActionState, useRef, useEffect } from "react";
 import { createMessageAction } from "@/lib/actions/student/messages/createMessage";
+import { usePathname } from "next/navigation";
 
 const MessageInput = () => {
   const [state, action] = useActionState(createMessageAction, {
     message: "",
     errors: [],
   });
+  const pathname = usePathname()
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -32,6 +34,7 @@ const MessageInput = () => {
           placeholder="Type your message"
           className="input w-full pr-12"
         />
+        <input type="hidden" name="pathname" value={pathname} />
         <Icon
           icon="ph:pencil-simple-line"
           className="text-primary/50 text-md absolute top-1/2 right-4 -translate-y-1/2 md:text-lg"
@@ -43,7 +46,7 @@ const MessageInput = () => {
       </button>
 
       {state.errors.length > 0 && (
-        <div className="text-error text-sm mt-2 absolute bottom-2 left-4">
+        <div className="text-error absolute bottom-2 left-4 mt-2 text-sm">
           {state.errors.map((error, index) => (
             <p key={index}>{error}</p>
           ))}

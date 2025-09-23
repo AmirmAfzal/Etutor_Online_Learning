@@ -151,7 +151,7 @@ export default function MessagesPage() {
       </div>
 
       <div className="hidden w-2/3 flex-col md:flex">
-        <ChatMessages mockChatMessages={mockChatMessages} />
+        <ChatMessages />
         <MessageInput />
       </div>
     </div>
