@@ -1,112 +1,23 @@
-// "use client";
-//
-// import Image from "next/image";
-// import { useState } from "react";
-//
-// import ChatMessages from "./ChatMessages";
-// import MessageInput from "./MessageInput";
-//
-// const ContactList = ({
-//   mockContacts,
-//   mockChatMessages,
-// }: {
-//   mockContacts: {
-//     id: number;
-//     name: string;
-//     image: string;
-//     lastMessage: string;
-//     timestamp: string;
-//     isActive: boolean;
-//     unread: boolean;
-//   }[];
-//   mockChatMessages: {
-//     id: number;
-//     sender: string;
-//     message: string;
-//     timestamp: string;
-//     isOwn: boolean;
-//   }[];
-// }) => {
-//   const [chatOpen, setChatOpen] = useState(false);
-//
-//   const openChatIfMobile = () => {
-//     if (typeof window !== "undefined" && window.innerWidth < 768) {
-//       setChatOpen(true);
-//     }
-//   };
-//
-//   if (chatOpen)
-//     return (
-//       <div className="!z-100 flex h-full w-full flex-col">
-//         <ChatMessages mockChatMessages={mockChatMessages} />
-//         <MessageInput />
-//       </div>
-//     );
-//
-//   return (
-//     <div className="h-80 flex-1 overflow-y-auto md:h-auto">
-//       {mockContacts.map((contact) => (
-//         <button
-//           key={contact.id}
-//           tabIndex={0}
-//           aria-label={`Open chat with ${contact.name}`}
-//           onClick={openChatIfMobile}
-//           // for lint error
-//           onKeyDown={(e) => {
-//             if (e.key === "Enter" || e.key === " ") {
-//               e.preventDefault();
-//               openChatIfMobile();
-//             }
-//           }}
-//           className={`border-base-200 hover:bg-base-200 flex cursor-pointer items-center gap-3 border-b p-1 md:p-4 ${
-//             contact.isActive ? "bg-primary/10" : ""
-//           }`}
-//         >
-//           <div className="relative mt-1">
-//             <Image
-//               src={contact.image}
-//               alt={contact.name}
-//               width={48}
-//               height={48}
-//               className="rounded-full object-cover"
-//             />
-//             {contact.unread && (
-//               <div className="bg-primary absolute -top-1 -right-1 h-2 w-2 rounded-full md:h-3 md:w-3"></div>
-//             )}
-//           </div>
-//           <div className="min-w-0 flex-1">
-//             <div className="flex items-center justify-between">
-//               <h3 className="text-base-content md:text-md truncate text-sm font-medium">
-//                 {contact.name}
-//               </h3>
-//               <span className="text-base-content/50 text-xs">
-//                 {contact.timestamp}
-//               </span>
-//             </div>
-//             <p className="text-base-content/60 truncate text-xs md:text-sm">
-//               {contact.lastMessage}
-//             </p>
-//           </div>
-//         </button>
-//       ))}
-//     </div>
-//   );
-// };
-//
-// export default ContactList;
-
 import { connectDB } from "@/lib/db/db";
 import messageModel from "@/lib/db/models/messageModel";
 import Icon from "@/components/ui/Icon";
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
+import moment from "moment";
 
 const contactList = async () => {
   await connectDB();
 
   const messageSender = await messageModel.aggregate([
     { $match: { sender: "STUDENT" } },
-    { $group: { _id: "$student" } },
+    { $sort: { createdAt: -1 } },
+    {
+      $group: {
+        _id: "$student",
+        lastMessage: { $first: "$$ROOT" },
+      },
+    },
     {
       $lookup: {
         from: "students",
@@ -122,6 +33,8 @@ const contactList = async () => {
         firstname: "$studentData.firstname",
         lastname: "$studentData.lastname",
         avatar: "$studentData.avatar",
+        lastMessage: "$lastMessage.message",
+        lastMessageDate: "$lastMessage.createdAt",
       },
     },
   ]);
@@ -130,22 +43,39 @@ const contactList = async () => {
     <div>
       <ul>
         {messageSender.map((sender, index) => (
-          <li key={index}  className="flex items-center gap-2 my-3 ml-2">
-            {sender.avatar ? (
-              <Image
-                src={sender.avatar || "/default-avatar.png"}
-                alt={`${sender.username}'s avatar`}
-                width={50}
-                height={50}
-                style={{ borderRadius: "50%" }}
-              />
-            ) : (
-              <Icon
-                icon="ph:user"
-                className="border-base-300 rounded-full border p-3 text-xl"
-              />
-            )}
-            <span>{`${sender.firstname} ${sender.lastname}`}</span>
+          <li key={index} className="my-3 ml-2">
+            <Link
+              href={`/instructor/dashboard/message/${sender._id}`}
+              className="hover:bg-base-200 flex flex-col gap-2 rounded-lg p-2 transition sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div className="flex min-w-0 flex-1 items-center gap-2">
+                {sender.avatar ? (
+                  <Image
+                    src={sender.avatar || "/default-avatar.png"}
+                    alt={`${sender.firstname} ${sender.lastname}'s avatar`}
+                    width={50}
+                    height={50}
+                    className="shrink-0 rounded-full"
+                  />
+                ) : (
+                  <Icon
+                    icon="ph:user"
+                    className="border-base-300 shrink-0 rounded-full border p-3 text-2xl"
+                  />
+                )}
+                <div className="flex min-w-0 flex-col">
+                  <span className="text-sm font-medium sm:text-base">
+                    {`${sender.firstname} ${sender.lastname}`}
+                  </span>
+                  <p className="text-base-content/70 truncate text-xs sm:text-sm">
+                    {sender.lastMessage}
+                  </p>
+                </div>
+              </div>
+              <span className="text-[10px] text-base-content/60 sm:text-right sm:text-xs">
+                {moment(sender.lastMessageDate).fromNow()}
+              </span>
+            </Link>
           </li>
         ))}
       </ul>
