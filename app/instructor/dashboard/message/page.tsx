@@ -2,8 +2,6 @@ import ChatMessages from "@/components/Student/student-messages/ChatMessages";
 import ContactList from "@/components/Student/student-messages/ContactList";
 import MessageHeader from "@/components/Student/student-messages/MessageHeader";
 import MessageInput from "@/components/Student/student-messages/MessageInput";
-
-const MessagePage = () => {
   const mockContacts = [
     {
       id: 1,
@@ -137,6 +135,14 @@ const MessagePage = () => {
     },
   ];
 
+const MessagePage = ({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    id: string;
+  }>;
+}) => {
+
   return (
     <div className="bg-base-200 border-base-300 flex h-screen w-full flex-row gap-6 border p-6">
       <div className="border-base-300 bg-base-100 flex w-full flex-col border-r md:w-1/3">
@@ -148,7 +154,7 @@ const MessagePage = () => {
       </div>
 
       <div className="bg-base-100 hidden w-2/3 flex-col md:flex">
-        <ChatMessages mockChatMessages={mockChatMessages} />
+        <ChatMessages searchParams={searchParams} />
         <MessageInput />
       </div>
     </div>

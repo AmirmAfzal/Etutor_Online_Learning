@@ -1,96 +1,156 @@
-"use client";
+// "use client";
+//
+// import Image from "next/image";
+// import { useState } from "react";
+//
+// import ChatMessages from "./ChatMessages";
+// import MessageInput from "./MessageInput";
+//
+// const ContactList = ({
+//   mockContacts,
+//   mockChatMessages,
+// }: {
+//   mockContacts: {
+//     id: number;
+//     name: string;
+//     image: string;
+//     lastMessage: string;
+//     timestamp: string;
+//     isActive: boolean;
+//     unread: boolean;
+//   }[];
+//   mockChatMessages: {
+//     id: number;
+//     sender: string;
+//     message: string;
+//     timestamp: string;
+//     isOwn: boolean;
+//   }[];
+// }) => {
+//   const [chatOpen, setChatOpen] = useState(false);
+//
+//   const openChatIfMobile = () => {
+//     if (typeof window !== "undefined" && window.innerWidth < 768) {
+//       setChatOpen(true);
+//     }
+//   };
+//
+//   if (chatOpen)
+//     return (
+//       <div className="!z-100 flex h-full w-full flex-col">
+//         <ChatMessages mockChatMessages={mockChatMessages} />
+//         <MessageInput />
+//       </div>
+//     );
+//
+//   return (
+//     <div className="h-80 flex-1 overflow-y-auto md:h-auto">
+//       {mockContacts.map((contact) => (
+//         <button
+//           key={contact.id}
+//           tabIndex={0}
+//           aria-label={`Open chat with ${contact.name}`}
+//           onClick={openChatIfMobile}
+//           // for lint error
+//           onKeyDown={(e) => {
+//             if (e.key === "Enter" || e.key === " ") {
+//               e.preventDefault();
+//               openChatIfMobile();
+//             }
+//           }}
+//           className={`border-base-200 hover:bg-base-200 flex cursor-pointer items-center gap-3 border-b p-1 md:p-4 ${
+//             contact.isActive ? "bg-primary/10" : ""
+//           }`}
+//         >
+//           <div className="relative mt-1">
+//             <Image
+//               src={contact.image}
+//               alt={contact.name}
+//               width={48}
+//               height={48}
+//               className="rounded-full object-cover"
+//             />
+//             {contact.unread && (
+//               <div className="bg-primary absolute -top-1 -right-1 h-2 w-2 rounded-full md:h-3 md:w-3"></div>
+//             )}
+//           </div>
+//           <div className="min-w-0 flex-1">
+//             <div className="flex items-center justify-between">
+//               <h3 className="text-base-content md:text-md truncate text-sm font-medium">
+//                 {contact.name}
+//               </h3>
+//               <span className="text-base-content/50 text-xs">
+//                 {contact.timestamp}
+//               </span>
+//             </div>
+//             <p className="text-base-content/60 truncate text-xs md:text-sm">
+//               {contact.lastMessage}
+//             </p>
+//           </div>
+//         </button>
+//       ))}
+//     </div>
+//   );
+// };
+//
+// export default ContactList;
 
+import { connectDB } from "@/lib/db/db";
+import messageModel from "@/lib/db/models/messageModel";
+import Icon from "@/components/ui/Icon";
+import React from "react";
 import Image from "next/image";
-import { useState } from "react";
 
-import ChatMessages from "./ChatMessages";
-import MessageInput from "./MessageInput";
+const contactList = async () => {
+  await connectDB();
 
-const ContactList = ({
-  mockContacts,
-  mockChatMessages,
-}: {
-  mockContacts: {
-    id: number;
-    name: string;
-    image: string;
-    lastMessage: string;
-    timestamp: string;
-    isActive: boolean;
-    unread: boolean;
-  }[];
-  mockChatMessages: {
-    id: number;
-    sender: string;
-    message: string;
-    timestamp: string;
-    isOwn: boolean;
-  }[];
-}) => {
-  const [chatOpen, setChatOpen] = useState(false);
-
-  const openChatIfMobile = () => {
-    if (typeof window !== "undefined" && window.innerWidth < 768) {
-      setChatOpen(true);
-    }
-  };
-
-  if (chatOpen)
-    return (
-      <div className="!z-100 flex h-full w-full flex-col">
-        <ChatMessages mockChatMessages={mockChatMessages} />
-        <MessageInput />
-      </div>
-    );
+  const messageSender = await messageModel.aggregate([
+    { $match: { sender: "STUDENT" } },
+    { $group: { _id: "$student" } },
+    {
+      $lookup: {
+        from: "students",
+        localField: "_id",
+        foreignField: "_id",
+        as: "studentData",
+      },
+    },
+    { $unwind: "$studentData" },
+    {
+      $project: {
+        _id: 1,
+        firstname: "$studentData.firstname",
+        lastname: "$studentData.lastname",
+        avatar: "$studentData.avatar",
+      },
+    },
+  ]);
 
   return (
-    <div className="h-80 flex-1 overflow-y-auto md:h-auto">
-      {mockContacts.map((contact) => (
-        <button
-          key={contact.id}
-          tabIndex={0}
-          aria-label={`Open chat with ${contact.name}`}
-          onClick={openChatIfMobile}
-          // for lint error
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              openChatIfMobile();
-            }
-          }}
-          className={`border-base-200 hover:bg-base-200 flex cursor-pointer items-center gap-3 border-b p-1 md:p-4 ${
-            contact.isActive ? "bg-primary/10" : ""
-          }`}
-        >
-          <div className="relative mt-1">
-            <Image
-              src={contact.image}
-              alt={contact.name}
-              width={48}
-              height={48}
-              className="rounded-full object-cover"
-            />
-            {contact.unread && (
-              <div className="bg-primary absolute -top-1 -right-1 h-2 w-2 rounded-full md:h-3 md:w-3"></div>
+    <div>
+      <ul>
+        {messageSender.map((sender, index) => (
+          <li key={index}  className="flex items-center gap-2 my-3 ml-2">
+            {sender.avatar ? (
+              <Image
+                src={sender.avatar || "/default-avatar.png"}
+                alt={`${sender.username}'s avatar`}
+                width={50}
+                height={50}
+                style={{ borderRadius: "50%" }}
+              />
+            ) : (
+              <Icon
+                icon="ph:user"
+                className="border-base-300 rounded-full border p-3 text-xl"
+              />
             )}
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base-content md:text-md truncate text-sm font-medium">
-                {contact.name}
-              </h3>
-              <span className="text-base-content/50 text-xs">
-                {contact.timestamp}
-              </span>
-            </div>
-            <p className="text-base-content/60 truncate text-xs md:text-sm">
-              {contact.lastMessage}
-            </p>
-          </div>
-        </button>
-      ))}
+            <span>{`${sender.firstname} ${sender.lastname}`}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default ContactList;
+export default contactList;

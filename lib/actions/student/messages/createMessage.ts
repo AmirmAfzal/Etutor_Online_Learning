@@ -22,8 +22,6 @@ interface UserProfile {
   avatar?: string;
 }
 
-const DEFAULT_AVATAR = "/default-avatar.png";
-
 export const createMessageAction = async (
   prevState: ActionData,
   formData: FormData
@@ -53,7 +51,6 @@ export const createMessageAction = async (
 
     const sanitizedMessage = messageRaw.trim();
 
-    let userProfile: UserProfile | null = null;
     let senderId: Types.ObjectId | null = null;
 
     const senderRole = pathname.includes("instructor")
@@ -65,7 +62,6 @@ export const createMessageAction = async (
         .findOne({ user: sessionUser.id })
         .lean<UserProfile>();
       if (studentResult) {
-        userProfile = studentResult;
         senderId = studentResult._id;
       }
     } else if (senderRole === "INSTRUCTOR") {
@@ -73,28 +69,14 @@ export const createMessageAction = async (
         .findOne({ user: sessionUser.id })
         .lean<UserProfile>();
       if (instructorResult) {
-        userProfile = instructorResult;
         senderId = instructorResult._id;
       }
     }
 
-    if (!userProfile || !senderId) {
-      console.error("User profile not found for session user:", sessionUser);
-      return {
-        message: "ERROR",
-        errors: ["User profile not found in database."],
-      };
-    }
-
-    const userFullName =
-      `${userProfile.firstname ?? ""} ${userProfile.lastname ?? ""}`.trim();
-    const userAvatar = userProfile.avatar ?? DEFAULT_AVATAR;
-
     // FIXME : fix student , instructor id
     const messageData = {
       message: sanitizedMessage,
-      name: userFullName,
-      avatar: userAvatar,
+
       sender: senderRole,
       student: senderRole === "STUDENT" ? senderId : new Types.ObjectId(),
       instructor: senderRole === "INSTRUCTOR" ? senderId : new Types.ObjectId(),
