@@ -139,7 +139,13 @@ const mockChatMessages = [
   },
 ];
 
-export default function MessagesPage() {
+export default function MessagesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    id: string;
+  }>;
+}) {
   return (
     <div className="bg-base-100 border-base-300 flex h-screen w-full border">
       <div className="border-base-300 flex w-full flex-col border-r md:w-1/3">
@@ -151,7 +157,7 @@ export default function MessagesPage() {
       </div>
 
       <div className="hidden w-2/3 flex-col md:flex">
-        <ChatMessages />
+        <ChatMessages searchParams={searchParams} />
         <MessageInput />
       </div>
     </div>

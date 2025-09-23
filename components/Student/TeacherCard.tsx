@@ -1,8 +1,11 @@
 import Image from "next/image";
 import React from "react";
 import { Icon } from "@iconify/react";
+import TeacherSendMessageBtn from "@/components/Student/TeacherSendMessageBtn";
+import { ObjectId } from "mongoose";
 
 interface TeacherCardProps {
+  id: ObjectId;
   name: string;
   title: string;
   image: string;
@@ -13,6 +16,7 @@ interface TeacherCardProps {
 }
 
 export default function TeacherCard({
+  id,
   name,
   title,
   image,
@@ -33,7 +37,7 @@ export default function TeacherCard({
       ) : (
         <Icon
           icon="ph:user"
-          className="w-full align-center h-48 sm:h-56 md:h-64 text-5xl"
+          className="align-center h-48 w-full text-5xl sm:h-56 md:h-64"
         />
       )}
 
@@ -61,11 +65,7 @@ export default function TeacherCard({
             </div>
           </div>
 
-          {sendMessage && (
-            <button className="btn btn-soft btn-primary w-full text-sm">
-              Send Message
-            </button>
-          )}
+          {sendMessage && <TeacherSendMessageBtn id={id} />}
         </div>
       </div>
     </div>

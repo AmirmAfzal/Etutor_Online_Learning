@@ -9,7 +9,17 @@ import messageModel from "@/lib/db/models/messageModel";
 //   timestamp: string;
 // }
 
-const ChatMessages = async () => {
+interface Props {
+  searchParams: Promise<{ id: string }>;
+}
+
+const ChatMessages = async (props: Props) => {
+  const searchParams = await props.searchParams;
+
+  const { id } = searchParams;
+
+  console.log(id);
+
   await connectDB();
 
   const foundMessages = await messageModel.find().lean();

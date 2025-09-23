@@ -9,6 +9,7 @@ import { connectDB } from "@/lib/db/db";
 import { CourseInterface } from "@/lib/db/models/courseModel";
 import studentModel from "@/lib/db/models/studentModel";
 import { authOptions } from "@/lib/auth/authOptions";
+import { ObjectId } from "mongoose";
 
 interface InstructorData {
   name: string;
@@ -19,7 +20,7 @@ interface InstructorData {
 }
 
 interface Instructor {
-  _id: string;
+  _id: ObjectId;
   firstname: string;
   lastname: string;
   bio?: string;
@@ -73,10 +74,10 @@ const TeachersPage = async (props: Props) => {
 
   const instructorData: InstructorData[] = uniqueInstructors.map(
     (instructor: Instructor) => ({
+      id: instructor?._id?.toString(),
       name: `${instructor.firstname} ${instructor.lastname}`,
       title: instructor.bio || "Instructor",
-      image:
-        instructor.avatar || "",
+      image: instructor.avatar || "",
       rating: instructor.rating,
       students: instructor.students,
     })
