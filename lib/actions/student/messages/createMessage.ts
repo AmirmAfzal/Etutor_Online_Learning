@@ -8,6 +8,7 @@ import messageModel from "@/lib/db/models/messageModel";
 import studentModel from "@/lib/db/models/studentModel";
 import instructorModel from "@/lib/db/models/instructorModel";
 import { Types } from "mongoose";
+import { revalidatePath } from "next/cache";
 
 interface SessionUser {
   id: string;
@@ -109,6 +110,8 @@ export const createMessageAction = async (
       "Message sent successfully",
       JSON.parse(JSON.stringify(createMessage))
     );
+
+    revalidatePath("student/messages")
 
     return {
       message: "SUCCESS",
