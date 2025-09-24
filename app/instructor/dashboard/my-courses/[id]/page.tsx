@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
 import { getCourseRevenue } from "@/lib/utils/getCourseRevenue";
+import { getCourseDailyIncome } from "@/lib/utils/getCourseDailyIncome";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -27,6 +28,15 @@ const CourseDetailPage = async (props: Props) => {
   const course = await courseModel.findById(id).populate("category", "name");
 
   const revenue = await getCourseRevenue(course._id, course.price);
+
+  const currentMonth = new Date().getUTCMonth() + 1;
+  const currentYear = new Date().getFullYear();
+
+  const courseDailyIncome = await getCourseDailyIncome(
+    course._id,
+    currentMonth,
+    currentYear
+  );
 
   return (
     <section className="bg-base-200 w-full">
@@ -167,7 +177,12 @@ const CourseDetailPage = async (props: Props) => {
         </div>
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-12">
           <div className="col-span-1 md:col-span-5">
-            <RevenueView stroke="#23BD33" fill="#E1F7E3" height={400} />
+            <RevenueView
+              stroke="#23BD33"
+              fill="#E1F7E3"
+              height={400}
+              initialChartData={courseDailyIncome}
+            />
           </div>
           <div className="col-span-1 md:col-span-7">
             <CourseOverview />

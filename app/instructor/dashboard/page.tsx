@@ -9,12 +9,27 @@ import EarningView from "@/components/instructor-dashboard/EarningView";
 import CourseRating from "@/components/instructor-dashboard/CourseRating";
 import CourseOverview from "@/components/instructor-dashboard/CourseOverview";
 import { authOptions } from "@/lib/auth/authOptions";
+import { getInstructorDailyIncome } from "@/lib/utils/getInstructorDailyIncome";
+import instructorModel from "@/lib/db/models/instructorModel";
+import { connectDB } from "@/lib/db/db";
 
 const DashboardPage = async () => {
+  await connectDB();
   const session = await getServerSession(authOptions);
   if (!session?.user.id) {
     redirect("/auth/signin");
   }
+
+  const instructor = await instructorModel.findOne({ user: session.user.id });
+
+  const currentMonth = new Date().getUTCMonth() + 1;
+  const currentYear = new Date().getFullYear();
+
+  const initialData = await getInstructorDailyIncome(
+    instructor._id,
+    currentMonth,
+    currentYear
+  );
 
   return (
     <section className="bg-base-200 space-y-6 p-4">
@@ -25,7 +40,12 @@ const DashboardPage = async () => {
           <RecentActivity />
         </div>
         <div className="col-span-1 h-auto w-full md:col-span-5">
-          <RevenueView stroke="#564FFD" fill="#EBEBFF" height={320} />
+          <RevenueView
+            stroke="#564FFD"
+            fill="#EBEBFF"
+            height={320}
+            initialChartData={initialData}
+          />
         </div>
         <div className="col-span-1 h-auto w-full md:col-span-3">
           <EarningView />

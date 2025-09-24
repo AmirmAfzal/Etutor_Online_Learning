@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   AreaChart,
   Area,
@@ -17,34 +18,61 @@ import {
   SelectValue,
 } from "../ui/select";
 
-const data = [
-  { name: "Aug 01", uv: 4000, pv: 2400, amt: 2400 },
-  { name: "Aug 05", uv: 3000, pv: 1398, amt: 2210 },
-  { name: "Aug 10", uv: 2000, pv: 9800, amt: 2290 },
-  { name: "Aug 15", uv: 2780, pv: 3908, amt: 2000 },
-  { name: "Aug 20", uv: 1890, pv: 4800, amt: 2181 },
-  { name: "Aug 25", uv: 2390, pv: 3800, amt: 2500 },
-  { name: "Aug 30", uv: 3490, pv: 4300, amt: 2100 },
-];
+type RevenuePoint = { day: string; income: number };
 
 interface Props {
   stroke: string;
   fill: string;
   height: number;
+  initialChartData?: RevenuePoint[];
 }
 
-const RevenueView = ({ stroke, fill, height }: Props) => {
+const defaultChartData: RevenuePoint[] = [
+  { day: "Aug 01", income: 4000 },
+  { day: "Aug 05", income: 3000 },
+  { day: "Aug 10", income: 2000 },
+  { day: "Aug 15", income: 2780 },
+  { day: "Aug 20", income: 1890 },
+  { day: "Aug 25", income: 2390 },
+  { day: "Aug 30", income: 3490 },
+];
+
+const months = [
+  { value: 1, label: "Jan" },
+  { value: 2, label: "Feb" },
+  { value: 3, label: "Mar" },
+  { value: 4, label: "Apr" },
+  { value: 5, label: "May" },
+  { value: 6, label: "Jun" },
+  { value: 7, label: "Jul" },
+  { value: 8, label: "Aug" },
+  { value: 9, label: "Sep" },
+  { value: 10, label: "Oct" },
+  { value: 11, label: "Nov" },
+  { value: 12, label: "Dec" },
+];
+
+const RevenueView = ({ stroke, fill, height, initialChartData }: Props) => {
+  const [month, setMonth] = useState(new Date().getUTCMonth() + 1);
+
+  const data = initialChartData ? initialChartData : defaultChartData;
   return (
     <div className="bg-base-100 h-full w-full">
       <div className="border-base-300 flex flex-row items-center justify-between border-b p-4">
         <h3 className="text-sm font-bold">Revenue</h3>
-        <Select>
+        <Select
+          value={month.toString()}
+          onValueChange={(value) => setMonth(Number(value))}
+        >
           <SelectTrigger className="border-0">
             <SelectValue placeholder="This Month" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="this-month">This Month</SelectItem>
-            <SelectItem value="last-month">Last Month</SelectItem>
+            {months.map((m) => (
+              <SelectItem key={m.value} value={m.value.toString()}>
+                {m.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -55,16 +83,16 @@ const RevenueView = ({ stroke, fill, height }: Props) => {
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
           <XAxis
-            dataKey="name"
+            dataKey="day"
             tickLine={false}
             axisLine={false}
             fontSize={12}
           />
-          <YAxis fontSize={12} tickLine={false} axisLine={false} />
+          <YAxis fontSize={10} tickLine={false} axisLine={false} />
           <Tooltip />
           <Area
             type="monotone"
-            dataKey="uv"
+            dataKey="income"
             stroke={stroke}
             strokeWidth={2}
             fill={fill}
