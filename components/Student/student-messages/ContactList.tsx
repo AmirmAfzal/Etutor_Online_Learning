@@ -6,38 +6,80 @@ import Image from "next/image";
 import Link from "next/link";
 import moment from "moment";
 
-const contactList = async () => {
+interface Props {
+  role: "student" | "instructor";
+}
+
+const contactList = async ({ role }: Props) => {
   await connectDB();
 
-  const messageSender = await messageModel.aggregate([
-    { $match: { sender: "STUDENT" } },
-    { $sort: { createdAt: -1 } },
-    {
-      $group: {
-        _id: "$student",
-        lastMessage: { $first: "$$ROOT" },
+  console.log("Current Role:", role);
+
+  let pipeline;
+
+  if (role == "instructor") {
+    pipeline = [
+      { $match: { sender: "STUDENT" } },
+      { $sort: { createdAt: -1 } },
+      {
+        $group: {
+          _id: "$student",
+          lastMessage: { $first: "$$ROOT" },
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "students",
-        localField: "_id",
-        foreignField: "_id",
-        as: "studentData",
+      {
+        $lookup: {
+          from: "students",
+          localField: "_id",
+          foreignField: "_id",
+          as: "studentData",
+        },
       },
-    },
-    { $unwind: "$studentData" },
-    {
-      $project: {
-        _id: 1,
-        firstname: "$studentData.firstname",
-        lastname: "$studentData.lastname",
-        avatar: "$studentData.avatar",
-        lastMessage: "$lastMessage.message",
-        lastMessageDate: "$lastMessage.createdAt",
+      { $unwind: "$studentData" },
+      {
+        $project: {
+          _id: 1,
+          firstname: "$studentData.firstname",
+          lastname: "$studentData.lastname",
+          avatar: "$studentData.avatar",
+          lastMessage: "$lastMessage.message",
+          lastMessageDate: "$lastMessage.createdAt",
+        },
       },
-    },
-  ]);
+    ];
+  } else if (role == "student") {
+    pipeline = [
+      { $match: { sender: "INSTRUCTOR" } },
+      { $sort: { createdAt: -1 } },
+      {
+        $group: {
+          _id: "$instructor",
+          lastMessage: { $first: "$$ROOT" },
+        },
+      },
+      {
+        $lookup: {
+          from: "instructors",
+          localField: "_id",
+          foreignField: "_id",
+          as: "instructorData",
+        },
+      },
+      { $unwind: "$instructorData" },
+      {
+        $project: {
+          _id: 1,
+          firstname: "$instructorData.firstname",
+          lastname: "$instructorData.lastname",
+          avatar: "$instructorData.avatar",
+          lastMessage: "$lastMessage.message",
+          lastMessageDate: "$lastMessage.createdAt",
+        },
+      },
+    ];
+  }
+
+  const messageSender = await messageModel.aggregate(pipeline);
 
   return (
     <div>
@@ -72,7 +114,7 @@ const contactList = async () => {
                   </p>
                 </div>
               </div>
-              <span className="text-[10px] text-base-content/60 sm:text-right sm:text-xs">
+              <span className="text-base-content/60 text-[10px] sm:text-right sm:text-xs">
                 {moment(sender.lastMessageDate).fromNow()}
               </span>
             </Link>

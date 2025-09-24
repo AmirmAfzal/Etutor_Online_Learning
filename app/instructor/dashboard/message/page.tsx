@@ -14,7 +14,7 @@ const MessagePage = async (props: Props) => {
   return (
     <div className="border-base-300 bg-base-200 flex h-screen w-full gap-6 border p-6">
       <div className="border-base-300 bg-base-100 flex w-full flex-col border-r md:w-1/3">
-        <ContactList />
+        <ContactList role="instructor" />
       </div>
 
       {receiverId ? (
