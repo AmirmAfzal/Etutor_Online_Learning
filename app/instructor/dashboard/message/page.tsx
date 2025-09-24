@@ -1,14 +1,15 @@
 import ChatMessages from "@/components/Student/student-messages/ChatMessages";
 import ContactList from "@/components/Student/student-messages/ContactList";
 import MessageInput from "@/components/Student/student-messages/MessageInput";
+import { Types } from "mongoose";
 
 interface Props {
-  searchParams?: Promise<{ id: string }>;
+  searchParams?: Promise<{ id: Types.ObjectId & string }>;
 }
 
-const MessagePage = async ({ searchParams }: Props) => {
-  const resolvedSearchParams = await searchParams;
-  const receiverId = resolvedSearchParams?.id;
+const MessagePage = async (props: Props) => {
+  const searchParams = await props.searchParams;
+  const receiverId = searchParams?.id;
 
   return (
     <div className="border-base-300 bg-base-200 flex h-screen w-full gap-6 border p-6">

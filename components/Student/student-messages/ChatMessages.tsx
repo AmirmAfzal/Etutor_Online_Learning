@@ -5,6 +5,8 @@ import messageModel from "@/lib/db/models/messageModel";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import { Types } from "mongoose";
+import studentModel from "@/lib/db/models/studentModel";
+import instructorModel from "@/lib/db/models/instructorModel";
 
 interface Props {
   searchParams?: Promise<{ id: string }>;
@@ -13,43 +15,80 @@ interface Props {
 }
 
 const ChatMessages = async (props: Props) => {
-  // const searchParams = await props.searchParams;
-  // const params = await props.params;
+  const searchParams = await props.searchParams;
+  const params = await props.params;
 
+  const receiverId = props.receiverId || searchParams?.id || params?.id;
+  // await connectDB();
+  //
+  // const session = await getServerSession(authOptions);
+  // if (!session?.user?.id || !session?.user?.role) return <p>Unauthorized</p>;
+  //
+  // const senderRole = session?.user?.role;
+  // const senderId = new Types.ObjectId(session.user.id);
+  //
+  // // const receiverIdRaw = params?.id || searchParams?.id;
+  // const receiverIdRaw = props.receiverId;
+  // if (!receiverIdRaw) return <p>No receiver selected</p>;
+  // const receiverId = new Types.ObjectId(receiverIdRaw);
+  //
+  // let studentId: Types.ObjectId;
+  // let instructorId: Types.ObjectId;
+  //
+  // if (senderRole === "STUDENT") {
+  //   studentId = senderId;
+  //   instructorId = receiverId;
+  // } else {
+  //   instructorId = senderId;
+  //   studentId = receiverId;
+  // }
+  //
+  // console.log("s", studentId);
+  // console.log("i", instructorId);
+  //
+  //
+  // const messages = await messageModel
+  //   .find({ student: studentId, instructor: instructorId })
+  //   .sort({ createdAt: 1 })
+  //   .lean();
+  //
+  // console.log(messages);
   await connectDB();
 
+  // USER : SENDER
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || !session?.user?.role) return <p>Unauthorized</p>;
-
-  const senderRole = session?.user?.role;
-  const senderId = new Types.ObjectId(session.user.id);
-
-  // const receiverIdRaw = params?.id || searchParams?.id;
-  const receiverIdRaw = props.receiverId;
-  if (!receiverIdRaw) return <p>No receiver selected</p>;
-  const receiverId = new Types.ObjectId(receiverIdRaw);
-
-  let studentId: Types.ObjectId;
-  let instructorId: Types.ObjectId;
-
-  if (senderRole === "STUDENT") {
-    studentId = senderId;
-    instructorId = receiverId;
-  } else {
-    instructorId = senderId;
-    studentId = receiverId;
+  const user = session?.user;
+  const userId = session?.user?.id;
+  if (!session?.user?.id) {
+    return <span>invalid user id</span>;
   }
 
-  console.log("s", studentId);
-  console.log("i", instructorId);
+  console.log(session?.user?.id);
 
+  let studentId = null;
+  let instructorId = null;
+
+  if (user?.role === "STUDENT") {
+    const student = await studentModel.findOne({ user: userId }).lean();
+    if (student) {
+      studentId = student?._id;
+      instructorId = receiverId;
+    }
+  } else if (user?.role === "INSTRUCTOR") {
+    const instructor = await instructorModel.findOne({ user: userId }).lean();
+    if (instructor) {
+      instructorId = instructor?._id;
+      studentId = receiverId;
+    }
+  }
+
+  console.log("student", studentId);
+  console.log("instructor", instructorId);
 
   const messages = await messageModel
-    .find({ student: studentId, instructor: instructorId })
-    .sort({ createdAt: 1 })
+    .find({ student: studentId }, { instructor: instructorId })
+    .sort({ createdAt: -1 })
     .lean();
-
-  console.log(messages);
 
   return (
     <div className="bg-base-100 flex-1 overflow-y-auto p-4">

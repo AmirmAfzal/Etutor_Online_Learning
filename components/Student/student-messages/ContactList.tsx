@@ -45,7 +45,7 @@ const contactList = async () => {
         {messageSender.map((sender, index) => (
           <li key={index} className="my-3 ml-2">
             <Link
-              href={`/instructor/dashboard/message/${sender._id}`}
+              href={`/student/messages/${sender._id}`}
               className="hover:bg-base-200 flex flex-col gap-2 rounded-lg p-2 transition sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex min-w-0 flex-1 items-center gap-2">

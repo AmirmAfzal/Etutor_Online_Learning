@@ -5,7 +5,7 @@ import { useActionState, useRef, useEffect } from "react";
 import { createMessageAction } from "@/lib/actions/student/messages/createMessage";
 import { usePathname } from "next/navigation";
 
-const MessageInput = ({ receiverId }: { receiverId: string }) => {
+const MessageInput = ({ receiverId }: { receiverId: string}) => {
   const [state, action] = useActionState(createMessageAction, {
     message: "",
     errors: [],
