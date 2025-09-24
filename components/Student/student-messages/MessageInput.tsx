@@ -28,7 +28,7 @@ const MessageInput = ({ receiverId }: { receiverId: string}) => {
     <form
       ref={formRef}
       action={action}
-      className="border-base-300 bg-base-100 flex items-center gap-2 border-t p-4"
+      className="border-base-300 bg-base-100 flex items-center gap-2 border-t p-2"
     >
       <div className="relative flex-1">
         <input

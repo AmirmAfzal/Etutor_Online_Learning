@@ -7,6 +7,7 @@ import { authOptions } from "@/lib/auth/authOptions";
 import { Types } from "mongoose";
 import studentModel from "@/lib/db/models/studentModel";
 import instructorModel from "@/lib/db/models/instructorModel";
+import MessageInput from "@/components/Student/student-messages/MessageInput";
 
 interface Props {
   searchParams?: Promise<{ id: string }>;
@@ -19,40 +20,7 @@ const ChatMessages = async (props: Props) => {
   const params = await props.params;
 
   const receiverId = props.receiverId || searchParams?.id || params?.id;
-  // await connectDB();
-  //
-  // const session = await getServerSession(authOptions);
-  // if (!session?.user?.id || !session?.user?.role) return <p>Unauthorized</p>;
-  //
-  // const senderRole = session?.user?.role;
-  // const senderId = new Types.ObjectId(session.user.id);
-  //
-  // // const receiverIdRaw = params?.id || searchParams?.id;
-  // const receiverIdRaw = props.receiverId;
-  // if (!receiverIdRaw) return <p>No receiver selected</p>;
-  // const receiverId = new Types.ObjectId(receiverIdRaw);
-  //
-  // let studentId: Types.ObjectId;
-  // let instructorId: Types.ObjectId;
-  //
-  // if (senderRole === "STUDENT") {
-  //   studentId = senderId;
-  //   instructorId = receiverId;
-  // } else {
-  //   instructorId = senderId;
-  //   studentId = receiverId;
-  // }
-  //
-  // console.log("s", studentId);
-  // console.log("i", instructorId);
-  //
-  //
-  // const messages = await messageModel
-  //   .find({ student: studentId, instructor: instructorId })
-  //   .sort({ createdAt: 1 })
-  //   .lean();
-  //
-  // console.log(messages);
+
   await connectDB();
 
   // USER : SENDER
@@ -87,41 +55,43 @@ const ChatMessages = async (props: Props) => {
 
   const messages = await messageModel
     .find({ student: studentId, instructor: instructorId })
+    .sort({ createdAt: -1 })
     .lean();
 
   console.log(messages);
 
   return (
-    <div className="bg-base-100 flex-1 overflow-y-auto p-4">
-      <div className="flex h-full flex-col justify-end space-y-4">
-        {messages.map((message) => (
-          <div
-            key={message?._id?.toString()}
-            className={`flex flex-col ${
-              message.sender === "STUDENT" ? "items-end" : "items-start"
-            }`}
-          >
-            <p className="mb-1 text-xs opacity-70">
-              {new Date(message.createdAt).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </p>
+      <div className="bg-base-100 ml:w-3/4 border-base-300 relative flex-1 border p-4">
+        <div className="flex h-[600px] mb-2 flex-col-reverse space-y-4 space-y-reverse overflow-y-auto">
+          {messages.map((message) => (
             <div
-              className={`max-w-xs rounded-md p-2.5 ${
-                message.sender === "STUDENT"
-                  ? "bg-primary text-primary-content"
-                  : "bg-primary/20 text-base-content/70"
+              key={message?._id?.toString()}
+              className={`flex flex-col ${
+                message.sender === "STUDENT" ? "items-end" : "items-start"
               }`}
             >
-              <p className="text-xs font-medium md:text-sm">
-                {message.message}
+              <p className="mb-1 text-xs opacity-70">
+                {new Date(message.createdAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
+              <div
+                className={`max-w-xs rounded-md p-2.5 ${
+                  message.sender === "STUDENT"
+                    ? "bg-primary text-primary-content"
+                    : "bg-primary/20 text-base-content/70"
+                }`}
+              >
+                <p className="text-xs font-medium md:text-sm">
+                  {message.message}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <MessageInput receiverId={receiverId} />
       </div>
-    </div>
   );
 };
 
