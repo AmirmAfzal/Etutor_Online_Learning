@@ -86,9 +86,10 @@ const ChatMessages = async (props: Props) => {
   console.log("instructor", instructorId);
 
   const messages = await messageModel
-    .find({ student: studentId }, { instructor: instructorId })
-    .sort({ createdAt: -1 })
+    .find({ student: studentId, instructor: instructorId })
     .lean();
+
+  console.log(messages);
 
   return (
     <div className="bg-base-100 flex-1 overflow-y-auto p-4">
