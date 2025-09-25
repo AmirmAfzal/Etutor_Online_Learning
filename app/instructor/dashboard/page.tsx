@@ -44,6 +44,7 @@ const DashboardPage = async () => {
             stroke="#564FFD"
             fill="#EBEBFF"
             height={320}
+            instructorId={String(instructor._id)}
             initialChartData={initialData}
           />
         </div>

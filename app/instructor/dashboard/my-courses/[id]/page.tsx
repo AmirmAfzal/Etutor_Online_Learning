@@ -181,6 +181,7 @@ const CourseDetailPage = async (props: Props) => {
               stroke="#23BD33"
               fill="#E1F7E3"
               height={400}
+              courseId={String(course._id)}
               initialChartData={courseDailyIncome}
             />
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import {
   AreaChart,
   Area,
@@ -9,6 +9,11 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+
+import {
+  fetchCourseRevenue,
+  fetchInstructorRevenue,
+} from "@/lib/actions/instructor/revenue";
 
 import {
   Select,
@@ -24,18 +29,10 @@ interface Props {
   stroke: string;
   fill: string;
   height: number;
-  initialChartData?: RevenuePoint[];
+  instructorId?: string;
+  courseId?: string;
+  initialChartData: RevenuePoint[];
 }
-
-const defaultChartData: RevenuePoint[] = [
-  { day: "Aug 01", income: 4000 },
-  { day: "Aug 05", income: 3000 },
-  { day: "Aug 10", income: 2000 },
-  { day: "Aug 15", income: 2780 },
-  { day: "Aug 20", income: 1890 },
-  { day: "Aug 25", income: 2390 },
-  { day: "Aug 30", income: 3490 },
-];
 
 const months = [
   { value: 1, label: "Jan" },
@@ -52,18 +49,43 @@ const months = [
   { value: 12, label: "Dec" },
 ];
 
-const RevenueView = ({ stroke, fill, height, initialChartData }: Props) => {
+const RevenueView = ({
+  stroke,
+  fill,
+  height,
+  instructorId,
+  courseId,
+  initialChartData,
+}: Props) => {
   const [month, setMonth] = useState(new Date().getUTCMonth() + 1);
+  const [data, setData] = useState<RevenuePoint[]>(initialChartData);
+  const year = new Date().getFullYear();
 
-  const data = initialChartData ? initialChartData : defaultChartData;
+  const changeHandler = (value: string) => {
+    setMonth(Number(value));
+  };
+
+  useEffect(() => {
+    const updateData = async () => {
+      if (instructorId) {
+        const result = await fetchInstructorRevenue(instructorId, month, year);
+        setData(result);
+      } else if (courseId) {
+        const result = await fetchCourseRevenue(courseId, month, year);
+        setData(result);
+      }
+    };
+
+    startTransition(() => {
+      updateData();
+    });
+  }, [month, instructorId, courseId, year]);
+
   return (
     <div className="bg-base-100 h-full w-full">
       <div className="border-base-300 flex flex-row items-center justify-between border-b p-4">
         <h3 className="text-sm font-bold">Revenue</h3>
-        <Select
-          value={month.toString()}
-          onValueChange={(value) => setMonth(Number(value))}
-        >
+        <Select value={month.toString()} onValueChange={changeHandler}>
           <SelectTrigger className="border-0">
             <SelectValue placeholder="This Month" />
           </SelectTrigger>
@@ -88,7 +110,7 @@ const RevenueView = ({ stroke, fill, height, initialChartData }: Props) => {
             axisLine={false}
             fontSize={12}
           />
-          <YAxis fontSize={10} tickLine={false} axisLine={false} />
+          <YAxis fontSize={12} tickLine={false} axisLine={false} />
           <Tooltip />
           <Area
             type="monotone"
