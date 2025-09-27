@@ -7,6 +7,7 @@ import instructorModel from "../db/models/instructorModel";
 import { ActionData } from "../formTypes";
 import { connectDB } from "../db/db";
 import { authOptions } from "../auth/authOptions";
+import userModel from "@/lib/db/models/userModel";
 
 export async function becomeInstructor(
   prevState: ActionData,
@@ -30,11 +31,19 @@ export async function becomeInstructor(
     };
   }
 
+  const updateUser = await userModel.findByIdAndUpdate(session.user.id, {
+    role: "INSTRUCTOR",
+  });
+
   const newInstructor = await instructorModel.create({
     user: data.id,
     firstname: data.firstname,
     lastname: data.lastname,
   });
+
+  if (updateUser) {
+    console.log("update user role successfully");
+  }
 
   if (newInstructor) {
     redirect("/instructor/dashboard/settings");

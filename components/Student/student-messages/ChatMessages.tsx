@@ -25,29 +25,31 @@ const ChatMessages = async (props: Props) => {
 
   // USER : SENDER
   const session = await getServerSession(authOptions);
-  const user = session?.user;
   const userId = session?.user?.id;
   if (!session?.user?.id) {
     return <span>invalid user id</span>;
   }
+
+  let userRole: "STUDENT" | "INSTRUCTOR" | null = null;
+  const student = await studentModel.findOne({ user: userId }).lean();
+  if (student) userRole = "STUDENT";
+
+  const instructor = await instructorModel.findOne({ user: userId }).lean();
+  if (instructor) userRole = "INSTRUCTOR";
+
+  console.log("userRole", userRole);
 
   console.log(session?.user?.id);
 
   let studentId = null;
   let instructorId = null;
 
-  if (user?.role === "STUDENT") {
-    const student = await studentModel.findOne({ user: userId }).lean();
-    if (student) {
-      studentId = student?._id;
-      instructorId = receiverId;
-    }
-  } else if (user?.role === "INSTRUCTOR") {
-    const instructor = await instructorModel.findOne({ user: userId }).lean();
-    if (instructor) {
-      instructorId = instructor?._id;
-      studentId = receiverId;
-    }
+  if (userRole === "STUDENT") {
+    studentId = student?._id;
+    instructorId = receiverId;
+  } else if (userRole === "INSTRUCTOR") {
+    instructorId = instructor?._id;
+    studentId = receiverId;
   }
 
   console.log("student", studentId);
@@ -61,37 +63,37 @@ const ChatMessages = async (props: Props) => {
   console.log(messages);
 
   return (
-      <div className="bg-base-100 ml:w-3/4 border-base-300 relative flex-1 border p-4">
-        <div className="flex h-[600px] mb-2 flex-col-reverse space-y-4 space-y-reverse overflow-y-auto">
-          {messages.map((message) => (
+    <div className="bg-base-100 ml:w-3/4 border-base-300 relative flex-1 border p-4">
+      <div className="mb-2 flex h-[600px] flex-col-reverse space-y-4 space-y-reverse overflow-y-auto">
+        {messages.map((message) => (
+          <div
+            key={message?._id?.toString()}
+            className={`flex flex-col ${
+              message.sender === "STUDENT" ? "items-end" : "items-start"
+            }`}
+          >
+            <p className="mb-1 text-xs opacity-70">
+              {new Date(message.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
             <div
-              key={message?._id?.toString()}
-              className={`flex flex-col ${
-                message.sender === "STUDENT" ? "items-end" : "items-start"
+              className={`max-w-xs rounded-md p-2.5 ${
+                message.sender === "STUDENT"
+                  ? "bg-primary text-primary-content"
+                  : "bg-primary/20 text-base-content/70"
               }`}
             >
-              <p className="mb-1 text-xs opacity-70">
-                {new Date(message.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+              <p className="text-xs font-medium md:text-sm">
+                {message.message}
               </p>
-              <div
-                className={`max-w-xs rounded-md p-2.5 ${
-                  message.sender === "STUDENT"
-                    ? "bg-primary text-primary-content"
-                    : "bg-primary/20 text-base-content/70"
-                }`}
-              >
-                <p className="text-xs font-medium md:text-sm">
-                  {message.message}
-                </p>
-              </div>
             </div>
-          ))}
-        </div>
-        <MessageInput receiverId={receiverId} />
+          </div>
+        ))}
       </div>
+      <MessageInput receiverId={receiverId} />
+    </div>
   );
 };
 

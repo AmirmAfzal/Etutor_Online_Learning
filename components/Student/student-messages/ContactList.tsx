@@ -5,6 +5,10 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import moment from "moment";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import instructorModel from "@/lib/db/models/instructorModel";
+import studentModel from "@/lib/db/models/studentModel";
 
 interface Props {
   role: "student" | "instructor";
@@ -13,13 +17,27 @@ interface Props {
 const contactList = async ({ role }: Props) => {
   await connectDB();
 
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+
   console.log("Current Role:", role);
 
+  let currentInstructorId = null;
+  let currentStudentId = null;
   let pipeline;
+
+  if (role === "instructor" && userId) {
+    const instructor = await instructorModel.findOne({ user: userId }).lean();
+    currentInstructorId = instructor?._id;
+  }
+  if (role === "student" && userId) {
+    const student = await studentModel.findOne({ user: userId }).lean();
+    currentStudentId = student?._id;
+  }
 
   if (role == "instructor") {
     pipeline = [
-      { $match: { sender: "STUDENT" } },
+      { $match: { sender: "STUDENT", instructor: currentInstructorId } },
       { $sort: { createdAt: -1 } },
       {
         $group: {
@@ -49,7 +67,7 @@ const contactList = async ({ role }: Props) => {
     ];
   } else if (role == "student") {
     pipeline = [
-      { $match: { sender: "INSTRUCTOR" } },
+      { $match: { sender: "INSTRUCTOR", student: currentStudentId } },
       { $sort: { createdAt: -1 } },
       {
         $group: {
@@ -82,7 +100,7 @@ const contactList = async ({ role }: Props) => {
   const messageSender = await messageModel.aggregate(pipeline);
 
   return (
-    <ul className="ml:w-1/4 border border-base-300">
+    <ul className="ml:w-1/4 border-base-300 border">
       {messageSender.map((sender, index) => (
         <li key={index} className="my-3 ml-2">
           <Link
