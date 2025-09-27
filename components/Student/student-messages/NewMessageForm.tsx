@@ -10,19 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-const NewMessageForm = ({
-  mockContacts,
-}: {
-  mockContacts: {
-    id: number;
-    name: string;
-    image: string;
-    lastMessage: string;
-    timestamp: string;
-    isActive: boolean;
-    unread: boolean;
-  }[];
-}) => {
+const NewMessageForm = () => {
   return (
     <form className="mt-4 space-y-6">
       <div>
@@ -37,11 +25,11 @@ const NewMessageForm = ({
             <SelectValue placeholder="Select..." />
           </SelectTrigger>
           <SelectContent>
-            {mockContacts.map((contact) => (
-              <SelectItem key={contact.id} value={contact.id.toString()}>
-                {contact.name}
-              </SelectItem>
-            ))}
+            {/*{mockContacts.map((contact) => (*/}
+            {/*  <SelectItem key={contact.id} value={contact.id.toString()}>*/}
+            {/*    {contact.name}*/}
+            {/*  </SelectItem>*/}
+            {/*))}*/}
           </SelectContent>
         </Select>
       </div>

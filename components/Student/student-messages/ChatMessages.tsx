@@ -8,6 +8,7 @@ import { Types } from "mongoose";
 import studentModel from "@/lib/db/models/studentModel";
 import instructorModel from "@/lib/db/models/instructorModel";
 import MessageInput from "@/components/Student/student-messages/MessageInput";
+import MessageProfile from "@/components/Student/student-messages/MessageProfile";
 
 interface Props {
   searchParams?: Promise<{ id: string }>;
@@ -41,8 +42,24 @@ const ChatMessages = async (props: Props) => {
 
   console.log(session?.user?.id);
 
+  let receiverInfo = null;
   let studentId = null;
   let instructorId = null;
+
+  const receiverStudent = await studentModel.findById(receiverId).lean();
+  if (receiverStudent) {
+    receiverInfo = { ...receiverStudent, role: "STUDENT" };
+  } else {
+    const receiverInstructor = await instructorModel
+      .findById(receiverId)
+      .lean();
+    if (receiverInstructor) {
+      receiverInfo = { ...receiverInstructor, role: "INSTRUCTOR" };
+    }
+  }
+  if (!receiverInfo) {
+    return <span>Receiver not found</span>;
+  }
 
   if (userRole === "STUDENT") {
     studentId = student?._id;
@@ -61,9 +78,9 @@ const ChatMessages = async (props: Props) => {
     .lean();
 
   console.log(messages);
-
   return (
     <div className="bg-base-100 ml:w-3/4 border-base-300 relative flex-1 border p-4">
+      <MessageProfile {...receiverInfo}  />
       <div className="mb-2 flex h-[600px] flex-col-reverse space-y-4 space-y-reverse overflow-y-auto">
         {messages.map((message) => (
           <div
