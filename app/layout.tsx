@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Poppins } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
@@ -9,7 +10,6 @@ import Footer from "@/components/ui/Footer";
 import AuthProvider from "./auth/AuthProvider";
 
 import "./globals.css";
-import { ToastContainer } from "react-toastify";
 
 const poppins = Poppins({
   subsets: ["latin"],

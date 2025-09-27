@@ -22,6 +22,15 @@ export interface InstructorInterface extends Document {
     whatsapp: string | null;
     twitter: string | null;
   };
+  notifications: {
+    coursePurchased: boolean;
+    CourseReview: boolean;
+    LectureComment: boolean;
+    LectureDownload: boolean;
+    CommentReply: boolean;
+    ProfileVisit: boolean;
+    attachmentDownloaded: boolean;
+  };
 }
 
 const instructorSchema = new Schema<InstructorInterface>(
@@ -51,6 +60,15 @@ const instructorSchema = new Schema<InstructorInterface>(
       youtube: { type: String, default: null },
       whatsapp: { type: String, default: null },
       twitter: { type: String, default: null },
+    },
+    notifications: {
+      coursePurchased: { type: Boolean, default: false },
+      CourseReview: { type: Boolean, default: false },
+      LectureComment: { type: Boolean, default: false },
+      LectureDownload: { type: Boolean, default: false },
+      CommentReply: { type: Boolean, default: false },
+      ProfileVisit: { type: Boolean, default: false },
+      attachmentDownloaded: { type: Boolean, default: false },
     },
   },
   {
