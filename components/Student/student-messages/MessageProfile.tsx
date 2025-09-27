@@ -15,8 +15,10 @@ const MessageProfile = (props: Props) => {
         {props?.avatar ? (
           <Image
             src={props?.avatar || ""}
+            width={70}
+            height={70}
             alt={`${props.firstname} ${props.lastname}`}
-            className="rounded-full text-3xl"
+            className="rounded-full object-cover"
           />
         ) : (
           <Icon
@@ -31,7 +33,7 @@ const MessageProfile = (props: Props) => {
           <span className="text-base-content/60 text-xs">Active Now</span>
         </div>
       </div>
-      <Icon icon="ph:dots-three" className="text-4xl p-1 bg-base-300" />
+      <Icon icon="ph:dots-three" className="bg-base-300 p-1 text-4xl" />
     </div>
   );
 };
