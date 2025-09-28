@@ -10,7 +10,13 @@ import {
 } from "@/components/ui/select";
 import NewMessageCompose from "@/components/Student/student-messages/NewMessageCompose";
 
-const NewMessageClient = ({ instructors }: { instructors: any[] }) => {
+interface Instructor {
+  _id: string | undefined;
+  firstname: string;
+  lastname: string;
+}
+
+const NewMessageClient = ({ instructors }: { instructors: Instructor[] }) => {
   const [receiverId, setReceiverId] = useState<string | null>(null);
 
   console.log(receiverId);
@@ -32,7 +38,7 @@ const NewMessageClient = ({ instructors }: { instructors: any[] }) => {
               <SelectItem
                 className="hover:bg-base-200 transition-all duration-200"
                 key={contact?._id}
-                value={contact?._id?.toString()}
+                value={contact?._id ?? ""}
               >
                 {`${contact.firstname} ${contact.lastname}`}
               </SelectItem>
