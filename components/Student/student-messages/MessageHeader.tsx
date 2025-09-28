@@ -23,9 +23,12 @@ const MessageHeader = () => {
             <DialogPrimitive.Overlay className="bg-base-content/50 fixed inset-0 z-40" />
             <DialogPrimitive.Content className="bg-base-100 fixed top-1/2 left-1/2 z-50 w-full max-w-xl -translate-x-1/2 -translate-y-1/2 p-6">
               <div className="border-base-content/20 flex items-center justify-between border-b pb-2">
-                <span className="text-base-content/70 text-md font-semibold md:text-lg">
+                {/*<span className="text-base-content/70 text-md font-semibold md:text-lg">*/}
+                {/*  New Message*/}
+                {/*</span>*/}
+                <DialogPrimitive.Title className="text-lg font-semibold">
                   New Message
-                </span>
+                </DialogPrimitive.Title>
                 <DialogPrimitive.Close asChild>
                   <button className="btn btn-ghost text-base-content/70 text-xl md:text-2xl">
                     &times;

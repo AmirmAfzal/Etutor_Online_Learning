@@ -1,0 +1,125 @@
+"use server";
+
+import { ActionData } from "@/lib/formTypes";
+import { connectDB } from "@/lib/db/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import studentModel from "@/lib/db/models/studentModel";
+import instructorModel from "@/lib/db/models/instructorModel";
+import { Types } from "mongoose";
+import messageModel from "@/lib/db/models/messageModel";
+import { revalidatePath } from "next/cache";
+
+interface UserProfile {
+  _id: Types.ObjectId;
+  firstname?: string;
+  lastname?: string;
+  avatar?: string;
+}
+
+export const newMessageCompose = async (
+  prevState: ActionData,
+  formData: FormData
+): Promise<ActionData> => {
+  try {
+    await connectDB();
+
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+      return {
+        message: "ERROR",
+        errors: ["User not authenticated"],
+      };
+    }
+
+    const messageRaw = formData.get("message")?.toString() ?? "";
+    const pathname = formData.get("pathname")?.toString() ?? "";
+    const receiverId = formData.get("receiverId")?.toString() ?? "";
+    const receiverRole = formData.get("receiverRole")?.toString() ?? "";
+
+    if (!messageRaw.trim()) {
+      return {
+        message: "ERROR",
+        errors: ["Message text is required."],
+      };
+    }
+
+    const sanitizedMessage = messageRaw.trim();
+
+    let senderId: Types.ObjectId | null = null;
+
+    const senderRole = pathname.includes("instructor")
+      ? "INSTRUCTOR"
+      : "STUDENT";
+
+    if (senderRole === "STUDENT") {
+      const studentResult = await studentModel
+        .findOne({ user: session?.user?.id })
+        .lean<UserProfile>();
+      if (studentResult) {
+        senderId = studentResult._id;
+      }
+    } else if (senderRole === "INSTRUCTOR") {
+      const instructorResult = await instructorModel
+        .findOne({ user: session?.user?.id })
+        .lean<UserProfile>();
+      if (instructorResult) {
+        senderId = instructorResult._id;
+      }
+    }
+
+    const studentId =
+      senderRole === "STUDENT"
+        ? senderId
+        : receiverRole === "STUDENT"
+          ? new Types.ObjectId(receiverId)
+          : null;
+
+    const instructorId =
+      senderRole === "INSTRUCTOR"
+        ? senderId
+        : receiverRole === "INSTRUCTOR"
+          ? new Types.ObjectId(receiverId)
+          : null;
+
+    const messageData = {
+      message: sanitizedMessage,
+      sender: senderRole,
+      student: studentId,
+      instructor: instructorId,
+    };
+
+    const createMessage = await messageModel.create(messageData);
+
+    if (!createMessage) {
+      return {
+        message: "ERROR",
+        errors: ["Failed to create message."],
+      };
+    }
+
+    console.log(
+      "Message sent successfully",
+      JSON.parse(JSON.stringify(createMessage))
+    );
+
+    const revalidatePathname =
+      senderRole === "STUDENT"
+        ? "/student/messages"
+        : "/instructor/dashboard/message";
+    revalidatePath(revalidatePathname);
+
+    return {
+      message: "SUCCESS",
+      data: JSON.parse(JSON.stringify(createMessage)),
+      errors: [],
+    };
+  } catch (error: unknown) {
+    console.error("Error creating message:", error);
+    return {
+      message: "ERROR",
+      errors: ["An unexpected error occurred. Please try again later."],
+    };
+  }
+};
