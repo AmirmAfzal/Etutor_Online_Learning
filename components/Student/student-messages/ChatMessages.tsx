@@ -16,6 +16,10 @@ interface Props {
   receiverId: Types.ObjectId;
 }
 
+interface LeanProp {
+  _id: Types.ObjectId;
+}
+
 const ChatMessages = async (props: Props) => {
   const searchParams = await props.searchParams;
   const params = await props.params;
@@ -32,10 +36,12 @@ const ChatMessages = async (props: Props) => {
   }
 
   let userRole: "STUDENT" | "INSTRUCTOR" | null = null;
-  const student = await studentModel.findOne({ user: userId }).lean();
+  const student = await studentModel.findOne({ user: userId }).lean<LeanProp>();
   if (student) userRole = "STUDENT";
 
-  const instructor = await instructorModel.findOne({ user: userId }).lean();
+  const instructor = await instructorModel
+    .findOne({ user: userId })
+    .lean<LeanProp>();
   if (instructor) userRole = "INSTRUCTOR";
 
   console.log("userRole", userRole);
@@ -77,10 +83,17 @@ const ChatMessages = async (props: Props) => {
     .sort({ createdAt: -1 })
     .lean();
 
+
+  const profileProps = {
+    avatar: receiverInfo.avatar,
+    firstname: receiverInfo.firstname,
+    lastname : receiverInfo.lastname,
+  };
+
   console.log(messages);
   return (
     <div className="bg-base-100 ml:w-3/4 border-base-300 relative flex-1 border p-4">
-      <MessageProfile {...receiverInfo}  />
+      <MessageProfile {...profileProps} />
       <div className="mb-2 flex h-[600px] flex-col-reverse space-y-4 space-y-reverse overflow-y-auto">
         {messages.map((message) => (
           <div

@@ -4,8 +4,13 @@ import Icon from "@/components/ui/Icon";
 import { useActionState, useRef, useEffect } from "react";
 import { createMessageAction } from "@/lib/actions/student/messages/createMessage";
 import { usePathname } from "next/navigation";
+import { Types } from "mongoose";
 
-const MessageInput = ({ receiverId }: { receiverId: string}) => {
+const MessageInput = ({
+  receiverId,
+}: {
+  receiverId: string | Types.ObjectId;
+}) => {
   const [state, action] = useActionState(createMessageAction, {
     message: "",
     errors: [],
@@ -39,7 +44,7 @@ const MessageInput = ({ receiverId }: { receiverId: string}) => {
           className="input w-full pr-12"
         />
         <input type="hidden" name="pathname" value={pathname} />
-        <input type="hidden" name="receiverId" value={receiverId} />
+        <input type="hidden" name="receiverId" value={receiverId?.toString()} />
         <input type="hidden" name="receiverRole" value={receiverRole} />
 
         <Icon

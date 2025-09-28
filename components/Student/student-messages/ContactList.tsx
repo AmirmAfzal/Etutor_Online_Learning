@@ -10,9 +10,14 @@ import { authOptions } from "@/lib/auth/authOptions";
 import instructorModel from "@/lib/db/models/instructorModel";
 import studentModel from "@/lib/db/models/studentModel";
 import MessageHeader from "@/components/Student/student-messages/MessageHeader";
+import { PipelineStage, Types } from "mongoose";
 
 interface Props {
   role: "student" | "instructor";
+}
+
+interface IdProp {
+  _id: Types.ObjectId;
 }
 
 const contactList = async ({ role }: Props) => {
@@ -25,14 +30,16 @@ const contactList = async ({ role }: Props) => {
 
   let currentInstructorId = null;
   let currentStudentId = null;
-  let pipeline;
+  let pipeline: PipelineStage[] = [];
 
   if (role === "instructor" && userId) {
-    const instructor = await instructorModel.findOne({ user: userId }).lean();
+    const instructor = await instructorModel
+      .findOne({ user: userId })
+      .lean<IdProp>();
     currentInstructorId = instructor?._id;
   }
   if (role === "student" && userId) {
-    const student = await studentModel.findOne({ user: userId }).lean();
+    const student = await studentModel.findOne({ user: userId }).lean<IdProp>();
     currentStudentId = student?._id;
   }
 
