@@ -31,8 +31,8 @@ const ChatMessages = async (props: Props) => {
   // USER : SENDER
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
-  if (!session?.user?.id) {
-    return <span>invalid user id</span>;
+  if (!userId) {
+    return <span>Invalid user id</span>;
   }
 
   let userRole: "STUDENT" | "INSTRUCTOR" | null = null;
@@ -43,10 +43,6 @@ const ChatMessages = async (props: Props) => {
     .findOne({ user: userId })
     .lean<LeanProp>();
   if (instructor) userRole = "INSTRUCTOR";
-
-  console.log("userRole", userRole);
-
-  console.log(session?.user?.id);
 
   let receiverInfo = null;
   let studentId = null;
@@ -75,26 +71,24 @@ const ChatMessages = async (props: Props) => {
     studentId = receiverId;
   }
 
-  console.log("student", studentId);
-  console.log("instructor", instructorId);
-
   const messages = await messageModel
     .find({ student: studentId, instructor: instructorId })
     .sort({ createdAt: -1 })
     .lean();
 
-
   const profileProps = {
     avatar: receiverInfo.avatar,
     firstname: receiverInfo.firstname,
-    lastname : receiverInfo.lastname,
+    lastname: receiverInfo.lastname,
   };
 
-  console.log(messages);
   return (
-    <div className="bg-base-100 ml:w-3/4 border-base-300 relative flex-1 border p-4">
+    <div className="bg-base-100 relative flex flex-col flex-1 p-4">
+      {/* Header */}
       <MessageProfile {...profileProps} />
-      <div className="mb-2 flex h-[600px] flex-col-reverse space-y-4 space-y-reverse overflow-y-auto">
+
+      {/* Messages */}
+      <div className=" flex flex-col-reverse overflow-y-auto h-[600px] p-4 space-y-4 space-y-reverse">
         {messages.map((message) => (
           <div
             key={message?._id?.toString()}
@@ -122,6 +116,8 @@ const ChatMessages = async (props: Props) => {
           </div>
         ))}
       </div>
+
+      {/* Input */}
       <MessageInput receiverId={receiverId} />
     </div>
   );
