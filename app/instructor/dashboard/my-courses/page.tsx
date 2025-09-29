@@ -21,6 +21,9 @@ import courseModel from "@/lib/db/models/courseModel";
 import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
 import MyCoursesPagination from "@/components/instructor-dashboard/my-courses/MyCoursesPagination";
 import categoryModel from "@/lib/db/models/categoryModel";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import { redirect } from "next/navigation";
 
 interface Props {
   searchParams: Promise<{
@@ -33,6 +36,12 @@ interface Props {
 
 const MyCoursesPage = async (props: Props) => {
   await connectDB();
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user.id) {
+    redirect("/auth/signin");
+  }
+
   const courses = await courseModel
     .find()
     .populate("category", "name")
