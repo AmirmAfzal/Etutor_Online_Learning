@@ -78,7 +78,10 @@ const AddToCartModal = ({
                     {courseTitle}
                   </span>
                   <span className="text-base-content/70 p-4 pt-0 text-sm">
-                    {courseInstructor}
+                    {/*ّFIXME : fix this join */}
+                    {courseInstructor
+                      ? `${courseInstructor.join(",")}`
+                      : "nobody"}
                   </span>
                 </div>
               </div>

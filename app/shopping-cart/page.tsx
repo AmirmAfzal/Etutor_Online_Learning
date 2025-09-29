@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Document, Types } from "mongoose";
 import { SlashIcon } from "lucide-react";
+import Icon from "./../../components/ui/Icon";
 
 import {
   Breadcrumb,
@@ -150,8 +151,8 @@ const ShoppingCart = async () => {
             </div>
 
             <Link href="/student/checkout" className="btn btn-primary w-full">
-              {/* TODO : add icon  */}
-              Proceed To Checkout →
+              Proceed To Checkout
+              <Icon icon="ph:arrow-right" className="text-2xl" />
             </Link>
 
             <div className="divider divider-base-content/80 w-full"></div>

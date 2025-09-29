@@ -9,6 +9,7 @@ import WishlistCourseRow from "@/components/Student/student-wishlist/WishlistCou
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
+import instructorModel from "@/lib/db/models/instructorModel";
 
 interface CourseData {
   _id: Types.ObjectId;
@@ -29,6 +30,7 @@ interface Student {
 }
 
 interface InstructorDocument {
+  _id: string;
   firstname?: string;
   lastname?: string;
   bio?: string;
@@ -56,27 +58,33 @@ const WishlistPage = async () => {
   }
 
   const wishlistCourses: CourseData[] = student.wishlist || [];
+  const courses = await Promise.all(
+    wishlistCourses.map(async (course) => {
+      const authorIds = (course.authors || []).map(a => a._id);
 
-  const courses = wishlistCourses.map((course) => {
-    // FIXME : fix this
-    const instructors = (course.authors || []).map((instructor) => {
-      const fullName =
-        `${instructor.firstname || ""} ${instructor.lastname || ""}`.trim();
-      return fullName || "Unknown Instructor";
-    });
+      const courseAuthors = await instructorModel
+        .find({ _id: { $in: authorIds } })
+        .lean<InstructorDocument[]>();
 
-    return {
-      id: course._id.toString(),
-      title: course.title,
-      image: course.thumbnail,
-      instructors, // Pass the array of instructor names
-      price: course.price || "00.00",
-      originalPrice: course.originalPrice || "00.00",
-      rating: course.rating || 545,
-      reviews: course.reviews || 667,
-    };
-  });
+      const instructorNames = courseAuthors.map(inst => {
+        const fullName = `${inst.firstname || ""} ${inst.lastname || ""}`.trim();
+        return fullName || inst.name || "Unknown Instructor";
+      });
 
+      return {
+        id: course._id.toString(),
+        title: course.title,
+        image: course.thumbnail,
+        instructors: instructorNames,
+        price: course.price || "00.00",
+        originalPrice: course.originalPrice || "00.00",
+        rating: course.rating || 545,
+        reviews: course.reviews || 667,
+      };
+    })
+  );
+
+  // console.log(courses.instructors);
   return (
     <>
       <div className="mb-6 sm:mb-8">

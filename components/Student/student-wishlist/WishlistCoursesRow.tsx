@@ -45,7 +45,7 @@ const WishlistCourseRow = ({
               <div className="mb-2 flex items-center gap-1">
                 <Icon icon="ph:star-fill" className="text-primary text-sm" />
                 <span className="text-base-content/70 text-sm font-semibold md:text-xs">
-                  {rating} ({reviews.toLocaleString()} Review)
+                  {rating} ({reviews?.toLocaleString()} Review)
                 </span>
               </div>
 
