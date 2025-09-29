@@ -13,37 +13,37 @@ import MessageHeader from "@/components/Student/student-messages/MessageHeader";
 import { PipelineStage, Types } from "mongoose";
 
 interface Props {
-  role: "student" | "instructor";
+  userRole: "student" | "instructor";
 }
 
 interface IdProp {
   _id: Types.ObjectId;
 }
 
-const contactList = async ({ role }: Props) => {
+const contactList = async ({ userRole }: Props) => {
   await connectDB();
 
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
 
-  console.log("Current Role:", role);
+  console.log("Current Role:", userRole);
 
   let currentInstructorId = null;
   let currentStudentId = null;
   let pipeline: PipelineStage[] = [];
 
-  if (role === "instructor" && userId) {
+  if (userRole === "instructor" && userId) {
     const instructor = await instructorModel
       .findOne({ user: userId })
       .lean<IdProp>();
     currentInstructorId = instructor?._id;
   }
-  if (role === "student" && userId) {
+  if (userRole === "student" && userId) {
     const student = await studentModel.findOne({ user: userId }).lean<IdProp>();
     currentStudentId = student?._id;
   }
 
-  if (role == "instructor") {
+  if (userRole == "instructor") {
     pipeline = [
       { $match: { sender: "STUDENT", instructor: currentInstructorId } },
       { $sort: { createdAt: -1 } },
@@ -73,7 +73,7 @@ const contactList = async ({ role }: Props) => {
         },
       },
     ];
-  } else if (role == "student") {
+  } else if (userRole == "student") {
     pipeline = [
       { $match: { sender: "INSTRUCTOR", student: currentStudentId } },
       { $sort: { createdAt: -1 } },
@@ -115,9 +115,9 @@ const contactList = async ({ role }: Props) => {
           <li key={index} className="my-3 ml-2">
             <Link
               href={
-                role == "student"
+                userRole == "student"
                   ? `/student/messages/${sender._id}`
-                  : role == "instructor"
+                  : userRole == "instructor"
                     ? `/instructor/dashboard/message/${sender._id}`
                     : ""
               }

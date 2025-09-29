@@ -27,7 +27,7 @@ const MessagesById = async (props: Props) => {
       <div
         className={`border-base-300 bg-base-100 flex flex-col border-r ${receiverId ? "hidden md:flex md:w-1/3" : "flex w-full md:w-1/3"}`}
       >
-        <ContactList role="instructor" />
+        <ContactList userRole="instructor" />
       </div>
 
       {/* Chat Section */}

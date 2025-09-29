@@ -1,6 +1,5 @@
 import ChatMessages from "@/components/Student/student-messages/ChatMessages";
 import ContactList from "@/components/Student/student-messages/ContactList";
-import MessageInput from "@/components/Student/student-messages/MessageInput";
 import { Types } from "mongoose";
 
 interface Props {
@@ -18,7 +17,7 @@ const MessagesById = async (props: Props) => {
         className={`border-base-300 bg-base-100 flex flex-col border-r 
         ${receiverId ? "hidden md:flex md:w-1/3" : "flex w-full md:w-1/3"}`}
       >
-        <ContactList role="student" />
+        <ContactList userRole="student" />
       </div>
 
       {/* Chat Section */}
