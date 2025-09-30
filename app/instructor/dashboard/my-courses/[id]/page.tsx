@@ -18,6 +18,7 @@ import {
 import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
 import { getCourseRevenue } from "@/lib/utils/getCourseRevenue";
 import { getCourseDailyIncome } from "@/lib/utils/getCourseDailyIncome";
+import { getCourseDailyComments } from "@/lib/utils/getCourseDailyComments";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -33,6 +34,12 @@ const CourseDetailPage = async (props: Props) => {
   const currentYear = new Date().getFullYear();
 
   const courseDailyIncome = await getCourseDailyIncome(
+    course._id,
+    currentMonth,
+    currentYear
+  );
+
+  const dailyComments = await getCourseDailyComments(
     course._id,
     currentMonth,
     currentYear
@@ -186,7 +193,10 @@ const CourseDetailPage = async (props: Props) => {
             />
           </div>
           <div className="col-span-1 md:col-span-7">
-            <CourseOverview />
+            <CourseOverview
+              chartData={dailyComments}
+              courseId={course._id.toString()}
+            />
           </div>
         </div>
       </div>

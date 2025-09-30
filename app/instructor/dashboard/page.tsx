@@ -12,6 +12,7 @@ import { authOptions } from "@/lib/auth/authOptions";
 import { getInstructorDailyIncome } from "@/lib/utils/getInstructorDailyIncome";
 import instructorModel from "@/lib/db/models/instructorModel";
 import { connectDB } from "@/lib/db/db";
+import { getInstructorDailyComments } from "@/lib/utils/getInstructorDailyComments";
 
 const DashboardPage = async () => {
   await connectDB();
@@ -26,6 +27,12 @@ const DashboardPage = async () => {
   const currentYear = new Date().getFullYear();
 
   const initialData = await getInstructorDailyIncome(
+    instructor._id,
+    currentMonth,
+    currentYear
+  );
+
+  const instructorDailyComments = await getInstructorDailyComments(
     instructor._id,
     currentMonth,
     currentYear
@@ -55,7 +62,10 @@ const DashboardPage = async () => {
           <CourseRating />
         </div>
         <div className="col-span-1 h-auto w-full md:col-span-7">
-          <CourseOverview />
+          <CourseOverview
+            chartData={instructorDailyComments}
+            instructorId={instructor._id.toString()}
+          />
         </div>
       </div>
     </section>
