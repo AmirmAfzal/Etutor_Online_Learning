@@ -13,6 +13,7 @@ import { getInstructorDailyIncome } from "@/lib/utils/getInstructorDailyIncome";
 import instructorModel from "@/lib/db/models/instructorModel";
 import { connectDB } from "@/lib/db/db";
 import { getInstructorDailyComments } from "@/lib/utils/getInstructorDailyComments";
+import calculateAllCoursesRating from "@/lib/utils/calculateAllCoursesRating";
 
 const DashboardPage = async () => {
   await connectDB();
@@ -33,6 +34,12 @@ const DashboardPage = async () => {
   );
 
   const instructorDailyComments = await getInstructorDailyComments(
+    instructor._id,
+    currentMonth,
+    currentYear
+  );
+
+  const instructorDailyRating = await calculateAllCoursesRating(
     instructor._id,
     currentMonth,
     currentYear
@@ -59,12 +66,15 @@ const DashboardPage = async () => {
           <EarningView />
         </div>
         <div className="col-span-1 h-auto w-full md:col-span-5">
-          <CourseRating />
+          <CourseRating
+            chartData={instructorDailyRating}
+            instructorId={String(instructor._id)}
+          />
         </div>
         <div className="col-span-1 h-auto w-full md:col-span-7">
           <CourseOverview
             chartData={instructorDailyComments}
-            instructorId={instructor._id.toString()}
+            instructorId={String(instructor._id)}
           />
         </div>
       </div>

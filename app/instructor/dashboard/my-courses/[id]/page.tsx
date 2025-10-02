@@ -19,6 +19,7 @@ import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteBut
 import { getCourseRevenue } from "@/lib/utils/getCourseRevenue";
 import { getCourseDailyIncome } from "@/lib/utils/getCourseDailyIncome";
 import { getCourseDailyComments } from "@/lib/utils/getCourseDailyComments";
+import calculateCourseRating from "@/lib/utils/calculateCourseRating";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -45,6 +46,12 @@ const CourseDetailPage = async (props: Props) => {
     currentYear
   );
 
+  const dailyRating = await calculateCourseRating(
+    course._id,
+    currentMonth,
+    currentYear
+  );
+  console.log(dailyRating);
   return (
     <section className="bg-base-200 w-full">
       <div className="container mx-auto p-6">
@@ -127,8 +134,13 @@ const CourseDetailPage = async (props: Props) => {
                     />
                   ))}
                 </div>
-                <p className="font-bold">{course.rating}</p>
-                <p className="text-base-content/70 text-sm">(123,456 Rating)</p>
+                <p className="font-bold">
+                  {/* {course.rating} */}
+                  {dailyRating.averageRating.toFixed(1)}
+                </p>
+                <p className="text-base-content/70 text-sm">
+                  ({dailyRating.totalFeedbacks} Rating)
+                </p>
               </div>
             </div>
             <div className="border-base-300 flex flex-col items-center justify-between gap-4 border-t pt-4 md:flex-row">
@@ -180,7 +192,7 @@ const CourseDetailPage = async (props: Props) => {
 
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
           <CourseInformation courseId={id} />
-          <CourseRating />
+          <CourseRating chartData={dailyRating} courseId={String(course._id)} />
         </div>
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-12">
           <div className="col-span-1 md:col-span-5">
@@ -195,7 +207,7 @@ const CourseDetailPage = async (props: Props) => {
           <div className="col-span-1 md:col-span-7">
             <CourseOverview
               chartData={dailyComments}
-              courseId={course._id.toString()}
+              courseId={String(course._id)}
             />
           </div>
         </div>

@@ -104,7 +104,6 @@ const CourseOverview = ({ chartData, courseId, instructorId }: Props) => {
             <Area
               type="monotone"
               dataKey="comments"
-              stackId="1"
               stroke="#564FFD"
               strokeWidth={2}
               fill="#EBEBFF"
