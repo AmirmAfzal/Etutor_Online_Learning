@@ -12,7 +12,6 @@ export default async function calculateAllCoursesRating(
   const end = new Date(year, month, 0, 23, 59, 59, 999);
   const daysInMonth = end.getDate();
 
-  // پیدا کردن همه دوره‌های مدرس
   const courses = await courseModel
     .find({
       authors: new mongoose.Types.ObjectId(instructorId),
@@ -44,7 +43,6 @@ export default async function calculateAllCoursesRating(
 
   const courseIds = courses.map((c) => c._id);
 
-  // آمار کلی
   const feedbacks = await feedbackModel.aggregate([
     {
       $match: {
@@ -65,7 +63,6 @@ export default async function calculateAllCoursesRating(
   const totalFeedbacks = feedbacks.length > 0 ? feedbacks[0].totalFeedbacks : 0;
   const averageRating = feedbacks.length > 0 ? feedbacks[0].averageRating : 0;
 
-  // آمار روزانه
   const dailyFeedbacks = await feedbackModel.aggregate([
     {
       $match: {
@@ -110,7 +107,6 @@ export default async function calculateAllCoursesRating(
     };
   });
 
-  // توزیع ستاره‌ها
   const ratingDistributionData = await feedbackModel.aggregate([
     {
       $match: {
