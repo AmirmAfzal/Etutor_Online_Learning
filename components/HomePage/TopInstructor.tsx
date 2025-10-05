@@ -9,7 +9,15 @@ import instructorModel, {
 
 import Icon from "../ui/Icon";
 
-type Instructor = Omit<InstructorInterface, keyof Document>;
+type Instructor = {
+  _id: string;
+  firstname: string;
+  lastname: string;
+  avatar: string;
+  title: string;
+  rating: number;
+  students: number;
+};
 
 const TopInstructor = async () => {
   await connectDB();
@@ -28,8 +36,9 @@ const TopInstructor = async () => {
       </h3>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {instructors.map((instructor: Instructor, index: number) => (
-          <div
+          <Link
             key={index}
+            href={`/instructor/${instructor._id}`}
             className="border-base-300 flex flex-col justify-between border"
           >
             {instructor.avatar ? (
@@ -64,7 +73,7 @@ const TopInstructor = async () => {
                 <p className="text-base-content/50">students</p>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
       <div className="flex flex-col items-center justify-center gap-4 text-sm md:flex-row">
