@@ -70,7 +70,7 @@ export default async function calculateCourseRating(
     const stats = feedbackMap[i + 1] || { averageRating: 0, totalFeedbacks: 0 };
     return {
       date: formatter.format(date),
-      averageRating: stats.averageRating,
+      averageRating: Number(stats.averageRating.toFixed(1)),
       totalFeedbacks: stats.totalFeedbacks,
     };
   });

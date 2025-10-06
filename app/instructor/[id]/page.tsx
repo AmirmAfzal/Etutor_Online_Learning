@@ -30,7 +30,7 @@ interface Props {
 
 const InstructorPage = async ({ params, searchParams }: Props) => {
   const rating = (await searchParams).rating || "all";
-  console.log(rating);
+
   const { id } = await params;
   const currentMonth = new Date().getUTCMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -52,10 +52,13 @@ const InstructorPage = async ({ params, searchParams }: Props) => {
 
   let feedbacks = [];
   if (rating === "all") {
-    feedbacks = await feedbackModel.find().lean().sort({ star: -1 });
+    feedbacks = await feedbackModel
+      .find({ userId: instructor.user })
+      .lean()
+      .sort({ star: -1 });
   } else {
     feedbacks = await feedbackModel
-      .find({ star: { $eq: Number(rating) } })
+      .find({ userId: instructor.user, star: { $eq: Number(rating) } })
       .lean()
       .sort({ star: -1 });
   }
@@ -81,10 +84,7 @@ const InstructorPage = async ({ params, searchParams }: Props) => {
                   Top Rated
                 </button>
               </div>
-              <p className="text-base-content/60 mt-2">
-                {/* Web Designer & Best-Selling Instructor */}
-                {instructor.title}
-              </p>
+              <p className="text-base-content/60 mt-2">{instructor.title}</p>
               <div className="mt-4 flex flex-row gap-4">
                 <div className="flex flex-row items-center gap-2">
                   <Icon
