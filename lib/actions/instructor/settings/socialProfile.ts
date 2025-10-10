@@ -64,9 +64,4 @@ export async function saveSocialProfile(
       errors: ["error in save social Profiles"],
     };
   }
-
-  return {
-    message: "SUCCESS",
-    errors: [],
-  };
 }
