@@ -93,8 +93,6 @@ export const createCommentAction = async (
       };
     }
 
-    console.log("userProfile", userProfile);
-
     if (!userProfile?._id) {
       console.error(
         "User profile not found in database for session user:",
@@ -121,9 +119,6 @@ export const createCommentAction = async (
 
     const lecture = new Types.ObjectId(lectureIdRaw);
 
-
-    console.log(lecture)
-
     const createComment = await commentModel.create({
       userId: userProfile?._id,
       comment,
@@ -140,10 +135,7 @@ export const createCommentAction = async (
       };
     }
 
-    // FIXME : fix this path
-    revalidatePath(
-      "http://localhost:3000/courses/688a44038e96d020b5889ea2/watch"
-    );
+    revalidatePath("/courses/[id]/watch");
 
     return {
       message: "SUCCESS",

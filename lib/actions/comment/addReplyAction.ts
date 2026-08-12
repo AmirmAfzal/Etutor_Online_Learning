@@ -134,10 +134,7 @@ export const addReplyAction = async (
       $push: { replies: createReply._id },
     });
 
-    // FIXME : fix this path
-    revalidatePath(
-      "http://localhost:3000/courses/688a44038e96d020b5889ea2/watch"
-    );
+    revalidatePath("/courses/[id]/watch");
 
     return {
       message: "SUCCESS",

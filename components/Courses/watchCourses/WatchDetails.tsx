@@ -28,7 +28,6 @@ const WatchDetails = ({
   sectionTitle,
   watchingStudents,
 }: WatchDetailsProps) => {
-  // FIXME : get students from course enrolled students
   const courseStudents = [
     { avatar: "/images/profile-img.png" },
     { avatar: "" },
@@ -41,7 +40,6 @@ const WatchDetails = ({
   return (
     <div className="mt-12 w-full md:mt-8 lg:w-2/3">
       <h2 className="text-base-content/80 text-lg font-semibold md:text-xl">
-        {/* FIXME : fix the section || lecture number */}
         {sectionNumber} . {sectionTitle}
       </h2>
 
@@ -77,7 +75,6 @@ const WatchDetails = ({
           </div>
         </div>
         <div className="text-base-content/70 flex flex-wrap items-center gap-4 text-sm md:text-base">
-          {/* FIXME */}
           <span>Last updated: 3 days ago</span>
           <span>Comments: 0</span>
         </div>

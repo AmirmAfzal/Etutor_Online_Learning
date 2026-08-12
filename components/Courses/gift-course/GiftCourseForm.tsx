@@ -31,7 +31,7 @@ const GiftCourseForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof GiftCourseFormSchema>) {
-    console.log(values);
+    void values;
   }
 
   return (

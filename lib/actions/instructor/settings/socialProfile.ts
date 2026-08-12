@@ -58,7 +58,7 @@ export async function saveSocialProfile(
       errors: [],
     };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       message: "ERROR",
       errors: ["error in save social Profiles"],

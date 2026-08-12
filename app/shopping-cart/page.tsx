@@ -150,7 +150,6 @@ const ShoppingCart = async () => {
             </div>
 
             <Link href="/student/checkout" className="btn btn-primary w-full">
-              {/* TODO : add icon  */}
               Proceed To Checkout →
             </Link>
 

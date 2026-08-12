@@ -31,8 +31,6 @@ type WatchCurriculumProps = {
   currentSectionIndex?: number;
 };
 
-// TODO : add completionPercentage
-
 const WatchCurriculum = ({
   curriculum,
   completionPercentage,

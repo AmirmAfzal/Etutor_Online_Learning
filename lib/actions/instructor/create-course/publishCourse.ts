@@ -13,7 +13,6 @@ export async function publishCourse(
   formData: PublishMessageFormData
 ) {
   const result = publishMessageSchema.safeParse(formData);
-  console.log(result);
   if (!result.success) {
     return {
       message: "ERROR",
@@ -35,7 +34,7 @@ export async function publishCourse(
     }
 
     // Update the course with the publish data
-    const updatedCourse = await courseModel.findOneAndUpdate(
+    await courseModel.findOneAndUpdate(
       { _id: result.data.courseId },
       {
         $set: {
@@ -43,12 +42,9 @@ export async function publishCourse(
           congratulationsMessage: result.data.congratulationsMessage,
           instructors: result.data.instructors,
         },
-      },
-      { new: true }
+      }
     );
 
-    console.log("Course published successfully:", updatedCourse);
-    
     return {
       message: "SUCCESS",
       errors: [],

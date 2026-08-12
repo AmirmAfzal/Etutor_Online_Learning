@@ -58,7 +58,6 @@ const WishlistPage = async () => {
   const wishlistCourses: CourseData[] = student.wishlist || [];
 
   const courses = wishlistCourses.map((course) => {
-    // FIXME : fix this
     const instructors = (course.authors || []).map((instructor) => {
       const fullName =
         `${instructor.firstname || ""} ${instructor.lastname || ""}`.trim();

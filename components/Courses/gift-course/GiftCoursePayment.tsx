@@ -10,14 +10,14 @@ const paymentMethods = [
     icon: "/images/visa.png",
     label: "4855 **** **** ****",
     expiry: "04/24",
-    name: "Vako Shtvili",
+    name: "Cardholder Name",
   },
   {
     id: "mastercard",
     icon: "/images/masterCard.png",
     label: "5795 **** **** ****",
     expiry: "04/24",
-    name: "Vako Shtvili",
+    name: "Cardholder Name",
   },
   {
     id: "paypal",

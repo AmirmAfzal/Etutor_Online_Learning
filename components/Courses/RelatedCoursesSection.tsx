@@ -26,7 +26,6 @@ if(foundCourses.length > 0){
   courses = foundCourses.map(course => ({
     thumbnail: course.thumbnail,
     name: course.title,
-    // FIXME: replace with actual category data if available
     category: "development",
     price: course.price,
     students: course.studentsCount,

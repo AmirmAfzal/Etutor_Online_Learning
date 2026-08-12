@@ -71,7 +71,6 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
             {currentLecture.notes}
           </p>
 
-          {/* FIXME : fix file number*/}
           {files.length > 0 ? (
             <div className="flex flex-col gap-6">
               <h3 className="text-lg font-semibold lg:text-xl">
@@ -92,7 +91,6 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
                         {file.split("/").pop() || "Downloadable File"}
                       </p>
                       <p className="text-base-content/60 text-sm">File Size</p>{" "}
-                      {/* FIXME :  This should be dynamic */}
                     </div>
                   </div>
                   <Link

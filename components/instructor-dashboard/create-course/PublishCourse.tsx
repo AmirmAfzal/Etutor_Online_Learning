@@ -99,7 +99,6 @@ const PublishCourse = ({ onBack, course }: Props) => {
   };
 
   const submitHandler = (data: PublishMessageFormData) => {
-    console.log(data);
     if (!course?._id) {
       console.error("Course ID not found");
       return;

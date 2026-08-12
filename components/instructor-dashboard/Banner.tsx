@@ -44,7 +44,7 @@ const compeleted = [
     isCompelet: false,
   },
 ];
-const Bannar = () => {
+const Banner = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [instructor, setInstructor] = useState<DataTypes | null>(null);
 
@@ -61,11 +61,9 @@ const Bannar = () => {
                 />
                 <div className="flex flex-col gap-1">
                   <p className="text-base-100 font-bold">
-                    {/* Vako Shvili */}
                     {instructor?.fullName}
                   </p>
                   <p className="text-base-100/60 text-xs">
-                    {/* vako.shvili@gmail.com */}
                     {instructor?.email}
                   </p>
                 </div>
@@ -143,4 +141,4 @@ const Bannar = () => {
   );
 };
 
-export default Bannar;
+export default Banner;

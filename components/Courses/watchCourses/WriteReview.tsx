@@ -21,8 +21,6 @@ const WriteReview = ({ courseId } :{courseId: string}) => {
   const userRole = session?.user?.role ?? "";
   const userName = session?.user?.name ?? "";
 
-  console.log(courseId);
-
   return (
     <>
       <label
