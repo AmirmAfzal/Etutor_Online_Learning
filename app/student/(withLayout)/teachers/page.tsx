@@ -81,9 +81,6 @@ const TeachersPage = async (props: Props) => {
       students: instructor.students,
     })
   );
-  console.log(instructorData);
-
-  // FIXME filter on db
   const filteredTeachers = query
     ? instructorData.filter(
         (teacher) =>

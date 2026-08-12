@@ -119,7 +119,6 @@ const PurchaseHistory = async () => {
                             <span className="text-base-content/50">
                               Course by:
                             </span>
-                            {/*FIXME : add course authors*/}
                             {"Unknown Author"}
                           </div>
                         </div>
@@ -175,7 +174,6 @@ const PurchaseHistory = async () => {
       </Accordion>
       <div className="text-base-content/60 mt-8 text-center text-xs opacity-80 md:text-sm">
         Yay! You have seen all your purchase history.
-        {/* TODO : add a emoji here */}
       </div>
     </div>
   );

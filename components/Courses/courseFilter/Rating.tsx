@@ -112,7 +112,6 @@ const Rating = async (props: Props) => {
         <AccordionTrigger className="border-base-300 rounded-none border border-x-0 px-2 text-lg font-semibold">
           RATING
         </AccordionTrigger>
-        {/* FIXME : fix the suspense */}
         <Suspense fallback={<div>Loading...</div>}>
           <RatingContent
             courseRating={props.courseRating}

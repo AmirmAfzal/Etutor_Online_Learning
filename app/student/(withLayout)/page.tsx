@@ -53,23 +53,16 @@ const StudentDashboard = async () => {
 
       const totalLectures = lectureIds.length;
 
-      console.log(`Processing course: ${course.title} (ID: ${course._id})`);
-      console.log(`Total lectures for this course: ${totalLectures}`);
-
       const completedLectures = await courseProgressModel.countDocuments({
         lecture: { $in: lectureIds },
         user: session.user.id,
         completed: true,
       });
 
-      console.log(`Completed lectures for this course: ${completedLectures}`);
-
       const progress =
         totalLectures > 0
           ? Math.round((completedLectures / totalLectures) * 100)
           : 0;
-
-      console.log(`Calculated progress: ${progress}%`);
 
       return {
         id: course._id,

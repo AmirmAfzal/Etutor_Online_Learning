@@ -50,7 +50,6 @@ const FilterMobile = ({ searchParams, children }: Props) => {
         <Icon icon="ph:faders-fill" className="text-xl" />
         <span className="text-sm">Filter</span>
         <span className="text-primary bg-primary/10 px-2">
-          {/* FIXME : fix number of filtering */}
           {isFilterPanelVisible ? "1" : "0"}
         </span>
       </SheetTrigger>

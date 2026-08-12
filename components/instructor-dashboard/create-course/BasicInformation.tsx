@@ -115,11 +115,6 @@ const BasicInformation = ({ onNext, course }: Props) => {
     saveBasicInformation,
     initialState
   );
-  // TODO: state for "Save & Preview" button
-  // const [previewState, previewFormAction] = useActionState(
-  //   saveAndPreviewBasicInformation,
-  //   initialState
-  // );
   const handleSubmit = (data: BasicInformationFormData) => {
     startTransition(() => {
       formAction(data);

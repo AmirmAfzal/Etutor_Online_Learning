@@ -41,8 +41,6 @@ export default function CommentReplyForm({
     }
   };
 
-  // FIXME : replace with render toast component
-
   return (
     <div className="mt-3">
       {!active ? (

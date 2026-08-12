@@ -25,13 +25,12 @@ export async function saveAdvanceInformation(
 
   try {
     const foundCourse = await courseModel.findOne({ _id: formData._id });
-    console.log(foundCourse);
     if (!foundCourse)
       return {
         message: "ERROR",
         errors: ["Course not found"],
       };
-    const updatedCourse = await courseModel.findOneAndUpdate(
+    await courseModel.findOneAndUpdate(
       { _id: formData._id },
       {
         $set: {
@@ -44,8 +43,6 @@ export async function saveAdvanceInformation(
         },
       }
     );
-
-    console.log(updatedCourse);
 
     return {
       message: "SUCCESS",

@@ -57,7 +57,7 @@ export async function saveAccountSettings(
       errors: [],
     };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       message: "ERROR",
       errors: ["save account settings error"],

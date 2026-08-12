@@ -15,13 +15,13 @@ const InstructorPage = () => {
             <Image
               className="h-50 w-50 rounded-full"
               src={"/images/instructors/instructor-4.png"}
-              alt="instractor"
+              alt="instructor"
               width={512}
               height={512}
             />
             <div className="flex flex-col">
               <div className="flex flex-row items-center gap-4">
-                <h1 className="text-3xl font-semibold">Vako Shvili</h1>
+                <h1 className="text-3xl font-semibold">Instructor Name</h1>
                 <button className="btn btn-primary btn-soft">
                   <Icon width={20} className="" icon="ph:crown-simple-bold" />
                   Top Rated
@@ -68,7 +68,7 @@ const InstructorPage = () => {
                 className="link link-secondary text-sm font-medium"
                 href={"/"}
               >
-                https://www.vakoshvili.com
+                www.instructorwebsite.com
               </Link>
             </div>
             <div className="flex flex-row gap-2">
@@ -131,24 +131,17 @@ const InstructorPage = () => {
         <div className="border-base-content/10 flex h-max flex-col gap-4 border-1 p-8">
           <span className="text-lg font-medium">ABOUT ME</span>
           <p className="text-base-content/60 text-sm">
-            One day Vako had enough with the 9-to-5 grind, or more like 9-to-9
-            in his case, and quit his job, or more like got himself fired from
-            his own startup.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. The
+            instructor has been teaching in this field for years and is
+            passionate about sharing practical, real-world knowledge.
           </p>
           <p className="text-base-content/60 text-sm">
-            He decided to work on his dream: be his own boss, travel the world,
-            only do the work he enjoyed, and make a lot more money in the
-            process. No more begging for vacation days and living from paycheck
-            to paycheck. After trying everything from e-commerce stores to
-            professional poker his lucky break came when he started freelance
-            design. Vako fell in love with the field that gives him the
-            lifestyle of his dreams.
+            Their courses focus on hands-on learning, guiding students from
+            the fundamentals to advanced topics at their own pace.
           </p>
           <p className="text-base-content/60 text-sm">
-            Vako realizes that people who take courses on Udemy want to
-            transform their lives. Today with his courses and mentoring Vako is
-            helping thousands of people transform their lives, just like he did
-            once.
+            With hundreds of students mentored so far, the instructor is
+            committed to helping every learner reach their goals.
           </p>
         </div>
         <div className="col-span-2 flex w-full flex-col">
@@ -158,7 +151,7 @@ const InstructorPage = () => {
           </div>
           <div className="divider my-0"></div>
           <span className="mt-6 text-2xl font-semibold">
-            Vako Courses <span className="font-normal">(02)</span>
+            Instructor Courses <span className="font-normal">(02)</span>
           </span>
           <div className="mt-6 grid grid-cols-2 gap-6">
             <CourseCard

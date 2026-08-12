@@ -37,7 +37,6 @@ const VideoUploaderModal = ({ openModal, onSave }: Props) => {
     if (video) {
       openModal("video");
       onSave(video);
-      console.log(video);
     }
   };
 

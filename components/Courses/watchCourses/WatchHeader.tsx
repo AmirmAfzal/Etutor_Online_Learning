@@ -31,15 +31,12 @@ const WatchHeader = async ({
 
 const  { id : courseIdUrl }  = params;
 
-  console.log("Course ID in WatchHeader:", courseIdUrl);
-  
   await connectDB();
 
   const foundSection = await sectionModel
     .findOne({ index: searchParams.section })
     .lean<Course>();
   const courseId = foundSection?.course.toString() || courseIdUrl;
-  console.log(courseId);
 
   return (
     <div className="bg-base-200 flex w-full flex-col items-start justify-between gap-4 p-4 lg:flex-row lg:items-center">

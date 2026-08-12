@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 import InstructorOverview from "@/components/instructor-dashboard/InstructorOverview";
-import Bannar from "@/components/instructor-dashboard/Bannar";
+import Banner from "@/components/instructor-dashboard/Banner";
 import RecentActivity from "@/components/instructor-dashboard/RecentActivity";
 import RevenueView from "@/components/instructor-dashboard/RevenueView";
 import EarningView from "@/components/instructor-dashboard/EarningView";
@@ -19,7 +19,7 @@ const DashboardPage = async () => {
   return (
     <section className="bg-base-200 space-y-6 p-4">
       <InstructorOverview />
-      <Bannar />
+      <Banner />
       <div className="container mx-auto grid grid-cols-1 gap-6 md:grid-cols-12">
         <div className="col-span-1 h-auto w-full md:col-span-4">
           <RecentActivity />

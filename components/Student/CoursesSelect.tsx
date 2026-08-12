@@ -13,7 +13,7 @@ import {
 
 async function formAction(formData: FormData) {
   const data = Object.fromEntries(formData);
-  console.log(data);
+  void data;
 }
 
 const CoursesSelect = () => {

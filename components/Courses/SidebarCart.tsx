@@ -121,7 +121,6 @@ const SidebarCart = ({
         <div className="divider divider-base-300 my-1 w-full" />
 
         <div className="flex flex-col items-center gap-1">
-          {/* FIXME */}
           <AddToCartModal
             courseTitle={courseTitle}
             courseThumbnail={courseThumbnail}
@@ -203,7 +202,6 @@ const SidebarCart = ({
         </div>
 
         <div className="divider divider-base-300 my-1 w-full" />
-        {/* TODO : add share buttons */}
       </div>
     </div>
   );

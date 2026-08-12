@@ -219,7 +219,7 @@ const WatchCourse = async (props: Props) => {
       ? foundSections.findIndex((s) => s._id === currentSection._id) + 1
       : 0,
     sectionTitle: currentLecture.title,
-    students: 122, // FIXME: student number
+    students: 122,
   };
 
   if (!studentCourses) {

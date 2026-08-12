@@ -204,7 +204,6 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
           ...section,
           lectures: editedLectures,
         };
-        console.log(editedSection);
         return section.id === sectionId ? editedSection : section;
       })
     );
@@ -245,7 +244,6 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
   const sendData = () => {
     startTransition(() => {
       formAction({ sections, courseId: (course?._id as string) || "" });
-      console.log(sections);
     });
   };
 
@@ -253,10 +251,7 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
     if (state.message === "SUCCESS") {
       onNext();
     }
-    if (state.message === "ERROR") {
-      console.log(state.errors);
-    }
-  }, [state.message, state.errors, onNext]);
+  }, [state.message, onNext]);
 
   return (
     <div>
