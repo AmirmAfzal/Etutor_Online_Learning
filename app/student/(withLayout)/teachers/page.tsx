@@ -16,6 +16,7 @@ interface InstructorData {
   image: string;
   rating: number;
   students: number;
+  createdAt?: Date;
 }
 
 interface Instructor {
@@ -26,10 +27,11 @@ interface Instructor {
   avatar?: string;
   rating: number;
   students: number;
+  createdAt: Date;
 }
 
 interface Props {
-  searchParams: Promise<{ query?: string }>;
+  searchParams: Promise<{ query?: string; sorted?: string }>;
 }
 
 const TeachersPage = async (props: Props) => {
@@ -49,7 +51,7 @@ const TeachersPage = async (props: Props) => {
       path: "courses",
       populate: {
         path: "authors",
-        select: "firstname lastname avatar username bio rating students",
+        select: "firstname lastname avatar username bio rating students createdAt",
       },
     });
 
@@ -71,23 +73,46 @@ const TeachersPage = async (props: Props) => {
       )
   );
 
-  const instructorData: InstructorData[] = uniqueInstructors.map(
+  let instructorData: InstructorData[] = uniqueInstructors.map(
     (instructor: Instructor) => ({
       name: `${instructor.firstname} ${instructor.lastname}`,
       title: instructor.bio || "Instructor",
-      image:
-        instructor.avatar || "",
+      image: instructor.avatar || "",
       rating: instructor.rating,
       students: instructor.students,
+      createdAt: instructor.createdAt,
     })
   );
-  const filteredTeachers = query
-    ? instructorData.filter(
-        (teacher) =>
-          teacher.name.toLowerCase().includes(query) ||
-          teacher.title.toLowerCase().includes(query)
-      )
-    : instructorData;
+
+  // Filter based on search query
+  if (query) {
+    instructorData = instructorData.filter(
+      (teacher) =>
+        teacher.name.toLowerCase().includes(query) ||
+        teacher.title.toLowerCase().includes(query)
+    );
+  }
+
+  switch (searchParams.sorted) {
+    case "MostStudents":
+      instructorData.sort((a, b) => b.students - a.students);
+      break;
+    case "Latest":
+      instructorData.sort(
+        (a, b) =>
+          (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0)
+      );
+      break;
+    case "Oldest":
+      instructorData.sort(
+        (a, b) =>
+          (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0)
+      );
+      break;
+    default:
+      instructorData.sort((a, b) => b.students - a.students);
+  }
+
 
   return (
     <>
@@ -95,7 +120,7 @@ const TeachersPage = async (props: Props) => {
         <div className="text-base-content/80 mb-4 text-xl font-semibold">
           Instructors
           <span className="text-base-content/80">
-            {`(${filteredTeachers.length})`}
+            {`(${instructorData.length})`}
           </span>
         </div>
 
@@ -110,7 +135,7 @@ const TeachersPage = async (props: Props) => {
       </div>
 
       <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
-        {filteredTeachers.map((teacher, i) => (
+        {instructorData.map((teacher, i) => (
           <TeacherCard key={i} {...teacher} />
         ))}
       </div>

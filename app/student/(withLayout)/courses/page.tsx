@@ -8,6 +8,8 @@ import CoursesSelect from "@/components/Student/CoursesSelect";
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
+import sectionModel from "@/lib/db/models/sectionModel";
+import courseProgressModel from "@/lib/db/models/courseProgressModel";
 
 interface CourseData {
   id?: string;
@@ -18,6 +20,8 @@ interface CourseData {
   progress?: string;
   status?: string;
   author: string[];
+  views: number;
+  createdAt?: Date;
 }
 
 interface Student {
@@ -27,13 +31,45 @@ interface Student {
 }
 
 interface Props {
-  searchParams: Promise<{ query?: string }>;
+  searchParams: Promise<{ query?: string; sorted?: string; status?: string }>;
+}
+async function getCourseProgress(courseId: string, userId: string | undefined) {
+  const sections = await sectionModel.find({ course: courseId }).lean();
+  const allLectures = sections.flatMap((s) =>
+    s.lectures.map((lec: string) => String(lec))
+  );
+
+  if (allLectures.length === 0) {
+    return { status: "NotStarted", progress: 0 };
+  }
+
+  const progresses = await courseProgressModel
+    .find({
+      user: userId,
+      course: courseId,
+      lecture: { $in: allLectures },
+    })
+    .lean();
+
+  const completedLectures = new Set(
+    progresses.filter((p) => p.completed).map((p) => String(p.lecture))
+  );
+
+  const completedCount = completedLectures.size;
+  const totalCount = allLectures.length;
+  const percent = Math.round((completedCount / totalCount) * 100);
+
+  let status = "Ongoing";
+  if (percent === 0) status = "Not Started";
+  else if (percent === 100) status = "Completed";
+
+  return { status, progress: percent };
 }
 
-const StudentCoursesPage = async ({ searchParams }: Props) => {
+const StudentCoursesPage = async (props: Props) => {
   await connectDB();
-  const resolvedSearchParams = await searchParams;
-  const query = resolvedSearchParams.query?.toLowerCase();
+  const searchParams = await props.searchParams;
+  const query = searchParams.query?.toLowerCase();
 
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -61,14 +97,53 @@ const StudentCoursesPage = async ({ searchParams }: Props) => {
 
   const courses: CourseData[] = student.courses || [];
 
-  const mappedCourses = courses.map((course) => ({
-    id: course._id,
-    name: course.title,
-    subtitle: course.subtitle,
-    image: course.thumbnail,
-    progress: course.progress || "0%",
-    status: course.status || "Not Started",
-  }));
+  switch (searchParams.sorted) {
+    case "MostViewed":
+      courses.sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
+      break;
+    case "Latest":
+      courses.sort(
+        (a, b) =>
+          new Date(b.createdAt ?? 0).getTime() -
+          new Date(a.createdAt ?? 0).getTime()
+      );
+      break;
+    case "oldest":
+      courses.sort(
+        (a, b) =>
+          new Date(a.createdAt ?? 0).getTime() -
+          new Date(b.createdAt ?? 0).getTime()
+      );
+      break;
+    default:
+      courses.sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
+  }
+
+  let mappedCoursesWithStatus = await Promise.all(
+    courses.map(async (course) => {
+      const { status, progress } = await getCourseProgress(
+        course._id,
+        session?.user?.id
+      );
+
+      return {
+        id: course._id,
+        name: course.title,
+        subtitle: course.subtitle,
+        image: course.thumbnail,
+        progress: `${progress}%`,
+        status,
+      };
+    })
+  );
+
+  if (searchParams.status && searchParams.status !== "AllCourses") {
+    mappedCoursesWithStatus = mappedCoursesWithStatus.filter(
+      (course) => course.status === searchParams.status
+    );
+  }
+
+  const mappedCourses = mappedCoursesWithStatus;
 
   return (
     <>

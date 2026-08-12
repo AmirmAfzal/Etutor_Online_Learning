@@ -5,6 +5,9 @@ import WithdrawHistory from "@/components/instructor-dashboard/earning/WithdrawH
 import WithdrawMoney from "@/components/instructor-dashboard/earning/WithdrawMoney";
 import { connectDB } from "@/lib/db/db";
 import paymentCardModel from "@/lib/db/models/paymentCardModel";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/authOptions";
+import { redirect } from "next/navigation";
 
 const earningInformation = [
   {
@@ -43,6 +46,12 @@ const earningInformation = [
 
 const EarningPage = async () => {
   await connectDB();
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user.id) {
+    redirect("/auth/signin");
+  }
+
   const paymentCards = await paymentCardModel.find().lean();
   const plainCards = JSON.parse(JSON.stringify(paymentCards));
 

@@ -7,11 +7,15 @@ import SocialProfile from "@/components/instructor-dashboard/settings/SocialProf
 import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import instructorModel from "@/lib/db/models/instructorModel";
+import { redirect } from "next/navigation";
 
 const SettingsPage = async () => {
   await connectDB();
 
   const session = await getServerSession(authOptions);
+  if (!session?.user.id) {
+    redirect("/auth/signin");
+  }
 
   const foundInstructor = await instructorModel
     .findOne({ user: session?.user.id })
