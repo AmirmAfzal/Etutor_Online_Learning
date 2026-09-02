@@ -22,9 +22,8 @@ export async function findSubCategories(
   const subCategories = JSON.parse(
     JSON.stringify(await subCategoryModel.find())
   );
-  const matched = subCategories.filter(
-    (category: { name: string }) =>
-      category.name.toLowerCase().includes(search)
+  const matched = subCategories.filter((category: { name: string }) =>
+    category.name.toLowerCase().includes(search)
   );
 
   return {

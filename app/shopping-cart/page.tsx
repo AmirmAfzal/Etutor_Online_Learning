@@ -16,6 +16,7 @@ import { connectDB } from "@/lib/db/db";
 import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
 import { authOptions } from "@/lib/auth/authOptions";
 
+export const dynamic = "force-dynamic";
 // Define the interface for the Course directly in this file
 interface Course extends Document {
   title: string;
@@ -126,16 +127,6 @@ const ShoppingCart = async () => {
               </span>
             </div>
 
-            <div className="mb-2 flex justify-between text-sm">
-              <span className="text-base-content/70">Coupon Discount</span>
-              <span className="font-medium">8%</span>
-            </div>
-
-            <div className="flex justify-between text-sm">
-              <span className="text-base-content/70">Taxes</span>
-              <span className="font-medium">$17.99 USD</span>
-            </div>
-
             <div className="divider divider-base-content/80 w-full"></div>
 
             <div className="mb-4 flex items-center justify-between">
@@ -152,30 +143,6 @@ const ShoppingCart = async () => {
             <Link href="/student/checkout" className="btn btn-primary w-full">
               Proceed To Checkout →
             </Link>
-
-            <div className="divider divider-base-content/80 w-full"></div>
-
-            <form>
-              <label
-                className="text-base-content/80 mb-2 block text-sm"
-                htmlFor="coupon"
-              >
-                Apply coupon code
-              </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  placeholder="Coupon code"
-                  className="input input-bordered input-sm flex-1"
-                />
-                <button
-                  type="submit"
-                  className="btn btn-sm bg-base-200 ml-2 text-xs font-medium"
-                >
-                  Apply
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       </div>

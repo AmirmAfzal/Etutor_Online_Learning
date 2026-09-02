@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fa">
       <body className={`bg-base-100 ${poppins.variable}`}>
-      <ToastContainer />
+        <ToastContainer />
         <AuthProvider>
           {!url && <Navbar />}
           <main className="no-scrollbar min-h-screen">{children}</main>

@@ -19,7 +19,6 @@ interface Course {
   course: string;
 }
 
-
 const WatchHeader = async ({
   title,
   sectionsCount,
@@ -28,8 +27,7 @@ const WatchHeader = async ({
   searchParams,
   params,
 }: WatchHeaderProps) => {
-
-const  { id : courseIdUrl }  = params;
+  const { id: courseIdUrl } = params;
 
   await connectDB();
 

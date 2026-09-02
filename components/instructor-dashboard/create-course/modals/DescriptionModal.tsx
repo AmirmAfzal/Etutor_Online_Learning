@@ -13,7 +13,7 @@ interface Props {
   sectionId: number;
   lectureId: number;
   onSave: (description: string) => void;
-};
+}
 
 const DescriptionModal = ({
   openModal,

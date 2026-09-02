@@ -7,10 +7,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Icon from "@/components/ui/Icon";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import purchaseHistoryModel from "@/lib/db/models/purchaseHistoryModel";
 
-
+export const dynamic = "force-dynamic";
 interface Course {
   _id: string;
   title: string;
@@ -32,13 +35,16 @@ interface Author {
 const PurchaseHistory = async () => {
   await connectDB();
 
+  const session = await getServerSession(authOptions);
+  if (!session?.user.id) {
+    redirect("/auth/signin");
+  }
+
   const foundPurchases = await purchaseHistoryModel
-    .find()
+    .find({ userId: session.user.id })
     .populate("courses")
     .populate("userId")
     .sort({ createdAt: -1 });
-
-
 
   return (
     <div className="max-w-5xl px-2 pb-8">

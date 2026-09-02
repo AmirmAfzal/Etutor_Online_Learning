@@ -7,9 +7,7 @@ import Icon from "@/components/ui/Icon";
 import { addFeedbackAction } from "@/lib/actions/feedBack/addFeedbackAction";
 import Toast from "@/components/Toast";
 
-
-
-const WriteReview = ({ courseId } :{courseId: string}) => {
+const WriteReview = ({ courseId }: { courseId: string }) => {
   const { data: session } = useSession();
   const [state, action, pending] = useActionState(addFeedbackAction, {
     message: "",
@@ -30,7 +28,7 @@ const WriteReview = ({ courseId } :{courseId: string}) => {
         Write A Review
       </label>
       <input type="checkbox" id="my_modal_6" className="modal-toggle" />
-      <div className="modal " role="dialog">
+      <div className="modal" role="dialog">
         <div className="modal-box rounded-none">
           <div className="border-b-base-300 flex w-full flex-row items-center justify-between border-b">
             <span className="text-md text-sm">write a review</span>
@@ -98,7 +96,7 @@ const WriteReview = ({ courseId } :{courseId: string}) => {
                   id="feedback-input"
                   name="feedback"
                   placeholder="Write down your feedback here"
-                  className=" w-full border border-base-300 p-2 mt-2"
+                  className="border-base-300 mt-2 w-full border p-2"
                 />
                 <input name="refPath" type="hidden" value={userRole} />
                 <input name="name" type="hidden" value={userName} />
@@ -136,8 +134,12 @@ const WriteReview = ({ courseId } :{courseId: string}) => {
             </div>
           </form>
 
-          <Toast message={state.message} isError={!!state.errors?.length} errors={state.errors} messageDetail={state.messageDetail} />
-
+          <Toast
+            message={state.message}
+            isError={!!state.errors?.length}
+            errors={state.errors}
+            messageDetail={state.messageDetail}
+          />
         </div>
       </div>
     </>

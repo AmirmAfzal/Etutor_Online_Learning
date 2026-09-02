@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
 import {
@@ -28,6 +28,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 const Navbar = () => {
   const { data: session } = useSession();
+  const router = useRouter();
   return (
     <>
       <header className="border-base-300 hidden border-b lg:block">
@@ -35,8 +36,7 @@ const Navbar = () => {
           <div className="flex flex-row items-center gap-8">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/courses">Courses</NavLink>
-            <NavLink href="/about">About</NavLink>
-            <NavLink href="/contact">Contact</NavLink>
+            <NavLink href="/category">Category</NavLink>
             <NavLink href="/become-instructor">Become an Instructor</NavLink>
           </div>
           <div className="flex flex-row items-center gap-4">
@@ -55,8 +55,8 @@ const Navbar = () => {
                 <SelectValue placeholder="English" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="englis">English</SelectItem>
                 <SelectItem value="english">English</SelectItem>
+                <SelectItem value="persian">فارسی</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -88,13 +88,12 @@ const Navbar = () => {
               <HoverCardContent className="mt-3 ml-8 w-3xl rounded-none">
                 <div className="grid w-full grid-cols-2 gap-6">
                   <div>
-                    <Link href="#instructor" className="font-bold">
+                    <Link href="/category" className="font-bold">
                       Browse Instructor
                     </Link>
                     <p className="text-base-content/70 mt-2 text-sm">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Nisi ea nam hic assumenda qui harum accusantium et nihil
-                      error exercitationem?
+                      Explore instructors, their courses, and teaching expertise
+                      all in one place.
                     </p>
                   </div>
                   <div>
@@ -102,9 +101,8 @@ const Navbar = () => {
                       Browse Courses
                     </Link>
                     <p className="text-base-content/70 mt-2 text-sm">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Nisi ea nam hic assumenda qui harum accusantium et nihil
-                      error exercitationem?
+                      Discover courses across every category and start learning
+                      today.
                     </p>
                   </div>
                 </div>
@@ -124,7 +122,7 @@ const Navbar = () => {
                 placeholder="What do you want learn..."
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    redirect(`/courses?query=${e.currentTarget.value}`);
+                    router.push(`/courses?query=${e.currentTarget.value}`);
                   }
                 }}
               />

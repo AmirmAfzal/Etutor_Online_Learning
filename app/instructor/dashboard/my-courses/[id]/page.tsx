@@ -1,13 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import moment from "moment";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 import CourseInformation from "@/components/instructor-dashboard/course-detail/CourseInformation";
 import CourseOverview from "@/components/instructor-dashboard/CourseOverview";
 import CourseRating from "@/components/instructor-dashboard/CourseRating";
-import RevenueView from "@/components/instructor-dashboard/RevenueView";
+import Statistic from "@/components/instructor-dashboard/earning/Statistic";
 import Icon from "@/components/ui/Icon";
 import courseModel from "@/lib/db/models/courseModel";
+import instructorModel from "@/lib/db/models/instructorModel";
+import { connectDB } from "@/lib/db/db";
+import { authOptions } from "@/lib/auth/authOptions";
 import { Instructor } from "@/lib/actions/instructor/create-course/findInstructors";
 import {
   DropdownMenu,
@@ -17,13 +22,32 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ id: string }>;
 }
 
 const CourseDetailPage = async (props: Props) => {
   const { id } = await props.params;
-  const course = await courseModel.findById(id).populate("category", "name");
+
+  await connectDB();
+  const session = await getServerSession(authOptions);
+  if (!session?.user.id) {
+    redirect("/auth/signin");
+  }
+
+  const instructor = await instructorModel.findOne({ user: session.user.id });
+  if (!instructor) {
+    redirect("/auth/signin");
+  }
+
+  const course = await courseModel
+    .findOne({ _id: id, authors: instructor._id })
+    .populate("category", "name");
+  if (!course) {
+    redirect("/instructor/dashboard/my-courses");
+  }
 
   return (
     <section className="bg-base-200 w-full">
@@ -162,7 +186,7 @@ const CourseDetailPage = async (props: Props) => {
         </div>
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-12">
           <div className="col-span-1 md:col-span-5">
-            <RevenueView stroke="#23BD33" fill="#E1F7E3" height={400} />
+            <Statistic stroke="#23BD33" fill="#E1F7E3" height={400} />
           </div>
           <div className="col-span-1 md:col-span-7">
             <CourseOverview />

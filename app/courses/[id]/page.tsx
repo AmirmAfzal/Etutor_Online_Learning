@@ -8,6 +8,7 @@ import CourseTrailer from "@/components/Courses/CourseTrailer";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
 
+export const dynamic = "force-dynamic";
 interface CurriculumContentItem {
   title: string;
   info: string;
@@ -65,6 +66,7 @@ interface InstructorDocument {
   avatar?: string;
   rating?: number;
   students?: number;
+  courses?: number;
   name?: string;
 }
 
@@ -83,6 +85,8 @@ interface FoundCourseDocument {
   duration?: string;
   studentsCount?: number;
   authors?: InstructorDocument[];
+  rating?: number;
+  reviews?: number;
   originalPrice?: number;
   discount?: string;
   timeLeft?: string;
@@ -99,11 +103,12 @@ const buildInstructorData = (
     name: `${instructor.firstname || "Unknown"} ${instructor.lastname || ""}`.trim(),
     bio: instructor.bio || "Instructor",
     avatar: instructor.avatar || "",
-    rating: instructor.rating || 5,
+    rating: instructor.rating || 0,
     students: instructor.students || 0,
-    courses: 12,
+    courses: instructor.courses || 0,
     description:
-      "John is a seasoned web designer with over 10 years of experience in creating stunning websites. He specializes in Figma and Webflow, helping students turn their design ideas into reality.",
+      instructor.bio ||
+      "This instructor shares their expertise and experience to help you reach your learning goals.",
   }));
 };
 
@@ -125,11 +130,11 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
         `${author?.firstname || ""} ${author?.lastname || ""}`.trim()
       )
       .join(", "),
-    rating: 5,
+    rating: course.rating || 0,
     originalPrice: course.originalPrice || 0,
     discount: course.discount || "0%",
     timeLeft: course.timeLeft || "0 days left at this price!",
-    reviews: 244455,
+    reviews: course.reviews || 0,
     courseDetails: [
       {
         label: "Course Duration",
@@ -158,17 +163,15 @@ const buildCourse = (course: FoundCourseDocument, id: string): Course => {
   };
 };
 
-const fakeSidebarCart = {
-  includes: [
-    "Lifetime access",
-    "30-days money-back guarantee",
-    "Free exercises file & downloadable resources",
-    "Shareable certificate of completion",
-    "Access on mobile, tablet and TV",
-    "English subtitles",
-    "100% online course",
-  ],
-};
+const courseIncludes = [
+  "Lifetime access",
+  "30-days money-back guarantee",
+  "Free exercises file & downloadable resources",
+  "Shareable certificate of completion",
+  "Access on mobile, tablet and TV",
+  "English subtitles",
+  "100% online course",
+];
 
 const SingleCoursePage = async ({
   params,
@@ -205,8 +208,6 @@ const SingleCoursePage = async ({
     id
   );
 
-  // const sorted = searchParams.sorted || "trending";
-
   return (
     <section className="relative mx-auto px-4 py-8 md:px-8 lg:px-16">
       <div className="bg-base-200 absolute top-0 left-0 z-0 h-[30vh] w-screen"></div>
@@ -239,7 +240,7 @@ const SingleCoursePage = async ({
         </div>
 
         <SidebarCart
-          fakeSidebarCart={fakeSidebarCart}
+          courseIncludes={courseIncludes}
           courseId={singleCourse.id || id}
           singleCourse={singleCourse}
         />

@@ -5,10 +5,12 @@ import WithdrawHistory from "@/components/instructor-dashboard/earning/WithdrawH
 import WithdrawMoney from "@/components/instructor-dashboard/earning/WithdrawMoney";
 import { connectDB } from "@/lib/db/db";
 import paymentCardModel from "@/lib/db/models/paymentCardModel";
+import instructorModel from "@/lib/db/models/instructorModel";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
 const earningInformation = [
   {
     id: 1,
@@ -52,7 +54,14 @@ const EarningPage = async () => {
     redirect("/auth/signin");
   }
 
-  const paymentCards = await paymentCardModel.find().lean();
+  const instructor = await instructorModel.findOne({ user: session.user.id });
+  if (!instructor) {
+    redirect("/auth/signin");
+  }
+
+  const paymentCards = await paymentCardModel
+    .find({ instructor: instructor._id })
+    .lean();
   const plainCards = JSON.parse(JSON.stringify(paymentCards));
 
   return (

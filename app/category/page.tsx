@@ -7,6 +7,7 @@ import PopularInstructors from "@/components/Category/PopularInstructors";
 import SearchFilterAndResults from "@/components/Category/SearchFilterAndResults";
 import CoursesGrid from "@/components/Category/CoursesGrid";
 
+export const dynamic = "force-dynamic";
 interface Props {
   searchParams: Promise<{
     query?: string;
@@ -27,8 +28,6 @@ interface Props {
 export default async function CategoryPage(props: Props) {
   const searchParams = await props.searchParams;
 
-
-
   await connectDB();
 
   const foundAllCourse = await courseModel.find().limit(5).lean();
@@ -39,14 +38,14 @@ export default async function CategoryPage(props: Props) {
     name: course.title,
     category: course.category?.name || "Unknown",
     price: course.price,
-    rating: 5,
+    rating: course.rating || 0,
     students: course.studentsCount,
   }));
 
   const instructors = foundInstructor.map((instructor) => ({
     name: `${instructor.firstname} ${instructor.lastname}`,
     title: "Instructor",
-    image: instructor.avatar || "/images/instructors/instructors-1.png",
+    image: instructor.avatar || "/images/instructors/instructor-1.png",
     rating: instructor.rating,
     students: instructor.students,
   }));

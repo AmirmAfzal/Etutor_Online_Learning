@@ -36,7 +36,6 @@ export async function saveBasicInformation(
     redirect("/auth/signin");
   }
 
-  // try {
   let foundCategory = await categoryModel.findOne({
     name: result.data.category,
   });
@@ -126,17 +125,6 @@ export async function saveBasicInformation(
       `/instructor/dashboard/create-course?tab=AdvanceInformation&_id=${createdCourse._id}`
     );
   }
-  //   return {
-  //     message: "SUCCESS",
-  //     errors: [],
-  //   };
-  // } catch (error) {
-  //   console.error("Error saving form data:", error);
-  //   return {
-  //     message: "ERROR",
-  //     errors: ["An unexpected error occurred. Please try again."],
-  //   };
-  // }
 }
 
 export async function saveAndPreviewBasicInformation(

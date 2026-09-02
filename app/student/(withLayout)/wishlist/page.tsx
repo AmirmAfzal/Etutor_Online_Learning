@@ -10,6 +10,7 @@ import { authOptions } from "@/lib/auth/authOptions";
 import { connectDB } from "@/lib/db/db";
 import studentModel from "@/lib/db/models/studentModel";
 
+export const dynamic = "force-dynamic";
 interface CourseData {
   _id: Types.ObjectId;
   title: string;

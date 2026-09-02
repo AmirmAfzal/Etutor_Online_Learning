@@ -47,7 +47,7 @@ const Toast = ({
         );
       }
     }
-  }, [message, isError, duration,errors, messageDetail]);
+  }, [message, isError, duration, errors, messageDetail]);
 
   return <ToastContainer />;
 };

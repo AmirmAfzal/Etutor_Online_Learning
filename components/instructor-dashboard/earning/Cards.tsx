@@ -136,12 +136,12 @@ const Cards = ({ cards }: Props) => {
                     <div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Icon
-                              icon="ph:dots-three"
-                              className="btn btn-ghost btn-xs"
-                              width="24"
-                              height="24"
-                            />
+                          <Icon
+                            icon="ph:dots-three"
+                            className="btn btn-ghost btn-xs"
+                            width="24"
+                            height="24"
+                          />
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent>
@@ -160,7 +160,9 @@ const Cards = ({ cards }: Props) => {
                     </p>
                     <button
                       className="relative"
-                      onClick={() => handleCopyCardNumber(card.cardNumber, card._id)}
+                      onClick={() =>
+                        handleCopyCardNumber(card.cardNumber, card._id)
+                      }
                     >
                       {copiedCardId === card._id && (
                         <p className="text-success bg-base-300 absolute bottom-8 -left-6 rounded-lg px-2 py-1 text-sm">

@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { connectDB } from "@/lib/db/db";
 import courseModel from "@/lib/db/models/courseModel";
+import instructorModel from "@/lib/db/models/instructorModel";
 import DeleteButton from "@/components/instructor-dashboard/my-courses/DeleteButton";
 import MyCoursesPagination from "@/components/instructor-dashboard/my-courses/MyCoursesPagination";
 import categoryModel from "@/lib/db/models/categoryModel";
@@ -25,6 +26,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
 interface Props {
   searchParams: Promise<{
     search: string;
@@ -42,8 +44,13 @@ const MyCoursesPage = async (props: Props) => {
     redirect("/auth/signin");
   }
 
+  const instructor = await instructorModel.findOne({ user: session.user.id });
+  if (!instructor) {
+    redirect("/auth/signin");
+  }
+
   const courses = await courseModel
-    .find()
+    .find({ authors: instructor._id })
     .populate("category", "name")
     .sort({ createdAt: -1 });
 
@@ -65,8 +72,14 @@ const MyCoursesPage = async (props: Props) => {
       return matchSearch && matchCategory && matchRating;
     })
     .sort((a, b) => {
-      if (sort === "latest") return b.id - a.id;
-      if (sort === "oldest") return a.id - b.id;
+      if (sort === "latest")
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      if (sort === "oldest")
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
       return 0;
     });
 
@@ -152,11 +165,11 @@ const MyCoursesPage = async (props: Props) => {
                 <SelectValue placeholder="Rating" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="5">5 Start</SelectItem>
-                <SelectItem value="4">4 Start & Up</SelectItem>
-                <SelectItem value="3">3 Start & Up</SelectItem>
-                <SelectItem value="2">2 Start & Up</SelectItem>
-                <SelectItem value="1">1 Start & Up</SelectItem>
+                <SelectItem value="5">5 Stars</SelectItem>
+                <SelectItem value="4">4 Stars & Up</SelectItem>
+                <SelectItem value="3">3 Stars & Up</SelectItem>
+                <SelectItem value="2">2 Stars & Up</SelectItem>
+                <SelectItem value="1">1 Star & Up</SelectItem>
                 <SelectItem value="0">All</SelectItem>
               </SelectContent>
             </Select>

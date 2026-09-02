@@ -6,15 +6,12 @@ import { redirect } from "next/navigation";
 import { becomeInstructor } from "@/lib/actions/becomeInstructor";
 
 import Icon from "../ui/Icon";
-import { Student } from "./StudentProfile";
 
 type Props = {
-  userId: string;
-  student: Student;
   isInstructor: boolean;
 };
 
-const BecomeInstructorButton = ({ userId, student, isInstructor }: Props) => {
+const BecomeInstructorButton = ({ isInstructor }: Props) => {
   const [state, formAction, pending] = useActionState(becomeInstructor, {
     message: "",
     errors: [],
@@ -22,12 +19,7 @@ const BecomeInstructorButton = ({ userId, student, isInstructor }: Props) => {
 
   const becomeInstructorHandler = () => {
     startTransition(() => {
-      const formData = new FormData();
-      formData.append("id", userId);
-      formData.append("firstname", student.firstname);
-      formData.append("lastname", student.lastname);
-
-      formAction(formData);
+      formAction(new FormData());
     });
   };
 

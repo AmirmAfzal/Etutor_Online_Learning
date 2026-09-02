@@ -68,7 +68,7 @@ export const addReplyAction = async (
 
     const userRole = sessionUser?.role ?? "STUDENT";
 
-    const refPathMap= {
+    const refPathMap = {
       STUDENT: "Student",
       INSTRUCTOR: "Instructor",
       ADMIN: "Admin",

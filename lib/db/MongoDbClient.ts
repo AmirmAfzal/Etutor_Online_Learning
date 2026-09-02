@@ -1,37 +1,41 @@
-// This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
-import { MongoClient } from "mongodb"
+// MongoDB client for the NextAuth adapter.
+// The connection is established lazily (only when the adapter is first used),
+// so importing this module never requires DATABASE_URL at build time.
+import { MongoClient } from "mongodb";
 
+const uri = process.env.DATABASE_URL;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('Invalid/Missing environment variable: "DATABASE_URL"' + `ENV :${process.env.DATABASE_URL}`)
-}
-
-const uri = process.env.DATABASE_URL
-const options = {}
-
-let client
-let clientPromise: Promise<MongoClient>
+let client: MongoClient | undefined;
+let clientPromise: Promise<MongoClient> | undefined;
 
 const globalWithMongo = global as typeof globalThis & {
-  _mongoClientPromise: Promise<MongoClient>
-}
-if (process.env.NODE_ENV === "development") {
+  _mongoClientPromise?: Promise<MongoClient>;
+};
 
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(uri, options)
-    globalWithMongo._mongoClientPromise = client.connect()
+function createClient(): MongoClient {
+  if (!uri) {
+    throw new Error('Invalid/Missing environment variable: "DATABASE_URL"');
   }
-  clientPromise = globalWithMongo._mongoClientPromise
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options)
-  clientPromise = client.connect()
+  return new MongoClient(uri);
 }
 
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
-export default clientPromise
+/**
+ * Returns a cached promise that resolves to a connected MongoClient.
+ * The global cache keeps the connection alive across HMR reloads in dev.
+ */
+export default function getClientPromise(): Promise<MongoClient> {
+  if (clientPromise) return clientPromise;
 
+  if (process.env.NODE_ENV === "development") {
+    if (!globalWithMongo._mongoClientPromise) {
+      client = createClient();
+      globalWithMongo._mongoClientPromise = client.connect();
+    }
+    clientPromise = globalWithMongo._mongoClientPromise;
+  } else {
+    client = createClient();
+    clientPromise = client.connect();
+  }
 
+  return clientPromise;
+}

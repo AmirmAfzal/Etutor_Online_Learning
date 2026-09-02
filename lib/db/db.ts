@@ -1,54 +1,30 @@
 import mongoose from "mongoose";
 
-import replyModel from "@/lib/db/models/replyModel";
-import commentModel from "@/lib/db/models/commentModel";
-import feedbackModel from "@/lib/db/models/feedbackModel";
+import "@/lib/db/models/replyModel";
+import "@/lib/db/models/commentModel";
+import "@/lib/db/models/feedbackModel";
+import "./models/courseModel";
+import "./models/userModel";
+import "./models/lectureModel";
+import "./models/studentModel";
+import "./models/subCategoryModel";
+import "./models/instructorModel";
+import "./models/videoModel";
+import "./models/tagModel";
+import "./models/categoryModel";
 
-import courseModel from "./models/courseModel";
-import userModel from "./models/userModel";
-import lectureModel from "./models/lectureModel";
-import studentModel from "./models/studentModel";
-import subCategoryModel from "./models/subCategoryModel";
-import instructorModel from "./models/instructorModel";
-import videoModel from "./models/videoModel";
-import tagModel from "./models/tagModel";
-import categoryModel from "./models/categoryModel";
-
-const DATABASE_URL = process.env.DATABASE_URL as string;
+const DATABASE_URL = process.env.DATABASE_URL;
 
 export async function connectDB(): Promise<void> {
   if (mongoose.connection.readyState >= 1) return;
+
+  if (!DATABASE_URL) {
+    throw new Error('Invalid/Missing environment variable: "DATABASE_URL"');
+  }
+
   try {
     await mongoose.connect(DATABASE_URL);
-
-    const categoryCount = await categoryModel.countDocuments();
-    const courseCount = await courseModel.countDocuments();
-    const userCount = await userModel.countDocuments();
-    const lectureCount = await lectureModel.countDocuments();
-    const studentCount = await studentModel.countDocuments();
-    const subCategoryCount = await subCategoryModel.countDocuments();
-    const instructorCount = await instructorModel.countDocuments();
-    const videoCount = await videoModel.countDocuments();
-    const tagCount = await tagModel.countDocuments();
-    const replyCount = await replyModel.countDocuments();
-    const commentCount = await commentModel.countDocuments();
-    const feedbackCount = await feedbackModel.countDocuments();
-
-    console.log("✅ Connected to MongoDB");
-    console.log("📊 Database Statistics:");
-    console.log(`- Categories: ${categoryCount}`);
-    console.log(`- Courses: ${courseCount}`);
-    console.log(`- Users: ${userCount}`);
-    console.log(`- Lectures: ${lectureCount}`);
-    console.log(`- Students: ${studentCount}`);
-    console.log(`- Sub Categories: ${subCategoryCount}`);
-    console.log(`- Instructors: ${instructorCount}`);
-    console.log(`- Videos: ${videoCount}`);
-    console.log(`- Tags: ${tagCount}`);
-    console.log(`- Comments: ${commentCount}`);
-    console.log(`- Replies: ${replyCount}`);
-    console.log(`- FeedBacks: ${feedbackCount}`);
   } catch (error) {
-    console.error("❌ MongoDB Connection Error:", error);
+    console.error("MongoDB connection error:", error);
   }
 }

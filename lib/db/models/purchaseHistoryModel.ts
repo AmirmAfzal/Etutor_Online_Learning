@@ -25,7 +25,6 @@ const purchaseHistorySchema = new Schema<PurchaseHistoryInterface>(
 
     courses: [{ type: Schema.Types.ObjectId, ref: "course" }],
 
-
     summaryCourses: { type: Number, required: true },
 
     userId: { type: Schema.Types.ObjectId, ref: "user", required: true },

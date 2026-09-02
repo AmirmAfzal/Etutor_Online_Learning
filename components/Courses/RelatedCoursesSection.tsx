@@ -12,27 +12,23 @@ type RelatedCourse = {
   rating: number;
 };
 
+const RelatedCoursesSection = async () => {
+  await connectDB();
 
-const RelatedCoursesSection =async () => {
+  const foundCourses = await courseModel.find().limit(4).lean();
 
-await connectDB()
+  let courses: RelatedCourse[] = [];
 
-const foundCourses = await courseModel.find().limit(4).lean()
-
-let courses: RelatedCourse[] = []
-
-
-if(foundCourses.length > 0){
-  courses = foundCourses.map(course => ({
-    thumbnail: course.thumbnail,
-    name: course.title,
-    category: "development",
-    price: course.price,
-    students: course.studentsCount,
-    rating: course.rating
-  }))
-}
-
+  if (foundCourses.length > 0) {
+    courses = foundCourses.map((course) => ({
+      thumbnail: course.thumbnail,
+      name: course.title,
+      category: "development",
+      price: course.price,
+      students: course.studentsCount,
+      rating: course.rating,
+    }));
+  }
 
   return (
     <div className="border-base-300 mt-12 w-full border-t">

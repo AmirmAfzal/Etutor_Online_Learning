@@ -22,10 +22,12 @@ export async function publishCourse(
 
   try {
     await connectDB();
-    
+
     // Find the course using the courseId
-    const foundCourse = await courseModel.findOne({ _id: result.data.courseId });
-    
+    const foundCourse = await courseModel.findOne({
+      _id: result.data.courseId,
+    });
+
     if (!foundCourse) {
       return {
         message: "ERROR",

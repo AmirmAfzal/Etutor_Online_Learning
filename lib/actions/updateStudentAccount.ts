@@ -1,7 +1,10 @@
 "use server";
 
+import { getServerSession } from "next-auth";
+
 import { settingAccountSchema } from "@/lib/validation/Student-dashboard/settingAccountSchema";
 import { ActionData } from "@/lib/formTypes";
+import { authOptions } from "@/lib/auth/authOptions";
 
 import { connectDB } from "../db/db";
 import studentModel from "../db/models/studentModel";
@@ -12,6 +15,14 @@ export const updateStudentAccount = async (
   formData: FormData
 ): Promise<ActionData> => {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return {
+        message: "ERROR",
+        errors: ["You must be signed in to update your account."],
+      };
+    }
+
     await connectDB();
 
     const data = Object.fromEntries(formData.entries());
@@ -25,10 +36,7 @@ export const updateStudentAccount = async (
     }
 
     const updatedStudent = await studentModel.findOneAndUpdate(
-      // FIXME: Security issue
-      //  وقتی یه عملیاتی با آیدی یوزر آپدیت بشه مشکل امنیتی ایجاد میکنه چون یکی که به یوزر آیدی همه دسترسی داره میتونه پروفایل و رمز همرو آپدیت کنه برای همین سعی کن کاربر رو از روی سشن برداری
-      // const user = await getServerSession(authOptions);
-      { user: result.data.id },
+      { user: session.user.id },
       {
         firstname: result.data.firstName,
         lastname: result.data.lastName,
@@ -47,7 +55,7 @@ export const updateStudentAccount = async (
     }
 
     const updatedUser = await userModel.findByIdAndUpdate(
-      result.data.id,
+      session.user.id,
       { email: result.data.email },
       { new: true }
     );

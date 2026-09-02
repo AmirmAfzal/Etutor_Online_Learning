@@ -8,6 +8,7 @@ import { connectDB } from "@/lib/db/db";
 import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
 import userModel, { UserInterface } from "@/lib/db/models/userModel";
 
+export const dynamic = "force-dynamic";
 const StudentSettingsPage = async () => {
   await connectDB();
   const session = await getServerSession(authOptions);
@@ -27,7 +28,6 @@ const StudentSettingsPage = async () => {
     <div className="bg-base-100 max-w-5xl">
       <h3 className="mb-6 text-lg font-semibold">Account settings</h3>
       <AccountSettingsForm
-        _id={foundUser._id.toString()}
         firstName={foundStudent.firstname}
         lastName={foundStudent.lastname}
         email={foundUser.email}

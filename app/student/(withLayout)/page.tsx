@@ -10,6 +10,7 @@ import studentModel from "@/lib/db/models/studentModel";
 import sectionModel from "@/lib/db/models/sectionModel";
 import courseProgressModel from "@/lib/db/models/courseProgressModel";
 
+export const dynamic = "force-dynamic";
 interface CourseData {
   _id: string;
   title: string;
@@ -68,11 +69,16 @@ const StudentDashboard = async () => {
         id: course._id,
         title: course.title,
         subtitle: course.subtitle,
-        image: course.thumbnail || "/images/course-images-01.png",
+        image: course.thumbnail || "/images/course-images-1.png",
         progress: `${progress}%`,
       };
     })
   );
+
+  const completedCoursesCount = coursesWithProgress.filter(
+    (course) => course.progress === "100%"
+  ).length;
+  const activeCoursesCount = coursesWithProgress.length - completedCoursesCount;
 
   const stats = [
     {
@@ -83,19 +89,19 @@ const StudentDashboard = async () => {
     },
     {
       label: "Active Courses",
-      value: "6",
+      value: activeCoursesCount.toString(),
       icon: "ph:check-square-offset-duotone",
       color: "secondary",
     },
     {
       label: "Completed Courses",
-      value: "951",
+      value: completedCoursesCount.toString(),
       icon: "ph:trophy-duotone",
       color: "success",
     },
     {
       label: "Course Instructors",
-      value: "241",
+      value: coursesWithProgress.length.toString(),
       icon: "ph:users-duotone",
       color: "primary",
     },

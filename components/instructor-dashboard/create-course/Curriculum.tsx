@@ -243,7 +243,10 @@ const Curriculum = ({ onNext, onBack, course }: Props) => {
 
   const sendData = () => {
     startTransition(() => {
-      formAction({ sections, courseId: (course?._id as string) || "" });
+      formAction({
+        sections,
+        courseId: course?._id?.toString() ?? "",
+      });
     });
   };
 

@@ -55,7 +55,7 @@ export async function notifications(
       data: JSON.parse(JSON.stringify(updatedNotifications.notifications)),
     };
   } catch (error) {
-    console.log(error);
+    console.error("Error updating notifications:", error);
     return {
       message: "ERROR",
       errors: [],

@@ -27,9 +27,7 @@ const CoursesSelect = ({ className }: Props) => {
 
   return (
     <div
-      className={
-        `flex w-full flex-row items-center justify-between gap-3 sm:justify-end ${className}`
-      }
+      className={`flex w-full flex-row items-center justify-between gap-3 sm:justify-end ${className}`}
     >
       <label htmlFor="sorted" className="text-base-content/60 text-sm">
         Sorted by:

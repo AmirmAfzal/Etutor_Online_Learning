@@ -25,7 +25,6 @@ import { Input } from "@/components/ui/input";
 import Toast from "@/components/Toast";
 
 type Props = {
-  _id: string;
   firstName: string;
   lastName: string;
   username: string;
@@ -40,7 +39,6 @@ const AccountSettingsForm = (props: Props) => {
   const accountForm = useForm<z.infer<typeof settingAccountSchema>>({
     resolver: zodResolver(settingAccountSchema),
     defaultValues: {
-      id: props._id,
       firstName: props.firstName,
       lastName: props.lastName,
       username: props.username,
@@ -50,9 +48,9 @@ const AccountSettingsForm = (props: Props) => {
     },
   });
 
-  const [ state , formAction] = useActionState(updateStudentAccount, {
+  const [state, formAction] = useActionState(updateStudentAccount, {
     message: "",
-    messageDetail:"",
+    messageDetail: "",
     errors: [],
   });
 
@@ -229,7 +227,12 @@ const AccountSettingsForm = (props: Props) => {
           </form>
         </Form>
       </div>
-      <Toast message={state.message} isError={!!state.errors?.length} errors={state.errors} messageDetail={state.messageDetail} />
+      <Toast
+        message={state.message}
+        isError={!!state.errors?.length}
+        errors={state.errors}
+        messageDetail={state.messageDetail}
+      />
     </div>
   );
 };

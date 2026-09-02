@@ -7,7 +7,6 @@ interface Props {
 }
 
 const TopCourse = ({ courses }: Props) => {
-
   if (!Array.isArray(courses) || courses.length === 0) {
     return null;
   }
@@ -19,9 +18,10 @@ const TopCourse = ({ courses }: Props) => {
           Best selling courses
         </h3>
         <div className="grid grid-cols-1 gap-6 px-8 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-5">
-          {courses && courses.map((course: CourseTypes) => (
-            <CourseCard key={course.title} course={course} />
-          ))}
+          {courses &&
+            courses.map((course: CourseTypes) => (
+              <CourseCard key={course.title} course={course} />
+            ))}
         </div>
       </div>
     </section>

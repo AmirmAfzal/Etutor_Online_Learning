@@ -1,9 +1,11 @@
-  import React from 'react'
+import React from "react";
 
 const Loading = () => {
   return (
-    <span className="w-full h-screen flex flex-row items-center justify-center gap-4 font-audiowide font-semibold text-lg" ><div className="loading loading-spinner"></div> LOADING</span>
-  )
-}
+    <span className="font-audiowide flex h-screen w-full flex-row items-center justify-center gap-4 text-lg font-semibold">
+      <div className="loading loading-spinner"></div> LOADING
+    </span>
+  );
+};
 
-export default Loading
+export default Loading;

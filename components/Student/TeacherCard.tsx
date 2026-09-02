@@ -33,7 +33,7 @@ export default function TeacherCard({
       ) : (
         <Icon
           icon="ph:user"
-          className="w-full align-center h-48 sm:h-56 md:h-64 text-5xl"
+          className="align-center h-48 w-full text-5xl sm:h-56 md:h-64"
         />
       )}
 

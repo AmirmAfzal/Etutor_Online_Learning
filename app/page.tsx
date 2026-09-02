@@ -10,6 +10,7 @@ import TopInstructor from "../components/HomePage/TopInstructor";
 import CompaniesLogo from "../components/HomePage/CompaniesLogo";
 import courseModel from "../lib/db/models/courseModel";
 
+export const dynamic = "force-dynamic";
 export interface CourseTypes {
   _id: string;
   title: string;
@@ -55,7 +56,6 @@ const HomePage = async () => {
     .populate("subCategory", "name")
     .lean()
     .exec();
-
 
   const plainCourse = JSON.parse(JSON.stringify(foundCourse ?? []));
   return (

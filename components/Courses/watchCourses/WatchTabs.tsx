@@ -16,13 +16,11 @@ interface Lecture {
   caption: string;
 }
 
-
-
 interface WatchTabsProps {
   currentLecture: Lecture;
 }
 
-const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
+const WatchTabs = ({ currentLecture }: WatchTabsProps) => {
   if (!currentLecture) {
     return <div>No lecture details available.</div>;
   }
@@ -65,7 +63,6 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
           </p>
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <h3 className="text-lg font-semibold md:text-xl">Lecture Notes</h3>
-
           </div>
           <p className="text-base-content/70 text-sm leading-6">
             {currentLecture.notes}
@@ -90,7 +87,9 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
                       <p className="font-medium">
                         {file.split("/").pop() || "Downloadable File"}
                       </p>
-                      <p className="text-base-content/60 text-sm">File Size</p>{" "}
+                      <p className="text-base-content/60 text-sm">
+                        File Size
+                      </p>{" "}
                     </div>
                   </div>
                   <Link
@@ -109,7 +108,6 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
             </span>
           )}
 
-
           <WatchComments lectureId={currentLecture._id} />
         </div>
       </TabsContent>
@@ -118,7 +116,6 @@ const WatchTabs = ({ currentLecture, }: WatchTabsProps) => {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <h3 className="text-xl font-semibold">Lecture Notes</h3>
-
           </div>
           <p className="text-base-content/70 text-md font-semibold">
             {currentLecture.notes}

@@ -31,7 +31,7 @@ const GiftCoursePage = () => {
               <SlashIcon />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink>Complete web...</BreadcrumbLink>
+              <BreadcrumbLink>Gift a course</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <SlashIcon />

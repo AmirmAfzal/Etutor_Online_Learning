@@ -9,6 +9,7 @@ import { connectDB } from "@/lib/db/db";
 import instructorModel from "@/lib/db/models/instructorModel";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
 const SettingsPage = async () => {
   await connectDB();
 

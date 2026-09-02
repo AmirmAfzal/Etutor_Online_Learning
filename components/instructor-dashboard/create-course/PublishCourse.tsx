@@ -108,7 +108,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
       // Add courseId to the form data
       const formDataWithCourseId = {
         ...data,
-        courseId: course._id as string,
+        courseId: course._id.toString(),
       };
       formAction(formDataWithCourseId);
     });
@@ -136,7 +136,7 @@ const PublishCourse = ({ onBack, course }: Props) => {
               type="text"
               hidden
               name="courseId"
-              defaultValue={(course?._id as string) || ""}
+              defaultValue={course?._id?.toString() || ""}
             />
             <div className="grid gap-6 md:grid-cols-2">
               <FormField

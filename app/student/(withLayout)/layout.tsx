@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import StudentProfile from "@/components/Student/StudentProfile";
 
+export const dynamic = "force-dynamic";
+
 const tabLinks = [
   { label: "Dashboard", href: "/student" },
   { label: "Courses", href: "/student/courses" },

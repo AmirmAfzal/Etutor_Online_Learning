@@ -68,7 +68,7 @@ const StudentProfile = async () => {
       ) : (
         <Icon
           icon="ph:user"
-          className="text-5xl rounded-full border p-4 border-base-300"
+          className="border-base-300 rounded-full border p-4 text-5xl"
         />
       )}
       <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
@@ -80,11 +80,7 @@ const StudentProfile = async () => {
         </p>
       </div>
 
-      <BecomeInstructorButton
-        userId={session.user.id}
-        student={JSON.parse(JSON.stringify(student))}
-        isInstructor={instructor ? true : false}
-      />
+      <BecomeInstructorButton isInstructor={instructor ? true : false} />
     </div>
   );
 };

@@ -14,9 +14,7 @@ import Icon from "../ui/Icon";
 import Toast from "../Toast";
 
 interface SidebarCartProps {
-  fakeSidebarCart: {
-    includes: string[];
-  };
+  courseIncludes: string[];
   singleCourse: {
     id?: string;
 
@@ -33,7 +31,7 @@ interface SidebarCartProps {
 }
 
 const SidebarCart = ({
-  fakeSidebarCart,
+  courseIncludes,
   courseId,
   singleCourse,
 }: SidebarCartProps) => {
@@ -43,7 +41,7 @@ const SidebarCart = ({
   );
   const [buyNowState, buyNowAction, buyNowPending] = useActionState(
     actionBuyNow,
-    { message: "", messageDetail: "" , errors: [] as string[] }
+    { message: "", messageDetail: "", errors: [] as string[] }
   );
 
   if (
@@ -189,7 +187,7 @@ const SidebarCart = ({
             This course includes:
           </span>
           <ul className="text-base-content/60 mt-2 space-y-2 text-xs">
-            {fakeSidebarCart.includes.map((item, index) => (
+            {courseIncludes.map((item, index) => (
               <li key={index} className="flex items-center gap-1">
                 <Icon
                   icon="ph:check-circle-fill"

@@ -11,6 +11,7 @@ import studentModel from "@/lib/db/models/studentModel";
 import sectionModel from "@/lib/db/models/sectionModel";
 import courseProgressModel from "@/lib/db/models/courseProgressModel";
 
+export const dynamic = "force-dynamic";
 interface CourseData {
   id?: string;
   _id: string;

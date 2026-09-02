@@ -4,6 +4,8 @@ import courseModel from "@/lib/db/models/courseModel";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 interface Props {
   searchParams: Promise<{ _id: string; tab: string }>;
 }

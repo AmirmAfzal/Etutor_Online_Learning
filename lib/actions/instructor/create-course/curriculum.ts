@@ -74,7 +74,7 @@ export async function saveCurriculum(
       errors: [],
     };
   } catch (error) {
-    console.error("error", error);
+    console.error("Error saving curriculum:", error);
     return {
       message: "ERROR",
       errors: [],

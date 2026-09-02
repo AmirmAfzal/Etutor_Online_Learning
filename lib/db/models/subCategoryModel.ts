@@ -6,14 +6,19 @@ export interface SubCategoryInterface extends Document {
   category: mongoose.Types.ObjectId; // Reference to parent category
 }
 
-const subCategorySchema = new Schema<SubCategoryInterface & Document>({
-  name: { type: String, required: true, unique: true },
-  description: { type: String },
-  category: { type: Schema.Types.ObjectId, ref: "category", required: true },
-}, {
-  timestamps: true,
-});
+const subCategorySchema = new Schema<SubCategoryInterface & Document>(
+  {
+    name: { type: String, required: true, unique: true },
+    description: { type: String },
+    category: { type: Schema.Types.ObjectId, ref: "category", required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const subCategoryModel = mongoose.models.subcategory || mongoose.model<SubCategoryInterface>("subcategory", subCategorySchema);
+const subCategoryModel =
+  mongoose.models.subcategory ||
+  mongoose.model<SubCategoryInterface>("subcategory", subCategorySchema);
 
-export default subCategoryModel; 
+export default subCategoryModel;

@@ -29,12 +29,14 @@ export async function findInstructor(
   }
 
   const foundInstructors = await instructorModel.find().lean();
-  const instructors: Instructor[] = foundInstructors.map((instructor, index) => ({
-    id: index + 1,
-    profile: instructor.avatar,
-    name: `${instructor.firstname} ${instructor.lastname}`,
-    skill: instructor.title,
-  }));
+  const instructors: Instructor[] = foundInstructors.map(
+    (instructor, index) => ({
+      id: index + 1,
+      profile: instructor.avatar,
+      name: `${instructor.firstname} ${instructor.lastname}`,
+      skill: instructor.title,
+    })
+  );
 
   const matched = instructors.filter((instructor) =>
     instructor.name.toLowerCase().includes(search)

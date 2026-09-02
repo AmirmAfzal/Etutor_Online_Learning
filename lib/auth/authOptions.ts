@@ -1,12 +1,11 @@
 import { AuthOptions } from "next-auth";
-// eslint-disable-next-line import/no-named-as-default
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
 import userModel from "@/lib/db/models/userModel";
 import { connectDB } from "@/lib/db/db";
-import clientPromise from "@/lib/db/MongoDbClient";
+import getClientPromise from "@/lib/db/MongoDbClient";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -33,7 +32,10 @@ export const authOptions: AuthOptions = {
           credentials?.password,
           findedUser.password
         );
-        if (!successCompare) throw new Error("The email and password you entered do not match. Please try again.");
+        if (!successCompare)
+          throw new Error(
+            "The email and password you entered do not match. Please try again."
+          );
 
         return {
           id: findedUser._id,
@@ -49,7 +51,7 @@ export const authOptions: AuthOptions = {
     newUser: "/auth/signup",
   },
 
-  adapter: MongoDBAdapter(clientPromise, {
+  adapter: MongoDBAdapter(getClientPromise, {
     collections: {
       Accounts: "account",
       Sessions: "session",

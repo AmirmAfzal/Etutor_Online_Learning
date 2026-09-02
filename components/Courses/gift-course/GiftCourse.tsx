@@ -8,7 +8,7 @@ const courses = [
     subtotal: 61.97,
     discount: 8,
     total: 75.0,
-    image: "/images/student-dashboard/course-2.jpg",
+    image: "/images/Student-dashboard/course-2.jpg",
   },
 ];
 

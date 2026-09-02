@@ -5,7 +5,6 @@ export interface PaymentCardInterface extends Document {
   name: string;
   cardNumber: string;
   expiration: string;
-  cvc: string;
   instructor: ObjectId;
   student: ObjectId;
 }
@@ -16,7 +15,6 @@ const paymentCardSchema = new Schema<PaymentCardInterface & Document>(
     name: { type: String, required: true },
     cardNumber: { type: String, required: true },
     expiration: { type: String, required: true },
-    cvc: { type: String, required: true },
     instructor: { type: Schema.Types.ObjectId, required: false, default: null },
     student: { type: Schema.Types.ObjectId, required: false, default: null },
   },

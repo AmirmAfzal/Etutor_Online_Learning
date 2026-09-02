@@ -15,7 +15,7 @@ import { ModalType } from "../Curriculum";
 interface Props {
   openModal: (type: ModalType) => void;
   onSave: (videoUrl: CloudinaryUploadWidgetInfo) => void;
-};
+}
 
 export const formatDuration = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -116,7 +116,7 @@ const VideoUploaderModal = ({ openModal, onSave }: Props) => {
                       result.event === "success" &&
                       typeof result.info === "object" &&
                       "secure_url" in result.info
-                    )  {
+                    ) {
                       setVideo(result.info);
                     }
                   }}

@@ -1,12 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  BarChart,
-  Bar,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, Tooltip, ResponsiveContainer } from "recharts";
 
 import {
   Select,

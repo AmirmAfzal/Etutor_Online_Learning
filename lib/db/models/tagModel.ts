@@ -5,13 +5,17 @@ export interface TagInterface extends Document {
   description: string;
 }
 
-const tagSchema = new Schema<TagInterface & Document>({
-  name: { type: String, required: true, unique: true },
-  description: { type: String },
-}, {
-  timestamps: true,
-});
+const tagSchema = new Schema<TagInterface & Document>(
+  {
+    name: { type: String, required: true, unique: true },
+    description: { type: String },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const tagModel = mongoose.models.tag || mongoose.model<TagInterface>("tag", tagSchema);
+const tagModel =
+  mongoose.models.tag || mongoose.model<TagInterface>("tag", tagSchema);
 
-export default tagModel; 
+export default tagModel;

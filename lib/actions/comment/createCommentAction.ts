@@ -50,8 +50,7 @@ export const createCommentAction = async (
     >;
 
     const commentRaw = data.comment?.toString() ?? "";
-    const lectureIdRaw =
-      data.lectureId?.toString() || "";
+    const lectureIdRaw = data.lectureId?.toString() || "";
 
     if (!commentRaw.trim()) {
       return {
@@ -64,7 +63,7 @@ export const createCommentAction = async (
 
     const userRole = sessionUser?.role ?? "STUDENT";
 
-    const refPathMap= {
+    const refPathMap = {
       STUDENT: "Student",
       INSTRUCTOR: "Instructor",
       ADMIN: "Admin",
@@ -107,8 +106,7 @@ export const createCommentAction = async (
     const userFullName =
       `${userProfile?.firstname ?? ""} ${userProfile?.lastname ?? ""}`.trim();
 
-    const userAvatar =
-      userProfile?.avatar  ?? "/default-avatar.png";
+    const userAvatar = userProfile?.avatar ?? "/default-avatar.png";
 
     if (!Types.ObjectId.isValid(lectureIdRaw)) {
       return {
@@ -124,7 +122,7 @@ export const createCommentAction = async (
       comment,
       refPath,
       title: userFullName,
-      lecture : lecture,
+      lecture: lecture,
       avatar: userAvatar,
     });
 

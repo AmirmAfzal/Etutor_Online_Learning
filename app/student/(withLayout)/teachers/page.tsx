@@ -10,6 +10,7 @@ import { CourseInterface } from "@/lib/db/models/courseModel";
 import studentModel from "@/lib/db/models/studentModel";
 import { authOptions } from "@/lib/auth/authOptions";
 
+export const dynamic = "force-dynamic";
 interface InstructorData {
   name: string;
   title: string;
@@ -51,7 +52,8 @@ const TeachersPage = async (props: Props) => {
       path: "courses",
       populate: {
         path: "authors",
-        select: "firstname lastname avatar username bio rating students createdAt",
+        select:
+          "firstname lastname avatar username bio rating students createdAt",
       },
     });
 
@@ -99,20 +101,17 @@ const TeachersPage = async (props: Props) => {
       break;
     case "Latest":
       instructorData.sort(
-        (a, b) =>
-          (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0)
+        (a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0)
       );
       break;
     case "Oldest":
       instructorData.sort(
-        (a, b) =>
-          (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0)
+        (a, b) => (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0)
       );
       break;
     default:
       instructorData.sort((a, b) => b.students - a.students);
   }
-
 
   return (
     <>

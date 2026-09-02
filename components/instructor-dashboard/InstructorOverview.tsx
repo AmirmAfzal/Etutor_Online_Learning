@@ -2,63 +2,43 @@ import React from "react";
 
 import Icon from "../ui/Icon";
 
-const InstructorOverview = () => {
+interface InstructorOverviewProps {
+  courseCount: number;
+  studentCount: number;
+}
+
+const InstructorOverview = ({
+  courseCount,
+  studentCount,
+}: InstructorOverviewProps) => {
   const overviewData = [
     {
       icon: "ph:play-circle-duotone",
-      name: "Enrolled Courses",
-      value: "957",
+      name: "My Courses",
+      value: courseCount.toString(),
       bg: "bg-[#FFEEE8]",
       color: "text-[#FF6636]",
     },
     {
-      icon: "ph:check-square-offset-duotone",
-      name: "Active Courses",
-      value: "19",
+      icon: "ph:users-duotone",
+      name: "Students",
+      value: studentCount.toLocaleString(),
       bg: "bg-[#EBEBFF]",
       color: "text-[#564FFD]",
     },
     {
-      icon: "ph:users-duotone",
-      name: "Course Instructors",
-      value: "241",
+      icon: "ph:star-duotone",
+      name: "Rating",
+      value: "—",
       bg: "bg-[#FFF2E5]",
       color: "text-[#FD8E1F]",
     },
     {
-      icon: "ph:trophy-duotone",
-      name: "Completed Courses",
-      value: "951",
+      icon: "ph:chart-line-duotone",
+      name: "Total Earnings",
+      value: "—",
       bg: "bg-[#E1F7E3]",
       color: "text-[#23BD33]",
-    },
-    {
-      icon: "ph:user-circle-duotone",
-      name: "Students",
-      value: "1,674,767",
-      bg: "bg-[#FFF0F0]",
-      color: "text-[#E34444]",
-    },
-    {
-      icon: "ph:notepad-duotone",
-      name: "Online Courses",
-      value: "3",
-      bg: "bg-[#E1F7E3]",
-      color: "text-[#23BD33]",
-    },
-    {
-      icon: "ph:credit-card-duotone",
-      name: "USD Total Earning",
-      value: "$7,461,767",
-      bg: "bg-[#F5F7FA]",
-      color: "text-[#1D2026]",
-    },
-    {
-      icon: "ph:stack-duotone",
-      name: "Course Sold",
-      value: "56,489",
-      bg: "bg-[#EBEBFF]",
-      color: "text-[#564FFD]",
     },
   ];
   return (

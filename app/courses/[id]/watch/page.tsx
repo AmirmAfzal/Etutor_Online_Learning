@@ -13,6 +13,7 @@ import studentModel from "@/lib/db/models/studentModel";
 import { redirect } from "next/navigation";
 import courseProgressModel from "@/lib/db/models/courseProgressModel";
 
+export const dynamic = "force-dynamic";
 interface CurriculumItem {
   title: string;
   lectures: number;
@@ -193,8 +194,6 @@ const WatchCourse = async (props: Props) => {
         Math.round((completedLectures.length / lectures.length) * 100)
       )
     : 0;
-
-
 
   const curriculum: CurriculumItem[] = foundSections.map((section) => {
     const totalSectionDuration = section.lectures.reduce(

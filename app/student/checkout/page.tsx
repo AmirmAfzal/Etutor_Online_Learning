@@ -12,7 +12,7 @@ import { authOptions } from "@/lib/auth/authOptions";
 import studentModel, { StudentInterface } from "@/lib/db/models/studentModel";
 import PaymentBtn from "@/components/Student/PaymentBtn";
 
-
+export const dynamic = "force-dynamic";
 interface Course extends Document {
   title: string;
   thumbnail: string;
@@ -28,20 +28,20 @@ interface Props {
   image: string;
   instructor?: string;
   price: number;
-  offer?: number ;
+  offer?: number;
 }
 
 const paymentMethods = [
   {
     id: "visa",
-    icon: "/images/visa-photo.png",
+    icon: "/images/Student-dashboard/Visa-photo.png",
     label: "4855 **** **** ****",
     expiry: "04/24",
     name: "Cardholder Name",
   },
   {
     id: "mastercard",
-    icon: "/images/masterCard.png",
+    icon: "/images/Student-dashboard/masterCard.png",
     label: "5795 **** **** ****",
     expiry: "04/24",
     name: "Cardholder Name",
@@ -55,7 +55,6 @@ const paymentMethods = [
 ];
 
 const Page = async () => {
-
   await connectDB();
 
   const session = await getServerSession(authOptions);
@@ -76,7 +75,10 @@ const Page = async () => {
     image: course.thumbnail,
     instructor: course.instructor,
     price: course.price,
-    offer: typeof course.offer === 'number' ? course.offer : (course.offer ? parseFloat(course.offer as string) : 0) || 0,
+    offer:
+      typeof course.offer === "number"
+        ? course.offer
+        : (course.offer ? parseFloat(course.offer as string) : 0) || 0,
   }));
 
   const subtotal = courseData.reduce((acc, c) => acc + c.price, 0);

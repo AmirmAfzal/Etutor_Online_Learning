@@ -10,6 +10,7 @@ import CourseCard from "@/components/Student/CourseCard";
 import FilterMobile from "@/components/Courses/courseFilter/FilterMobile";
 import Icon from "@/components/ui/Icon";
 
+export const dynamic = "force-dynamic";
 interface Course {
   id?: string;
   thumbnail: string;

@@ -85,12 +85,11 @@ export async function saveChangePassword(
     }
 
     const hashedNewPassword = await hash(result.data.newPassword, 10);
-    const updatedUser = await userModel
-      .findByIdAndUpdate(
-        instructor.user._id,
-        { password: hashedNewPassword },
-        { new: true }
-      );
+    const updatedUser = await userModel.findByIdAndUpdate(
+      instructor.user._id,
+      { password: hashedNewPassword },
+      { new: true }
+    );
 
     if (!updatedUser) {
       return {

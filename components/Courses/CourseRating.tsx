@@ -20,8 +20,7 @@ const CourseRating: React.FC<CourseRatingProps> = async ({ courseId }) => {
 
   const total = feedbacks.length || 1;
   const distribution = [5, 4, 3, 2, 1].map(
-    (star) =>
-      (feedbacks.filter((f) => f.star === star).length / total) * 100
+    (star) => (feedbacks.filter((f) => f.star === star).length / total) * 100
   );
 
   return (

@@ -34,12 +34,8 @@ const MobileNavbar = () => {
       url: "/courses",
     },
     {
-      title: "About",
-      url: "/about",
-    },
-    {
-      title: "Contact",
-      url: "/contact",
+      title: "Category",
+      url: "/category",
     },
     {
       title: "Become an Instructor",

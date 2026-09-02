@@ -47,7 +47,6 @@ export async function savePaymentCard(
     name: result.data.name,
     cardNumber: result.data.cardNumber,
     expiration: result.data.expiration,
-    cvc: result.data.cvc,
     instructor: instructor._id,
   });
 
